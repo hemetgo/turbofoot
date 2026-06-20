@@ -37,21 +37,29 @@ function generateCaptain(baseLevel = 1) {
     };
 }
 
-function generateBasePlayer(baseLevel = 1, forceTrait = false) {
+function generateBasePlayer(baseLevel = 1, numTraits = 0) {
     const baseProfile = rnd(GAME_CONTENT.players.baseProfiles);
     let perks = [];
     let rank = 'C';
 
-    if (forceTrait) {
-        perks.push(rnd(PERK_LIST));
-        rank = 'B'; // Se tem trait desde a base, já nasce Rank B
+    if (numTraits > 0) {
+        // Sorteia as habilidades com base na quantidade solicitada (1 ou 2)
+        for (let i = 0; i < numTraits; i++) {
+            perks.push(rnd(PERK_LIST));
+        }
+
+        // Se ganhou 2 traits, já vira um jogador forte da base (Rank A). Se 1 trait, Rank B.
+        rank = numTraits === 2 ? 'A' : 'B';
     }
 
     return {
         id: `p_${Date.now()}_${Math.random()}`,
         name: baseProfile.name,
         emoji: baseProfile.emoji,
-        level: baseLevel, perks: perks, rank: rank, isBase: !forceTrait
+        level: baseLevel,
+        perks: perks,
+        rank: rank,
+        isBase: (numTraits === 0) // Só é considerado "base" crua se não tiver traits
     };
 }
 

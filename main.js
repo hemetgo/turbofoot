@@ -74,24 +74,42 @@ function selectSeries(idx) {
 
     // LÊ AS MELHORIAS META
     let metaLevel = gameState.meta?.upgrades?.start_level || 0;
-    let metaTraits = gameState.meta?.upgrades?.start_traits || 0;
+    let metaTraits = gameState.meta?.upgrades?.start_traits || 0; // Este é o Nível do Upgrade (ex: de 1 a 10)
     let startLvl = 1 + metaLevel;
+
+    // A MÁGICA DA DISTRIBUIÇÃO:
+    // Ex: Nível 3 -> floor(3/2) = 1 jogador com 2 traits. 3%2 = 1 jogador com 1 trait.
+    let playersWith2Traits = Math.floor(metaTraits / 2);
+    let playersWith1Trait = metaTraits % 2;
 
     for (let i = 0; i < 3; i++) {
         const base = rnd(bases);
         const adj = rnd(adjs);
 
         let team = [];
-        let captain = generateCaptain(startLvl); // Capitão usa a nova regra
+        let captain = generateCaptain(startLvl); // Capitão usa a regra normal (nasce Rank S)
         team.push(captain);
+
         for (let j = 0; j < 10; j++) {
-            let hasTrait = (j < metaTraits); // Primeiros X jogadores ganham Trait
-            team.push(generateBasePlayer(startLvl, hasTrait));
+            let numTraitsToGive = 0;
+
+            // Os primeiros da lista recebem 2 Traits
+            if (j < playersWith2Traits) {
+                numTraitsToGive = 2;
+            }
+            // O(s) próximo(s) recebem 1 Trait (dependendo se for par ou ímpar)
+            else if (j < playersWith2Traits + playersWith1Trait) {
+                numTraitsToGive = 1;
+            }
+
+            // Agora a função generateBasePlayer sabe lidar com 0, 1 ou 2 traits
+            team.push(generateBasePlayer(startLvl, numTraitsToGive));
         }
 
         pendingClubOptions.push({
             club: { name: `${base.name} ${adj}`, emoji: base.emoji, isPlayer: true },
-            team: team, captain: captain
+            team: team,
+            captain: captain
         });
     }
 
@@ -110,7 +128,7 @@ function selectSeries(idx) {
                         <div style="font-weight: 900; color: #fff; font-size: 1rem;">${cap.name} <span style="color: var(--accent-gold);">${cap.rank}</span></div>
                         <div style="font-size: 0.8rem; color: var(--accent-blue); font-weight: 800; margin-top: 4px;">${cap.perks[0].emoji} ${cap.perks[0].name} & ${cap.perks[1].emoji} ${cap.perks[1].name}</div>
                     </div>
-                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; font-weight:700; border-top: 1px solid var(--border-light); padding-top: 8px; width: 100%;">Nível Inicial do Time: ${startLvl} | Craques extras: ${metaTraits}</div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; font-weight:700; border-top: 1px solid var(--border-light); padding-top: 8px; width: 100%;">Nível Inicial do Time: ${startLvl} | Nível do Celeiro: ${metaTraits}</div>
                 </div>
             </div>`;
     });
@@ -147,9 +165,26 @@ function renderMetaShop() {
         let cost = Math.floor(upg.baseCost * Math.pow(upg.costMult, currentLvl));
         let canAfford = (gameState.meta.metaCoins >= cost) && !isMax;
 
-        let btnHtml = isMax
-            ? `<button class="btn-secondary btn-sm" disabled style="width: 120px;">MÁXIMO</button>`
-            : `<button class="btn-primary btn-sm" style="width: 120px; background: var(--accent-gold); color: #000; box-shadow: none;" ${!canAfford ? 'disabled' : ''} onclick="buyMetaUpgrade('${upg.id}', ${cost})">COMPRAR<br>${cost} 🏆</button>`;
+        let btnHtml = "";
+
+        if (isMax) {
+            // Estado: Máximo
+            btnHtml = `<button class="btn-secondary btn-sm" disabled style="width: 120px; opacity: 0.4; cursor: not-allowed; border-color: rgba(255,255,255,0.1);">MÁXIMO</button>`;
+        } else if (!canAfford) {
+            // Estado: Sem dinheiro (Desativado)
+            btnHtml = `
+                <button class="btn-secondary btn-sm" disabled style="width: 120px; opacity: 0.3; filter: grayscale(100%); cursor: not-allowed; display:flex; flex-direction:column; align-items:center; gap:4px;">
+                    <span style="font-weight:900;">COMPRAR</span>
+                    <span style="font-size:0.9rem;">${cost} 🏆</span>
+                </button>`;
+        } else {
+            // Estado: Comprar (Ativo)
+            btnHtml = `
+                <button class="btn-primary btn-sm" onclick="buyMetaUpgrade('${upg.id}', ${cost})" style="width: 120px; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--accent-gold); box-shadow: 0 4px 15px rgba(245,158,11,0.15); display:flex; flex-direction:column; align-items:center; gap:4px;">
+                    <span style="color:var(--accent-gold); font-weight:900;">COMPRAR</span>
+                    <span style="color:#fff; font-size:0.9rem;">${cost} 🏆</span>
+                </button>`;
+        }
 
         list.innerHTML += `
             <div class="options-row" style="display:flex; justify-content:space-between; align-items:center; gap: 16px; border-left: 4px solid var(--accent-gold);">

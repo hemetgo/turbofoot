@@ -5,16 +5,16 @@
         {
             "id": "start_coins",
             "name": "Patrocínio",
-            "desc": "Comece cada jornada com +15 💰 extras.",
-            "maxLevel": 5,
+            "desc": "Comece cada jornada com +15 💰 extras por nível.",
+            "maxLevel": 10,
             "baseCost": 50,
             "costMult": 1.5
         },
         {
             "id": "start_traits",
             "name": "Celeiro de Craques",
-            "desc": "1 Atleta da base começará com uma habilidade bônus (Rank B).",
-            "maxLevel": 5,
+            "desc": "Fortalece a base! Intercala entre dar 1 Habilidade para um novo jogador ou aprimorar um existente para 2 Habilidades.",
+            "maxLevel": 10,
             "baseCost": 80,
             "costMult": 1.8
         },
@@ -22,7 +22,7 @@
             "id": "start_level",
             "name": "CT de Ponta",
             "desc": "Aumenta o Nível inicial de TODO o time em +1.",
-            "maxLevel": 3,
+            "maxLevel": 5,
             "baseCost": 200,
             "costMult": 2.5
         }
