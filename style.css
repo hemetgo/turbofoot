@@ -730,9 +730,39 @@ button {
 @media (min-width: 900px) {
     .club-options-wrapper {
         flex-direction: row;
-        justify-content: center;
-        align-items: stretch;
-        flex-wrap: wrap;
+        justify-content: safe center;
+        align-items: center;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 30px var(--space-lg);
+        gap: var(--space-lg);
+        scrollbar-width: thin;
+        scrollbar-color: var(--accent-gold) rgba(255, 255, 255, 0.05);
+    }
+
+    .club-options-wrapper::-webkit-scrollbar {
+        height: 10px;
+    }
+
+    .club-options-wrapper::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        margin: 0 20px;
+    }
+
+    .club-options-wrapper::-webkit-scrollbar-thumb {
+        background: var(--accent-gold);
+        border-radius: 4px;
+    }
+
+    /* O SEGREDO PRA RESOLVER O TAMANHO DOS CARDS ESTOURANDO: */
+    .club-select-card {
+        flex: 0 0 320px;
+        /* Trava a largura do card EXATAMENTE em 320px */
+        width: 320px;
+        max-width: none;
+        /* Remove o comportamento elástico */
     }
 }
 
@@ -778,7 +808,13 @@ button {
     font-weight: 900;
     color: #fff;
     text-transform: uppercase;
-    line-height: 1.1;
+    line-height: 1.2;
+    text-align: center;
+    width: 100%;
+    word-wrap: break-word;
+    /* OBRIGA palavras longas a quebrarem */
+    overflow-wrap: break-word;
+    /* Evita que o texto empurre o card */
 }
 
 .captain-box {
@@ -2113,5 +2149,49 @@ button {
         font-size: 0.55rem;
         /* Aperta o badge de sinergia também */
         padding: 2px 4px;
+    }
+}
+
+/* ==================== ELENCO / TIME (HORIZONTAL NO PC) ==================== */
+@media (min-width: 900px) {
+
+    /* Força o grid a virar uma linha horizontal rolável */
+    .roster-grid {
+        display: flex !important;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        /* Impede a quebra de linha */
+        overflow-x: auto;
+        /* Cria a rolagem lateral */
+        gap: 12px;
+        padding-bottom: 16px;
+        /* Espaço extra para a barra de rolagem não cortar o card */
+        align-items: stretch;
+
+        /* Estilização da barra de rolagem (Firefox) */
+        scrollbar-width: thin;
+        scrollbar-color: var(--accent-gold) rgba(255, 255, 255, 0.05);
+    }
+
+    /* Estilização da barra de rolagem (Chrome, Safari, Edge) */
+    .roster-grid::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .roster-grid::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+    }
+
+    .roster-grid::-webkit-scrollbar-thumb {
+        background: var(--accent-gold);
+        border-radius: 4px;
+    }
+
+    /* Trava a largura dos cards para que não fiquem esmagados */
+    .roster-grid .player-card {
+        flex: 0 0 150px;
+        /* Largura fixa ideal do card no PC */
+        min-width: 150px;
     }
 }
