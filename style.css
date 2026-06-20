@@ -2152,50 +2152,6 @@ button {
     }
 }
 
-/* ==================== ELENCO / TIME (HORIZONTAL NO PC) ==================== */
-@media (min-width: 900px) {
-
-    /* Força o grid a virar uma linha horizontal rolável */
-    .roster-grid {
-        display: flex !important;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        /* Impede a quebra de linha */
-        overflow-x: auto;
-        /* Cria a rolagem lateral */
-        gap: 12px;
-        padding-bottom: 16px;
-        /* Espaço extra para a barra de rolagem não cortar o card */
-        align-items: stretch;
-
-        /* Estilização da barra de rolagem (Firefox) */
-        scrollbar-width: thin;
-        scrollbar-color: var(--accent-gold) rgba(255, 255, 255, 0.05);
-    }
-
-    /* Estilização da barra de rolagem (Chrome, Safari, Edge) */
-    .roster-grid::-webkit-scrollbar {
-        height: 8px;
-    }
-
-    .roster-grid::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 4px;
-    }
-
-    .roster-grid::-webkit-scrollbar-thumb {
-        background: var(--accent-gold);
-        border-radius: 4px;
-    }
-
-    /* Trava a largura dos cards para que não fiquem esmagados */
-    .roster-grid .player-card {
-        flex: 0 0 150px;
-        /* Largura fixa ideal do card no PC */
-        min-width: 150px;
-    }
-}
-
 /* GRID EXCLUSIVO PARA A TELA DE SÉRIES NO PC */
 @media (min-width: 900px) {
     #series-options-container.club-options-wrapper {
