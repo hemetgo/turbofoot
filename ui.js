@@ -94,17 +94,6 @@ function returnToTitle() {
 }
 
 function updateRosterUI() {
-    const traits = getTeamTraits();
-    const statsHTML = `
-        <span title="Chutes" style="color:var(--accent-gold)">🎯 ${traits.finishing}</span>
-        <span title="Passes" style="color:var(--accent-blue)">👟 ${traits.passing}</span>
-        <span title="Risco Alto" style="color:var(--accent-purple)">⚡ ${traits.pace}</span>
-        <span title="Desarmes" style="color:var(--accent-green)">🪓 ${traits.tackling}</span>
-        <span title="Debuff Inimigo" style="color:var(--text-muted)">🛡️ ${traits.marking}</span>
-        <span title="Goleiro" style="color:var(--accent-blue)">🧤 ${traits.reflexes}</span>
-        <span title="Evolução" style="color:var(--accent-green)">🌱 ${traits.growth}</span>
-    `;
-
     let listHTML = "";
     gameState.team.forEach(p => { listHTML += getPlayerCardHTML(p); });
 
@@ -119,16 +108,12 @@ function updateRosterUI() {
         mobTitle.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${gameState.club.name}`;
     }
 
-    const sbStats = document.getElementById("sidebar-stats");
     const sbList = document.getElementById("sidebar-list");
     const sbCoins = document.getElementById("sidebar-coins");
-    if (sbStats) sbStats.innerHTML = statsHTML;
     if (sbList) sbList.innerHTML = listHTML;
     if (sbCoins) sbCoins.innerText = gameState.coins;
 
-    const modStats = document.getElementById("modal-roster-stats");
     const modList = document.getElementById("modal-roster-list");
-    if (modStats) modStats.innerHTML = statsHTML;
     if (modList) modList.innerHTML = listHTML;
 }
 

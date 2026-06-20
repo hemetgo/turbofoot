@@ -163,7 +163,7 @@ function _renderPlayerButtons() {
 
         if (node.comboReq === "ALL") { if (matchState.combo <= 0) canAfford = false; comboText = `(Tudo)`; }
         else if (node.comboReq > 0) { if (matchState.combo < node.comboReq) canAfford = false; comboText = `(-${node.comboReq} Combo)`; }
-        else if (node.comboGen > 0) { comboText = `(+${node.comboGen} Combo)`; }
+        else if (node.comboGen > 0) { comboText = `(+${node.comboGen}🔥)`; }
 
         let finalMod = node.id === "bicycle" ? node.mod + (Math.min(matchState.combo, 6) * 0.1) : node.mod;
 
