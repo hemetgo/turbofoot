@@ -173,7 +173,7 @@ function openHistoryModal() {
     list.innerHTML = "";
 
     if (!gameState.runHistory || gameState.runHistory.length === 0) {
-        list.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding: 20px;">Nenhuma run registrada ainda.</p>`;
+        list.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding: 20px;">Nenhuma partida registrada ainda.</p>`;
     } else {
         gameState.runHistory.forEach((run, idx) => {
             let cls = run.result === "CAMPEÃO" ? "victory" : "loss";
