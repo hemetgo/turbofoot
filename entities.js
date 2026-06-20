@@ -38,28 +38,32 @@ function generateCaptain(baseLevel = 1) {
 }
 
 function generateBasePlayer(baseLevel = 1, numTraits = 0) {
-    const baseProfile = rnd(GAME_CONTENT.players.baseProfiles);
+    let profile;
     let perks = [];
     let rank = 'C';
 
     if (numTraits > 0) {
-        // Sorteia as habilidades com base na quantidade solicitada (1 ou 2)
+        // Se tem habilidade, é um craque da base! Pega os nomes da lista boa.
+        profile = rnd(GAME_CONTENT.players.profiles);
+
         for (let i = 0; i < numTraits; i++) {
             perks.push(rnd(PERK_LIST));
         }
 
-        // Se ganhou 2 traits, já vira um jogador forte da base (Rank A). Se 1 trait, Rank B.
         rank = numTraits === 2 ? 'A' : 'B';
+    } else {
+        // Sem habilidade, é o jogador cru/ruim da base. Pega os nomes zueiros.
+        profile = rnd(GAME_CONTENT.players.baseProfiles);
     }
 
     return {
         id: `p_${Date.now()}_${Math.random()}`,
-        name: baseProfile.name,
-        emoji: baseProfile.emoji,
+        name: profile.name,
+        emoji: profile.emoji,
         level: baseLevel,
         perks: perks,
         rank: rank,
-        isBase: (numTraits === 0) // Só é considerado "base" crua se não tiver traits
+        isBase: (numTraits === 0) // Só recebe estilo visual cinza se não tiver traits
     };
 }
 
