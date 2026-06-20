@@ -1526,7 +1526,10 @@ button {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+    /* IMPEDE QUE O TEXTO ESTOURE A LARGURA DO BOTÃO */
 }
 
 .node-footer {
@@ -1547,19 +1550,56 @@ button {
     text-align: center;
 }
 
-.action-synergy {
-    font-size: 0.65rem;
-    color: var(--text-muted);
-    background: rgba(255, 255, 255, 0.05);
-    padding: 2px 6px;
-    border-radius: 4px;
-    margin-top: 4px;
-    font-weight: 800;
+/* ==================== SINERGIA E BADGES (CARDS DE AÇÃO) ==================== */
+.node-badges-wrapper {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 4px;
-    border: 1px solid var(--border-light);
+    margin-top: 6px;
+    width: 100%;
 }
+
+.action-synergy {
+    font-size: 0.55rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    letter-spacing: 0.5px;
+}
+
+.action-synergy.active {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(168, 85, 247, 0.1));
+    border: 1px solid var(--accent-purple);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+}
+
+.action-synergy.active span:first-child {
+    filter: drop-shadow(0 0 4px var(--accent-purple));
+}
+
+.action-synergy.inactive {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    color: var(--text-muted);
+}
+
+.action-tags-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    /* Se tiver muitas tags, quebra linha pra não vazar */
+    gap: 4px;
+    width: 100%;
+}
+
+/* ===== */
 
 .confirm-text {
     display: none;
@@ -1923,4 +1963,151 @@ button {
     background: rgba(168, 85, 247, 0.2);
     color: var(--accent-purple);
     border: 1px solid rgba(168, 85, 247, 0.4);
+}
+
+/* ==================== ESTRUTURA DO CARD DE AÇÃO ==================== */
+.node-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.node-chance {
+    font-size: 1.1rem;
+    font-weight: 900;
+    line-height: 1;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.combo-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--accent-gold);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.node-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.node-icon-name {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+}
+
+.node-emoji {
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.node-name {
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.1;
+    width: 100%;
+    word-wrap: break-word;
+    /* OBRIGA O TEXTO LONGO A QUEBRAR DE LINHA */
+    hyphens: auto;
+}
+
+.node-footer {
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 6px;
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.outcome-row {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+    white-space: nowrap;
+    /* Mantém o sucesso/fracasso em 1 linha */
+}
+
+.outcome-row.fail {
+    color: var(--accent-red);
+}
+
+.outcome-row.fail.safe {
+    color: var(--text-muted);
+}
+
+.outcome-row.succ {
+    color: var(--accent-green);
+}
+
+.buff-text {
+    color: var(--accent-gold);
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+/* ======== OTIMIZAÇÃO ESPECÍFICA PARA MOBILE ======== */
+@media (max-width: 600px) {
+    .node-btn {
+        padding: 6px 4px;
+        /* Mais espaço espremendo as bordas internas */
+    }
+
+    .node-chance {
+        font-size: 1rem;
+    }
+
+    .combo-badge {
+        font-size: 0.65rem;
+        padding: 2px 4px;
+    }
+
+    /* Voltamos para coluna, pois lado a lado estourava textos grandes */
+    .node-icon-name {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .node-emoji {
+        font-size: 1.4rem;
+        margin-bottom: -2px;
+    }
+
+    .node-name {
+        font-size: 0.65rem;
+        /* Fonte menor para caber */
+        letter-spacing: -0.3px;
+        /* Aproxima as letras de leve */
+    }
+
+    .outcome-row {
+        font-size: 0.65rem;
+        letter-spacing: -0.3px;
+    }
+
+    .action-synergy {
+        font-size: 0.55rem;
+        /* Aperta o badge de sinergia também */
+        padding: 2px 4px;
+    }
 }

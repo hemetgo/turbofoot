@@ -107,11 +107,15 @@
             },
             {
                 "name": "Fênix",
-                "emoji": "🔥"
+                "emoji": "🐦‍🔥"
             },
             {
                 "name": "Hidras",
                 "emoji": "🐲"
+            },
+            {
+                "name": "Caveiras",
+                "emoji": "💀"
             }
         ],
         "adjectives": [

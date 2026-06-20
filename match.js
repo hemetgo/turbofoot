@@ -159,22 +159,30 @@ function _renderPlayerButtons() {
 
     selected.forEach((node) => {
         const btn = document.createElement("button");
-        let canAfford = true, comboText = "";
+        let canAfford = true;
+        let comboBadge = "";
 
-        if (node.comboReq === "ALL") { if (matchState.combo <= 0) canAfford = false; comboText = `(Tudo)`; }
-        else if (node.comboReq > 0) { if (matchState.combo < node.comboReq) canAfford = false; comboText = `(-${node.comboReq}🔥)`; }
-        else if (node.comboGen > 0) { comboText = `(+${node.comboGen}🔥)`; }
+        // Badge de Combo (Nova estrutura)
+        if (node.comboReq === "ALL") {
+            if (matchState.combo <= 0) canAfford = false;
+            comboBadge = `<span class="combo-badge">TUDO 🔥</span>`;
+        }
+        else if (node.comboReq > 0) {
+            if (matchState.combo < node.comboReq) canAfford = false;
+            comboBadge = `<span class="combo-badge">-${node.comboReq} 🔥</span>`;
+        }
+        else if (node.comboGen > 0) {
+            comboBadge = `<span class="combo-badge">+${node.comboGen} 🔥</span>`;
+        }
 
         let finalMod = node.id === "bicycle" ? node.mod + (Math.min(matchState.combo, 6) * 0.1) : node.mod;
-
         let traitBonus = getTraitBonusForNode(node, traits);
-
         let pToUse = (node.type === 'atk' || node.type === 'shoot') ? power.atk : power.def;
         let pBase = (pToUse * finalMod) + matchState.nextBuff + (matchState.momentum * 5) + traitBonus;
+
         if (matchState.badLuckCounter > 0) pBase += GAME_BALANCE.mechanics.luckEvents.penaltyPower;
 
         let rBase = Math.max(1, (matchState.hasBall ? matchState.rivalProfile.def : matchState.rivalProfile.atk) - markingDebuff);
-
         let chance = node.riskLevel !== "safe" ? calcWinChance(pBase, rBase, GAME_BALANCE.mechanics.rngRange) : 100;
 
         if (traitBonus > 0 && node.riskLevel !== "safe") {
@@ -189,8 +197,23 @@ function _renderPlayerButtons() {
         btn.className = `node-btn ${colorClass} active ${gameState.settings.requireConfirm ? 'confirm-enabled' : ''}`;
         if (!canAfford) btn.disabled = true;
 
-        const succLabel = node.successMove > 0 ? `+${node.successMove} Zonas` : "Posição";
-        const failLabel = node.riskLevel === "safe" ? "Nenhum" : (node.failMove < 0 ? `${Math.abs(node.failMove)} Zonas` : "Perde Posse");
+        // ==========================================================
+        // TEXTOS DE SUCESSO/FRACASSO OTIMIZADOS P/ MOBILE (Uso de Ícones)
+        // ==========================================================
+        let succLabel = "";
+        if (node.type === 'shoot') succLabel = "Gol";
+        else if (node.type === 'save') succLabel = "Defesa";
+        else succLabel = node.successMove > 0 ? `Avança +${node.successMove}` : "Mantém";
+
+        if (node.nextBuff && node.nextBuff > 0) succLabel += ` <span class="buff-text">(+✨)</span>`;
+
+        let failLabel = "";
+        let failClass = "fail";
+        if (node.riskLevel === "safe") { failLabel = "Sem Risco"; failClass += " safe"; }
+        else if (node.type === 'save') failLabel = "Sofre Gol";
+        else failLabel = node.failMove < 0 ? `Recua ${Math.abs(node.failMove)}` : "Perde Posse";
+
+        // ==========================================================
 
         let synergies = [];
         if (node.type === 'shoot') synergies.push(PERK_LIST.find(p => p.id === 'finishing'));
@@ -199,39 +222,42 @@ function _renderPlayerButtons() {
         if (node.type === 'save') synergies.push(PERK_LIST.find(p => p.id === 'reflexes'));
         if (node.riskLevel === 'high') synergies.push(PERK_LIST.find(p => p.id === 'pace'));
 
-        let synHtml = synergies.map(s => `<span data-tip="${s.name}">${s.emoji}</span>`).join(' ');
+        let synHtml = synergies.map(s => `<span data-tip="${s.name}" style="font-size:0.8rem;">${s.emoji}</span>`).join('');
         let synBadge = '';
         let synergyIds = synergies.map(s => s.id);
 
         if (synergies.length > 0) {
             if (traitBonus > 0) {
                 btn.classList.add("has-synergy");
-                let plusCount = Math.floor(traitBonus / 8);
-                let pluses = '+'.repeat(Math.max(1, plusCount));
-
-                synBadge = `
-                    <div class="action-synergy" style="border-color: var(--accent-purple); color: var(--text-main);">
-                        ${synHtml} <b style="color:var(--accent-purple); margin-left:4px;">Vantagem ${pluses}</b>
-                    </div>`;
+                synBadge = `<div class="action-synergy active">${synHtml} <span>BÔNUS</span></div>`;
             } else {
-                synBadge = `<div class="action-synergy">Requer: ${synHtml}</div>`;
+                synBadge = `<div class="action-synergy inactive">${synHtml} <span>Sinergia</span></div>`;
             }
         }
 
+        // HTML ESTRUTURAL BASEADO EM CLASSES (Muito mais limpo)
         btn.innerHTML = `
             <div class="node-header">
-                <span style="color:${chanceColor}; font-weight:900;">🎯 ${chance}%</span>
-                <span style="color:var(--accent-gold); font-weight:800;">${comboText}</span>
+                <span class="node-chance" style="color:${chanceColor};">🎯 ${chance}%</span>
+                ${comboBadge}
             </div>
+            
             <div class="node-center">
-                <span class="node-emoji">${node.emoji}</span>
-                <span class="node-name">${node.name}</span>
-                ${synBadge}
+                <div class="node-icon-name">
+                    <span class="node-emoji">${node.emoji}</span>
+                    <span class="node-name">${node.name}</span>
+                </div>
+                
+                <div class="node-badges-wrapper">
+                    ${synBadge}
+                </div>
             </div>
+
             <div class="node-footer">
-            <div style="color:${node.riskLevel === 'safe' ? 'var(--accent-green)' : 'var(--accent-red)'}">Fracasso: ${failLabel}</div>
-                <div style="color:var(--accent-green)">Sucesso: ${succLabel}</div>
+                <div class="outcome-row ${failClass}">❌ ${failLabel}</div>
+                <div class="outcome-row succ">✅ ${succLabel}</div>
             </div>
+
             <div class="confirm-text">TOQUE P/ CONFIRMAR</div>
         `;
 
