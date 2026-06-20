@@ -297,19 +297,28 @@ function finishSeason(wonSeason) {
 
     let subText = wonSeason ? "\n🏆 A CAMPANHA FOI UM SUCESSO!\nVocê completou o mapa!" : "\nDerrota dolorosa. Fim da jornada.";
 
-    // LÓGICA DE META-PROGRESSÃO
     if (wonSeason) {
         let currentSeries = gameState.leagueLevel;
         let highest = gameState.meta.highestSeriesUnlocked || 0;
 
-        // Se o jogador venceu a sua Série máxima atual e ainda não está na Série S
         if (currentSeries === highest && highest < GAME_BALANCE.leagues.length - 1) {
             gameState.meta.highestSeriesUnlocked = highest + 1;
-            saveGame();
             let nextSeriesName = GAME_BALANCE.leagues[highest + 1].name;
             subText += `\n\n⭐ META ALCANÇADA! ⭐\nNova Divisão Desbloqueada:\n👉 ${nextSeriesName} 👈`;
         }
     }
+
+    // CALCULA TROFÉUS (Moeda Meta)
+    let baseTrophies = gameState.season.currentStage * 2;
+    let diffMult = (gameState.leagueLevel + 1);
+    let earnedTrophies = baseTrophies * diffMult;
+    if (wonSeason) earnedTrophies += (50 * diffMult); // Bônus por zerar
+
+    if (!gameState.meta.metaCoins) gameState.meta.metaCoins = 0;
+    gameState.meta.metaCoins += earnedTrophies;
+    saveGame();
+
+    subText += `\n\n🏆 Você ganhou +${earnedTrophies} Troféus para usar na Sede do Clube!`;
 
     document.getElementById('se-sub').innerText = subText;
     document.getElementById('season-end-overlay').style.display = 'flex';

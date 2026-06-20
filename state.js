@@ -2,15 +2,15 @@ const IS_DESKTOP = window.matchMedia("(hover: hover) and (pointer: fine)").match
 let GAME_BALANCE = {}; let GAME_CONTENT = {};
 
 let gameState = {
-    meta: { highestSeriesUnlocked: 0 }, // NOVO: Armazena o meta-progresso (0 = Série F, 6 = Série S)
-    coins: 0, leagueLevel: 0, club: null, team: [], activeCampBuff: 0, currentNode: null,
+    meta: { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} }, // NOVO
+    coins: 0, leagueLevel: 5, club: null, team: [], activeCampBuff: 0, currentNode: null,
     settings: { showSuspense: true, requireConfirm: !IS_DESKTOP },
     season: { number: 1, map: [], currentStage: 0, history: [], matchHistory: [] },
-    runHistory: [] 
+    runHistory: []
 };
 
 let matchState = {
-    userScore: 0, rivalScore: 0, combo: 0, momentum: 0, hasBall: true, zone: 2, 
+    userScore: 0, rivalScore: 0, combo: 0, momentum: 0, hasBall: true, zone: 2,
     rivalProfile: null, rivalTeamRef: null, nextBuff: 0, totalActions: 10, currentAction: 0, badLuckCounter: 0
 };
 
@@ -18,18 +18,18 @@ let PERK_LIST = [];
 
 function loadSaveData() {
     if (localStorage.getItem("turboFoot_mgr_v7")) {
-        try { 
-            let saved = JSON.parse(localStorage.getItem("turboFoot_mgr_v7")); 
-            // Faz um merge para manter a compatibilidade de saves antigos com o novo sistema meta
+        try {
+            let saved = JSON.parse(localStorage.getItem("turboFoot_mgr_v7"));
             gameState = { ...gameState, ...saved };
-            if (!gameState.meta) gameState.meta = { highestSeriesUnlocked: 0 };
+            if (!gameState.meta) gameState.meta = { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} };
+            if (!gameState.meta.metaCoins) gameState.meta.metaCoins = 0;
+            if (!gameState.meta.upgrades) gameState.meta.upgrades = {};
         } catch (e) { }
     } else {
         gameState.coins = GAME_BALANCE.mechanics?.initialCoins || 0;
         gameState.settings = { showSuspense: true };
-        gameState.meta = { highestSeriesUnlocked: 0 };
     }
-    
+
     if (!gameState.season.history) gameState.season.history = [];
     if (!gameState.season.matchHistory) gameState.season.matchHistory = [];
     if (!gameState.runHistory) gameState.runHistory = [];

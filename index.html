@@ -40,6 +40,9 @@
                     <h2 class="game-subtitle">MANAGER ROGUELITE</h2>
                     <div class="title-menu">
                         <button class="btn-primary" onclick="startRunFlow()">▶ JOGAR</button>
+                        <button class="btn-primary"
+                            style="background: var(--accent-gold); color: #000; box-shadow: 0 4px 15px rgba(245,158,11,0.3);"
+                            onclick="openMetaShop()">🏆 SEDE DO CLUBE</button>
                         <button class="btn-secondary" onclick="openHistoryModal()">📖 HISTÓRICO</button>
                         <button class="btn-secondary" onclick="openHowToPlay()">❓ COMO JOGAR</button>
                         <button class="btn-secondary" onclick="openOptions()">⚙️ OPÇÕES</button>
@@ -158,6 +161,22 @@
             </div>
 
         </main>
+
+        <div id="meta-shop-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header flex-between">
+                    <h2 class="options-title text-gold">SEDE DO CLUBE</h2>
+                    <div class="currency-display" style="font-size: 1.2rem;">🏆 <span id="meta-coins-display">0</span>
+                    </div>
+                </div>
+                <div class="modal-body" id="meta-shop-list"
+                    style="display:flex; flex-direction:column; gap:8px; padding-top: 24px;">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeModals()">← VOLTAR AO MENU</button>
+                </div>
+            </div>
+        </div>
 
         <div id="quit-confirm-overlay" class="modal-overlay" style="z-index: 999;">
             <div class="options-box text-center">

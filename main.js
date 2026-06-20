@@ -19,9 +19,9 @@ async function initGame() {
         const rivalsData = await fetch('config_rivals.json').then(r => r.json());
         const actionsData = await fetch('config_actions.json').then(r => r.json());
         const textsData = await fetch('config_texts.json').then(r => r.json());
+        const metaData = await fetch('config_meta.json').then(r => r.json()); // NOVO
 
-        // NOVO: Injetamos nossas Séries no lugar do config_leagues genérico antigo
-        GAME_BALANCE = { mechanics: mechanicsData, leagues: SERIES_DATA };
+        GAME_BALANCE = { mechanics: mechanicsData, leagues: SERIES_DATA, meta: metaData };
         GAME_CONTENT = {
             clubGeneration: generationData.clubGeneration, players: generationData.players,
             rivalStyles: rivalsData, nodes: actionsData,
@@ -30,20 +30,11 @@ async function initGame() {
         };
 
         PERK_LIST = textsData.perks;
-
         loadSaveData();
         populateHowToPlay();
         document.getElementById('loading-screen').style.display = 'none';
         returnToTitle();
-
-    } catch (e) {
-        console.error(e);
-        document.getElementById('loading-screen').innerHTML = `
-            <div style="padding: 20px; text-align: center; color: #f87171;">
-                <h3 style="margin-bottom: 10px;">Erro Crítico de Inicialização</h3>
-                <p style="font-size:0.8rem; font-family: monospace;">${e.message}</p>
-            </div>`;
-    }
+    } catch (e) { console.error(e); }
 }
 
 function startRunFlow() {
@@ -81,19 +72,26 @@ function selectSeries(idx) {
     let bases = GAME_CONTENT.clubGeneration.bases;
     let adjs = GAME_CONTENT.clubGeneration.adjectives;
 
+    // LÊ AS MELHORIAS META
+    let metaLevel = gameState.meta?.upgrades?.start_level || 0;
+    let metaTraits = gameState.meta?.upgrades?.start_traits || 0;
+    let startLvl = 1 + metaLevel;
+
     for (let i = 0; i < 3; i++) {
         const base = rnd(bases);
         const adj = rnd(adjs);
 
         let team = [];
-        let captain = generateCaptain();
+        let captain = generateCaptain(startLvl); // Capitão usa a nova regra
         team.push(captain);
-        for (let j = 0; j < 10; j++) team.push(generateBasePlayer());
+        for (let j = 0; j < 10; j++) {
+            let hasTrait = (j < metaTraits); // Primeiros X jogadores ganham Trait
+            team.push(generateBasePlayer(startLvl, hasTrait));
+        }
 
         pendingClubOptions.push({
             club: { name: `${base.name} ${adj}`, emoji: base.emoji, isPlayer: true },
-            team: team,
-            captain: captain
+            team: team, captain: captain
         });
     }
 
@@ -101,30 +99,21 @@ function selectSeries(idx) {
     container.innerHTML = '';
 
     pendingClubOptions.forEach((option, idx) => {
-        const c = option.club;
-        const cap = option.captain;
-
+        const c = option.club; const cap = option.captain;
         container.innerHTML += `
             <div class="club-select-card" onclick="chooseClub(${idx})">
-                <div class="club-select-header">
-                    <div class="club-select-emoji">${c.emoji}</div>
-                    <div class="club-select-name">${c.name}</div>
-                </div>
+                <div class="club-select-header"><div class="club-select-emoji">${c.emoji}</div><div class="club-select-name">${c.name}</div></div>
                 <div class="captain-box">
                     <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 900; letter-spacing: 1px;">⭐ DESTAQUE DA BASE</div>
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
                         <div style="font-size: 2.2rem; line-height: 1;">${cap.emoji}</div>
                         <div style="font-weight: 900; color: #fff; font-size: 1rem;">${cap.name} <span style="color: var(--accent-gold);">${cap.rank}</span></div>
-                        <div style="font-size: 0.8rem; color: var(--accent-blue); font-weight: 800; margin-top: 4px;">
-                            ${cap.perks[0].emoji} ${cap.perks[0].name} & ${cap.perks[1].emoji} ${cap.perks[1].name}
-                        </div>
+                        <div style="font-size: 0.8rem; color: var(--accent-blue); font-weight: 800; margin-top: 4px;">${cap.perks[0].emoji} ${cap.perks[0].name} & ${cap.perks[1].emoji} ${cap.perks[1].name}</div>
                     </div>
-                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; font-weight:700; border-top: 1px solid var(--border-light); padding-top: 8px; width: 100%;">+ 10 Atletas da Base</div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; font-weight:700; border-top: 1px solid var(--border-light); padding-top: 8px; width: 100%;">Nível Inicial do Time: ${startLvl} | Craques extras: ${metaTraits}</div>
                 </div>
-            </div>
-        `;
+            </div>`;
     });
-
     showScreen('screen-club-select');
 }
 
@@ -132,12 +121,56 @@ function chooseClub(index) {
     document.body.classList.add('in-run');
     gameState.club = pendingClubOptions[index].club;
     gameState.team = pendingClubOptions[index].team;
-
-    // NOVO: Define a dificuldade do jogo com base na Série escolhida
     gameState.leagueLevel = selectedSeriesIndex;
 
-    gameState.coins = GAME_BALANCE.mechanics.initialCoins;
+    // PATROCÍNIO INICIAL META
+    let metaCoinsBonus = (gameState.meta?.upgrades?.start_coins || 0) * 15;
+    gameState.coins = GAME_BALANCE.mechanics.initialCoins + metaCoinsBonus;
+
     startNewSeason();
+}
+
+// ====== COLOQUE NO FINAL DO ARQUIVO PARA GERENCIAR A LOJA: ======
+function openMetaShop() {
+    renderMetaShop();
+    document.getElementById('meta-shop-overlay').style.display = 'flex';
+}
+
+function renderMetaShop() {
+    const list = document.getElementById('meta-shop-list');
+    list.innerHTML = '';
+    document.getElementById('meta-coins-display').innerText = gameState.meta.metaCoins || 0;
+
+    GAME_BALANCE.meta.upgrades.forEach(upg => {
+        let currentLvl = gameState.meta.upgrades[upg.id] || 0;
+        let isMax = currentLvl >= upg.maxLevel;
+        let cost = Math.floor(upg.baseCost * Math.pow(upg.costMult, currentLvl));
+        let canAfford = (gameState.meta.metaCoins >= cost) && !isMax;
+
+        let btnHtml = isMax
+            ? `<button class="btn-secondary btn-sm" disabled style="width: 120px;">MÁXIMO</button>`
+            : `<button class="btn-primary btn-sm" style="width: 120px; background: var(--accent-gold); color: #000; box-shadow: none;" ${!canAfford ? 'disabled' : ''} onclick="buyMetaUpgrade('${upg.id}', ${cost})">COMPRAR<br>${cost} 🏆</button>`;
+
+        list.innerHTML += `
+            <div class="options-row" style="display:flex; justify-content:space-between; align-items:center; gap: 16px; border-left: 4px solid var(--accent-gold);">
+                <div style="flex:1;">
+                    <div style="font-weight:900; color:var(--accent-gold); font-size:1.1rem; text-transform:uppercase;">${upg.name} <span style="color:#fff; font-size:0.8rem; background:rgba(0,0,0,0.4); padding:2px 6px; border-radius:6px; vertical-align: middle;">Nv. ${currentLvl}/${upg.maxLevel}</span></div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">${upg.desc}</div>
+                </div>
+                <div>${btnHtml}</div>
+            </div>`;
+    });
+}
+
+function buyMetaUpgrade(id, cost) {
+    if (gameState.meta.metaCoins >= cost) {
+        gameState.meta.metaCoins -= cost;
+        if (!gameState.meta.upgrades[id]) gameState.meta.upgrades[id] = 0;
+        gameState.meta.upgrades[id]++;
+        saveGame();
+        renderMetaShop();
+        fireConfetti();
+    }
 }
 
 document.addEventListener("DOMContentLoaded", initGame);

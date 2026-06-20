@@ -1,49 +1,57 @@
 function generatePlayer(level, isPremium = false) {
     const profile = rnd(GAME_CONTENT.players.profiles);
     let roll = Math.random() * 100;
-    
+
     let rankRoll = isPremium ? roll + 30 : roll;
     let rank = (level >= 8 || rankRoll > 90) ? 'S' : (level >= 5 || rankRoll > 70) ? 'A' : (level >= 3 || rankRoll > 40) ? 'B' : 'C';
-    
+
     let perks = [];
     let numPerks = Math.random() > 0.3 ? 2 : 1;
     for (let i = 0; i < numPerks; i++) {
         perks.push(rnd(PERK_LIST));
     }
-    
+
     let price = 20 + (level * 5);
     if (numPerks === 2) price += 15;
     if (rank === 'S') price += 40;
     else if (rank === 'A') price += 20;
     else if (rank === 'B') price += 10;
-    
+
     return {
-        id: `p_${Date.now()}_${Math.random()}`, 
-        name: profile.name, 
+        id: `p_${Date.now()}_${Math.random()}`,
+        name: profile.name,
         emoji: profile.emoji,
         level: level, perks: perks, rank: rank, price: price
     };
 }
 
-function generateCaptain() {
+function generateCaptain(baseLevel = 1) {
     const profile = rnd(GAME_CONTENT.players.profiles);
     let shuffledPerks = [rnd(PERK_LIST), rnd(PERK_LIST)];
-    
+
     return {
-        id: `p_${Date.now()}_${Math.random()}`, 
-        name: "⭐ " + profile.name, 
+        id: `p_${Date.now()}_${Math.random()}`,
+        name: "⭐ " + profile.name,
         emoji: profile.emoji,
-        level: 4, perks: shuffledPerks, rank: 'S'
+        level: baseLevel + 2, perks: shuffledPerks, rank: 'S', isCaptain: true
     };
 }
 
-function generateBasePlayer() {
+function generateBasePlayer(baseLevel = 1, forceTrait = false) {
     const baseProfile = rnd(GAME_CONTENT.players.baseProfiles);
+    let perks = [];
+    let rank = 'C';
+
+    if (forceTrait) {
+        perks.push(rnd(PERK_LIST));
+        rank = 'B'; // Se tem trait desde a base, já nasce Rank B
+    }
+
     return {
-        id: `p_${Date.now()}_${Math.random()}`, 
-        name: baseProfile.name, 
+        id: `p_${Date.now()}_${Math.random()}`,
+        name: baseProfile.name,
         emoji: baseProfile.emoji,
-        level: 1, perks: [], rank: 'C', isBase: true
+        level: baseLevel, perks: perks, rank: rank, isBase: !forceTrait
     };
 }
 
@@ -55,7 +63,7 @@ function getRankColor(rank) {
 function getPlayerCardHTML(p, onClickAttr = "") {
     let rColor = getRankColor(p.rank);
     let isBaseClass = p.isBase ? 'base-player' : '';
-    
+
     // Animação de Level Up
     let levelUpClass = p.justLeveledUp ? 'level-up-flash' : '';
     if (p.justLeveledUp) p.justLeveledUp = false;
@@ -65,13 +73,13 @@ function getPlayerCardHTML(p, onClickAttr = "") {
 
     if (p.perks && p.perks.length > 0) {
         dataPerks = p.perks.map(perk => perk.id).join(',');
-        
+
         let perkCounts = {};
         p.perks.forEach(perk => {
-            if(!perkCounts[perk.id]) perkCounts[perk.id] = { ...perk, count: 1 };
+            if (!perkCounts[perk.id]) perkCounts[perk.id] = { ...perk, count: 1 };
             else perkCounts[perk.id].count++;
         });
-        
+
         Object.values(perkCounts).forEach(perk => {
             let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold); font-weight:900;">(x${perk.count})</span>` : "";
             perksHTML += `<div class="card-perk" data-tip="${perk.desc}">${perk.emoji} ${perk.name}${countLabel}</div>`;
@@ -89,19 +97,19 @@ function getPlayerCardHTML(p, onClickAttr = "") {
         </div>`;
 }
 
-function getTeamPower() { 
-    return { 
-        atk: gameState.team.reduce((acc, p) => acc + (p.level * 3 + 10), 0), 
-        def: gameState.team.reduce((acc, p) => acc + (p.level * 3 + 10), 0) 
-    }; 
+function getTeamPower() {
+    return {
+        atk: gameState.team.reduce((acc, p) => acc + (p.level * 3 + 10), 0),
+        def: gameState.team.reduce((acc, p) => acc + (p.level * 3 + 10), 0)
+    };
 }
 
 function getRivalTraitBonus(node, rival) {
     if (!rival.perks) return 0;
     let bonus = 0;
     let leagueDiff = GAME_BALANCE.leagues[gameState.leagueLevel]?.difficulty || 200;
-    let traitPower = Math.floor(leagueDiff * 0.10); 
-    
+    let traitPower = Math.floor(leagueDiff * 0.10);
+
     rival.perks.forEach(perk => {
         if (perk.id === 'finishing' && node.type === 'shoot') bonus += traitPower;
         if (perk.id === 'passing' && node.type === 'atk') bonus += traitPower;
@@ -113,19 +121,24 @@ function getRivalTraitBonus(node, rival) {
 
 function getTeamTraits() {
     let counts = { finishing: 0, passing: 0, pace: 0, tackling: 0, marking: 0, reflexes: 0, growth: 0 };
-    gameState.team.forEach(p => { if (p.perks) p.perks.forEach(perk => { if (counts[perk.id] !== undefined) counts[perk.id]++; }); });
+    gameState.team.forEach(p => {
+        let weight = p.isCaptain ? 1.2 : 1.0; // Capitão tem 20% a mais de peso nas sinergias!
+        if (p.perks) p.perks.forEach(perk => {
+            if (counts[perk.id] !== undefined) counts[perk.id] += weight;
+        });
+    });
     return counts;
 }
 
 function getTraitBonusForNode(node, traits) {
     let bonus = 0;
     let traitMultiplier = 8;
-    
-    if (node.type === 'shoot') bonus += traits.finishing * traitMultiplier; 
+
+    if (node.type === 'shoot') bonus += traits.finishing * traitMultiplier;
     if (node.type === 'atk') bonus += traits.passing * traitMultiplier;
-    if (node.type === 'def') bonus += traits.tackling * traitMultiplier; 
+    if (node.type === 'def') bonus += traits.tackling * traitMultiplier;
     if (node.type === 'save') bonus += traits.reflexes * traitMultiplier;
     if (node.riskLevel === 'high') bonus += traits.pace * traitMultiplier;
-    
+
     return bonus;
 }
