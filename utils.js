@@ -63,3 +63,58 @@ function setupMarquee(elId, text) {
 function closeModals() {
     document.querySelectorAll(".modal-overlay").forEach(m => m.style.display = 'none');
 }
+
+// ==========================================
+// MODO DEBUG E RESET DE SAVE
+// ==========================================
+
+function hardResetSave() {
+    if (confirm("ATENÇÃO: Você vai perder TODO o seu progresso, troféus e divisões liberadas.\n\nTem certeza absoluta?")) {
+        localStorage.removeItem("turboFoot_mgr_v7");
+        location.reload(); // Recarrega a página do zero
+    }
+}
+
+// Atalho secreto: Aperte a tecla "\" (Contra-barra) para abrir o console de debug
+document.addEventListener('keydown', (e) => {
+    if (e.key === '\\') {
+        let cmd = prompt("🔧 MODO DEBUG\nComandos: addmeta X, addcoins X, win");
+        if (!cmd) return;
+
+        let args = cmd.toLowerCase().trim().split(" ");
+        let action = args[0];
+        let val = parseInt(args[1]) || 0;
+
+        switch (action) {
+            case "addmeta":
+                if (!gameState.meta) gameState.meta = { metaCoins: 0, upgrades: {} };
+                gameState.meta.metaCoins += val;
+                saveGame();
+                alert(`+${val} Troféus adicionados!`);
+                // Se a loja estiver aberta, atualiza ela na hora
+                if (document.getElementById('meta-shop-overlay').style.display === 'flex') renderMetaShop();
+                break;
+
+            case "addcoins":
+                gameState.coins += val;
+                updateRosterUI();
+                if (document.getElementById('screen-market').classList.contains('active')) showMarketScreen();
+                alert(`+${val} 💰 adicionadas!`);
+                break;
+
+            case "win":
+                // Se estiver dentro de uma partida, injeta gols pro usuário e encerra
+                if (document.getElementById('screen-match').classList.contains('active')) {
+                    matchState.userScore += 10;
+                    endMatchByTime(); // Força o fim do jogo e calcula recompensas
+                } else {
+                    alert("Você precisa estar dentro de uma partida (no campo) para usar o 'win'.");
+                }
+                break;
+
+            default:
+                alert("Comando não reconhecido. Use:\naddmeta 100\naddcoins 100\nwin");
+                break;
+        }
+    }
+});
