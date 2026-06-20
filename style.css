@@ -2004,7 +2004,8 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 6px;
+    /* Aumentamos o buraco entre o ícone e o nome */
     width: 100%;
 }
 
@@ -2021,8 +2022,9 @@ button {
     line-height: 1.1;
     width: 100%;
     word-wrap: break-word;
-    /* OBRIGA O TEXTO LONGO A QUEBRAR DE LINHA */
     hyphens: auto;
+    margin-top: 2px;
+    /* Empurra o texto sutilmente para baixo */
 }
 
 .node-footer {
@@ -2082,22 +2084,24 @@ button {
         padding: 2px 4px;
     }
 
-    /* Voltamos para coluna, pois lado a lado estourava textos grandes */
     .node-icon-name {
         flex-direction: column;
-        gap: 2px;
+        gap: 6px;
+        /* Garante que o espaçamento exista no mobile */
     }
 
     .node-emoji {
         font-size: 1.4rem;
-        margin-bottom: -2px;
+        margin-bottom: 2px;
+        /* Remove qualquer margem negativa que estava puxando o texto */
+        display: block;
     }
 
     .node-name {
         font-size: 0.65rem;
-        /* Fonte menor para caber */
         letter-spacing: -0.3px;
-        /* Aproxima as letras de leve */
+        margin-top: 4px;
+        /* Dá um respiro extra empurrando para baixo no mobile */
     }
 
     .outcome-row {
