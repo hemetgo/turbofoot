@@ -1,0 +1,21 @@
+
+FEATURES E CORREÇOES
+- Quando der level up de jogadores, adicionar feedback visual neles
+- Adicionar possibilidade builds especificas que criem estilos de jogo diferentes
+
+POLIMENTO
+- SFX e Musica
+- Salvar estatisticas da partida no historico
+- Confetis quando marcar gol e feedback negativo da msm proporção para quando receber gol
+
+QUALIDADE DE VIDA
+- Add função de desistir do jogo
+- Meta progressao com: jogadores base ja vindo com traits, melhorando o nivel dos jogadores base, aumento de ouro ganho
+
+
+
+
+- posicione o texto de posse de bola sempre no canto esquerdo (como ja esta) e os outros textos q ficam na mesma linha, posicione-os sempre a direita
+- adicione tooltips para combo, momento, posse de bola, tatica, etc etc, todos esses textos eu quero que vc coloque num json a parte, pode ser um ja existente, como o config_texts.json
+- remova o botao ver fundamentos ali da partida, esta ocupando espaço desnceassario
+- crie um botao (como jogar?) em algum canto da tela (q faça sentido) que abre uma UI com as explicações de como jogar, e ali vai explicar os traits (todos ostexots dessa tela eu quero no config_texts.json tbm

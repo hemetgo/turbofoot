@@ -1,0 +1,14 @@
+{
+    "initialCoins": 80,
+    "rngRange": 300,
+    "comboCoinMultiplier": 0.15,
+    "matchActionsMin": 10,
+    "matchActionsMax": 15,
+    "safeActionChance": 0.15,
+    "cupBonusMultiplier": 1.25,
+    "luckEvents": {
+        "chance": 0.08,
+        "penaltyPower": -50,
+        "duration": 3
+    }
+}

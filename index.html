@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TurboFoot Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <h2>⚽ Carregando...</h2>
+    </div>
+
+    <div id="game-container">
+
+        <aside id="desktop-sidebar" class="desktop-only in-run-only">
+            <div class="sidebar-header">
+                <div id="sidebar-club-info" style="display:flex; align-items:center; gap:8px;">🛡️ MEU CLUBE</div>
+                <div class="currency-display">💰 <span id="sidebar-coins">0</span></div>
+            </div>
+            <div class="sidebar-body">
+                <div class="roster-grid" id="sidebar-list"></div>
+            </div>
+            <div class="sidebar-footer" style="display:flex; flex-direction:column; gap:8px;">
+                <button class="btn-secondary btn-sm"
+                    style="color:var(--accent-red); border-color:rgba(248,113,113,0.3); background:rgba(248,113,113,0.1);"
+                    onclick="openQuitConfirm()">🚪 DESISTIR</button>
+            </div>
+        </aside>
+
+        <main id="main-content">
+
+            <div id="screen-title" class="screen active">
+                <div class="title-container">
+                    <div class="title-logo">🏆</div>
+                    <h1 class="game-title">TURBOFOOT</h1>
+                    <h2 class="game-subtitle">MANAGER ROGUELITE</h2>
+                    <div class="title-menu">
+                        <button class="btn-primary" onclick="startRunFlow()">▶ JOGAR</button>
+                        <button class="btn-secondary" onclick="openHistoryModal()">📖 HISTÓRICO</button>
+                        <button class="btn-secondary" onclick="openHowToPlay()">❓ COMO JOGAR</button>
+                        <button class="btn-secondary" onclick="openOptions()">⚙️ OPÇÕES</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="screen-club-select" class="screen">
+                <div class="champ-header">
+                    <div class="champ-title-block">
+                        <div class="champ-league-label">ESCOLHA SEU CLUBE</div>
+                    </div>
+                </div>
+                <div class="club-options-wrapper" id="club-options-container"></div>
+                <div class="bottom-action-bar">
+                    <button class="btn-secondary" onclick="returnToTitle()">← VOLTAR AO MENU</button>
+                </div>
+            </div>
+
+            <div id="screen-map" class="screen">
+                <div class="champ-header">
+                    <button class="btn-icon mobile-only" onclick="openRosterModal()">🔍 TIME</button>
+                    <div class="champ-title-block">
+                        <div class="champ-league-label" id="map-league-title">O MAPA</div>
+                    </div>
+                    <div class="mobile-only" style="display:flex; gap:8px;">
+                        <div class="currency-display">💰 <span id="map-coins">0</span></div>
+                        <button class="btn-icon" style="color:var(--accent-red); border-color:var(--accent-red);"
+                            onclick="openQuitConfirm()">🚪</button>
+                    </div>
+                </div>
+                <div class="map-wrapper" id="map-wrapper">
+                    <div id="map-nodes-container" class="map-nodes-container"></div>
+                </div>
+            </div>
+
+            <div id="screen-market" class="screen">
+                <div class="champ-header">
+                    <button class="btn-icon mobile-only" onclick="openRosterModal()">🔍 TIME</button>
+                    <div class="champ-title-block">
+                        <div class="champ-league-label">MERCADO DA BOLA</div>
+                    </div>
+                    <div style="width: 70px;" class="mobile-only"></div>
+                </div>
+                <div class="market-wrapper">
+                    <div class="market-panel">
+                        <div class="market-header">
+                            <h3 id="market-title">ESCOLHA 1 REFORÇO</h3>
+                            <p id="market-sub">Os 50 💰 já foram pagos.</p>
+                        </div>
+                        <div id="market-list" class="market-list"></div>
+                        <button class="btn-secondary" onclick="cancelMarket()">DESCARTAR / AVANÇAR</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="screen-match" class="screen">
+                <div class="match-dashboard">
+                    <div class="scoreboard-container">
+                        <div class="team-section user">
+                            <div class="team-name-wrapper">
+                                <div id="match-user-name" class="team-name-content">SEU TIME</div>
+                            </div>
+                        </div>
+                        <div class="score-section">
+                            <div id="score-user" class="score-digit">0</div>
+                            <div class="score-divider">x</div>
+                            <div id="score-rival" class="score-digit">0</div>
+                        </div>
+                        <div class="team-section rival">
+                            <div class="team-name-wrapper">
+                                <div id="match-rival-name" class="team-name-content">RIVAL</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="match-timer-container">
+                        <div id="action-counter" class="action-timer">⏱️ 0/0</div>
+                    </div>
+                </div>
+                <div class="action-arena">
+                    <div class="minimap-wrapper">
+                        <div id="minimap-display"></div>
+                    </div>
+                    <div class="arena-status-row">
+                        <!-- POSSE DE BOLA À ESQUERDA -->
+                        <div id="possession-badge" class="arena-badge">⚽ ATAQUE</div>
+
+                        <!-- OUTROS ÍCONES AGRUPADOS À DIREITA -->
+                        <div style="display: flex; gap: 6px;">
+                            <div id="combo-badge" class="arena-badge combo">🔥 x0</div>
+                            <div id="tactical-bonus-display" class="arena-badge buff" style="display:none;">✨ +0 Tática
+                            </div>
+                            <div id="momentum-badge" class="arena-badge buff" style="display: none;">🌊 Momento: 0</div>
+                        </div>
+                    </div>
+                    <div class="field-container" id="dynamic-nodes-wrapper"></div>
+                </div>
+                <div class="match-log-container">
+                    <div class="log-header">TRANSMISSÃO AO VIVO 📻</div>
+                    <div id="match-log-feed" class="log-feed"></div>
+                </div>
+            </div>
+
+        </main>
+
+        <div id="quit-confirm-overlay" class="modal-overlay" style="z-index: 999;">
+            <div class="options-box text-center">
+                <div class="modal-header">
+                    <h2 class="options-title text-danger">DESISTIR?</h2>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-subtitle" style="margin-top:0;">Você perderá o progresso, o time será desfeito e
+                        nada será salvo.</p>
+                    <p style="color:#fff; font-weight:bold; margin-top:10px;">Tem certeza absoluta?</p>
+                </div>
+                <div class="modal-footer" style="flex-direction:row; gap:10px;">
+                    <button class="btn-secondary" style="flex:1;" onclick="closeModals()">CANCELAR</button>
+                    <button class="btn-primary" style="flex:1; background:var(--accent-red); box-shadow:none;"
+                        onclick="confirmQuitRun()">DESISTIR</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="replace-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header">
+                    <h2 class="options-title">QUEM VAI SAIR?</h2>
+                    <p class="modal-subtitle">Substitua jogadores para liberar vaga no time.</p>
+                </div>
+                <div class="modal-body">
+                    <div id="replace-list" class="roster-grid"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeReplaceModal()">CANCELAR</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="pre-match-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header">
+                    <h2 class="options-title text-danger">ADVERSÁRIO ENCONTRADO</h2>
+                </div>
+                <div class="modal-body" style="padding: 16px;">
+                    <div id="pre-match-details"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary" onclick="startMapMatch()">ENTRAR EM CAMPO ⚽</button>
+                    <button class="btn-secondary mobile-only" style="margin-top:8px;" onclick="openRosterModal()">🔍 VER
+                        MEU TIME</button>
+                    <button class="btn-secondary" style="margin-top:8px;" onclick="closeModals()">← VOLTAR AO
+                        MAPA</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="camp-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header">
+                    <h2 class="options-title text-success">ACAMPAMENTO DE TREINO 🏕️</h2>
+                    <p class="modal-subtitle">Aproveite para melhorar sua equipe.</p>
+                </div>
+                <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
+                    <button class="btn-primary" onclick="promptCampTrain()">TREINAMENTO INDIVIDUAL<br><small>Escolha 1
+                            jogador para subir de Nível</small></button>
+                    <button class="btn-primary btn-epic" onclick="applyCamp('buff')">FOCO TÁTICO<br><small>Bônus de
+                            Força no próximo jogo</small></button>
+                </div>
+                <div class="modal-footer mobile-only">
+                    <button class="btn-secondary" onclick="openRosterModal()">🔍 VER MEU TIME</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="camp-train-overlay" class="modal-overlay" style="z-index: 250;">
+            <div class="options-box">
+                <div class="modal-header">
+                    <h2 class="options-title text-success">QUEM VAI TREINAR?</h2>
+                    <p class="modal-subtitle">Este jogador ganhará +1 Nível permanentemente.</p>
+                </div>
+                <div class="modal-body">
+                    <div id="camp-train-list" class="roster-grid"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeCampTrainModal()">← VOLTAR</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="roster-overlay" class="modal-overlay">
+            <div class="options-box bottom-sheet">
+                <div class="modal-header flex-between">
+                    <h2 class="options-title" id="mobile-roster-title"
+                        style="display:flex; align-items:center; gap:8px;">MEU ELENCO</h2>
+                    <button class="btn-icon" onclick="closeModals()">❌</button>
+                </div>
+                <div class="modal-body">
+                    <div class="roster-total-stats" id="modal-roster-stats"></div>
+                    <div id="modal-roster-list" class="roster-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="run-history-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header flex-between">
+                    <h2 class="options-title">HISTÓRICO</h2>
+                    <button class="btn-icon" onclick="closeModals()">❌</button>
+                </div>
+                <div class="modal-body" style="padding: 0;">
+                    <div id="history-list" class="history-list"></div>
+                    <div id="history-details" class="history-details" style="display:none;">
+                        <div id="history-details-content" style="padding: 16px;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer" id="history-footer" style="display:none;">
+                    <button class="btn-secondary" onclick="closeHistoryDetails()">← VOLTAR PRA LISTA</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="options-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header">
+                    <h2 class="options-title">CONFIGURAÇÕES</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-suspense"
+                                onchange="toggleSuspense()"><span class="checkmark"></span><span
+                                class="toggle-text">Suspense</span></label></div>
+                    <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-confirm"
+                                onchange="toggleConfirm()"><span class="checkmark"></span><span
+                                class="toggle-text">Confirmação Cliques</span></label></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary" onclick="closeOptions()">FECHAR</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOVO MENU DE AJUDA COMO JOGAR -->
+        <div id="how-to-play-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header">
+                    <h2 class="options-title" id="htp-title">COMO JOGAR</h2>
+                </div>
+                <div class="modal-body" id="htp-body">
+                    <!-- Preenchido via Javascript via JSON -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary" onclick="closeModals()">ENTENDI</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="suspense-overlay">
+            <div id="suspense-team"></div>
+            <div id="suspense-text" class="suspense-text">Se prepara...</div>
+        </div>
+
+        <div id="post-match-overlay" class="modal-overlay" style="z-index: 900;">
+            <div class="options-box text-center">
+                <div class="modal-body" style="padding-top: 40px;">
+                    <h1 id="pm-title" class="pm-title">VITÓRIA!</h1>
+                    <div class="pm-score-display"><span id="pm-score">2 x 1</span></div>
+                    <p id="pm-info" class="modal-subtitle" style="margin: 16px 0;"></p>
+                    <div class="pm-rewards">
+                        <span class="pm-label">Premiação:</span>
+                        <span id="pm-coins" class="pm-val-coins">+50 💰</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="pm-btn" class="btn-primary" onclick="advanceMapAfterMatch()">CONTINUAR A
+                        JORNADA</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="season-end-overlay" class="modal-overlay" style="z-index: 950;">
+            <div class="options-box text-center">
+                <div class="modal-body" style="padding-top: 40px;">
+                    <div class="champ-end-icon">🏆</div>
+                    <h1 class="pm-title text-gold">FIM DE TEMPORADA!</h1>
+                    <p id="se-sub" class="modal-subtitle" style="white-space: pre-line; margin: 16px 0;">Resumo...</p>
+                    <div class="pm-rewards"><span id="se-coins" class="pm-val-coins">+0 💰</span></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary" onclick="returnToTitle()">VOLTAR AO MENU</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="position:fixed; bottom: 5px; right: 10px; font-size: 1rem; color: #475569; pointer-events: none;">
+        v0.18b
+    </footer>
+
+    <script src="state.js"></script>
+    <script src="utils.js"></script>
+    <script src="ui.js"></script>
+    <script src="entities.js"></script>
+    <script src="market.js"></script>
+    <script src="season.js"></script>
+    <script src="match.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>

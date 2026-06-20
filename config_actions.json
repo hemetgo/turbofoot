@@ -1,0 +1,310 @@
+[
+    {
+        "id": "short_out",
+        "name": "Saída Curta",
+        "emoji": "👟",
+        "type": "atk",
+        "mod": 1.2,
+        "successMove": 1,
+        "failMove": 0,
+        "comboGen": 1,
+        "zones": [
+            1
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "long_out",
+        "name": "Lançamento",
+        "emoji": "🚀",
+        "type": "atk",
+        "mod": 0.7,
+        "successMove": 3,
+        "failMove": -1,
+        "comboGen": 0,
+        "zones": [
+            1
+        ],
+        "riskLevel": "high"
+    },
+    {
+        "id": "pass",
+        "name": "Passe Seguro",
+        "emoji": "👟",
+        "type": "atk",
+        "mod": 1.1,
+        "successMove": 1,
+        "failMove": 0,
+        "comboGen": 1,
+        "zones": [
+            2
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "triangle",
+        "name": "Triangulação",
+        "emoji": "🔄",
+        "type": "atk",
+        "mod": 0.88,
+        "successMove": 0,
+        "failMove": -1,
+        "comboGen": 3,
+        "zones": [
+            2,
+            3
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "invert",
+        "name": "Inversão de Jogo",
+        "emoji": "🔀",
+        "type": "atk",
+        "mod": 0.8,
+        "successMove": 2,
+        "failMove": -1,
+        "comboGen": 0,
+        "zones": [
+            2
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "dribble",
+        "name": "Drible Rápido",
+        "emoji": "⚡",
+        "type": "atk",
+        "mod": 0.8,
+        "successMove": 1,
+        "failMove": -2,
+        "nextBuff": 20,
+        "zones": [
+            3
+        ],
+        "riskLevel": "high"
+    },
+    {
+        "id": "through",
+        "name": "Enfiada",
+        "emoji": "🎯",
+        "type": "atk",
+        "mod": 0.9,
+        "successMove": 2,
+        "failMove": -1,
+        "comboReq": 1,
+        "zones": [
+            2,
+            3
+        ],
+        "riskLevel": "high"
+    },
+    {
+        "id": "cross",
+        "name": "Cruzamento",
+        "emoji": "🔂",
+        "type": "atk",
+        "mod": 1.0,
+        "successMove": 1,
+        "failMove": -1,
+        "nextBuff": 10,
+        "zones": [
+            3
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "place",
+        "name": "Chute Colocado",
+        "emoji": "📐",
+        "type": "shoot",
+        "mod": 1.1,
+        "successMove": 1,
+        "failMove": 0,
+        "comboReq": 2,
+        "zones": [
+            4
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "power",
+        "name": "Bomba de Fora",
+        "emoji": "💣",
+        "type": "shoot",
+        "mod": 0.7,
+        "successMove": 2,
+        "failMove": -1,
+        "comboReq": 0,
+        "zones": [
+            3,
+            4
+        ],
+        "riskLevel": "high"
+    },
+    {
+        "id": "bicycle",
+        "name": "Bicicleta",
+        "emoji": "🚲",
+        "type": "shoot",
+        "mod": 0.9,
+        "successMove": 1,
+        "failMove": -1,
+        "comboReq": "5",
+        "zones": [
+            4
+        ],
+        "riskLevel": "high"
+    },
+    {
+        "id": "trick",
+        "name": "Cavadinha",
+        "emoji": "🥄",
+        "type": "shoot",
+        "mod": 0.9,
+        "successMove": 1,
+        "failMove": -1,
+        "comboReq": 1,
+        "zones": [
+            4
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "low_line",
+        "name": "Linha Baixa",
+        "emoji": "🛡️",
+        "type": "def",
+        "mod": 1.3,
+        "successMove": 0,
+        "failMove": -1,
+        "zones": [
+            1
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "mark",
+        "name": "Marcação",
+        "emoji": "🧍",
+        "type": "def",
+        "mod": 1.1,
+        "successMove": 0,
+        "failMove": -1,
+        "nextBuff": 5,
+        "zones": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "high_press",
+        "name": "Pressão Alta",
+        "emoji": "👥",
+        "type": "def",
+        "mod": 0.9,
+        "successMove": 1,
+        "failMove": -1,
+        "comboGen": 2,
+        "zones": [
+            2,
+            3,
+            4
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "intercept",
+        "name": "Antecipar",
+        "emoji": "👁️",
+        "type": "def",
+        "mod": 0.8,
+        "successMove": 1,
+        "failMove": -1,
+        "nextBuff": 15,
+        "zones": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "tackle",
+        "name": "Carrinho",
+        "emoji": "🚗",
+        "type": "def",
+        "mod": 0.6,
+        "successMove": 1,
+        "failMove": -2,
+        "nextBuff": 20,
+        "zones": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "riskLevel": "high"
+    },
+    {
+        "id": "save_close",
+        "name": "Fechar Ângulo",
+        "emoji": "🧍",
+        "type": "save",
+        "mod": 1.1,
+        "successMove": 1,
+        "failMove": -1,
+        "zones": [
+            0
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "save_dive",
+        "name": "Ponte",
+        "emoji": "🧤",
+        "type": "save",
+        "mod": 0.9,
+        "successMove": 1,
+        "failMove": -1,
+        "nextBuff": 10,
+        "zones": [
+            0
+        ],
+        "riskLevel": "med"
+    },
+    {
+        "id": "save_rush",
+        "name": "Sair nos Pés",
+        "emoji": "🏃‍♂️",
+        "type": "save",
+        "mod": 0.6,
+        "successMove": 2,
+        "failMove": -1,
+        "nextBuff": 5,
+        "zones": [
+            0
+        ],
+        "riskLevel": "high"
+    },
+    {
+        "id": "long_pass",
+        "name": "Passe Longo",
+        "emoji": "📡",
+        "type": "atk",
+        "mod": 1.4,
+        "successMove": 2,
+        "failMove": 0,
+        "comboReq": 2,
+        "zones": [
+            1,
+            2,
+            3
+        ],
+        "riskLevel": "safe"
+    }
+]

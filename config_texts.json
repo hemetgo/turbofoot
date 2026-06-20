@@ -1,0 +1,95 @@
+{
+    "suspenseTexts": {
+        "userShootPrep1": [
+            "Ajeita a bola com carinho...",
+            "Olha pro goleiro...",
+            "Firma o pé de apoio..."
+        ],
+        "userGoal": [
+            "GOOOOOL! PINTURA! ⚽",
+            "GOLAÇO! NO ÂNGULO! ⚽",
+            "GOOOL! INDEFENSÁVEL! ⚽"
+        ],
+        "userMiss": [
+            "NA TRAAAAVE! 💥",
+            "ISOLOU! QUE HORROR! 🤦",
+            "DEFESAÇA DO RIVAL! 🧤"
+        ],
+        "rivalShootPrep1": [
+            "Rival invade a área...",
+            "A zaga parou...",
+            "Ficou cara a cara..."
+        ],
+        "rivalGoal": [
+            "GOL DO RIVAL... 😢",
+            "GOL DELES. LAMENTÁVEL... 📉",
+            "GOL... A ZAGA DORMIU. 🚫"
+        ],
+        "rivalMiss": [
+            "DEFESA ESPETACULAR! 🧤",
+            "PRA FOOORA! QUE ALÍVIO! 💨",
+            "NO POSTE! QUASE! 💥"
+        ]
+    },
+    "logTexts": {
+        "success": [
+            "Incrível execução de {action}!",
+            "{action} com maestria.",
+            "Bela jogada de {action}."
+        ],
+        "fail": [
+            "Tentou {action}, mas falhou.",
+            "Deu ruim no {action}.",
+            "Péssima escolha tentar {action}."
+        ],
+        "goalUser": [
+            "⚽ GOOOOOOL! É DO SEU TIME!",
+            "⚽ É GOLAÇO!",
+            "⚽ BOLA NA REDE!"
+        ],
+        "goalRival": [
+            "⚽ Gol do Rival.",
+            "⚽ Gol deles...",
+            "⚽ Que vacilo. Gol do adversário."
+        ],
+        "matchStart": [
+            "Começa a partida!",
+            "Rola a bola!"
+        ],
+        "matchEnd": [
+            "FIM DE JOGO!",
+            "Apita o árbitro! Fim de papo!"
+        ]
+    },
+    "tooltips": {
+        "possessionAtk": "A bola é nossa! Avance pelas zonas do campo e escolha a melhor jogada para finalizar a gol.",
+        "possessionDef": "Sem a bola! Segure a pressão do adversário e tente um desarme para armar o contra-ataque.",
+        "combo": "O time tá on fire! Acertos seguidos multiplicam a grana final e liberam jogadas especiais (ex: Bicicleta).",
+        "tactical": "Preleção que deu certo! O time entra focado e ganha um bônus de Força temporário para amassar no lance.",
+        "momentum": "O balanço do jogo. Acertar lances empolga o time (bônus de Força), errar bate o nervosismo (penalidade)."
+    },
+    "howToPlay": {
+        "title": "COMO JOGAR",
+        "intro": "Bem-vindo ao TurboFoot! Aqui você assume a prancheta de um time em ascensão. Sua jornada é guiar sua equipe pelo mapa, vencer os adversários, juntar moedas e contratar reforços no mercado da bola para bater os grandes campeões da temporada!\n\nDentro de campo, o jogo é decidido lance a lance. Suas chances de sucesso dependem da força e do entrosamento do seu time contra o rival. Escolher a jogada certa no momento exato é a chave para chegar ao gol.",
+        "traitsTitle": "O PODER DOS ESPECIALISTAS",
+        "traitsIntro": "Ter jogadores com as habilidades certas faz toda a diferença no campo! Quando seu time é especialista em um lance, eles jogam com muito mais garra. Mesmo quando a jogada parece que vai dar errado, a habilidade técnica e a insistência dos seus atletas podem tirar um coelho da cartola e fazer o lance funcionar na pura raça!",
+        "traits": [
+            { "name": "🎯 Finalização", "desc": "Faro de artilheiro! Aumenta muito a Força do time em qualquer tentativa de Chute/Finalização." },
+            { "name": "👟 Passe", "desc": "Maestros em campo! Aumenta a Força da equipe na hora de Armar jogadas e trocar passes." },
+            { "name": "⚡ Velocidade", "desc": "Puro suco de contra-ataque! Aumenta a Força da equipe sempre que escolher uma jogada de Risco Alto." },
+            { "name": "🪓 Desarme", "desc": "Cães de guarda! Aumenta a Força na hora de se Defender ou tentar um Roubo de bola." },
+            { "name": "🛡️ Colocação", "desc": "Posicionamento tático impecável! Cansa o adversário e diminui a Força geral do rival durante a partida." },
+            { "name": "🧤 Reflexo", "desc": "Paredão nas traves! Melhora drasticamente as chances do seu Goleiro operar um milagre." },
+            { "name": "🌱 Evolução", "desc": "Joias da base! Atletas com essa habilidade ganham +1 Nível extra sempre que evoluem (no jogo ou no acampamento)." }
+        ]
+    },
+    "perks": [
+        { "id": "finishing", "name": "Finalização", "emoji": "🎯", "desc": "Faro de artilheiro! Aumenta muito a Força do time em qualquer tentativa de Chute/Finalização." },
+        { "id": "passing", "name": "Passe", "emoji": "👟", "desc": "Maestros em campo! Aumenta a Força da equipe na hora de Armar jogadas e trocar passes." },
+        { "id": "pace", "name": "Velocidade", "emoji": "⚡", "desc": "Puro suco de contra-ataque! Aumenta a Força da equipe sempre que escolher uma jogada de Risco Alto." },
+        { "id": "tackling", "name": "Desarme", "emoji": "🪓", "desc": "Cães de guarda! Aumenta a Força na hora de se Defender ou tentar um Roubo de bola." },
+        { "id": "marking", "name": "Colocação", "emoji": "🛡️", "desc": "Posicionamento tático impecável! Cansa o adversário e diminui a Força geral do rival durante a partida." },
+        { "id": "reflexes", "name": "Reflexo", "emoji": "🧤", "desc": "Paredão nas traves! Melhora drasticamente as chances do seu Goleiro operar um milagre." },
+        { "id": "growth", "name": "Evolução", "emoji": "🌱", "desc": "Joias da base! Atletas com essa habilidade ganham +1 Nível extra sempre que evoluem." }
+    ]
+}
