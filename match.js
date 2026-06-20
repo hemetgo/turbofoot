@@ -162,7 +162,7 @@ function _renderPlayerButtons() {
         let canAfford = true, comboText = "";
 
         if (node.comboReq === "ALL") { if (matchState.combo <= 0) canAfford = false; comboText = `(Tudo)`; }
-        else if (node.comboReq > 0) { if (matchState.combo < node.comboReq) canAfford = false; comboText = `(-${node.comboReq} Combo)`; }
+        else if (node.comboReq > 0) { if (matchState.combo < node.comboReq) canAfford = false; comboText = `(-${node.comboReq}🔥)`; }
         else if (node.comboGen > 0) { comboText = `(+${node.comboGen}🔥)`; }
 
         let finalMod = node.id === "bicycle" ? node.mod + (Math.min(matchState.combo, 6) * 0.1) : node.mod;
@@ -462,7 +462,6 @@ function finishMatchRewards() {
         document.getElementById("pm-info").innerText = gameState.currentNode.type === 'boss' ? "O CHEFÃO CAIU! MAPA VENCIDO!" : "O caminho está livre. Continue subindo!";
 
         let rewardsText = `+${coins} 💰`;
-        if (totalLevelsGained > 0) rewardsText += `\n🌟 +${totalLevelsGained} Níveis Totais!`;
         document.getElementById("pm-coins").innerText = rewardsText;
 
         document.querySelector("#post-match-overlay .btn-primary").innerText = "CONTINUAR A JORNADA";

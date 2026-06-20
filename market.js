@@ -1,5 +1,6 @@
 let draftedPlayers = [];
 let pendingPurchase = null;
+let pendingDraftIndex = -1; // Guarda qual slot da loja está sendo comprado
 
 // Função única e robusta para abrir e precificar o mercado
 function openShopNode() {
@@ -30,6 +31,20 @@ function showMarketScreen() {
     document.getElementById('market-sub').innerText = "Invista suas moedas para fortalecer o elenco.";
 
     draftedPlayers.forEach((p, idx) => {
+        // Se o jogador já foi comprado (marcado como null)
+        if (!p) {
+            list.innerHTML += `
+                <div class="market-card" style="opacity: 0.5; filter: grayscale(1); cursor: not-allowed;">
+                    <div class="card-emoji">🤝</div>
+                    <div class="market-info">
+                        <div class="market-name" style="color: var(--text-muted);">Vendido</div>
+                    </div>
+                    <button class="market-buy-btn" disabled>ESGOTADO</button>
+                </div>
+            `;
+            return;
+        }
+
         let disabledAttr = (gameState.coins < p.price) ? "disabled" : "";
 
         // Agrupa fundamentos visualmente no mercado
@@ -70,9 +85,12 @@ function cancelMarket() {
 
 function promptReplace(draftIndex) {
     pendingPurchase = draftedPlayers[draftIndex];
+    pendingDraftIndex = draftIndex; // Salva de qual posição ele veio
+
+    if (!pendingPurchase) return;
     if (gameState.coins < pendingPurchase.price) return;
 
-    // NOVO: Verifica se tem jogador base para substituição automática
+    // Verifica se tem jogador base para substituição automática
     let baseIndex = gameState.team.findIndex(p => p.isBase);
     if (baseIndex !== -1) {
         executePurchase(baseIndex);
@@ -91,22 +109,31 @@ function promptReplace(draftIndex) {
 
 function closeReplaceModal() {
     pendingPurchase = null;
+    pendingDraftIndex = -1;
     document.getElementById('replace-overlay').style.display = 'none';
 }
 
 function executePurchase(replaceIndex) {
     if (!pendingPurchase) return;
     if (gameState.coins < pendingPurchase.price) return;
+    
     gameState.coins -= pendingPurchase.price;
 
     // Substitui o jogador na posição escolhida (ou automática da base)
     gameState.team[replaceIndex] = pendingPurchase;
 
+    // Esgota a carta no mercado para não ser comprada de novo
+    if (pendingDraftIndex !== -1) {
+        draftedPlayers[pendingDraftIndex] = null;
+    }
+
     pendingPurchase = null;
-    draftedPlayers = [];
+    pendingDraftIndex = -1;
 
     closeReplaceModal();
     updateRosterUI();
     saveGame();
-    advanceMapNode();
+
+    // Redesenha o mercado para atualizar saldo e mostrar a carta "Esgotada"
+    showMarketScreen();
 }

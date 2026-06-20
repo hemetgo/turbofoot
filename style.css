@@ -716,16 +716,24 @@ button {
     letter-spacing: 1.5px;
 }
 
-/* Transformando os cartões de clube em lista vertical */
 .club-options-wrapper {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
     padding: var(--space-lg);
     display: flex;
-    flex-direction: column;
     gap: var(--space-lg);
     align-items: center;
+    flex-direction: column;
+}
+
+@media (min-width: 900px) {
+    .club-options-wrapper {
+        flex-direction: row;
+        justify-content: center;
+        align-items: stretch;
+        flex-wrap: wrap;
+    }
 }
 
 .club-select-card {
@@ -1880,4 +1888,39 @@ button {
     100% {
         transform: translateX(var(--scroll-dist));
     }
+}
+
+/* ==================== TAGS DE AÇÃO (GOL E BUFFS) ==================== */
+.action-tags-container {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 6px;
+    width: 100%;
+}
+
+.action-tag {
+    font-size: 0.6rem;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.tag-goal {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--accent-gold);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.tag-danger {
+    background: rgba(248, 113, 113, 0.2);
+    color: var(--accent-red);
+    border: 1px solid rgba(248, 113, 113, 0.4);
+}
+
+.tag-buff {
+    background: rgba(168, 85, 247, 0.2);
+    color: var(--accent-purple);
+    border: 1px solid rgba(168, 85, 247, 0.4);
 }

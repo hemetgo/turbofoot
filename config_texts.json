@@ -74,22 +74,78 @@
         "traitsTitle": "O PODER DOS ESPECIALISTAS",
         "traitsIntro": "Ter jogadores com as habilidades certas faz toda a diferença no campo! Quando seu time é especialista em um lance, eles jogam com muito mais garra. Mesmo quando a jogada parece que vai dar errado, a habilidade técnica e a insistência dos seus atletas podem tirar um coelho da cartola e fazer o lance funcionar na pura raça!",
         "traits": [
-            { "name": "🎯 Finalização", "desc": "Faro de artilheiro! Aumenta muito a Força do time em qualquer tentativa de Chute/Finalização." },
-            { "name": "👟 Passe", "desc": "Maestros em campo! Aumenta a Força da equipe na hora de Armar jogadas e trocar passes." },
-            { "name": "⚡ Velocidade", "desc": "Puro suco de contra-ataque! Aumenta a Força da equipe sempre que escolher uma jogada de Risco Alto." },
-            { "name": "🪓 Desarme", "desc": "Cães de guarda! Aumenta a Força na hora de se Defender ou tentar um Roubo de bola." },
-            { "name": "🛡️ Colocação", "desc": "Posicionamento tático impecável! Cansa o adversário e diminui a Força geral do rival durante a partida." },
-            { "name": "🧤 Reflexo", "desc": "Paredão nas traves! Melhora drasticamente as chances do seu Goleiro operar um milagre." },
-            { "name": "🌱 Evolução", "desc": "Joias da base! Atletas com essa habilidade ganham +1 Nível extra sempre que evoluem (no jogo ou no acampamento)." }
+            {
+                "name": "🎯 Finalização",
+                "desc": "Faro de artilheiro! Aumenta muito a Força do time em qualquer tentativa de Chute/Finalização."
+            },
+            {
+                "name": "👟 Passe",
+                "desc": "Maestros em campo! Aumenta a Força da equipe na hora de Armar jogadas e trocar passes."
+            },
+            {
+                "name": "⚡ Velocidade",
+                "desc": "Puro suco de contra-ataque! Aumenta a Força da equipe sempre que escolher uma jogada de Risco Alto."
+            },
+            {
+                "name": "🪓 Desarme",
+                "desc": "Cães de guarda! Aumenta a Força na hora de se Defender ou tentar um Roubo de bola."
+            },
+            {
+                "name": "🛡️ Colocação",
+                "desc": "Posicionamento tático impecável! Cansa o adversário e diminui a Força geral do rival durante a partida."
+            },
+            {
+                "name": "🧤 Reflexo",
+                "desc": "Paredão nas traves! Melhora drasticamente as chances do seu Goleiro operar um milagre."
+            },
+            {
+                "name": "🌱 Evolução",
+                "desc": "Joias da base! Atletas com essa habilidade ganham +1 Nível extra sempre que evoluem (no jogo ou no acampamento)."
+            }
         ]
     },
     "perks": [
-        { "id": "finishing", "name": "Finalização", "emoji": "🎯", "desc": "Faro de artilheiro! Aumenta muito a Força do time em qualquer tentativa de Chute/Finalização." },
-        { "id": "passing", "name": "Passe", "emoji": "👟", "desc": "Maestros em campo! Aumenta a Força da equipe na hora de Armar jogadas e trocar passes." },
-        { "id": "pace", "name": "Velocidade", "emoji": "⚡", "desc": "Puro suco de contra-ataque! Aumenta a Força da equipe sempre que escolher uma jogada de Risco Alto." },
-        { "id": "tackling", "name": "Desarme", "emoji": "🪓", "desc": "Cães de guarda! Aumenta a Força na hora de se Defender ou tentar um Roubo de bola." },
-        { "id": "marking", "name": "Colocação", "emoji": "🛡️", "desc": "Posicionamento tático impecável! Cansa o adversário e diminui a Força geral do rival durante a partida." },
-        { "id": "reflexes", "name": "Reflexo", "emoji": "🧤", "desc": "Paredão nas traves! Melhora drasticamente as chances do seu Goleiro operar um milagre." },
-        { "id": "growth", "name": "Evolução", "emoji": "🌱", "desc": "Joias da base! Atletas com essa habilidade ganham +1 Nível extra sempre que evoluem." }
+        {
+            "id": "finishing",
+            "name": "Finalização",
+            "emoji": "🎯",
+            "desc": "Faro de artilheiro! Aumenta muito a Força do time em qualquer tentativa de Chute/Finalização."
+        },
+        {
+            "id": "passing",
+            "name": "Passe",
+            "emoji": "👟",
+            "desc": "Maestros em campo! Aumenta a Força da equipe na hora de Armar jogadas e trocar passes."
+        },
+        {
+            "id": "pace",
+            "name": "Velocidade",
+            "emoji": "⚡",
+            "desc": "Puro suco de contra-ataque! Aumenta a Força da equipe sempre que escolher uma jogada de Risco Alto."
+        },
+        {
+            "id": "tackling",
+            "name": "Desarme",
+            "emoji": "🪓",
+            "desc": "Cães de guarda! Aumenta a Força na hora de se Defender ou tentar um Roubo de bola."
+        },
+        {
+            "id": "marking",
+            "name": "Colocação",
+            "emoji": "🛡️",
+            "desc": "Posicionamento tático impecável! Cansa o adversário e diminui a Força geral do rival durante a partida."
+        },
+        {
+            "id": "reflexes",
+            "name": "Reflexo",
+            "emoji": "🧤",
+            "desc": "Paredão nas traves! Melhora drasticamente as chances do seu Goleiro operar um milagre."
+        },
+        {
+            "id": "growth",
+            "name": "Evolução",
+            "emoji": "🌱",
+            "desc": "Joias da base! Atletas com essa habilidade ganham +1 Nível extra sempre que evoluem."
+        }
     ]
 }

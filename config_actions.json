@@ -147,10 +147,10 @@
         "name": "Bicicleta",
         "emoji": "🚲",
         "type": "shoot",
-        "mod": 0.9,
+        "mod": 1,
         "successMove": 1,
         "failMove": -1,
-        "comboReq": "5",
+        "comboReq": "3",
         "zones": [
             4
         ],
