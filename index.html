@@ -47,6 +47,18 @@
                 </div>
             </div>
 
+            <div id="screen-series-select" class="screen">
+                <div class="champ-header">
+                    <div class="champ-title-block">
+                        <div class="champ-league-label">ESCOLHA A DIVISÃO</div>
+                    </div>
+                </div>
+                <div class="club-options-wrapper" id="series-options-container"></div>
+                <div class="bottom-action-bar">
+                    <button class="btn-secondary" onclick="returnToTitle()">← VOLTAR AO MENU</button>
+                </div>
+            </div>
+
             <div id="screen-club-select" class="screen">
                 <div class="champ-header">
                     <div class="champ-title-block">
@@ -55,7 +67,9 @@
                 </div>
                 <div class="club-options-wrapper" id="club-options-container"></div>
                 <div class="bottom-action-bar">
-                    <button class="btn-secondary" onclick="returnToTitle()">← VOLTAR AO MENU</button>
+                    <!-- O botão agora volta para as Divisões em vez do Menu Principal -->
+                    <button class="btn-secondary" onclick="showScreen('screen-series-select')">← VOLTAR PARA
+                        DIVISÕES</button>
                 </div>
             </div>
 

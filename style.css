@@ -2195,3 +2195,31 @@ button {
         min-width: 150px;
     }
 }
+
+/* GRID EXCLUSIVO PARA A TELA DE SÉRIES NO PC */
+@media (min-width: 900px) {
+    #series-options-container.club-options-wrapper {
+        display: grid;
+        /* auto-fill e minmax criam um grid responsivo perfeito sem esticar o último card */
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--space-lg);
+        padding: 40px var(--space-lg);
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+
+        /* Substitui as regras do flexbox horizontal (scroll) */
+        align-content: start;
+        justify-content: center;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    /* Solta as amarras do tamanho fixo de scroll para os cards das divisões */
+    #series-options-container .club-select-card {
+        flex: unset;
+        width: 100%;
+        height: 100%;
+        /* Faz todos os cards da mesma linha terem a mesma altura */
+    }
+}

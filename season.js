@@ -297,6 +297,20 @@ function finishSeason(wonSeason) {
 
     let subText = wonSeason ? "\n🏆 A CAMPANHA FOI UM SUCESSO!\nVocê completou o mapa!" : "\nDerrota dolorosa. Fim da jornada.";
 
+    // LÓGICA DE META-PROGRESSÃO
+    if (wonSeason) {
+        let currentSeries = gameState.leagueLevel;
+        let highest = gameState.meta.highestSeriesUnlocked || 0;
+
+        // Se o jogador venceu a sua Série máxima atual e ainda não está na Série S
+        if (currentSeries === highest && highest < GAME_BALANCE.leagues.length - 1) {
+            gameState.meta.highestSeriesUnlocked = highest + 1;
+            saveGame();
+            let nextSeriesName = GAME_BALANCE.leagues[highest + 1].name;
+            subText += `\n\n⭐ META ALCANÇADA! ⭐\nNova Divisão Desbloqueada:\n👉 ${nextSeriesName} 👈`;
+        }
+    }
+
     document.getElementById('se-sub').innerText = subText;
     document.getElementById('season-end-overlay').style.display = 'flex';
 }
