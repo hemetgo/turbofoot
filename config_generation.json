@@ -1,340 +1,37 @@
 {
     "clubGeneration": {
         "bases": [
-            {
-                "name": "Tigres",
-                "emoji": "🐯"
-            },
-            {
-                "name": "Falcões",
-                "emoji": "🦅"
-            },
-            {
-                "name": "Dragões",
-                "emoji": "🐉"
-            },
-            {
-                "name": "Piratas",
-                "emoji": "🏴‍☠️"
-            },
-            {
-                "name": "Ninjas",
-                "emoji": "🥷"
-            },
-            {
-                "name": "Titãs",
-                "emoji": "🗿"
-            },
-            {
-                "name": "Fantasmas",
-                "emoji": "👻"
-            },
-            {
-                "name": "Lobos",
-                "emoji": "🐺"
-            },
-            {
-                "name": "Ursos",
-                "emoji": "🐻"
-            },
-            {
-                "name": "Reis",
-                "emoji": "👑"
-            },
-            {
-                "name": "Guerreiros",
-                "emoji": "⚔️"
-            },
-            {
-                "name": "Demônios",
-                "emoji": "👹"
-            },
-            {
-                "name": "Panteras",
-                "emoji": "🐆"
-            },
-            {
-                "name": "Cobras",
-                "emoji": "🐍"
-            },
-            {
-                "name": "Tubarões",
-                "emoji": "🦈"
-            },
-            {
-                "name": "Escorpiões",
-                "emoji": "🦂"
-            },
-            {
-                "name": "Corvos",
-                "emoji": "🐦‍⬛"
-            },
-            {
-                "name": "Touro",
-                "emoji": "🐂"
-            },
-            {
-                "name": "Vikings",
-                "emoji": "🛡️"
-            },
-            {
-                "name": "Gladiadores",
-                "emoji": "🏛️"
-            },
-            {
-                "name": "Samurais",
-                "emoji": "🎌"
-            },
-            {
-                "name": "Cavaleiros",
-                "emoji": "🐴"
-            },
-            {
-                "name": "Tempestades",
-                "emoji": "🌪️"
-            },
-            {
-                "name": "Cometas",
-                "emoji": "☄️"
-            },
-            {
-                "name": "Meteoros",
-                "emoji": "🌠"
-            },
-            {
-                "name": "Krakens",
-                "emoji": "🐙"
-            },
-            {
-                "name": "Fênix",
-                "emoji": "🐦‍🔥"
-            },
-            {
-                "name": "Hidras",
-                "emoji": "🐲"
-            },
-            {
-                "name": "Caveiras",
-                "emoji": "💀"
-            }
+            { "name": "Tigres", "emoji": "🐯" },
+            { "name": "Falcões", "emoji": "🦅" },
+            { "name": "Dragões", "emoji": "🐉" },
+            { "name": "Piratas", "emoji": "🏴‍☠️" },
+            { "name": "Ninjas", "emoji": "🥷" },
+            { "name": "Titãs", "emoji": "🗿" },
+            { "name": "Fantasmas", "emoji": "👻" },
+            { "name": "Lobos", "emoji": "🐺" },
+            { "name": "Ursos", "emoji": "🐻" },
+            { "name": "Reis", "emoji": "👑" },
+            { "name": "Guerreiros", "emoji": "⚔️" },
+            { "name": "Demônios", "emoji": "👹" },
+            { "name": "Panteras", "emoji": "🐆" },
+            { "name": "Cobras", "emoji": "🐍" },
+            { "name": "Tubarões", "emoji": "🦈" },
+            { "name": "Escorpiões", "emoji": "🦂" },
+            { "name": "Corvos", "emoji": "🐦‍⬛" },
+            { "name": "Touro", "emoji": "🐂" },
+            { "name": "Vikings", "emoji": "🛡️" },
+            { "name": "Gladiadores", "emoji": "🏛️" },
+            { "name": "Samurais", "emoji": "🎌" },
+            { "name": "Cavaleiros", "emoji": "🐴" },
+            { "name": "Krakens", "emoji": "🐙" },
+            { "name": "Fênix", "emoji": "🐦‍🔥" }
         ],
         "adjectives": [
-            "de Fogo",
-            "de Gelo",
-            "Dourados",
-            "Sombrios",
-            "Reais",
-            "Selvagens",
-            "Celestes",
-            "de Ferro",
-            "Imortais",
-            "Vorazes",
-            "do Caos",
-            "Supremos",
-            "Tempestuosos",
-            "Ancestrais",
-            "Lendários",
-            "Indomáveis",
-            "Furiosos",
-            "Invictos",
-            "Abissais",
-            "Radiantes",
-            "Noturnos",
-            "Colossais",
-            "Arcanos",
-            "Profanos",
-            "do Eclipse",
-            "da Tempestade",
-            "das Sombras",
-            "do Trovão",
-            "da Glória",
-            "da Ruína"
-        ]
-    },
-    "players": {
-        "profiles": [
-            {
-                "name": "Robogol",
-                "emoji": "🤖"
-            },
-            {
-                "name": "Paredão",
-                "emoji": "🧱"
-            },
-            {
-                "name": "Bruxo",
-                "emoji": "🪄"
-            },
-            {
-                "name": "Muralha",
-                "emoji": "🏰"
-            },
-            {
-                "name": "Garçom",
-                "emoji": "🍽️"
-            },
-            {
-                "name": "Foguete",
-                "emoji": "🚀"
-            },
-            {
-                "name": "Chacal",
-                "emoji": "🦊"
-            },
-            {
-                "name": "Matador",
-                "emoji": "🦁"
-            },
-            {
-                "name": "Xerife",
-                "emoji": "🤠"
-            },
-            {
-                "name": "Gênio",
-                "emoji": "🧠"
-            },
-            {
-                "name": "Mágico",
-                "emoji": "🎩"
-            },
-            {
-                "name": "Trator",
-                "emoji": "🚜"
-            },
-            {
-                "name": "Trovão",
-                "emoji": "⛈️"
-            },
-            {
-                "name": "Relâmpago",
-                "emoji": "🌩️"
-            },
-            {
-                "name": "Artilheiro",
-                "emoji": "🥅"
-            },
-            {
-                "name": "Canhão",
-                "emoji": "💣"
-            },
-            {
-                "name": "Motorzinho",
-                "emoji": "🏎️"
-            },
-            {
-                "name": "Espartano",
-                "emoji": "🪖"
-            },
-            {
-                "name": "Míssil",
-                "emoji": "🛸"
-            },
-            {
-                "name": "Professor",
-                "emoji": "📚"
-            },
-            {
-                "name": "Maquinista",
-                "emoji": "⚙️"
-            },
-            {
-                "name": "Predador",
-                "emoji": "🦅"
-            },
-            {
-                "name": "Fera",
-                "emoji": "🦍"
-            },
-            {
-                "name": "Tanque",
-                "emoji": "🚛"
-            },
-            {
-                "name": "Maestro",
-                "emoji": "🎼"
-            },
-            {
-                "name": "Imperador",
-                "emoji": "👑"
-            },
-            {
-                "name": "Sniper",
-                "emoji": "🔭"
-            },
-            {
-                "name": "Gladiador",
-                "emoji": "⚔️"
-            },
-            {
-                "name": "Artista",
-                "emoji": "🖌️"
-            }
-        ],
-        "baseProfiles": [
-            {
-                "name": "Juninho",
-                "emoji": "👦"
-            },
-            {
-                "name": "Bagre",
-                "emoji": "🐟"
-            },
-            {
-                "name": "Cansado",
-                "emoji": "🥱"
-            },
-            {
-                "name": "Novato",
-                "emoji": "🎒"
-            },
-            {
-                "name": "Cone",
-                "emoji": "🚧"
-            },
-            {
-                "name": "Turista",
-                "emoji": "📸"
-            },
-            {
-                "name": "Banana",
-                "emoji": "🍌"
-            },
-            {
-                "name": "Sonâmbulo",
-                "emoji": "😪"
-            },
-            {
-                "name": "Pé de Rato",
-                "emoji": "🐀"
-            },
-            {
-                "name": "Estagiário",
-                "emoji": "📋"
-            },
-            {
-                "name": "Atrasado",
-                "emoji": "⏰"
-            },
-            {
-                "name": "Perdido",
-                "emoji": "🧭"
-            },
-            {
-                "name": "Preguiçoso",
-                "emoji": "🦥"
-            },
-            {
-                "name": "Distraído",
-                "emoji": "🤪"
-            },
-            {
-                "name": "Reserva",
-                "emoji": "🪑"
-            },
-            {
-                "name": "Pipoqueiro",
-                "emoji": "🍿"
-            }
+            "de Fogo", "de Gelo", "Dourados", "Sombrios", "Reais", "Selvagens", 
+            "Celestes", "de Ferro", "Imortais", "Vorazes", "do Caos", "Supremos", 
+            "Tempestuosos", "Ancestrais", "Lendários", "Indomáveis", "Furiosos", 
+            "Invictos", "Abissais", "Radiantes", "Noturnos", "Colossais", 
+            "da Glória", "da Ruína"
         ]
     }
 }

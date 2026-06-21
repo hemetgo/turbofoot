@@ -94,8 +94,34 @@ function returnToTitle() {
 }
 
 function updateRosterUI() {
-    let listHTML = "";
-    gameState.team.forEach(p => { listHTML += getPlayerCardHTML(p); });
+    if (!document.getElementById('dynamic-sidebar-css')) {
+        const style = document.createElement('style');
+        style.id = 'dynamic-sidebar-css';
+        style.innerHTML = `
+            .player-card.highlight-synergy {
+                box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), inset 0 0 10px rgba(168, 85, 247, 0.2) !important;
+                border-color: #a855f7 !important;
+                transform: scale(1.02);
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    let modalHTML = "";
+    let sidebarHTML = "";
+
+    gameState.team.forEach(p => {
+        modalHTML += getPlayerCardHTML(p);
+        sidebarHTML += getSidebarPlayerHTML(p);
+    });
+
+    const sbBody = document.querySelector('.sidebar-body');
+    if (sbBody) {
+        sbBody.style.display = 'flex';
+        sbBody.style.flexDirection = 'column';
+        // Reduz o espaço interno no topo e embaixo para as cartas caberem
+        sbBody.style.padding = '8px 16px';
+    }
 
     const sbClubInfo = document.getElementById("sidebar-club-info");
     if (sbClubInfo && gameState.club) sbClubInfo.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${gameState.club.name}`;
@@ -105,17 +131,23 @@ function updateRosterUI() {
 
     const sbList = document.getElementById("sidebar-list");
     const sbCoins = document.getElementById("sidebar-coins");
-    if (sbList) sbList.innerHTML = listHTML;
+
+    if (sbList) {
+        sbList.className = "";
+        sbList.style.display = "flex";
+        sbList.style.flexDirection = "column";
+        sbList.style.gap = "2px"; // Encolhe a fenda entre os cards
+        sbList.style.flex = "1";
+        sbList.innerHTML = sidebarHTML;
+    }
     if (sbCoins) sbCoins.innerText = gameState.coins;
 
     const modList = document.getElementById("modal-roster-list");
-    if (modList) modList.innerHTML = listHTML;
+    if (modList) modList.innerHTML = modalHTML;
 
-    // ATUALIZA AS MOEDAS NA LOJA
     const mCoins = document.getElementById("market-coins");
     if (mCoins) mCoins.innerText = gameState.coins;
 }
-
 function openHowToPlay() {
     document.getElementById('how-to-play-overlay').style.display = 'flex';
 }

@@ -9,15 +9,21 @@ async function initGame() {
         const actionsData = await fetch('config_actions.json').then(r => r.json());
         const textsData = await fetch('config_texts.json').then(r => r.json());
         const metaData = await fetch('config_meta.json').then(r => r.json());
-        const leaguesData = await fetch('config_leagues.json').then(r => r.json()); // NOVO
+        const leaguesData = await fetch('config_leagues.json').then(r => r.json());
+        const namesData = await fetch('config_names.json').then(r => r.json());     // NOVO
+        const presetsData = await fetch('config_presets.json').then(r => r.json()); // NOVO
 
-        // CARREGA A LIGA DIRETO DO JSON
         GAME_BALANCE = { mechanics: mechanicsData, leagues: leaguesData, meta: metaData };
         GAME_CONTENT = {
-            clubGeneration: generationData.clubGeneration, players: generationData.players,
-            rivalStyles: rivalsData, nodes: actionsData,
-            suspenseTexts: textsData.suspenseTexts, logTexts: textsData.logTexts,
-            tooltips: textsData.tooltips, howToPlay: textsData.howToPlay
+            clubGeneration: generationData.clubGeneration,
+            names: namesData,       // NOVO
+            presets: presetsData,   // NOVO
+            rivalStyles: rivalsData,
+            nodes: actionsData,
+            suspenseTexts: textsData.suspenseTexts,
+            logTexts: textsData.logTexts,
+            tooltips: textsData.tooltips,
+            howToPlay: textsData.howToPlay
         };
 
         PERK_LIST = textsData.perks;
@@ -117,7 +123,7 @@ function selectSeries(idx) {
                     <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 900; letter-spacing: 1px;">⭐ DESTAQUE DA BASE</div>
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
                         <div style="font-size: 2.2rem; line-height: 1;">${cap.emoji}</div>
-                        <div style="font-weight: 900; color: #fff; font-size: 1rem;">${cap.name} <span style="color: var(--accent-gold);">${cap.rank}</span></div>
+                        <div style="font-weight: 900; color: #fff; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 4px;">${cap.name} <span style="filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); font-size: 1.1rem;">⭐</span></div>
                         <div style="font-size: 0.8rem; color: var(--accent-blue); font-weight: 800; margin-top: 4px;">${cap.perks[0].emoji} ${cap.perks[0].name} & ${cap.perks[1].emoji} ${cap.perks[1].name}</div>
                     </div>
                     <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; font-weight:700; border-top: 1px solid var(--border-light); padding-top: 8px; width: 100%;">Nível Inicial do Time: ${startLvl} | Nível do Celeiro: ${metaTraits}</div>

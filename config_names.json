@@ -1,0 +1,361 @@
+[
+    {
+        "country": "Brasil",
+        "flag": "🇧🇷",
+        "firstNames": [
+            "Manoel",
+            "César",
+            "Gabriel",
+            "Pedro",
+            "Júlio",
+            "João",
+            "Marcos",
+            "Lucas",
+            "Tiago",
+            "Matheus",
+            "Vini"
+        ],
+        "lastNames": [
+            "Pereira",
+            "Santos",
+            "Silva",
+            "Costa",
+            "Oliveira",
+            "Souza",
+            "Rodrigues",
+            "Ferreira",
+            "Gomes",
+            "Alves"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "👨🏾",
+            "👨🏿",
+            "🧔🏻",
+            "🧔🏽",
+            "🧔🏾",
+            "👨🏽‍🦱",
+            "👨🏿‍🦲"
+        ]
+    },
+    {
+        "country": "Japão",
+        "flag": "🇯🇵",
+        "firstNames": [
+            "Satoshi",
+            "Kenji",
+            "Hiroshi",
+            "Takumi",
+            "Daiki",
+            "Ren",
+            "Yuki",
+            "Kaito"
+        ],
+        "lastNames": [
+            "Nakamura",
+            "Takahashi",
+            "Suzuki",
+            "Watanabe",
+            "Ito",
+            "Yamamoto",
+            "Saito",
+            "Kobayashi"
+        ],
+        "faces": [
+            "👨🏻",
+            "🧔🏻",
+            "👨🏻‍🦱"
+        ]
+    },
+    {
+        "country": "EUA",
+        "flag": "🇺🇸",
+        "firstNames": [
+            "John",
+            "Michael",
+            "William",
+            "David",
+            "James",
+            "Robert",
+            "Jack",
+            "Tyler"
+        ],
+        "lastNames": [
+            "Smith",
+            "Johnson",
+            "Williams",
+            "Brown",
+            "Jones",
+            "Miller",
+            "Davis",
+            "Wilson"
+        ],
+        "faces": [
+            "👨🏼",
+            "👱🏼",
+            "👨🏽",
+            "👨🏾",
+            "👨🏿",
+            "🧔🏼",
+            "👨🏾‍🦱",
+            "👨🏿‍🦲"
+        ]
+    },
+    {
+        "country": "Espanha",
+        "flag": "🇪🇸",
+        "firstNames": [
+            "Alejandro",
+            "Daniel",
+            "Pablo",
+            "David",
+            "Álvaro",
+            "Hugo",
+            "Lucas",
+            "Sergio"
+        ],
+        "lastNames": [
+            "García",
+            "Fernández",
+            "González",
+            "Rodríguez",
+            "López",
+            "Martínez",
+            "Pérez",
+            "Gómez"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏼",
+            "👨🏻‍🦱",
+            "👨🏽‍🦱"
+        ]
+    },
+    {
+        "country": "Alemanha",
+        "flag": "🇩🇪",
+        "firstNames": [
+            "Lukas",
+            "Leon",
+            "Finn",
+            "Paul",
+            "Jonas",
+            "Max",
+            "Felix",
+            "Thomas"
+        ],
+        "lastNames": [
+            "Müller",
+            "Schmidt",
+            "Schneider",
+            "Fischer",
+            "Weber",
+            "Meyer",
+            "Wagner",
+            "Becker"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏻",
+            "👨🏼‍🦱",
+            "👨🏾",
+            "👨🏿"
+        ]
+    },
+    {
+        "country": "Itália",
+        "flag": "🇮🇹",
+        "firstNames": [
+            "Francesco",
+            "Alessandro",
+            "Leonardo",
+            "Lorenzo",
+            "Mattia",
+            "Andrea",
+            "Luca"
+        ],
+        "lastNames": [
+            "Rossi",
+            "Russo",
+            "Ferrari",
+            "Esposito",
+            "Bianchi",
+            "Romano",
+            "Colombo",
+            "Ricci"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏽",
+            "👨🏻‍🦱"
+        ]
+    },
+    {
+        "country": "Inglaterra",
+        "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+        "firstNames": [
+            "Harry",
+            "Jack",
+            "Oliver",
+            "Charlie",
+            "Jacob",
+            "Thomas",
+            "George",
+            "William"
+        ],
+        "lastNames": [
+            "Smith",
+            "Jones",
+            "Taylor",
+            "Brown",
+            "Williams",
+            "Wilson",
+            "Johnson",
+            "Davies"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "👨🏽",
+            "👨🏾",
+            "👨🏿",
+            "🧔🏼",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "França",
+        "flag": "🇫🇷",
+        "firstNames": [
+            "Lucas",
+            "Hugo",
+            "Arthur",
+            "Enzo",
+            "Nathan",
+            "Mathis",
+            "Gabriel",
+            "Kylian"
+        ],
+        "lastNames": [
+            "Martin",
+            "Bernard",
+            "Thomas",
+            "Petit",
+            "Robert",
+            "Richard",
+            "Durand",
+            "Dubois"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "👨🏾",
+            "👨🏿",
+            "🧔🏾",
+            "👨🏿‍🦲",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Argentina",
+        "flag": "🇦🇷",
+        "firstNames": [
+            "Thiago",
+            "Mateo",
+            "Benjamín",
+            "Joaquín",
+            "Nicolás",
+            "Lautaro",
+            "Lucas",
+            "Enzo"
+        ],
+        "lastNames": [
+            "González",
+            "Rodríguez",
+            "Gómez",
+            "Fernández",
+            "López",
+            "Díaz",
+            "Martínez",
+            "Pérez"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "👨🏻‍🦱",
+            "👱🏼"
+        ]
+    },
+    {
+        "country": "Senegal",
+        "flag": "🇸🇳",
+        "firstNames": [
+            "Sadio",
+            "Moussa",
+            "Cheikhou",
+            "Idrissa",
+            "Pape",
+            "Kalidou",
+            "Ismaïla"
+        ],
+        "lastNames": [
+            "Sarr",
+            "Diop",
+            "Ndiaye",
+            "Gueye",
+            "Fall",
+            "Thiam",
+            "Mendy",
+            "Cissé"
+        ],
+        "faces": [
+            "👨🏾",
+            "👨🏿",
+            "🧔🏿",
+            "👨🏿‍🦲",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Coreia do Sul",
+        "flag": "🇰🇷",
+        "firstNames": [
+            "Ji-Hoon",
+            "Min-Jun",
+            "Seo-Joon",
+            "Do-Yun",
+            "Eun-Woo",
+            "Hyun-Woo"
+        ],
+        "lastNames": [
+            "Kim",
+            "Lee",
+            "Park",
+            "Choi",
+            "Jeong",
+            "Kang",
+            "Jo",
+            "Yoon"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏻‍🦱"
+        ]
+    }
+]

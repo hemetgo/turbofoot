@@ -33,15 +33,21 @@ function showMarketScreen() {
     draftedPlayers.forEach((p, idx) => {
         // Se o jogador já foi comprado (marcado como null)
         if (!p) {
+            let starLabel = p.isStar ? `<span style="font-size: 1.1rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
+
             list.innerHTML += `
-                <div class="market-card" style="opacity: 0.5; filter: grayscale(1); cursor: not-allowed;">
-                    <div class="card-emoji">🤝</div>
-                    <div class="market-info">
-                        <div class="market-name" style="color: var(--text-muted);">Vendido</div>
+            <div class="market-card">
+                <div class="card-emoji">${p.emoji}</div>
+                <div class="market-info">
+                
+                    <div class="market-name">${p.name} ${starLabel} <small style="color:var(--text-muted);font-weight:700; margin-left: 4px;">Lvl ${p.level}</small></div>
+                    <div class="market-stats">
+                        ${perksHtml}
                     </div>
-                    <button class="market-buy-btn" disabled>ESGOTADO</button>
                 </div>
-            `;
+                <button class="market-buy-btn" ${disabledAttr} onclick="promptReplace(${idx})">COMPRAR (${p.price} 💰)</button>
+            </div>
+        `;
             return;
         }
 
@@ -116,7 +122,7 @@ function closeReplaceModal() {
 function executePurchase(replaceIndex) {
     if (!pendingPurchase) return;
     if (gameState.coins < pendingPurchase.price) return;
-    
+
     gameState.coins -= pendingPurchase.price;
 
     // Substitui o jogador na posição escolhida (ou automática da base)

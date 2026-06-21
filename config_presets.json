@@ -1,0 +1,38 @@
+[
+    {
+        "name": "L. Pulga",
+        "flag": "🇦🇷",
+        "face": "🧔🏻",
+        "perks": ["finishing", "passing"]
+    },
+    {
+        "name": "C. Robô",
+        "flag": "🇵🇹",
+        "face": "👨🏻",
+        "perks": ["finishing", "pace"]
+    },
+    {
+        "name": "N. Magia",
+        "flag": "🇧🇷",
+        "face": "👨🏽",
+        "perks": ["passing", "pace"]
+    },
+    {
+        "name": "M. Muralha",
+        "flag": "🇩🇪",
+        "face": "👱🏻",
+        "perks": ["reflexes", "marking"]
+    },
+    {
+        "name": "P. Dinamo",
+        "flag": "🇮🇹",
+        "face": "🧔🏻",
+        "perks": ["tackling", "marking"]
+    },
+    {
+        "name": "K. Tartaruga",
+        "flag": "🇫🇷",
+        "face": "👨🏾",
+        "perks": ["pace", "finishing"]
+    }
+]
