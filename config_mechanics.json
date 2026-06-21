@@ -26,7 +26,7 @@
             "coinMult": 1.0
         },
         "elite": {
-            "label": "ALTA (CLÁSSICO)",
+            "label": "ALTA",
             "color": "var(--accent-gold)",
             "powerMultMin": 1.10,
             "powerMultMax": 1.20,
@@ -35,7 +35,7 @@
             "coinMult": 2.0
         },
         "boss": {
-            "label": "MÁXIMA (CHEFÃO)",
+            "label": "INSANA",
             "color": "var(--accent-red)",
             "powerMultMin": 1.25,
             "powerMultMax": 1.35,

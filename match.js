@@ -122,11 +122,32 @@ function updateFieldState() {
     _renderPlayerButtons();
 }
 
+// Função auxiliar que sorteia considerando o "peso" da raridade
+function pickWeightedNodes(nodesArray, count) {
+    let result = [];
+    let available = [...nodesArray];
+    for (let i = 0; i < count && available.length > 0; i++) {
+        let totalW = available.reduce((sum, n) => sum + (n.weight !== undefined ? n.weight : 100), 0);
+        let r = Math.random() * totalW;
+        let current = 0;
+        for (let j = 0; j < available.length; j++) {
+            current += (available[j].weight !== undefined ? available[j].weight : 100);
+            if (r <= current) {
+                result.push(available[j]);
+                available.splice(j, 1);
+                break;
+            }
+        }
+    }
+    return result;
+}
+
 function _renderPlayerButtons() {
     const wrapper = document.getElementById("dynamic-nodes-wrapper");
     wrapper.innerHTML = ""; wrapper.classList.remove("pop-in"); void wrapper.offsetWidth;
     selectedActionNodeId = null;
 
+    // Filtra as ações válidas para a zona atual
     let pool = GAME_CONTENT.nodes.filter(n => {
         if (matchState.hasBall) return (matchState.zone === 4) ? n.type === 'shoot' : (n.type === 'atk' || n.type === 'shoot') && n.zones.includes(matchState.zone);
         return (matchState.zone === 0) ? n.type === 'save' : n.type === 'def' && n.zones.includes(matchState.zone);
@@ -134,15 +155,25 @@ function _renderPlayerButtons() {
 
     const isCritical = (matchState.hasBall && matchState.zone === 4) || (!matchState.hasBall && matchState.zone === 0);
     let selected = [];
+
+    // Separa opções seguras e arriscadas
     let safeNodes = pool.filter(n => n.riskLevel === "safe");
-    let riskyNodes = shuffle(pool.filter(n => n.riskLevel !== "safe"));
+    let riskyNodes = pool.filter(n => n.riskLevel !== "safe");
 
-    if (Math.random() < (GAME_BALANCE.mechanics.safeActionChance ?? 0.15) && safeNodes.length > 0) selected.push(shuffle(safeNodes)[0]);
-    while (selected.length < (isCritical ? 2 : 3) && riskyNodes.length > 0) selected.push(riskyNodes.pop());
+    // Sorteia 1 carta segura (com base na chance global) usando Pesos
+    if (Math.random() < (GAME_BALANCE.mechanics.safeActionChance ?? 0.15) && safeNodes.length > 0) {
+        selected.push(pickWeightedNodes(safeNodes, 1)[0]);
+    }
 
+    // Completa o resto das cartas com as opções arriscadas usando Pesos
+    let neededRisky = (isCritical ? 2 : 3) - selected.length;
+    let chosenRisky = pickWeightedNodes(riskyNodes, neededRisky);
+    selected.push(...chosenRisky);
+
+    // Validação de Combo: Garante que pelo menos 1 carta possa ser paga
     if (!selected.some(n => n.comboReq === "ALL" ? matchState.combo > 0 : (!n.comboReq || matchState.combo >= n.comboReq))) {
         let affordable = pool.filter(n => n.comboReq === "ALL" ? matchState.combo > 0 : (!n.comboReq || matchState.combo >= n.comboReq));
-        if (affordable.length > 0) selected[0] = rnd(affordable);
+        if (affordable.length > 0) selected[0] = pickWeightedNodes(affordable, 1)[0];
     }
 
     selected = shuffle(selected);
@@ -175,24 +206,24 @@ function _renderPlayerButtons() {
         }
 
         let finalMod = node.id === "bicycle" ? node.mod + (Math.min(matchState.combo, 6) * 0.1) : node.mod;
-        let traitBonus = getTraitBonusForNode(node, traits) || 0; // Garante que nunca seja undefined
+        let traitBonus = getTraitBonusForNode(node, traits) || 0;
         let pToUse = (node.type === 'atk' || node.type === 'shoot') ? power.atk : power.def;
 
         let pBase = (pToUse * finalMod) + (matchState.nextBuff * buffScale) + (matchState.momentum * momentumVal) + traitBonus;
         if (matchState.badLuckCounter > 0) pBase = Math.floor(pBase * GAME_BALANCE.mechanics.luckEvents.penaltyMult);
 
-        let rTraitBonus = getRivalTraitBonus(node, matchState.rivalTeamRef) || 0; // Garante que nunca seja undefined
+        let rTraitBonus = getRivalTraitBonus(node, matchState.rivalTeamRef) || 0;
         let rBase = Math.max(1, (matchState.hasBall ? matchState.rivalProfile.def : matchState.rivalProfile.atk) - markingDebuff) + rTraitBonus;
 
-        // Calcula a chance pura
         let chance = node.riskLevel !== "safe" ? calcWinChance(pBase, rBase, rngRange) : 100;
-
-        // Garante que o número não seja quebrado e esteja entre 0 e 100
         chance = Math.round(chance);
         chance = Math.max(0, Math.min(100, chance));
 
-        // Define as cores baseadas no percentual
+        // NOVA COR PARA AS LENDÁRIAS (Brilho roxo especial)
+        let isLegendary = (node.weight && node.weight <= 20);
         let colorClass = chance >= 65 ? "risk-safe" : chance >= 40 ? "risk-med" : "risk-high";
+        if (isLegendary) colorClass += " legendary-node"; // Adiciona a tag lendária
+
         let chanceColor = chance >= 65 ? "var(--accent-green)" : chance >= 40 ? "var(--accent-gold)" : "var(--accent-red)";
 
         btn.className = `node-btn ${colorClass} active ${gameState.settings.requireConfirm ? 'confirm-enabled' : ''}`;
