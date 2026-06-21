@@ -132,9 +132,9 @@ function getRivalTraitBonus(node, rival) {
 }
 
 function getTeamTraits() {
-    let counts = { finishing: 0, passing: 0, pace: 0, tackling: 0, marking: 0, reflexes: 0, growth: 0 };
+    let counts = { finishing: 0, passing: 0, pace: 0, tackling: 0, marking: 0, reflexes: 0 };
     gameState.team.forEach(p => {
-        let weight = p.isCaptain ? 1.2 : 1.0; // Capitão tem 20% a mais de peso nas sinergias!
+        let weight = p.isCaptain ? 1.2 : 1.0;
         if (p.perks) p.perks.forEach(perk => {
             if (counts[perk.id] !== undefined) counts[perk.id] += weight;
         });

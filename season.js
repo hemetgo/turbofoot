@@ -245,10 +245,8 @@ function promptCampTrain() {
 
 function executeCampTrain(index) {
     let p = gameState.team[index];
-    let gain = 1;
-    if (p.perks && p.perks.some(perk => perk.id === 'growth')) gain += 1;
 
-    p.level = Math.min(10, p.level + gain);
+    p.level = Math.min(10, p.level + 1);
     p.justLeveledUp = true;
 
     document.getElementById('camp-train-overlay').style.display = 'none';

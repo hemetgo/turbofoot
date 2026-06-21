@@ -97,10 +97,6 @@
             {
                 "name": "🧤 Reflexo",
                 "desc": "Paredão nas traves! Melhora drasticamente as chances do seu Goleiro operar um milagre."
-            },
-            {
-                "name": "🌱 Evolução",
-                "desc": "Joias da base! Atletas com essa habilidade ganham +1 Nível extra sempre que evoluem (no jogo ou no acampamento)."
             }
         ]
     },
@@ -140,12 +136,6 @@
             "name": "Reflexo",
             "emoji": "🧤",
             "desc": "Paredão nas traves! Melhora drasticamente as chances do seu Goleiro operar um milagre."
-        },
-        {
-            "id": "growth",
-            "name": "Evolução",
-            "emoji": "🌱",
-            "desc": "Joias da base! Atletas com essa habilidade ganham +1 Nível extra sempre que evoluem."
         }
     ]
 }

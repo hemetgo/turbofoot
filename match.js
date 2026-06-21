@@ -465,11 +465,9 @@ function finishMatchRewards() {
 
         gameState.team.forEach(p => {
             if (p.level < 10) {
-                let gain = levelGainBase;
-                if (p.perks && p.perks.some(perk => perk.id === 'growth')) gain += 1;
-
                 let oldLvl = p.level;
-                p.level = Math.min(10, p.level + gain);
+                p.level = Math.min(10, p.level + levelGainBase);
+
                 if (p.level > oldLvl) {
                     p.justLeveledUp = true;
                     totalLevelsGained += (p.level - oldLvl);
