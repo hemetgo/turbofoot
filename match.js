@@ -237,6 +237,7 @@ function _renderPlayerButtons() {
         let succLabel = "";
         if (node.type === 'shoot') succLabel = "Gol";
         else if (node.type === 'save') succLabel = "Defesa";
+        else if (node.successMove < 0) succLabel = `Recua ${Math.abs(node.successMove)}`; // NOVO: Reconhece recuos no sucesso
         else succLabel = node.successMove > 0 ? `Avança +${node.successMove}` : "Mantém";
 
         if (node.nextBuff && node.nextBuff > 0) succLabel += ` <span class="buff-text">(+✨)</span>`;
@@ -388,6 +389,11 @@ async function resolveProceduralNode(node, power, event) {
         matchState.zone = Math.min(4, matchState.zone + node.successMove);
         matchState.nextBuff = node.nextBuff || 0;
 
+        if (node.forcePossessionLoss) {
+            matchState.hasBall = false;
+            addMatchLog("Falta feita! O rival assume o jogo.", "fail");
+        }
+
         if (node.type === 'shoot' && matchState.zone >= 4) { goalScored = true; isUserGoal = true; }
         else if (node.type !== 'shoot' && node.type !== 'save') { createJuiceText(matchState.nextBuff > 0 ? "Lindo! ✨" : node.name, "#34d399", x, y); addMatchLog(getRandomLog('success', node.name), 'success'); }
         else if (node.type === 'save') { createJuiceText("DEFESAÇA!", "#38bdf8", x, y); addMatchLog("Defesa espetacular!", 'success'); }
@@ -477,10 +483,15 @@ function finishMatchRewards() {
             document.getElementById("pm-title").className = `pm-title loss`;
             document.getElementById("pm-score").innerText = `${matchState.userScore} x ${matchState.rivalScore}`;
             document.getElementById("pm-info").innerText = "A campanha terminou mais cedo. Você não sobreviveu ao mapa.";
-            document.getElementById("pm-coins").innerText = "+0 💰";
+
+            // --- REMOÇÃO DA PREMIAÇÃO ---
+            // Escondemos o elemento que mostra as moedas na tela de derrota
+            document.querySelector(".pm-rewards").style.display = "none";
 
             document.querySelector("#post-match-overlay .btn-primary").innerText = "VOLTAR AO MENU";
             document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
+                // Restauramos o display caso o jogador ganhe uma partida no futuro
+                document.querySelector(".pm-rewards").style.display = "flex";
                 document.getElementById('post-match-overlay').style.display = 'none';
                 returnToTitle();
             };

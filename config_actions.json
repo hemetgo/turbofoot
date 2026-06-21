@@ -1,114 +1,471 @@
 [
     {
-        "id": "short_out", "name": "Saída Curta", "emoji": "🦶", "type": "atk",
-        "mod": 1.15, "successMove": 1, "failMove": 0, "comboGen": 1, "zones": [1], "riskLevel": "med", "weight": 100, "synergy": "passing"
+        "id": "short_out",
+        "name": "Saída Curta",
+        "emoji": "🥾",
+        "type": "atk",
+        "mod": 1.15,
+        "successMove": 1,
+        "failMove": 0,
+        "comboGen": 1,
+        "zones": [
+            1
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "passing"
     },
     {
-        "id": "long_out", "name": "Lançamento", "emoji": "🛫", "type": "atk",
-        "mod": 0.80, "successMove": 2, "failMove": -1, "comboGen": 0, "zones": [1], "riskLevel": "high", "weight": 100, "synergy": "pace"
+        "id": "long_out",
+        "name": "Lançamento",
+        "emoji": "🛫",
+        "type": "atk",
+        "mod": 0.80,
+        "successMove": 2,
+        "failMove": -1,
+        "comboGen": 0,
+        "zones": [
+            1
+        ],
+        "riskLevel": "high",
+        "weight": 100,
+        "synergy": "pace"
     },
     {
-        "id": "back_pass", "name": "Recuo", "emoji": "🔙", "type": "atk",
-        "mod": 1.0, "successMove": -1, "failMove": -1, "comboGen": 1, "zones": [2, 3], "riskLevel": "safe", "weight": 100, "synergy": "passing"
+        "id": "back_pass",
+        "name": "Recuo",
+        "emoji": "🔙",
+        "type": "atk",
+        "mod": 1.0,
+        "successMove": -1,
+        "failMove": -2,
+        "comboGen": 1,
+        "zones": [
+            2,
+            3
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "passing"
     },
     {
-        "id": "pass", "name": "Passe Seguro", "emoji": "➡️", "type": "atk",
-        "mod": 1.05, "successMove": 1, "failMove": 0, "comboGen": 1, "zones": [2], "riskLevel": "med", "weight": 100, "synergy": "passing"
+        "id": "pass",
+        "name": "Passe Seguro",
+        "emoji": "🤝",
+        "type": "atk",
+        "mod": 1.05,
+        "successMove": 1,
+        "failMove": 0,
+        "comboGen": 1,
+        "zones": [
+            2
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "passing"
     },
     {
-        "id": "triangle", "name": "Triangulação", "emoji": "🔺", "type": "atk",
-        "mod": 0.95, "successMove": 1, "failMove": -1, "comboGen": 2, "zones": [2, 3], "riskLevel": "med", "weight": 100, "synergy": "passing"
+        "id": "triangle",
+        "name": "Triangulação",
+        "emoji": "🔺",
+        "type": "atk",
+        "mod": 0.95,
+        "successMove": 1,
+        "failMove": -1,
+        "comboGen": 2,
+        "zones": [
+            2,
+            3
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "passing"
     },
     {
-        "id": "invert", "name": "Inversão de Jogo", "emoji": "🔀", "type": "atk",
-        "mod": 0.90, "successMove": 2, "failMove": -1, "comboGen": 0, "zones": [2], "riskLevel": "med", "weight": 100, "synergy": "passing"
+        "id": "invert",
+        "name": "Inversão de Jogo",
+        "emoji": "🔀",
+        "type": "atk",
+        "mod": 0.90,
+        "successMove": 2,
+        "failMove": -1,
+        "comboGen": 0,
+        "zones": [
+            2
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "passing"
     },
     {
-        "id": "dribble", "name": "Drible Rápido", "emoji": "💨", "type": "atk",
-        "mod": 0.85, "successMove": 1, "failMove": -1, "nextBuff": 15, "zones": [3], "riskLevel": "high", "weight": 100, "synergy": "pace"
+        "id": "dribble",
+        "name": "Drible Rápido",
+        "emoji": "💨",
+        "type": "atk",
+        "mod": 0.85,
+        "successMove": 1,
+        "failMove": -1,
+        "nextBuff": 15,
+        "zones": [
+            3
+        ],
+        "riskLevel": "high",
+        "weight": 100,
+        "synergy": "pace"
     },
     {
-        "id": "through", "name": "Enfiada", "emoji": "🧵", "type": "atk",
-        "mod": 0.90, "successMove": 2, "failMove": -1, "comboReq": 1, "zones": [2, 3], "riskLevel": "high", "weight": 100, "synergy": "passing"
+        "id": "through",
+        "name": "Enfiada",
+        "emoji": "🪡",
+        "type": "atk",
+        "mod": 0.90,
+        "successMove": 2,
+        "failMove": -1,
+        "comboReq": 1,
+        "zones": [
+            2,
+            3
+        ],
+        "riskLevel": "high",
+        "weight": 100,
+        "synergy": "passing"
     },
     {
-        "id": "cross", "name": "Cruzamento", "emoji": "⤴️", "type": "atk",
-        "mod": 1.0, "successMove": 1, "failMove": -1, "nextBuff": 10, "zones": [3], "riskLevel": "med", "weight": 100, "synergy": "passing"
+        "id": "cross",
+        "name": "Cruzamento",
+        "emoji": "🚁",
+        "type": "atk",
+        "mod": 1.0,
+        "successMove": 1,
+        "failMove": -1,
+        "nextBuff": 10,
+        "zones": [
+            3
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "passing"
     },
     {
-        "id": "long_pass", "name": "Passe Longo", "emoji": "📡", "type": "atk",
-        "mod": 1.0, "successMove": 2, "failMove": 0, "comboReq": 2, "zones": [1, 2, 3], "riskLevel": "safe", "weight": 100, "synergy": "passing"
+        "id": "long_pass",
+        "name": "Passe Longo",
+        "emoji": "📡",
+        "type": "atk",
+        "mod": 1.0,
+        "successMove": 2,
+        "failMove": 0,
+        "comboReq": 2,
+        "zones": [
+            1,
+            2,
+            3
+        ],
+        "riskLevel": "safe",
+        "weight": 100,
+        "synergy": "passing"
     },
     {
-        "id": "first_touch", "name": "De Primeira", "emoji": "💥", "type": "shoot",
-        "mod": 1.0, "successMove": 1, "failMove": -1, "comboReq": 0, "zones": [4], "riskLevel": "med", "weight": 100, "synergy": "finishing"
+        "id": "first_touch",
+        "name": "De Primeira",
+        "emoji": "💥",
+        "type": "shoot",
+        "mod": 1.0,
+        "successMove": 1,
+        "failMove": -1,
+        "comboReq": 0,
+        "zones": [
+            4
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "finishing"
     },
     {
-        "id": "place", "name": "Chute Colocado", "emoji": "📐", "type": "shoot",
-        "mod": 1.15, "successMove": 1, "failMove": 0, "comboReq": 2, "zones": [4], "riskLevel": "med", "weight": 100, "synergy": "finishing"
+        "id": "place",
+        "name": "Chute Colocado",
+        "emoji": "📐",
+        "type": "shoot",
+        "mod": 1.15,
+        "successMove": 1,
+        "failMove": 0,
+        "comboReq": 2,
+        "zones": [
+            4
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "finishing"
     },
     {
-        "id": "power", "name": "Bomba de Fora", "emoji": "🧨", "type": "shoot",
-        "mod": 0.80, "successMove": 2, "failMove": -1, "comboReq": 0, "zones": [3, 4], "riskLevel": "high", "weight": 100, "synergy": "finishing"
+        "id": "power",
+        "name": "Bomba de Fora",
+        "emoji": "🧨",
+        "type": "shoot",
+        "mod": 0.80,
+        "successMove": 2,
+        "failMove": -1,
+        "comboReq": 0,
+        "zones": [
+            3,
+            4
+        ],
+        "riskLevel": "high",
+        "weight": 100,
+        "synergy": "finishing"
     },
     {
-        "id": "bicycle", "name": "Bicicleta", "emoji": "🚲", "type": "shoot",
-        "mod": 0.90, "successMove": 1, "failMove": -1, "comboReq": 3, "zones": [4], "riskLevel": "high", "weight": 40, "synergy": "pace"
+        "id": "bicycle",
+        "name": "Bicicleta",
+        "emoji": "🚲",
+        "type": "shoot",
+        "mod": 0.90,
+        "successMove": 1,
+        "failMove": -1,
+        "comboReq": 3,
+        "zones": [
+            4
+        ],
+        "riskLevel": "high",
+        "weight": 40,
+        "synergy": "pace"
     },
     {
-        "id": "trick", "name": "Cavadinha", "emoji": "🥄", "type": "shoot",
-        "mod": 0.95, "successMove": 1, "failMove": -1, "comboReq": 1, "zones": [4], "riskLevel": "med", "weight": 100, "synergy": "finishing"
+        "id": "trick",
+        "name": "Cavadinha",
+        "emoji": "🥄",
+        "type": "shoot",
+        "mod": 0.95,
+        "successMove": 1,
+        "failMove": -1,
+        "comboReq": 1,
+        "zones": [
+            4
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "finishing"
     },
     {
-        "id": "low_line", "name": "Linha Baixa", "emoji": "⛺", "type": "def",
-        "mod": 1.20, "successMove": 0, "failMove": -1, "zones": [1, 2], "riskLevel": "med", "weight": 100, "synergy": "tackling"
+        "id": "low_line",
+        "name": "Retranca",
+        "emoji": "🔒",
+        "type": "def",
+        "mod": 1.20,
+        "successMove": 0,
+        "failMove": -1,
+        "zones": [
+            1,
+            2
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "tackling"
     },
     {
-        "id": "mark", "name": "Marcação", "emoji": "🧲", "type": "def",
-        "mod": 1.10, "successMove": 0, "failMove": -1, "nextBuff": 5, "zones": [1, 2, 3, 4], "riskLevel": "med", "weight": 100, "synergy": "tackling"
+        "id": "mark",
+        "name": "Marcação",
+        "emoji": "🧲",
+        "type": "def",
+        "mod": 1.10,
+        "successMove": 0,
+        "failMove": -1,
+        "nextBuff": 5,
+        "zones": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "tackling"
     },
     {
-        "id": "high_press", "name": "Pressão Alta", "emoji": "👥", "type": "def",
-        "mod": 0.95, "successMove": 1, "failMove": -1, "comboGen": 1, "zones": [2, 3, 4], "riskLevel": "med", "weight": 100, "synergy": "tackling"
+        "id": "high_press",
+        "name": "Abafar",
+        "emoji": "🥵",
+        "type": "def",
+        "mod": 0.95,
+        "successMove": 1,
+        "failMove": -1,
+        "comboGen": 1,
+        "zones": [
+            2,
+            3,
+            4
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "tackling"
     },
     {
-        "id": "intercept", "name": "Antecipar", "emoji": "👁️", "type": "def",
-        "mod": 0.85, "successMove": 1, "failMove": -1, "nextBuff": 15, "zones": [1, 2, 3, 4], "riskLevel": "med", "weight": 100, "synergy": "tackling"
+        "id": "intercept",
+        "name": "Antecipar",
+        "emoji": "👁️",
+        "type": "def",
+        "mod": 0.85,
+        "successMove": 1,
+        "failMove": -1,
+        "nextBuff": 15,
+        "zones": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "tackling"
     },
     {
-        "id": "tackle", "name": "Carrinho", "emoji": "🚗", "type": "def",
-        "mod": 0.75, "successMove": 1, "failMove": -2, "nextBuff": 20, "zones": [1, 2, 3, 4], "riskLevel": "high", "weight": 100, "synergy": "pace"
+        "id": "tackle",
+        "name": "Carrinho",
+        "emoji": "🚗",
+        "type": "def",
+        "mod": 0.75,
+        "successMove": 1,
+        "failMove": -2,
+        "nextBuff": 20,
+        "zones": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "riskLevel": "high",
+        "weight": 100,
+        "synergy": "pace"
     },
     {
-        "id": "tactical_foul", "name": "Falta Tática", "emoji": "🛑", "type": "def",
-        "mod": 1.0, "successMove": 0, "failMove": -1, "nextBuff": -10, "zones": [2, 3, 4], "riskLevel": "safe", "weight": 100, "synergy": "tackling"
+        "id": "tactical_foul",
+        "name": "Falta Tática",
+        "emoji": "🛑",
+        "type": "def",
+        "mod": 1.0,
+        "successMove": 0,
+        "failMove": -1,
+        "comboReq": 2,
+        "nextBuff": -10,
+        "zones": [
+            2,
+            3,
+            4
+        ],
+        "riskLevel": "safe",
+        "weight": 100,
+        "synergy": "tackling",
+        "forcePossessionLoss": true
     },
     {
-        "id": "save_close", "name": "Fechar Ângulo", "emoji": "🙅‍♂️", "type": "save",
-        "mod": 1.10, "successMove": 1, "failMove": -1, "zones": [0], "riskLevel": "med", "weight": 100, "synergy": "reflexes"
+        "id": "save_close",
+        "name": "Fechar Ângulo",
+        "emoji": "🙅‍♂️",
+        "type": "save",
+        "mod": 1.10,
+        "successMove": 1,
+        "failMove": -1,
+        "zones": [
+            0
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "reflexes"
     },
     {
-        "id": "save_dive", "name": "Ponte", "emoji": "✈️", "type": "save",
-        "mod": 0.95, "successMove": 1, "failMove": -1, "nextBuff": 10, "zones": [0], "riskLevel": "med", "weight": 100, "synergy": "reflexes"
+        "id": "save_dive",
+        "name": "Salto",
+        "emoji": "🦘",
+        "type": "save",
+        "mod": 0.95,
+        "successMove": 1,
+        "failMove": -1,
+        "nextBuff": 10,
+        "zones": [
+            0
+        ],
+        "riskLevel": "med",
+        "weight": 100,
+        "synergy": "reflexes"
     },
     {
-        "id": "save_rush", "name": "Sair nos Pés", "emoji": "🏃‍♂️", "type": "save",
-        "mod": 0.75, "successMove": 2, "failMove": -1, "nextBuff": 5, "zones": [0], "riskLevel": "high", "weight": 100, "synergy": "pace"
+        "id": "save_rush",
+        "name": "Sair nos Pés",
+        "emoji": "🦶",
+        "type": "save",
+        "mod": 0.75,
+        "successMove": 2,
+        "failMove": -1,
+        "nextBuff": 5,
+        "zones": [
+            0
+        ],
+        "riskLevel": "high",
+        "weight": 100,
+        "synergy": "pace"
     },
     {
-        "id": "save_safe", "name": "Espalmar", "emoji": "👋", "type": "save",
-        "mod": 1.0, "successMove": 0, "failMove": -1, "comboReq": 1, "zones": [0], "riskLevel": "safe", "weight": 100, "synergy": "reflexes"
+        "id": "save_safe",
+        "name": "Espalmar",
+        "emoji": "👋",
+        "type": "save",
+        "mod": 1.0,
+        "successMove": 0,
+        "failMove": -1,
+        "comboReq": 1,
+        "zones": [
+            0
+        ],
+        "riskLevel": "safe",
+        "weight": 100,
+        "synergy": "reflexes"
     },
     {
-        "id": "epic_pass", "name": "Passe Mágico", "emoji": "✨", "type": "atk",
-        "mod": 1.15, "successMove": 2, "failMove": 0, "comboGen": 2, "zones": [1, 2], "riskLevel": "safe", "weight": 15, "synergy": "passing"
+        "id": "epic_pass",
+        "name": "Passe Mágico",
+        "emoji": "✨",
+        "type": "atk",
+        "mod": 1.15,
+        "successMove": 2,
+        "failMove": 0,
+        "comboReq": 3,
+        "zones": [
+            1,
+            2
+        ],
+        "riskLevel": "safe",
+        "weight": 15,
+        "synergy": "passing"
     },
     {
-        "id": "epic_shoot", "name": "Chutaço do Meio", "emoji": "💫", "type": "shoot",
-        "mod": 0.95, "successMove": 2, "failMove": -1, "comboReq": 2, "zones": [3], "riskLevel": "med", "weight": 15, "synergy": "finishing"
+        "id": "epic_shoot",
+        "name": "Meio da Rua",
+        "emoji": "🛣️",
+        "type": "shoot",
+        "mod": 0.95,
+        "successMove": 2,
+        "failMove": -1,
+        "comboReq": 2,
+        "zones": [
+            3
+        ],
+        "riskLevel": "med",
+        "weight": 15,
+        "synergy": "finishing"
     },
     {
-        "id": "epic_save", "name": "Milagre", "emoji": "👼", "type": "save",
-        "mod": 1.30, "successMove": 2, "failMove": -1, "comboGen": 2, "zones": [0], "riskLevel": "med", "weight": 10, "synergy": "reflexes"
+        "id": "epic_save",
+        "name": "Milagre",
+        "emoji": "👼",
+        "type": "save",
+        "mod": 1.30,
+        "successMove": 2,
+        "failMove": -1,
+        "comboGen": 2,
+        "zones": [
+            0
+        ],
+        "riskLevel": "med",
+        "weight": 10,
+        "synergy": "reflexes"
     }
 ]
