@@ -570,30 +570,44 @@ button {
     color: #94a3b8;
 }
 
-.card-badge {
-    position: absolute;
-    top: -6px;
-    /* Destaca quebrando a borda do card */
-    right: -6px;
-    font-size: 0.75rem;
-    /* Fonte muito mais legível */
-    background: rgba(2, 6, 23, 0.95);
-    /* Fundo escuro sólido */
-    padding: 4px 8px;
-    /* Mais gordinho */
-    border-radius: 8px;
+/* ==================== CABEÇALHO DO CARD (NÍVEL E RANK) ==================== */
+.card-header-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 2px;
+    margin-bottom: 2px;
+}
+
+.card-lvl {
+    font-size: 0.7rem;
     font-weight: 900;
     color: #fff;
-    /* Nível agora é branco e brilhante */
-    border: 1px solid var(--border-light);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-    z-index: 5;
-    letter-spacing: 0.5px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-rank {
+    font-size: 0.75rem;
+    font-weight: 900;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .card-emoji {
-    font-size: 1.6rem;
-    margin: 8px 0 4px 0;
+    text-align: center;
+    font-size: 2rem;
+    /* Mantém o tamanho grande */
+    margin-top: -15px;
+    /* Puxa o emoji para cima, para mais perto do cabeçalho */
+    margin-bottom: 6px;
+    /* Dá um respiro antes do nome */
+    line-height: 1;
 }
 
 .card-name {
