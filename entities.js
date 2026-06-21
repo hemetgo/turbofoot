@@ -110,17 +110,24 @@ function getPlayerCardHTML(p, onClickAttr = "") {
 }
 
 function getTeamPower() {
-    return {
-        atk: gameState.team.reduce((acc, p) => acc + (p.level * 3 + 10), 0),
-        def: gameState.team.reduce((acc, p) => acc + (p.level * 3 + 10), 0)
-    };
+    let avgLevel = gameState.team.reduce((acc, p) => acc + p.level, 0) / Math.max(1, gameState.team.length);
+    let currentLeague = GAME_BALANCE.leagues[gameState.leagueLevel];
+    let leagueDiff = currentLeague.difficulty;
+    let scale = GAME_BALANCE.mechanics.scaling;
+
+    // Agora o multiplicador base é puxado especificamente da Liga atual!
+    let baseP = leagueDiff * currentLeague.playerBaseMult;
+    let levelP = leagueDiff * (avgLevel / 10) * scale.playerLevelMaxMult;
+    let total = Math.floor(baseP + levelP);
+
+    return { atk: total, def: total };
 }
 
 function getRivalTraitBonus(node, rival) {
     if (!rival.perks) return 0;
     let bonus = 0;
-    let leagueDiff = GAME_BALANCE.leagues[gameState.leagueLevel]?.difficulty || 200;
-    let traitPower = Math.floor(leagueDiff * 0.10);
+    let leagueDiff = GAME_BALANCE.leagues[gameState.leagueLevel].difficulty;
+    let traitPower = Math.floor(leagueDiff * GAME_BALANCE.mechanics.scaling.traitPowerMult);
 
     rival.perks.forEach(perk => {
         if (perk.id === 'finishing' && node.type === 'shoot') bonus += traitPower;
@@ -128,7 +135,8 @@ function getRivalTraitBonus(node, rival) {
         if (perk.id === 'tackling' && node.type === 'def') bonus += traitPower;
         if (perk.id === 'reflexes' && node.type === 'save') bonus += traitPower;
         if (perk.id === 'pace' && node.riskLevel === 'high') bonus += traitPower;
-    }); return bonus;
+    });
+    return bonus;
 }
 
 function getTeamTraits() {
@@ -143,14 +151,15 @@ function getTeamTraits() {
 }
 
 function getTraitBonusForNode(node, traits) {
+    let leagueDiff = GAME_BALANCE.leagues[gameState.leagueLevel].difficulty;
+    let traitPower = Math.floor(leagueDiff * GAME_BALANCE.mechanics.scaling.traitPowerMult);
     let bonus = 0;
-    let traitMultiplier = 8;
 
-    if (node.type === 'shoot') bonus += traits.finishing * traitMultiplier;
-    if (node.type === 'atk') bonus += traits.passing * traitMultiplier;
-    if (node.type === 'def') bonus += traits.tackling * traitMultiplier;
-    if (node.type === 'save') bonus += traits.reflexes * traitMultiplier;
-    if (node.riskLevel === 'high') bonus += traits.pace * traitMultiplier;
+    if (node.type === 'shoot') bonus += traits.finishing * traitPower;
+    if (node.type === 'atk') bonus += traits.passing * traitPower;
+    if (node.type === 'def') bonus += traits.tackling * traitPower;
+    if (node.type === 'save') bonus += traits.reflexes * traitPower;
+    if (node.riskLevel === 'high') bonus += traits.pace * traitPower;
 
     return bonus;
 }

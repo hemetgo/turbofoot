@@ -73,23 +73,30 @@ function createMapRivalNode(type, baseDiff, stageIndex = 0) {
     const adj = rnd(GAME_CONTENT.clubGeneration.adjectives);
     const style = rnd(GAME_CONTENT.rivalStyles);
 
-    let runScale = 1 + (stageIndex * 0.12);
-    let varMult = (type === 'boss') ? 1.4 : (type === 'elite' ? 1.2 : (0.85 + Math.random() * 0.25));
+    // Pega as mecânicas do JSON
+    const mechanics = GAME_BALANCE.mechanics;
+    const threat = mechanics.threatLevels[type] || mechanics.threatLevels['match'];
+
+    let runScale = 1 + (stageIndex * mechanics.scaling.stageDifficultyStep);
+
+    // Rola uma dificuldade dinamicamente baseada nos multiplicadores do JSON
+    let minMult = threat.powerMultMin;
+    let maxMult = threat.powerMultMax;
+    let varMult = minMult + Math.random() * (maxMult - minMult);
 
     let rAtk = Math.floor(baseDiff * style.atkMod * varMult * runScale);
     let rDef = Math.floor(baseDiff * style.defMod * varMult * runScale);
 
-    // Os perks começam vazios e serão gerados dinamicamente na hora do clique
     return {
         id: `node_${Date.now()}_${Math.random()}`, type: type,
         rival: {
             name: `${base.name} ${adj}`,
             emoji: base.emoji,
             style: style,
-            perks: [], // Começa zerado
+            perks: [],
             atk: rAtk,
             def: rDef,
-            dynamicTraitsSet: false // Trava de segurança para gerar só uma vez
+            dynamicTraitsSet: false
         }
     };
 }
@@ -192,24 +199,21 @@ function handleMapNodeClick(node) {
     gameState.currentNode = node;
 
     if (node.type === 'match' || node.type === 'elite' || node.type === 'boss') {
+        const threat = GAME_BALANCE.mechanics.threatLevels[node.type] || GAME_BALANCE.mechanics.threatLevels['match'];
 
-        // --- NOVA LÓGICA DE PAREAMENTO DINÂMICO ---
+        // --- NOVA LÓGICA DE PAREAMENTO DINÂMICO USANDO JSON ---
         if (!node.rival.dynamicTraitsSet) {
-            // 1. Conta quantas traits totais o jogador tem no time atualmente
             let playerTraitCount = 0;
             gameState.team.forEach(p => {
                 if (p.perks) playerTraitCount += p.perks.length;
             });
 
-            // 2. Cria a variação de -2 a +2
             let variation = Math.floor(Math.random() * 5) - 2;
-            let rivalTraitCount = Math.max(0, playerTraitCount + variation); // max(0) garante que não seja negativo
+            let rivalTraitCount = Math.max(0, playerTraitCount + variation);
 
-            // Bônus natural de dificuldade: Elites ganham +1 trait e Chefões ganham +2
-            if (node.type === 'elite') rivalTraitCount += 1;
-            if (node.type === 'boss') rivalTraitCount += 2;
+            // Soma a ameaça extra que vem configurada no JSON
+            rivalTraitCount += threat.extraTraits;
 
-            // 3. Sorteia as traits do rival e trava para não ficar mudando se o jogador fechar o modal
             node.rival.perks = [];
             for (let i = 0; i < rivalTraitCount; i++) {
                 node.rival.perks.push(rnd(PERK_LIST));
@@ -222,8 +226,10 @@ function handleMapNodeClick(node) {
         const modal = document.getElementById('pre-match-overlay');
         const details = document.getElementById('pre-match-details');
 
-        let threatColor = node.type === 'boss' ? 'var(--accent-red)' : (node.type === 'elite' ? 'var(--accent-gold)' : 'var(--accent-green)');
-        let threatLabel = node.type === 'boss' ? 'MÁXIMA (CHEFÃO)' : (node.type === 'elite' ? 'ALTA (CLÁSSICO)' : 'MODERADA');
+        // Puxa as cores e textos do JSON
+        let threatColor = threat.color;
+        let threatLabel = threat.label;
+        let levelGain = threat.expReward;
 
         let perkCounts = {};
         node.rival.perks.forEach(perk => {
@@ -235,8 +241,6 @@ function handleMapNodeClick(node) {
             let countLabel = perk.count > 1 ? ` <b style="color:var(--accent-gold);">(x${perk.count})</b>` : "";
             return `<span data-tip="${perk.desc}" style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.05); padding:6px 12px; border-radius:8px; ">${perk.emoji} ${perk.name}${countLabel}</span>`;
         }).join('');
-
-        let levelGain = node.type === 'elite' ? 2 : 1;
 
         details.innerHTML = `
             <div style="font-size:3.5rem; margin-bottom:10px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); text-align: center;">${node.rival.emoji}</div>
@@ -297,7 +301,7 @@ function closeCampTrainModal() {
 
 function applyCamp(choice) {
     if (choice === 'buff') {
-        gameState.activeCampBuff = 20;
+        gameState.activeCampBuff = 15;
     }
     updateRosterUI();
     closeModals(); advanceMapNode();

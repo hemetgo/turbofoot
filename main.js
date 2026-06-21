@@ -1,17 +1,6 @@
 let pendingClubOptions = [];
 let selectedSeriesIndex = 0;
 
-// NOVO: Definição de todas as Séries e Dificuldades
-const SERIES_DATA = [
-    { id: 0, name: "SÉRIE F", desc: "Futebol Amador. O começo da lenda.", difficulty: 80, rewardBase: 30, color: "#94a3b8" },
-    { id: 1, name: "SÉRIE E", desc: "Liga de Bairro. Primeiros desafios reais.", difficulty: 110, rewardBase: 35, color: "#34d399" },
-    { id: 2, name: "SÉRIE D", desc: "Divisão Regional. Os times já têm tática.", difficulty: 150, rewardBase: 40, color: "#38bdf8" },
-    { id: 3, name: "SÉRIE C", desc: "Cenário Nacional. Jogadores profissionais.", difficulty: 200, rewardBase: 45, color: "#a855f7" },
-    { id: 4, name: "SÉRIE B", desc: "Divisão de Acesso. A pressão e técnica sobem.", difficulty: 260, rewardBase: 55, color: "#f59e0b" },
-    { id: 5, name: "SÉRIE A", desc: "A Elite do Futebol. Apenas times gigantes.", difficulty: 330, rewardBase: 70, color: "#f87171" },
-    { id: 6, name: "SÉRIE S", desc: "Divisão LENDÁRIA. Implacável e cruel.", difficulty: 420, rewardBase: 100, color: "#fbbf24" }
-];
-
 async function initGame() {
     try {
         const mechanicsData = await fetch('config_mechanics.json').then(r => r.json());
@@ -19,9 +8,11 @@ async function initGame() {
         const rivalsData = await fetch('config_rivals.json').then(r => r.json());
         const actionsData = await fetch('config_actions.json').then(r => r.json());
         const textsData = await fetch('config_texts.json').then(r => r.json());
-        const metaData = await fetch('config_meta.json').then(r => r.json()); // NOVO
+        const metaData = await fetch('config_meta.json').then(r => r.json());
+        const leaguesData = await fetch('config_leagues.json').then(r => r.json()); // NOVO
 
-        GAME_BALANCE = { mechanics: mechanicsData, leagues: SERIES_DATA, meta: metaData };
+        // CARREGA A LIGA DIRETO DO JSON
+        GAME_BALANCE = { mechanics: mechanicsData, leagues: leaguesData, meta: metaData };
         GAME_CONTENT = {
             clubGeneration: generationData.clubGeneration, players: generationData.players,
             rivalStyles: rivalsData, nodes: actionsData,
@@ -43,7 +34,8 @@ function startRunFlow() {
 
     let highestUnlocked = gameState.meta?.highestSeriesUnlocked || 0;
 
-    SERIES_DATA.forEach((series, idx) => {
+    // Alterado para buscar do GAME_BALANCE e não do chumbado
+    GAME_BALANCE.leagues.forEach((series, idx) => {
         let isLocked = idx > highestUnlocked;
         let lockedAttr = isLocked ? 'style="opacity:0.3; filter:grayscale(1); pointer-events:none;"' : '';
         let lockIcon = isLocked ? '🔒' : '🏆';

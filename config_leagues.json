@@ -1,37 +1,65 @@
-{
-    "5": {
-        "name": "Série E",
-        "difficulty": 340,
+[
+    {
+        "id": 0,
+        "name": "SÉRIE F",
+        "desc": "Futebol Amador. O começo da lenda.",
+        "difficulty": 100,
+        "rewardBase": 30,
+        "color": "#94a3b8",
+        "playerBaseMult": 1.00
+    },
+    {
+        "id": 1,
+        "name": "SÉRIE E",
+        "desc": "Liga de Bairro. Primeiros desafios reais.",
+        "difficulty": 200,
+        "rewardBase": 35,
+        "color": "#34d399",
+        "playerBaseMult": 0.95
+    },
+    {
+        "id": 2,
+        "name": "SÉRIE D",
+        "desc": "Divisão Regional. Os times já têm tática.",
+        "difficulty": 350,
         "rewardBase": 40,
-        "color": "#10b981",
-        "glow": "rgba(16, 185, 129, 0.3)"
+        "color": "#38bdf8",
+        "playerBaseMult": 0.90
     },
-    "4": {
-        "name": "Série D",
-        "difficulty": 440,
-        "rewardBase": 60,
-        "color": "#3b82f6",
-        "glow": "rgba(59, 130, 246, 0.3)"
+    {
+        "id": 3,
+        "name": "SÉRIE C",
+        "desc": "Cenário Nacional. Jogadores profissionais.",
+        "difficulty": 600,
+        "rewardBase": 45,
+        "color": "#a855f7",
+        "playerBaseMult": 0.85
     },
-    "3": {
-        "name": "Série C",
-        "difficulty": 540,
-        "rewardBase": 90,
-        "color": "#eab308",
-        "glow": "rgba(234, 179, 8, 0.3)"
+    {
+        "id": 4,
+        "name": "SÉRIE B",
+        "desc": "Divisão de Acesso. A pressão e técnica sobem.",
+        "difficulty": 1000,
+        "rewardBase": 55,
+        "color": "#f59e0b",
+        "playerBaseMult": 0.80
     },
-    "2": {
-        "name": "Série B",
-        "difficulty": 690,
-        "rewardBase": 140,
-        "color": "#f97316",
-        "glow": "rgba(249, 115, 22, 0.3)"
+    {
+        "id": 5,
+        "name": "SÉRIE A",
+        "desc": "A Elite do Futebol. Apenas times gigantes.",
+        "difficulty": 1800,
+        "rewardBase": 70,
+        "color": "#f87171",
+        "playerBaseMult": 0.75
     },
-    "1": {
-        "name": "Série A",
-        "difficulty": 900,
-        "rewardBase": 250,
-        "color": "#ec4899",
-        "glow": "rgba(236, 72, 153, 0.4)"
+    {
+        "id": 6,
+        "name": "SÉRIE S",
+        "desc": "Divisão LENDÁRIA. Implacável e cruel.",
+        "difficulty": 3000,
+        "rewardBase": 100,
+        "color": "#fbbf24",
+        "playerBaseMult": 0.70
     }
-}
+]

@@ -1,14 +1,47 @@
 {
     "initialCoins": 80,
-    "rngRange": 300,
     "comboCoinMultiplier": 0.15,
     "matchActionsMin": 10,
     "matchActionsMax": 15,
     "safeActionChance": 0.15,
-    "cupBonusMultiplier": 1.25,
     "luckEvents": {
         "chance": 0.08,
-        "penaltyPower": -50,
+        "penaltyMult": 0.85,
         "duration": 3
+    },
+    "scaling": {
+        "playerLevelMaxMult": 0.50,
+        "traitPowerMult": 0.15,
+        "rngRangeMult": 1.00,
+        "stageDifficultyStep": 0.05
+    },
+    "threatLevels": {
+        "match": {
+            "label": "MODERADA",
+            "color": "var(--accent-green)",
+            "powerMultMin": 0.90,
+            "powerMultMax": 1.00,
+            "extraTraits": 0,
+            "expReward": 1,
+            "coinMult": 1.0
+        },
+        "elite": {
+            "label": "ALTA (CLÁSSICO)",
+            "color": "var(--accent-gold)",
+            "powerMultMin": 1.10,
+            "powerMultMax": 1.20,
+            "extraTraits": 1,
+            "expReward": 2,
+            "coinMult": 2.0
+        },
+        "boss": {
+            "label": "MÁXIMA (CHEFÃO)",
+            "color": "var(--accent-red)",
+            "powerMultMin": 1.25,
+            "powerMultMax": 1.35,
+            "extraTraits": 2,
+            "expReward": 2,
+            "coinMult": 3.0
+        }
     }
 }

@@ -27,7 +27,7 @@ function startMapMatch() {
     showScreen("screen-match");
     document.getElementById('match-log-feed').innerHTML = '';
     addMatchLog("A bola rola para o desafio no Mapa!", "system");
-    if (matchState.nextBuff > 0) addMatchLog("Seu time entra focado (+20 Força no 1º turno) devido ao Treinamento!", "success");
+    if (matchState.nextBuff > 0) addMatchLog(`Seu time entra focado (+${matchState.nextBuff} Tática no 1º turno) devido ao Treinamento!`, "success");
     updateFieldState();
 }
 
@@ -148,16 +148,20 @@ function _renderPlayerButtons() {
     selected = shuffle(selected);
     wrapper.className = `field-container ${matchState.hasBall ? 'atk-theme' : 'def-theme'} pop-in`;
 
+    const leagueDiff = GAME_BALANCE.leagues[gameState.leagueLevel].difficulty;
+    const rngRange = Math.floor(leagueDiff * GAME_BALANCE.mechanics.scaling.rngRangeMult);
+    const momentumVal = Math.floor(leagueDiff * 0.03);
+    const buffScale = leagueDiff / 100;
+
     const power = getTeamPower();
     const traits = getTeamTraits();
-    const markingDebuff = traits.marking * 12;
+    const markingDebuff = traits.marking * Math.floor(leagueDiff * GAME_BALANCE.mechanics.scaling.traitPowerMult);
 
     selected.forEach((node) => {
         const btn = document.createElement("button");
         let canAfford = true;
         let comboBadge = "";
 
-        // Badge de Combo com Aviso de Falta
         if (node.comboReq === "ALL") {
             if (matchState.combo <= 0) canAfford = false;
             comboBadge = canAfford ? `<span class="combo-badge">TUDO 🔥</span>` : `<span class="combo-badge" style="color:var(--accent-red); border-color:var(--accent-red); background:rgba(248,113,113,0.15);">FALTA COMBO</span>`;
@@ -171,30 +175,29 @@ function _renderPlayerButtons() {
         }
 
         let finalMod = node.id === "bicycle" ? node.mod + (Math.min(matchState.combo, 6) * 0.1) : node.mod;
-        let traitBonus = getTraitBonusForNode(node, traits);
+        let traitBonus = getTraitBonusForNode(node, traits) || 0; // Garante que nunca seja undefined
         let pToUse = (node.type === 'atk' || node.type === 'shoot') ? power.atk : power.def;
-        let pBase = (pToUse * finalMod) + matchState.nextBuff + (matchState.momentum * 5) + traitBonus;
 
-        if (matchState.badLuckCounter > 0) pBase += GAME_BALANCE.mechanics.luckEvents.penaltyPower;
+        let pBase = (pToUse * finalMod) + (matchState.nextBuff * buffScale) + (matchState.momentum * momentumVal) + traitBonus;
+        if (matchState.badLuckCounter > 0) pBase = Math.floor(pBase * GAME_BALANCE.mechanics.luckEvents.penaltyMult);
 
-        let rBase = Math.max(1, (matchState.hasBall ? matchState.rivalProfile.def : matchState.rivalProfile.atk) - markingDebuff);
-        let chance = node.riskLevel !== "safe" ? calcWinChance(pBase, rBase, GAME_BALANCE.mechanics.rngRange) : 100;
+        let rTraitBonus = getRivalTraitBonus(node, matchState.rivalTeamRef) || 0; // Garante que nunca seja undefined
+        let rBase = Math.max(1, (matchState.hasBall ? matchState.rivalProfile.def : matchState.rivalProfile.atk) - markingDebuff) + rTraitBonus;
 
-        if (traitBonus > 0 && node.riskLevel !== "safe") {
-            let chanceOfFail = (100 - chance) / 100;
-            let realChance = 1 - (chanceOfFail * chanceOfFail);
-            chance = Math.round(realChance * 100);
-        }
+        // Calcula a chance pura
+        let chance = node.riskLevel !== "safe" ? calcWinChance(pBase, rBase, rngRange) : 100;
 
+        // Garante que o número não seja quebrado e esteja entre 0 e 100
+        chance = Math.round(chance);
+        chance = Math.max(0, Math.min(100, chance));
+
+        // Define as cores baseadas no percentual
         let colorClass = chance >= 65 ? "risk-safe" : chance >= 40 ? "risk-med" : "risk-high";
         let chanceColor = chance >= 65 ? "var(--accent-green)" : chance >= 40 ? "var(--accent-gold)" : "var(--accent-red)";
 
         btn.className = `node-btn ${colorClass} active ${gameState.settings.requireConfirm ? 'confirm-enabled' : ''}`;
         if (!canAfford) btn.disabled = true;
 
-        // ==========================================================
-        // TEXTOS DE SUCESSO/FRACASSO OTIMIZADOS P/ MOBILE (Uso de Ícones)
-        // ==========================================================
         let succLabel = "";
         if (node.type === 'shoot') succLabel = "Gol";
         else if (node.type === 'save') succLabel = "Defesa";
@@ -207,8 +210,6 @@ function _renderPlayerButtons() {
         if (node.riskLevel === "safe") { failLabel = "Sem Risco"; failClass += " safe"; }
         else if (node.type === 'save') failLabel = "Sofre Gol";
         else failLabel = node.failMove < 0 ? `Recua ${Math.abs(node.failMove)}` : "Perde Posse";
-
-        // ==========================================================
 
         let synergies = [];
         if (node.type === 'shoot') synergies.push(PERK_LIST.find(p => p.id === 'finishing'));
@@ -230,29 +231,24 @@ function _renderPlayerButtons() {
             }
         }
 
-        // HTML ESTRUTURAL BASEADO EM CLASSES (Muito mais limpo)
         btn.innerHTML = `
             <div class="node-header">
                 <span class="node-chance" style="color:${chanceColor};">🎯 ${chance}%</span>
                 ${comboBadge}
             </div>
-            
             <div class="node-center">
                 <div class="node-icon-name">
                     <span class="node-emoji">${node.emoji}</span>
                     <span class="node-name">${node.name}</span>
                 </div>
-                
                 <div class="node-badges-wrapper">
                     ${synBadge}
                 </div>
             </div>
-
             <div class="node-footer">
                 <div class="outcome-row ${failClass}">❌ ${failLabel}</div>
                 <div class="outcome-row succ">✅ ${succLabel}</div>
             </div>
-
             <div class="confirm-text">TOQUE P/ CONFIRMAR</div>
         `;
 
@@ -286,24 +282,30 @@ async function resolveProceduralNode(node, power, event) {
     const traits = getTeamTraits();
     const traitBonus = getTraitBonusForNode(node, traits);
 
+    let leagueDiff = GAME_BALANCE.leagues[gameState.leagueLevel].difficulty;
+    let rngRange = Math.floor(leagueDiff * GAME_BALANCE.mechanics.scaling.rngRangeMult);
+    let momentumVal = Math.floor(leagueDiff * 0.03);
+    let buffScale = leagueDiff / 100;
+
     let pToUse = (node.type === 'atk' || node.type === 'shoot') ? power.atk : power.def;
     let finalMod = node.id === "bicycle" ? node.mod + (Math.min(matchState.combo, 6) * 0.1) : node.mod;
 
-    let pBaseFixed = (pToUse * finalMod) + matchState.nextBuff + (matchState.momentum * 5) + traitBonus;
-    if (matchState.badLuckCounter > 0) pBaseFixed += GAME_BALANCE.mechanics.luckEvents.penaltyPower;
+    let pBaseFixed = (pToUse * finalMod) + (matchState.nextBuff * buffScale) + (matchState.momentum * momentumVal) + traitBonus;
+    if (matchState.badLuckCounter > 0) pBaseFixed = Math.floor(pBaseFixed * GAME_BALANCE.mechanics.luckEvents.penaltyMult);
 
-    let rPowFixed = Math.max(1, (matchState.hasBall ? matchState.rivalProfile.def : matchState.rivalProfile.atk) - (traits.marking * 12));
+    let markingDebuff = traits.marking * Math.floor(leagueDiff * GAME_BALANCE.mechanics.scaling.traitPowerMult);
+    let rPowFixed = Math.max(1, (matchState.hasBall ? matchState.rivalProfile.def : matchState.rivalProfile.atk) - markingDebuff);
     let rTraitBonus = getRivalTraitBonus(node, matchState.rivalTeamRef);
 
-    let pRoll = pBaseFixed + Math.floor(Math.random() * GAME_BALANCE.mechanics.rngRange);
-    let rRoll = rPowFixed + rTraitBonus + Math.floor(Math.random() * GAME_BALANCE.mechanics.rngRange);
+    let pRoll = pBaseFixed + Math.floor(Math.random() * rngRange);
+    let rRoll = rPowFixed + rTraitBonus + Math.floor(Math.random() * rngRange);
 
     let isSuccess = (node.riskLevel === "safe") ? true : (pRoll >= rRoll);
     let usedSecondChance = false;
 
     if (!isSuccess && traitBonus > 0 && node.riskLevel !== "safe") {
-        let pRoll2 = pBaseFixed + Math.floor(Math.random() * GAME_BALANCE.mechanics.rngRange);
-        let rRoll2 = rPowFixed + rTraitBonus + Math.floor(Math.random() * GAME_BALANCE.mechanics.rngRange);
+        let pRoll2 = pBaseFixed + Math.floor(Math.random() * rngRange);
+        let rRoll2 = rPowFixed + rTraitBonus + Math.floor(Math.random() * rngRange);
 
         if (pRoll2 >= rRoll2) {
             isSuccess = true;
@@ -451,11 +453,13 @@ function finishMatchRewards() {
             return;
         }
 
+        const threat = GAME_BALANCE.mechanics.threatLevels[gameState.currentNode.type] || GAME_BALANCE.mechanics.threatLevels['match'];
         const base = GAME_BALANCE.leagues[gameState.leagueLevel].rewardBase;
-        let mult = gameState.currentNode.type === 'elite' ? 2 : (gameState.currentNode.type === 'boss' ? 3 : 1);
+
+        let mult = threat.coinMult;
         let coins = Math.floor(base * (1 + Math.min(matchState.combo, 6) * GAME_BALANCE.mechanics.comboCoinMultiplier)) * mult;
 
-        let levelGainBase = gameState.currentNode.type === 'elite' ? 2 : 1;
+        let levelGainBase = threat.expReward;
         let totalLevelsGained = 0;
 
         gameState.team.forEach(p => {
