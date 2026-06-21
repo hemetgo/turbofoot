@@ -134,11 +134,10 @@ function getRivalTraitBonus(node, rival) {
     let traitPower = Math.floor(leagueDiff * GAME_BALANCE.mechanics.scaling.traitPowerMult);
 
     rival.perks.forEach(perk => {
-        if (perk.id === 'finishing' && node.type === 'shoot') bonus += traitPower;
-        if (perk.id === 'passing' && node.type === 'atk') bonus += traitPower;
-        if (perk.id === 'tackling' && node.type === 'def') bonus += traitPower;
-        if (perk.id === 'reflexes' && node.type === 'save') bonus += traitPower;
-        if (perk.id === 'pace' && node.riskLevel === 'high') bonus += traitPower;
+        // Verifica a sinergia única
+        if (node.synergy && perk.id === node.synergy) {
+            bonus += traitPower;
+        }
     });
     return bonus;
 }
@@ -159,11 +158,10 @@ function getTraitBonusForNode(node, traits) {
     let traitPower = Math.floor(leagueDiff * GAME_BALANCE.mechanics.scaling.traitPowerMult);
     let bonus = 0;
 
-    if (node.type === 'shoot') bonus += traits.finishing * traitPower;
-    if (node.type === 'atk') bonus += traits.passing * traitPower;
-    if (node.type === 'def') bonus += traits.tackling * traitPower;
-    if (node.type === 'save') bonus += traits.reflexes * traitPower;
-    if (node.riskLevel === 'high') bonus += traits.pace * traitPower;
+    // Bônus aplicado a partir da sinergia única do JSON
+    if (node.synergy && traits[node.synergy]) {
+        bonus += traits[node.synergy] * traitPower;
+    }
 
     return bonus;
 }

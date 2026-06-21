@@ -248,11 +248,10 @@ function _renderPlayerButtons() {
         else failLabel = node.failMove < 0 ? `Recua ${Math.abs(node.failMove)}` : "Perde Posse";
 
         let synergies = [];
-        if (node.type === 'shoot') synergies.push(PERK_LIST.find(p => p.id === 'finishing'));
-        if (node.type === 'atk') synergies.push(PERK_LIST.find(p => p.id === 'passing'));
-        if (node.type === 'def') synergies.push(PERK_LIST.find(p => p.id === 'tackling'));
-        if (node.type === 'save') synergies.push(PERK_LIST.find(p => p.id === 'reflexes'));
-        if (node.riskLevel === 'high') synergies.push(PERK_LIST.find(p => p.id === 'pace'));
+        if (node.synergy) {
+            let foundPerk = PERK_LIST.find(p => p.id === node.synergy);
+            if (foundPerk) synergies.push(foundPerk);
+        }
 
         let synHtml = synergies.map(s => `<span data-tip="${s.name}" style="font-size:0.8rem;">${s.emoji}</span>`).join('');
         let synBadge = '';
