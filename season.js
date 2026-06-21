@@ -214,6 +214,9 @@ function handleMapNodeClick(node) {
             // Soma a ameaça extra que vem configurada no JSON
             rivalTraitCount += threat.extraTraits;
 
+            // NOVO: Garante que NENHUM rival terá menos de 2 traits
+            rivalTraitCount = Math.max(2, rivalTraitCount);
+
             node.rival.perks = [];
             for (let i = 0; i < rivalTraitCount; i++) {
                 node.rival.perks.push(rnd(PERK_LIST));

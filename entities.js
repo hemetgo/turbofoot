@@ -78,16 +78,17 @@ function getRankColor(rank) {
 
 function getPlayerCardHTML(p, onClickAttr = "") {
     let rColor = getRankColor(p.rank);
-    let isBaseClass = p.isBase ? 'base-player' : '';
 
-    // NOVA LÓGICA DE LEVEL UP (Removido o p.justLeveledUp = false daqui)
-    let levelUpClass = p.justLeveledUp ? 'level-up-flash' : '';
-    let levelUpBadge = p.justLeveledUp ? `<div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:var(--accent-green); color:#000; font-weight:900; padding:2px 8px; border-radius:10px; font-size:0.7rem; z-index:10; box-shadow:0 0 10px var(--accent-green); white-space:nowrap; animation: pulseBallZone 1s infinite alternate;">⬆️ LEVEL UP</div>` : '';
+    // Verifica se tem habilidades
+    let hasTraits = p.perks && p.perks.length > 0;
+
+    // O jogador SÓ fica apagadinho se for da base E NÃO tiver nenhuma habilidade
+    let isBaseClass = (p.isBase && !hasTraits) ? 'base-player' : '';
 
     let perksHTML = "";
     let dataPerks = "";
 
-    if (p.perks && p.perks.length > 0) {
+    if (hasTraits) {
         dataPerks = p.perks.map(perk => perk.id).join(',');
 
         let perkCounts = {};
@@ -104,10 +105,10 @@ function getPlayerCardHTML(p, onClickAttr = "") {
         perksHTML = `<div class="card-perk" style="color:var(--text-muted); justify-content:center;" data-tip="Não possui bônus de habilidade.">Sem Habilidade</div>`;
     }
 
+    // Removidas as referências à animação de Level Up
     return `
-        <div class="player-card ${isBaseClass} ${levelUpClass}" data-perks="${dataPerks}" ${onClickAttr}>
-            ${levelUpBadge}
-            <div class="card-badge" style="z-index:5;">Lvl ${p.level} • <span style="color:${rColor}; font-weight:900;">${p.rank}</span></div>
+        <div class="player-card ${isBaseClass}" data-perks="${dataPerks}" ${onClickAttr}>
+            <div class="card-badge">Nv ${p.level} <span style="color:var(--text-muted); margin: 0 2px;">|</span> <span style="color:${rColor}; font-size: 0.85rem;">${p.rank}</span></div>
             <div class="card-emoji">${p.emoji}</div>
             <div class="card-name">${p.name}</div>
             <div class="card-stats">${perksHTML}</div>
