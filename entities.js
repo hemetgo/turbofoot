@@ -107,12 +107,12 @@ function getPlayerCardHTML(p, onClickAttr = "") {
         // Adicionado: cursor de ajuda (help) e removido overflow que cortava as tooltips!
         let perksArray = Object.values(perkCounts).map(perk => {
             let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold); font-weight:900;">(x${perk.count})</span>` : "";
-            return `<div data-tip="${perk.desc}" style="position: relative; display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 6px; white-space: nowrap; width: 100%; box-sizing: border-box; cursor: help; z-index: 10;">${perk.emoji} ${perk.name}${countLabel}</div>`;
+            return `<div data-tip="${perk.desc}" style="position: relative; display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 6px; white-space: nowrap; width: 100%; box-sizing: border-box; z-index: 10;">${perk.emoji} ${perk.name}${countLabel}</div>`;
         });
 
         perksHTML = `<div style="display: flex; flex-direction: column; width: 100%; gap: 4px;">${perksArray.join('')}</div>`;
     } else {
-        perksHTML = `<div style="color:var(--text-muted); width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.4); border-radius: 6px; padding: 4px; box-sizing: border-box; cursor: help; z-index: 10;" data-tip="Não possui bônus de habilidade.">Sem Habilidade</div>`;
+        perksHTML = `<div style="color:var(--text-muted); width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.4); border-radius: 6px; padding: 4px; box-sizing: border-box; z-index: 10;" data-tip="Não possui bônus de habilidade.">Sem Habilidade</div>`;
     }
 
     let nameSize = Math.min(0.92, 13 / Math.max(10, p.name.length));
@@ -158,12 +158,12 @@ function getPlayerCardHTML(p, onClickAttr = "") {
         let perksArray = Object.values(perkCounts).map(perk => {
             let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold); font-weight:900;">(x${perk.count})</span>` : "";
             // position: relative destrava a tooltip e cursor: help indica que é "passável"
-            return `<div data-tip="${perk.desc}" style="position: relative; display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 6px; white-space: nowrap; width: 100%; box-sizing: border-box; cursor: help; z-index: 10;">${perk.emoji} ${perk.name}${countLabel}</div>`;
+            return `<div data-tip="${perk.desc}" style="position: relative; display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 6px; white-space: nowrap; width: 100%; box-sizing: border-box; z-index: 10;">${perk.emoji} ${perk.name}${countLabel}</div>`;
         });
 
         perksHTML = `<div style="display: flex; flex-direction: column; width: 100%; gap: 4px;">${perksArray.join('')}</div>`;
     } else {
-        perksHTML = `<div style="position: relative; color:var(--text-muted); width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.4); border-radius: 6px; padding: 4px; box-sizing: border-box; cursor: help; z-index: 10;" data-tip="Não possui bônus de habilidade.">Sem Habilidade</div>`;
+        perksHTML = `<div style="position: relative; color:var(--text-muted); width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.4); border-radius: 6px; padding: 4px; box-sizing: border-box; z-index: 10;" data-tip="Não possui bônus de habilidade.">Sem Habilidade</div>`;
     }
 
     let nameSize = Math.min(0.92, 13 / Math.max(10, p.name.length));
@@ -207,13 +207,12 @@ function getSidebarPlayerHTML(p) {
 
         let perksArray = Object.values(perkCounts).map(perk => {
             let countLabel = perk.count > 1 ? ` (x${perk.count})` : "";
-            // Fonte da habilidade restaurada para 0.75rem
-            return `<div data-tip="${perk.desc}" style="position: relative; display: flex; align-items: center; gap: 3px; cursor: help; z-index: 10;"><span style="font-size: 0.75rem;">${perk.emoji}</span> <span>${perk.name}${countLabel}</span></div>`;
+            return `<div data-tip="${perk.desc}" style="position: relative; display: flex; align-items: center; gap: 3px; z-index: 10;"><span style="font-size: 0.75rem;">${perk.emoji}</span> <span>${perk.name}${countLabel}</span></div>`;
         });
 
         perksHTML = `<div style="display: flex; gap: 8px; width: 100%; flex-wrap: wrap;">${perksArray.join('')}</div>`;
     } else {
-        perksHTML = `<div style="position: relative; color:var(--text-muted); cursor: help; z-index: 10;" data-tip="Não possui bônus de habilidade.">Sem Habilidade</div>`;
+        perksHTML = `<div style="position: relative; color:var(--text-muted); z-index: 10;" data-tip="Não possui bônus de habilidade.">Sem Habilidade</div>`;
     }
 
     let isCaptain = p.name.includes("©️");
@@ -222,28 +221,25 @@ function getSidebarPlayerHTML(p) {
     let captainBadge = isCaptain ? `<span style="color:var(--accent-gold); font-size:0.8rem; margin-right: 4px;">©️</span>` : '';
     let starBadge = p.isStar ? `<span style="font-size: 0.9rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
 
-    // Altura mínima restaurada para 56px (não amassa o texto) e máxima para 70px (preenche espaços vazios)
     return `
         <div class="player-card" data-perks="${dataPerks}" style="display: flex; flex-direction: row; align-items: center; background: rgba(0,0,0,0.25); border: 1px solid var(--border-light); border-radius: 8px; padding: 6px 12px; width: 100%; box-sizing: border-box; flex: 1; min-height: 56px; max-height: 70px; transition: all 0.2s;">
             
-            <!-- Bandeira e Rosto (Tamanho restaurado) -->
-            <div style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; width: 55px; flex-shrink: 0;">
+            <div style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; width: 60px; flex-shrink: 0;">
                 <span style="font-size: 1.1rem; line-height: 1;">${p.flag || '🏳️'}</span>
                 <span style="font-size: 1.8rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${p.emoji}</span>
             </div>
 
-            <!-- Nome e Habilidades (Fontes originais restauradas) -->
-            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; margin-left: 4px;">
+            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; margin-left: 12px;">
                 <div style="display: flex; align-items: center; margin-bottom: 2px;">
-                    ${starBadge}${captainBadge}
+                    ${captainBadge}
                     <span style="font-size: 0.85rem; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${cleanName}</span>
+                    ${starBadge}
                 </div>
                 <div style="font-size: 0.65rem; color: var(--accent-blue); font-weight: 800; width: 100%;">
                     ${perksHTML}
                 </div>
             </div>
 
-            <!-- Nível -->
             <div style="flex-shrink: 0; margin-left: 8px;">
                 <span style="display: flex; justify-content: center; align-items: center; padding: 3px 8px; font-size: 0.75rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">Nv ${p.level}</span>
             </div>
