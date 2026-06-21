@@ -37,8 +37,8 @@
         "boss": {
             "label": "INSANA",
             "color": "var(--accent-red)",
-            "powerMultMin": 1.25,
-            "powerMultMax": 1.35,
+            "powerMultMin": 1.10,
+            "powerMultMax": 1.20,
             "extraTraits": 2,
             "expReward": 2,
             "coinMult": 3.0
