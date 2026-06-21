@@ -1,35 +1,35 @@
 {
     "5": {
         "name": "Série E",
-        "difficulty": 180,
+        "difficulty": 340,
         "rewardBase": 40,
         "color": "#10b981",
         "glow": "rgba(16, 185, 129, 0.3)"
     },
     "4": {
         "name": "Série D",
-        "difficulty": 260,
+        "difficulty": 440,
         "rewardBase": 60,
         "color": "#3b82f6",
         "glow": "rgba(59, 130, 246, 0.3)"
     },
     "3": {
         "name": "Série C",
-        "difficulty": 360,
+        "difficulty": 540,
         "rewardBase": 90,
         "color": "#eab308",
         "glow": "rgba(234, 179, 8, 0.3)"
     },
     "2": {
         "name": "Série B",
-        "difficulty": 480,
+        "difficulty": 690,
         "rewardBase": 140,
         "color": "#f97316",
         "glow": "rgba(249, 115, 22, 0.3)"
     },
     "1": {
         "name": "Série A",
-        "difficulty": 650,
+        "difficulty": 900,
         "rewardBase": 250,
         "color": "#ec4899",
         "glow": "rgba(236, 72, 153, 0.4)"
