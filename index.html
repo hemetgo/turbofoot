@@ -167,6 +167,29 @@
 
         </main>
 
+        <!-- MODAL DE DISTRIBUIÇÃO DE NÍVEIS -->
+        <div id="level-modal-overlay" class="modal-overlay" style="z-index: 9999;">
+            <div class="options-box">
+                <div class="modal-header">
+                    <h2 class="options-title text-success">📈 TREINAMENTO PÓS-JOGO</h2>
+                    <p class="modal-subtitle">
+                        Você tem <strong id="level-points-text"
+                            style="color: var(--accent-green); font-size: 1.1rem;">0</strong> níveis para distribuir!
+                    </p>
+                </div>
+
+                <div class="modal-body">
+                    <!-- Usando a classe roster-grid oficial do jogo para o responsivo perfeito -->
+                    <div id="level-team-grid" class="roster-grid"></div>
+                </div>
+
+                <div class="modal-footer" style="flex-direction: row; gap: 10px;">
+                    <button id="btn-level-reset" class="btn-secondary" style="flex: 1;">LIMPAR</button>
+                    <button id="btn-level-confirm" class="btn-primary" style="flex: 2;" disabled>CONFIRMAR</button>
+                </div>
+            </div>
+        </div>
+
         <div id="meta-shop-overlay" class="modal-overlay">
             <div class="options-box">
                 <div class="modal-header flex-between">
@@ -248,21 +271,6 @@
                 </div>
                 <div class="modal-footer mobile-only">
                     <button class="btn-secondary" onclick="openRosterModal()">🔍 VER MEU TIME</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="camp-train-overlay" class="modal-overlay" style="z-index: 250;">
-            <div class="options-box">
-                <div class="modal-header">
-                    <h2 class="options-title text-success">QUEM VAI TREINAR?</h2>
-                    <p class="modal-subtitle">Este jogador ganhará +1 Nível permanentemente.</p>
-                </div>
-                <div class="modal-body">
-                    <div id="camp-train-list" class="roster-grid"></div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-secondary" onclick="closeCampTrainModal()">← VOLTAR</button>
                 </div>
             </div>
         </div>

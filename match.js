@@ -495,20 +495,7 @@ function finishMatchRewards() {
         let mult = threat.coinMult;
         let coins = Math.floor(base * (1 + Math.min(matchState.combo, 6) * GAME_BALANCE.mechanics.comboCoinMultiplier)) * mult;
 
-        let levelGainBase = threat.expReward;
-        let totalLevelsGained = 0;
-
-        gameState.team.forEach(p => {
-            if (p.level < 10) {
-                let oldLvl = p.level;
-                p.level = Math.min(10, p.level + levelGainBase);
-
-                if (p.level > oldLvl) {
-                    p.justLeveledUp = true;
-                    totalLevelsGained += (p.level - oldLvl);
-                }
-            }
-        });
+        // --- SISTEMA ANTIGO DE NÍVEL AUTOMÁTICO FOI REMOVIDO DAQUI ---
 
         gameState.coins += coins;
         updateRosterUI();
@@ -523,13 +510,27 @@ function finishMatchRewards() {
         let rewardsText = `+${coins} 💰`;
         document.getElementById("pm-coins").innerText = rewardsText;
 
-        document.querySelector("#post-match-overlay .btn-primary").innerText = "CONTINUAR A JORNADA";
-        document.querySelector("#post-match-overlay .btn-primary").onclick = () => advanceMapAfterMatch();
+        // --- NOVO SISTEMA DE DISTRIBUIÇÃO DE PONTOS NO CLIQUE DO BOTÃO ---
+        document.querySelector("#post-match-overlay .btn-primary").innerText = "DISTRIBUIR NÍVEIS";
+        document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
+            // Fecha o modal de vitória
+            document.getElementById('post-match-overlay').style.display = 'none';
+
+            // Calcula os pontos baseado na ameaça (normal, elite, boss)
+            let niveisGanhos = threat.expReward || 1;
+
+            // Chama o novo modal de distribuição
+            showLevelDistribution(niveisGanhos, () => {
+                // Avança no mapa apenas após confirmar a distribuição
+                advanceMapNode();
+            });
+        };
 
         document.getElementById("post-match-overlay").style.display = "flex";
     }, 500);
 }
 
+// Essa função foi mantida caso você chame ela de algum outro lugar do seu código
 function advanceMapAfterMatch() {
     document.getElementById('post-match-overlay').style.display = 'none';
     advanceMapNode();

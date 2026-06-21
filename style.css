@@ -647,66 +647,47 @@ button {
     white-space: nowrap;
 }
 
-/* ==================== ANIMAÇÃO DE LEVEL UP SUTIL ==================== */
-.level-up-flash {
-    animation: levelUpGlow 1s ease-out forwards;
-}
-
-@keyframes levelUpGlow {
-    0% {
-        box-shadow: inset 0 0 15px rgba(52, 211, 153, 0.4);
-        border-color: var(--accent-green);
-    }
-
-    100% {
-        box-shadow: inset 0 0 0 transparent;
-        border-color: var(--border-accent);
-    }
-}
-
-/* ==================== ANIMAÇÃO DE LEVEL UP SUTIL ==================== */
+/* ==================== DISTRIBUIÇÃO DE NÍVEIS ==================== */
 .level-up-badge {
     position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: -10px;
+    right: -10px;
     background: var(--accent-green);
     color: #000;
     font-weight: 900;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 0.7rem;
+    font-size: 1rem;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     z-index: 10;
-    box-shadow: 0 0 10px var(--accent-green);
-    white-space: nowrap;
     pointer-events: none;
-    /* A animação forwards faz ele sumir e continuar invisível */
-    animation: floatAndFade 2.5s ease-out forwards;
+    animation: popIn 0.2s ease-out;
 }
 
-@keyframes floatAndFade {
+.player-card.can-level-up {
+    cursor: pointer;
+    transition: transform 0.1s, border-color 0.1s;
+}
+
+.player-card.can-level-up:active {
+    transform: scale(0.95);
+}
+
+@keyframes popIn {
     0% {
-        opacity: 0;
-        transform: translate(-50%, 10px);
-    }
-
-    15% {
-        opacity: 1;
-        transform: translate(-50%, 0px);
-    }
-
-    60% {
-        opacity: 1;
-        transform: translate(-50%, 0px);
+        transform: scale(0);
     }
 
     100% {
-        opacity: 0;
-        transform: translate(-50%, -15px);
+        transform: scale(1);
     }
-
-    /* Sobe e some */
 }
+
+/* == */
 
 .player-card.highlight-synergy {
     box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), inset 0 0 10px rgba(168, 85, 247, 0.2);

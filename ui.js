@@ -181,6 +181,106 @@ function openHistoryModal() {
     document.getElementById("run-history-overlay").style.display = "flex";
 }
 
+function showLevelDistribution(points, onComplete, givesTrait = false) {
+    const modal = document.getElementById('level-modal-overlay');
+    const grid = document.getElementById('level-team-grid');
+    const pointsText = document.getElementById('level-points-text');
+    const btnReset = document.getElementById('btn-level-reset');
+    const btnConfirm = document.getElementById('btn-level-confirm');
+
+    let available = points;
+    let originalPoints = points;
+    let allocations = {};
+
+    // Inicia todo mundo com 0 níveis extras
+    gameState.team.forEach(p => allocations[p.id] = 0);
+
+    function render() {
+        pointsText.innerText = available;
+        grid.innerHTML = "";
+
+        gameState.team.forEach(p => {
+            let currentBonus = allocations[p.id];
+
+            let levelDisplay = p.level;
+            if (currentBonus > 0) {
+                levelDisplay = `${p.level} <span style="color: var(--accent-green); font-weight: 900; margin-left: 2px;">+${currentBonus}</span>`;
+            }
+
+            let tempPlayer = { ...p, level: levelDisplay };
+            let tempDiv = document.createElement('div');
+            tempDiv.innerHTML = getPlayerCardHTML(tempPlayer);
+            let cardDiv = tempDiv.firstElementChild;
+
+            if (currentBonus > 0) {
+                cardDiv.style.borderColor = "var(--accent-green)";
+                cardDiv.style.boxShadow = "0 0 15px rgba(52, 211, 153, 0.2)";
+            }
+
+            // Removida a trava de nível máximo (isMaxLevel). O nível agora é infinito!
+            if (available > 0) {
+                cardDiv.classList.add('can-level-up');
+                cardDiv.onclick = () => {
+                    allocations[p.id]++;
+                    available--;
+                    render();
+                };
+            }
+
+            grid.appendChild(cardDiv);
+        });
+
+        btnConfirm.disabled = (available > 0);
+    }
+
+    btnReset.onclick = () => {
+        available = originalPoints;
+        gameState.team.forEach(p => allocations[p.id] = 0);
+        render();
+    };
+
+    // Botão Confirmar salva no jogo
+    btnConfirm.onclick = () => {
+        let gainedTrait = false;
+
+        gameState.team.forEach(p => {
+            let levelsGained = allocations[p.id];
+
+            if (levelsGained > 0) {
+                p.level += levelsGained; // Sobe o nível
+
+                // Lógica de Trait: Roda 1 vez para cada nível ganho
+                for (let i = 0; i < levelsGained; i++) {
+                    if (!p.perks) p.perks = [];
+
+                    // Só ganha se tiver menos de 2 Traits
+                    if (p.perks.length < 2) {
+                        let availablePerks = PERK_LIST.filter(perk => !p.perks.some(existing => existing.id === perk.id));
+
+                        if (availablePerks.length > 0) {
+                            p.perks.push(rnd(availablePerks)); // Sorteia o novo Trait
+                            gainedTrait = true;
+                        }
+                    }
+                }
+            }
+        });
+
+        saveGame();
+        modal.style.display = 'none';
+
+        // Feedback visual se qualquer jogador aprendeu uma habilidade nova
+        if (gainedTrait) {
+            createJuiceText("NOVO TRAIT! ✨", "var(--accent-purple)", window.innerWidth / 2, window.innerHeight / 2 - 50);
+        }
+
+        if (onComplete) onComplete();
+    };
+
+    modal.style.display = 'flex';
+    render();
+}
+
 function viewHistoryDetails(idx) {
     const run = gameState.runHistory[idx];
     document.getElementById("history-list").style.display = "none";
