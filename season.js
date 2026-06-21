@@ -288,6 +288,20 @@ function executeCampTrain(index) {
     p.level = Math.min(10, p.level + 1);
     p.justLeveledUp = true;
 
+    // NOVO: Lógica de ganhar Trait
+    if (!p.perks) p.perks = [];
+    if (p.perks.length < 2) {
+        // Filtra os traits que o jogador AINDA NÃO TEM para não vir repetido
+        let availablePerks = PERK_LIST.filter(perk => !p.perks.some(existing => existing.id === perk.id));
+        if (availablePerks.length > 0) {
+            p.perks.push(rnd(availablePerks));
+            createJuiceText("NOVO TRAIT! ✨", "var(--accent-purple)", window.innerWidth / 2, window.innerHeight / 2 - 50);
+        }
+    }
+
+    // Feedback visual extra do level up
+    createJuiceText("LEVEL UP! ⬆️", "var(--accent-green)", window.innerWidth / 2, window.innerHeight / 2);
+
     document.getElementById('camp-train-overlay').style.display = 'none';
     updateRosterUI();
     fireConfetti();

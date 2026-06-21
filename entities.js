@@ -6,7 +6,11 @@ function generatePlayer(level, isPremium = false) {
     let rank = (level >= 8 || rankRoll > 90) ? 'S' : (level >= 5 || rankRoll > 70) ? 'A' : (level >= 3 || rankRoll > 40) ? 'B' : 'C';
 
     let perks = [];
-    let numPerks = Math.random() > 0.3 ? 2 : 1;
+
+    // NOVO: 30% chance se for Premium, 10% chance se for normal
+    let traitChance = isPremium ? 0.30 : 0.10;
+    let numPerks = Math.random() < traitChance ? 2 : 1;
+
     for (let i = 0; i < numPerks; i++) {
         perks.push(rnd(PERK_LIST));
     }
@@ -76,9 +80,9 @@ function getPlayerCardHTML(p, onClickAttr = "") {
     let rColor = getRankColor(p.rank);
     let isBaseClass = p.isBase ? 'base-player' : '';
 
-    // Animação de Level Up
+    // NOVA LÓGICA DE LEVEL UP (Removido o p.justLeveledUp = false daqui)
     let levelUpClass = p.justLeveledUp ? 'level-up-flash' : '';
-    if (p.justLeveledUp) p.justLeveledUp = false;
+    let levelUpBadge = p.justLeveledUp ? `<div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:var(--accent-green); color:#000; font-weight:900; padding:2px 8px; border-radius:10px; font-size:0.7rem; z-index:10; box-shadow:0 0 10px var(--accent-green); white-space:nowrap; animation: pulseBallZone 1s infinite alternate;">⬆️ LEVEL UP</div>` : '';
 
     let perksHTML = "";
     let dataPerks = "";
@@ -102,6 +106,7 @@ function getPlayerCardHTML(p, onClickAttr = "") {
 
     return `
         <div class="player-card ${isBaseClass} ${levelUpClass}" data-perks="${dataPerks}" ${onClickAttr}>
+            ${levelUpBadge}
             <div class="card-badge" style="z-index:5;">Lvl ${p.level} • <span style="color:${rColor}; font-weight:900;">${p.rank}</span></div>
             <div class="card-emoji">${p.emoji}</div>
             <div class="card-name">${p.name}</div>

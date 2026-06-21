@@ -6,9 +6,14 @@ function startMapMatch() {
     const minA = GAME_BALANCE.mechanics.matchActionsMin;
     const maxA = GAME_BALANCE.mechanics.matchActionsMax;
 
+    // NOVO: Limpa o status de Level Up da última partida para não ficar piscando no mapa
+    gameState.team.forEach(p => p.justLeveledUp = false);
+
     matchState = {
         userScore: 0, rivalScore: 0, combo: 0, momentum: 0,
-        hasBall: true, zone: 2, rivalProfile: rivalTeam, rivalTeamRef: rivalTeam,
+        // NOVO: 50% de chance de começar com a bola
+        hasBall: Math.random() > 0.5,
+        zone: 2, rivalProfile: rivalTeam, rivalTeamRef: rivalTeam,
         nextBuff: gameState.activeCampBuff || 0,
         baseTotalActions: Math.floor(Math.random() * (maxA - minA + 1)) + minA,
         currentAction: 0, badLuckCounter: 0,
