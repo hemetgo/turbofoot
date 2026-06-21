@@ -97,16 +97,11 @@ function updateRosterUI() {
     let listHTML = "";
     gameState.team.forEach(p => { listHTML += getPlayerCardHTML(p); });
 
-    // Atualiza nomes do Clube nas UI
     const sbClubInfo = document.getElementById("sidebar-club-info");
-    if (sbClubInfo && gameState.club) {
-        sbClubInfo.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${gameState.club.name}`;
-    }
+    if (sbClubInfo && gameState.club) sbClubInfo.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${gameState.club.name}`;
 
     const mobTitle = document.getElementById("mobile-roster-title");
-    if (mobTitle && gameState.club) {
-        mobTitle.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${gameState.club.name}`;
-    }
+    if (mobTitle && gameState.club) mobTitle.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${gameState.club.name}`;
 
     const sbList = document.getElementById("sidebar-list");
     const sbCoins = document.getElementById("sidebar-coins");
@@ -115,6 +110,10 @@ function updateRosterUI() {
 
     const modList = document.getElementById("modal-roster-list");
     if (modList) modList.innerHTML = listHTML;
+
+    // ATUALIZA AS MOEDAS NA LOJA
+    const mCoins = document.getElementById("market-coins");
+    if (mCoins) mCoins.innerText = gameState.coins;
 }
 
 function openHowToPlay() {
@@ -164,14 +163,14 @@ function openHistoryModal() {
             let cls = run.result === "CAMPEÃO" ? "victory" : "loss";
             list.innerHTML += `
                 <div class="history-item ${cls}" onclick="viewHistoryDetails(${idx})">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <span style="font-size:1.8rem;">${run.club.emoji}</span>
-                        <div>
-                            <div style="font-weight:900; color:#fff; font-size:0.9rem;">${run.club.name}</div>
+                    <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+                        <span style="font-size:1.8rem; flex-shrink:0;">${run.club.emoji}</span>
+                        <div style="min-width:0; flex:1;">
+                            <div style="font-weight:900; color:#fff; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${run.club.name}</div>
                             <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${run.date}</div>
                         </div>
                     </div>
-                    <div style="font-weight:900; font-size:0.8rem; text-align:right;">
+                    <div style="font-weight:900; font-size:0.8rem; text-align:right; flex-shrink:0; margin-left:8px;">
                         <span style="color: ${run.result === 'CAMPEÃO' ? 'var(--accent-gold)' : 'var(--accent-red)'}">${run.result}</span><br>
                         <span style="color:var(--text-muted);">Estágio ${run.stageReached}/10</span>
                     </div>

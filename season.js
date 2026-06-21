@@ -95,6 +95,9 @@ function renderMap() {
     const container = document.getElementById('map-nodes-container');
     container.innerHTML = `<svg id="map-lines" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;"></svg>`;
 
+    let currentLeagueName = GAME_BALANCE.leagues[gameState.leagueLevel].name;
+    document.getElementById('map-league-title').innerText = `${currentLeagueName}`;
+
     // MAPA AGORA RENDERIZA DE CIMA PARA BAIXO (Invertido)
     for (let sIdx = 0; sIdx <= 9; sIdx++) {
         let stage = gameState.season.map[sIdx];
@@ -321,5 +324,10 @@ function finishSeason(wonSeason) {
     subText += `\n\n🏆 Você ganhou +${earnedTrophies} Troféus para usar na Sede do Clube!`;
 
     document.getElementById('se-sub').innerText = subText;
+
+    // Mostra os troféus NO LUGAR das moedas, com a formatação correta
+    document.getElementById('se-coins').innerText = `+${earnedTrophies} 🏆`;
+    document.getElementById('se-coins').style.color = "var(--accent-gold)";
+
     document.getElementById('season-end-overlay').style.display = 'flex';
 }

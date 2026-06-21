@@ -1,7 +1,12 @@
 function showScreen(id) {
     document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
     const target = document.getElementById(id);
-    if (target) target.classList.add("active");
+    if (target) {
+        target.classList.add("active");
+
+        const scrollAreas = target.querySelectorAll('.club-options-wrapper, .map-wrapper, .market-wrapper, .match-log-container');
+        scrollAreas.forEach(area => area.scrollTop = 0);
+    }
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }

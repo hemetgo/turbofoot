@@ -99,16 +99,19 @@
                     <div class="champ-title-block">
                         <div class="champ-league-label">MERCADO DA BOLA</div>
                     </div>
-                    <div style="width: 70px;" class="mobile-only"></div>
+                    <!-- MOEDAS AGORA APARECEM AQUI NO MOBILE -->
+                    <div class="mobile-only" style="display:flex; gap:8px;">
+                        <div class="currency-display">💰 <span id="market-coins">0</span></div>
+                    </div>
                 </div>
                 <div class="market-wrapper">
                     <div class="market-panel">
                         <div class="market-header">
-                            <h3 id="market-title">ESCOLHA 1 REFORÇO</h3>
-                            <p id="market-sub">Os 50 💰 já foram pagos.</p>
+                            <h3 id="market-title">ESCOLHA 1 NOVO JOGADOR</h3>
+                            <p id="market-sub">Os 💰 já foram pagos.</p>
                         </div>
                         <div id="market-list" class="market-list"></div>
-                        <button class="btn-secondary" onclick="cancelMarket()">DESCARTAR / AVANÇAR</button>
+                        <button class="btn-secondary" onclick="cancelMarket()">CONTINUAR</button>
                     </div>
                 </div>
             </div>
@@ -132,7 +135,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="match-timer-container">
+                    <div class="match-timer-container" style="position: relative;">
+                        <button class="btn-icon mobile-only" onclick="openRosterModal()"
+                            style="position: absolute; left: 0; top: 50%; transform: translateY(-50%);">🔍 TIME</button>
+
                         <div id="action-counter" class="action-timer">⏱️ 0/0</div>
                     </div>
                 </div>

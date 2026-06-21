@@ -162,14 +162,14 @@ function _renderPlayerButtons() {
         let canAfford = true;
         let comboBadge = "";
 
-        // Badge de Combo (Nova estrutura)
+        // Badge de Combo com Aviso de Falta
         if (node.comboReq === "ALL") {
             if (matchState.combo <= 0) canAfford = false;
-            comboBadge = `<span class="combo-badge">TUDO 🔥</span>`;
+            comboBadge = canAfford ? `<span class="combo-badge">TUDO 🔥</span>` : `<span class="combo-badge" style="color:var(--accent-red); border-color:var(--accent-red); background:rgba(248,113,113,0.15);">FALTA COMBO</span>`;
         }
         else if (node.comboReq > 0) {
             if (matchState.combo < node.comboReq) canAfford = false;
-            comboBadge = `<span class="combo-badge">-${node.comboReq} 🔥</span>`;
+            comboBadge = canAfford ? `<span class="combo-badge">-${node.comboReq} 🔥</span>` : `<span class="combo-badge" style="color:var(--accent-red); border-color:var(--accent-red); background:rgba(248,113,113,0.15);">FALTA COMBO</span>`;
         }
         else if (node.comboGen > 0) {
             comboBadge = `<span class="combo-badge">+${node.comboGen} 🔥</span>`;
