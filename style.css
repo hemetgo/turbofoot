@@ -550,7 +550,6 @@ button {
     align-items: center;
     position: relative;
     transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    cursor: pointer;
 }
 
 @media (hover: hover) and (pointer: fine) {
