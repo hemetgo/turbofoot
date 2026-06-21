@@ -108,11 +108,6 @@ function updateFieldState() {
         document.querySelector('.team-section.rival').style.opacity = '1';
     }
 
-    const momBadge = document.getElementById("momentum-badge");
-    momBadge.innerText = `🌊 Momento: ${matchState.momentum > 0 ? '+' : ''}${matchState.momentum}`;
-    momBadge.style.display = "flex";
-    momBadge.setAttribute("data-tip", GAME_CONTENT.tooltips.momentum);
-
     const comboBadge = document.getElementById("combo-badge");
     comboBadge.innerText = `🔥 Combo: ${matchState.combo}`;
     comboBadge.setAttribute("data-tip", GAME_CONTENT.tooltips.combo);
