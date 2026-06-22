@@ -10,14 +10,14 @@ async function initGame() {
         const textsData = await fetch('config_texts.json').then(r => r.json());
         const metaData = await fetch('config_meta.json').then(r => r.json());
         const leaguesData = await fetch('config_leagues.json').then(r => r.json());
-        const namesData = await fetch('config_names.json').then(r => r.json());     // NOVO
-        const presetsData = await fetch('config_presets.json').then(r => r.json()); // NOVO
+        const namesData = await fetch('config_names.json').then(r => r.json());
+        const presetsData = await fetch('config_presets.json').then(r => r.json());
 
         GAME_BALANCE = { mechanics: mechanicsData, leagues: leaguesData, meta: metaData };
         GAME_CONTENT = {
             clubGeneration: generationData.clubGeneration,
-            names: namesData,       // NOVO
-            presets: presetsData,   // NOVO
+            names: namesData,
+            presets: presetsData,
             rivalStyles: rivalsData,
             nodes: actionsData,
             suspenseTexts: textsData.suspenseTexts,
@@ -61,7 +61,6 @@ function startRunFlow() {
     showScreen('screen-series-select');
 }
 
-// Sorteia times focados no coletivo, listando as habilidades geradas
 function selectSeries(idx) {
     selectedSeriesIndex = idx;
     pendingClubOptions = [];
@@ -121,7 +120,6 @@ function selectSeries(idx) {
     const container = document.getElementById('club-options-container');
     container.innerHTML = '';
 
-    // NOVO: Atualiza o cabeçalho global com a informação de nível!
     const headerBlock = document.querySelector('#screen-club-select .champ-title-block');
     if (headerBlock) {
         headerBlock.innerHTML = `
@@ -166,14 +164,63 @@ function chooseClub(index) {
     gameState.team = pendingClubOptions[index].team;
     gameState.leagueLevel = selectedSeriesIndex;
 
-    // PATROCÍNIO INICIAL META
     let metaCoinsBonus = (gameState.meta?.upgrades?.start_coins || 0) * 15;
     gameState.coins = GAME_BALANCE.mechanics.initialCoins + metaCoinsBonus;
 
     startNewSeason();
 }
 
-// ====== COLOQUE NO FINAL DO ARQUIVO PARA GERENCIAR A LOJA: ======
+// ==========================================
+// SISTEMA META: LOJA E REEMBOLSO (VAMPIRE SURVIVORS STYLE)
+// ==========================================
+
+function getUpgradeCost(upg, level) {
+    return Math.floor(upg.baseCost * Math.pow(upg.costMult, level));
+}
+
+function getTotalSpent() {
+    let total = 0;
+    GAME_BALANCE.meta.upgrades.forEach(upg => {
+        let currentLvl = gameState.meta.upgrades[upg.id] || 0;
+        for (let i = 0; i < currentLvl; i++) {
+            total += getUpgradeCost(upg, i);
+        }
+    });
+    return total;
+}
+
+let pendingRefundAmount = 0; // Guarda o valor temporariamente
+
+// 1. Abre a tela de confirmação customizada
+function refundMetaUpgrades() {
+    pendingRefundAmount = getTotalSpent();
+    if (pendingRefundAmount <= 0) return;
+
+    // Atualiza o valor no texto do HTML e mostra o modal
+    document.getElementById('refund-amount-text').innerText = pendingRefundAmount;
+    document.getElementById('refund-confirm-overlay').style.display = 'flex';
+}
+
+// 2. Cancela e fecha a tela
+function closeRefundConfirm() {
+    document.getElementById('refund-confirm-overlay').style.display = 'none';
+    pendingRefundAmount = 0;
+}
+
+// 3. Executa a ação caso o jogador clique em CONFIRMAR
+function executeRefund() {
+    if (pendingRefundAmount > 0) {
+        gameState.meta.metaCoins += pendingRefundAmount;
+        gameState.meta.upgrades = {}; // Zera os upgrades
+        saveGame();
+        renderMetaShop();
+
+        // Feedback visual da grana voltando
+        createJuiceText(`+${pendingRefundAmount} 🏆`, "var(--accent-gold)", window.innerWidth / 2, window.innerHeight / 2);
+    }
+    closeRefundConfirm(); // Fecha o modal ao final
+}
+
 function openMetaShop() {
     renderMetaShop();
     document.getElementById('meta-shop-overlay').style.display = 'flex';
@@ -187,23 +234,20 @@ function renderMetaShop() {
     GAME_BALANCE.meta.upgrades.forEach(upg => {
         let currentLvl = gameState.meta.upgrades[upg.id] || 0;
         let isMax = currentLvl >= upg.maxLevel;
-        let cost = Math.floor(upg.baseCost * Math.pow(upg.costMult, currentLvl));
+        let cost = getUpgradeCost(upg, currentLvl);
         let canAfford = (gameState.meta.metaCoins >= cost) && !isMax;
 
         let btnHtml = "";
 
         if (isMax) {
-            // Estado: Máximo
             btnHtml = `<button class="btn-secondary btn-sm" disabled style="width: 120px; opacity: 0.4; cursor: not-allowed; border-color: rgba(255,255,255,0.1);">MÁXIMO</button>`;
         } else if (!canAfford) {
-            // Estado: Sem dinheiro (Desativado)
             btnHtml = `
                 <button class="btn-secondary btn-sm" disabled style="width: 120px; opacity: 0.3; filter: grayscale(100%); cursor: not-allowed; display:flex; flex-direction:column; align-items:center; gap:4px;">
                     <span style="font-weight:900;">COMPRAR</span>
                     <span style="font-size:0.9rem;">${cost} 🏆</span>
                 </button>`;
         } else {
-            // Estado: Comprar (Ativo)
             btnHtml = `
                 <button class="btn-primary btn-sm" onclick="buyMetaUpgrade('${upg.id}', ${cost})" style="width: 120px; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--accent-gold); box-shadow: 0 4px 15px rgba(245,158,11,0.15); display:flex; flex-direction:column; align-items:center; gap:4px;">
                     <span style="color:var(--accent-gold); font-weight:900;">COMPRAR</span>
@@ -220,6 +264,17 @@ function renderMetaShop() {
                 <div>${btnHtml}</div>
             </div>`;
     });
+
+    let totalSpent = getTotalSpent();
+    if (totalSpent > 0) {
+        list.innerHTML += `
+            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light); text-align: center;">
+                <button class="btn-secondary" style="border-color: var(--accent-red); color: var(--accent-red); width: 100%;" onclick="refundMetaUpgrades()">
+                    🔄 REEMBOLSAR TUDO (${totalSpent} 🏆)
+                </button>
+            </div>
+        `;
+    }
 }
 
 function buyMetaUpgrade(id, cost) {
