@@ -80,6 +80,119 @@ function hardResetSave() {
     }
 }
 
+// ==========================================
+// TOOLTIPS GLOBAIS (data-tip)
+// ==========================================
+// Por que isso existe: qualquer [data-tip] que vivesse dentro de um
+// contêiner com overflow:hidden/auto (roster, mercado, modais com scroll)
+// tinha o tooltip cortado, pois o ::after antigo era posicionado DENTRO
+// do próprio elemento. z-index não resolve isso — overflow recorta antes.
+//
+// Agora existe 1 único elemento .tooltip-global, anexado direto no
+// <body>, com position:fixed. Ele nunca fica preso por overflow de
+// nenhum contêiner pai. Usamos delegação de evento (no document) então
+// funciona até para cards criados depois via innerHTML += '...'.
+(function setupGlobalTooltip() {
+    let tooltipEl = null;
+    let currentTarget = null;
+
+    function ensureTooltipEl() {
+        if (!tooltipEl) {
+            tooltipEl = document.createElement('div');
+            tooltipEl.className = 'tooltip-global';
+            document.body.appendChild(tooltipEl);
+        }
+        return tooltipEl;
+    }
+
+    function positionTooltip(target) {
+        const el = ensureTooltipEl();
+        const rect = target.getBoundingClientRect();
+        const margin = 8;
+
+        // Mede a largura/altura real do tooltip (já com o texto setado)
+        const tw = el.offsetWidth;
+        const th = el.offsetHeight;
+
+        // Tenta centralizar acima do elemento-alvo
+        let left = rect.left + rect.width / 2 - tw / 2;
+        let top = rect.top - th - margin;
+
+        // Se não houver espaço acima, desenha abaixo
+        if (top < margin) {
+            top = rect.bottom + margin;
+        }
+
+        // Clampa horizontalmente para não vazar da viewport
+        const maxLeft = window.innerWidth - tw - margin;
+        if (left < margin) left = margin;
+        if (left > maxLeft) left = Math.max(margin, maxLeft);
+
+        // Clampa verticalmente também (por segurança)
+        const maxTop = window.innerHeight - th - margin;
+        if (top > maxTop) top = Math.max(margin, maxTop);
+
+        el.style.left = left + 'px';
+        el.style.top = top + 'px';
+    }
+
+    function showTooltip(target) {
+        const text = target.getAttribute('data-tip');
+        if (!text) return;
+        const el = ensureTooltipEl();
+        currentTarget = target;
+        el.textContent = text;
+        el.classList.add('visible');
+        // Reposiciona depois do texto setado (precisa do offsetWidth/Height corretos)
+        positionTooltip(target);
+    }
+
+    function hideTooltip() {
+        currentTarget = null;
+        if (tooltipEl) tooltipEl.classList.remove('visible');
+    }
+
+    // Desktop: hover
+    document.addEventListener('mouseover', (e) => {
+        const target = e.target.closest('[data-tip]');
+        if (target) showTooltip(target);
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        const target = e.target.closest('[data-tip]');
+        if (target && target === currentTarget) hideTooltip();
+    });
+
+    // Mobile/touch: toque mostra, toque fora esconde
+    document.addEventListener('touchstart', (e) => {
+        const target = e.target.closest('[data-tip]');
+        if (target) {
+            if (currentTarget === target) {
+                hideTooltip();
+            } else {
+                showTooltip(target);
+            }
+        } else if (currentTarget) {
+            hideTooltip();
+        }
+    }, { passive: true });
+
+    // Reposiciona/esconde em scroll e resize (a posição fixed pode desalinhar)
+    window.addEventListener('scroll', () => {
+        if (currentTarget) positionTooltip(currentTarget);
+    }, { passive: true, capture: true });
+
+    window.addEventListener('resize', () => {
+        if (currentTarget) positionTooltip(currentTarget);
+    });
+
+    // Some o tooltip se o clique for fora de qualquer [data-tip]
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('[data-tip]');
+        if (!target) hideTooltip();
+    });
+})();
+
 // Atalho secreto: Aperte a tecla "\" (Contra-barra) para abrir o console de debug
 document.addEventListener('keydown', (e) => {
     if (e.key === '\\') {

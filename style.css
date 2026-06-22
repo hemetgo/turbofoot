@@ -80,23 +80,26 @@ body {
 }
 
 /* ==================== TOOLTIPS GLOBAIS ==================== */
+/* O tooltip antigo usava [data-tip]::after posicionado de forma absoluta
+   DENTRO do próprio elemento. Isso quebrava sempre que [data-tip] estava
+   dentro de qualquer contêiner com overflow:hidden/auto (roster, market,
+   modais, listas com scroll) — o ::after era cortado pela caixa do pai,
+   independente do z-index, porque overflow recorta o conteúdo antes do
+   z-index entrar em jogo.
+
+   Solução: o elemento [data-tip] não desenha mais o próprio tooltip.
+   Um único elemento .tooltip-global é criado 1x via JS (utils.js) e
+   anexado direto no <body>, com position:fixed. Como ele vive fora de
+   qualquer contêiner com overflow, nunca é cortado. JS calcula a posição
+   (top/left) com getBoundingClientRect() a cada hover/touch. */
 [data-tip] {
-    position: relative;
     cursor: default;
-    overflow: visible !important;
 }
 
-[data-tip]:hover,
-[data-tip]:active {
-    z-index: 999999;
-}
-
-[data-tip]::after {
-    content: attr(data-tip);
-    position: absolute;
-    bottom: 120%;
-    left: 50%;
-    transform: translateX(-50%);
+.tooltip-global {
+    position: fixed;
+    top: 0;
+    left: 0;
     background: var(--bg-main);
     color: #fff;
     padding: 8px 12px;
@@ -109,34 +112,15 @@ body {
     text-align: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s, bottom 0.2s;
+    transition: opacity 0.15s ease;
     border: 1px solid var(--accent-blue);
     z-index: 999999;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
     line-height: 1.4;
 }
 
-[data-tip]:hover::after,
-[data-tip]:active::after {
+.tooltip-global.visible {
     opacity: 1;
-    bottom: 135%;
-}
-
-.roster-grid .player-card:nth-child(odd) [data-tip]::after,
-.market-card [data-tip]::after,
-#possession-badge[data-tip]::after {
-    left: 0;
-    right: auto;
-    transform: none;
-    text-align: left;
-}
-
-.roster-grid .player-card:nth-child(even) [data-tip]::after,
-.arena-status-row>div>[data-tip]::after {
-    left: auto;
-    right: 0;
-    transform: none;
-    text-align: right;
 }
 
 /* ==================== LAYOUT BASE ==================== */
