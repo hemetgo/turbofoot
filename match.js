@@ -39,7 +39,7 @@ function startMapMatch() {
 function updateTimerDisplay() {
     let el = document.getElementById("action-counter");
     if (matchState.isExtraTime) {
-        el.innerHTML = `<span style="color:var(--accent-gold); font-weight:900; letter-spacing:0.5px; text-shadow: 0 0 8px rgba(245,158,11,0.8);">PRORROGAÇÃO 🏆 GOL DE OURO</span>`;
+        el.innerHTML = `<span style="color:var(--accent-gold); font-weight:900; letter-spacing:0.5px; text-shadow: 0 0 8px rgba(245,158,11,0.8);">${matchState.currentAction}/${matchState.baseTotalActions} 🏆 PRORROGAÇÃO - GOL DE OURO - </span>`;
     } else {
         el.innerText = `⏱️ ${matchState.currentAction}/${matchState.baseTotalActions}`;
     }
@@ -127,7 +127,6 @@ function updateFieldState() {
     _renderPlayerButtons();
 }
 
-// Função auxiliar que sorteia considerando o "peso" da raridade
 function pickWeightedNodes(nodesArray, count) {
     let result = [];
     let available = [...nodesArray];
@@ -152,7 +151,6 @@ function _renderPlayerButtons() {
     wrapper.innerHTML = ""; wrapper.classList.remove("pop-in"); void wrapper.offsetWidth;
     selectedActionNodeId = null;
 
-    // Filtra as ações válidas para a zona atual
     let pool = GAME_CONTENT.nodes.filter(n => {
         if (matchState.hasBall) return (matchState.zone === 4) ? n.type === 'shoot' : (n.type === 'atk' || n.type === 'shoot') && n.zones.includes(matchState.zone);
         return (matchState.zone === 0) ? n.type === 'save' : n.type === 'def' && n.zones.includes(matchState.zone);
@@ -161,21 +159,17 @@ function _renderPlayerButtons() {
     const isCritical = (matchState.hasBall && matchState.zone === 4) || (!matchState.hasBall && matchState.zone === 0);
     let selected = [];
 
-    // Separa opções seguras e arriscadas
     let safeNodes = pool.filter(n => n.riskLevel === "safe");
     let riskyNodes = pool.filter(n => n.riskLevel !== "safe");
 
-    // Sorteia 1 carta segura (com base na chance global) usando Pesos
     if (Math.random() < (GAME_BALANCE.mechanics.safeActionChance ?? 0.15) && safeNodes.length > 0) {
         selected.push(pickWeightedNodes(safeNodes, 1)[0]);
     }
 
-    // Completa o resto das cartas com as opções arriscadas usando Pesos
     let neededRisky = (isCritical ? 2 : 3) - selected.length;
     let chosenRisky = pickWeightedNodes(riskyNodes, neededRisky);
     selected.push(...chosenRisky);
 
-    // Validação de Combo: Garante que pelo menos 1 carta possa ser paga
     if (!selected.some(n => n.comboReq === "ALL" ? matchState.combo > 0 : (!n.comboReq || matchState.combo >= n.comboReq))) {
         let affordable = pool.filter(n => n.comboReq === "ALL" ? matchState.combo > 0 : (!n.comboReq || matchState.combo >= n.comboReq));
         if (affordable.length > 0) selected[0] = pickWeightedNodes(affordable, 1)[0];
@@ -200,11 +194,11 @@ function _renderPlayerButtons() {
 
         if (node.comboReq === "ALL") {
             if (matchState.combo <= 0) canAfford = false;
-            comboBadge = canAfford ? `<span class="combo-badge">TUDO 🔥</span>` : `<span class="combo-badge" style="color:var(--accent-red); border-color:var(--accent-red); background:rgba(248,113,113,0.15);">FALTA COMBO</span>`;
+            comboBadge = canAfford ? `<span class="combo-badge">TUDO 🔥</span>` : `<span class="combo-badge" style="color:var(--accent-red); border-color:var(--accent-red); background:rgba(248,113,113,0.15);">-${node.comboReq}🔥</span>`;
         }
         else if (node.comboReq > 0) {
             if (matchState.combo < node.comboReq) canAfford = false;
-            comboBadge = canAfford ? `<span class="combo-badge">-${node.comboReq} 🔥</span>` : `<span class="combo-badge" style="color:var(--accent-red); border-color:var(--accent-red); background:rgba(248,113,113,0.15);">FALTA COMBO</span>`;
+            comboBadge = canAfford ? `<span class="combo-badge">-${node.comboReq} 🔥</span>` : `<span class="combo-badge" style="color:var(--accent-red); border-color:var(--accent-red); background:rgba(248,113,113,0.15);">-${node.comboReq}🔥</span>`;
         }
         else if (node.comboGen > 0) {
             comboBadge = `<span class="combo-badge">+${node.comboGen} 🔥</span>`;
@@ -224,10 +218,9 @@ function _renderPlayerButtons() {
         chance = Math.round(chance);
         chance = Math.max(0, Math.min(100, chance));
 
-        // NOVA COR PARA AS LENDÁRIAS (Brilho roxo especial)
         let isLegendary = (node.weight && node.weight <= 20);
         let colorClass = chance >= 65 ? "risk-safe" : chance >= 40 ? "risk-med" : "risk-high";
-        if (isLegendary) colorClass += " legendary-node"; // Adiciona a tag lendária
+        if (isLegendary) colorClass += " legendary-node";
 
         let chanceColor = chance >= 65 ? "var(--accent-green)" : chance >= 40 ? "var(--accent-gold)" : "var(--accent-red)";
 
@@ -237,7 +230,7 @@ function _renderPlayerButtons() {
         let succLabel = "";
         if (node.type === 'shoot') succLabel = "Gol";
         else if (node.type === 'save') succLabel = "Defesa";
-        else if (node.successMove < 0) succLabel = `Recua ${Math.abs(node.successMove)}`; // NOVO: Reconhece recuos no sucesso
+        else if (node.successMove < 0) succLabel = `Recua ${Math.abs(node.successMove)}`;
         else succLabel = node.successMove > 0 ? `Avança +${node.successMove}` : "Mantém";
 
         if (node.nextBuff && node.nextBuff > 0) succLabel += ` <span class="buff-text">(+✨)</span>`;
@@ -333,27 +326,43 @@ async function resolveProceduralNode(node, power, event) {
     let rPowFixed = Math.max(1, (matchState.hasBall ? matchState.rivalProfile.def : matchState.rivalProfile.atk) - markingDebuff);
     let rTraitBonus = getRivalTraitBonus(node, matchState.rivalTeamRef);
 
-    let pRoll = pBaseFixed + Math.floor(Math.random() * rngRange);
-    let rRoll = rPowFixed + rTraitBonus + Math.floor(Math.random() * rngRange);
-
-    let isSuccess = (node.riskLevel === "safe") ? true : (pRoll >= rRoll);
+    let isSuccess = false;
+    let wasPityUsed = false;
     let usedSecondChance = false;
 
-    if (!isSuccess && traitBonus > 0 && node.riskLevel !== "safe") {
-        let pRoll2 = pBaseFixed + Math.floor(Math.random() * rngRange);
-        let rRoll2 = rPowFixed + rTraitBonus + Math.floor(Math.random() * rngRange);
-
-        if (pRoll2 >= rRoll2) {
-            isSuccess = true;
-            usedSecondChance = true;
-        }
-    }
-
-    let wasPityUsed = false;
-
-    if (traitBonus > 0 && node.riskLevel !== "safe" && matchState.advantageFailCounter >= 2) {
+    if (node.riskLevel === "safe") {
         isSuccess = true;
-        wasPityUsed = true;
+    } else {
+        // SISTEMA DE PROTEÇÃO CONTRA AZAR (PITY TIMER)
+        if (traitBonus > 0 && matchState.advantageFailCounter >= GAME_BALANCE.mechanics.safePity) {
+            isSuccess = true;
+            wasPityUsed = true;
+            matchState.advantageFailCounter = 0; // Forçou o sucesso, então zera o contador
+        } else {
+            // Rolagem principal
+            let pRoll = pBaseFixed + Math.floor(Math.random() * rngRange);
+            let rRoll = rPowFixed + rTraitBonus + Math.floor(Math.random() * rngRange);
+            isSuccess = (pRoll >= rRoll);
+
+            // Segunda Chance da Vantagem Natural
+            if (!isSuccess && traitBonus > 0) {
+                let pRoll2 = pBaseFixed + Math.floor(Math.random() * rngRange);
+                let rRoll2 = rPowFixed + rTraitBonus + Math.floor(Math.random() * rngRange);
+                if (pRoll2 >= rRoll2) {
+                    isSuccess = true;
+                    usedSecondChance = true;
+                }
+            }
+
+            // Atualização do Contador de Insistência
+            if (traitBonus > 0) {
+                if (isSuccess) {
+                    matchState.advantageFailCounter = 0; // Acertou, limpa o azar
+                } else {
+                    matchState.advantageFailCounter++; // Falhou mesmo com vantagem, sobe o contador
+                }
+            }
+        }
     }
 
     const x = event.clientX || window.innerWidth / 2, y = event.clientY || window.innerHeight / 2;
@@ -365,15 +374,14 @@ async function resolveProceduralNode(node, power, event) {
     let goalScored = false, isUserGoal = false;
 
     if (isSuccess) {
-        if (traitBonus > 0) {
-            matchState.advantageFailCounter = 0;
-        }
-
         matchState.momentum = clamp(matchState.momentum + 1, -3, 3);
 
-        if (wasPityUsed || usedSecondChance) {
+        if (wasPityUsed) {
+            createJuiceText(`Insistência! ✨`, "#a855f7", x, y - 50);
+            addMatchLog(`O fundamento salvou a jogada na insistência após 2 erros!`, "success");
+        } else if (usedSecondChance) {
             createJuiceText(`Sinergia! ✨`, "#a855f7", x, y - 50);
-            addMatchLog(`O fundamento salvou a jogada na insistência!`, "success");
+            addMatchLog(`A vantagem garantiu o sucesso na segunda chance!`, "success");
         } else if (traitBonus > 0) {
             createJuiceText(`+${traitBonus} Fundamento!`, "#a855f7", x, y - 50);
             addMatchLog(`Fundamento: +${traitBonus} na jogada!`, "success");
@@ -398,10 +406,6 @@ async function resolveProceduralNode(node, power, event) {
         else if (node.type !== 'shoot' && node.type !== 'save') { createJuiceText(matchState.nextBuff > 0 ? "Lindo! ✨" : node.name, "#34d399", x, y); addMatchLog(getRandomLog('success', node.name), 'success'); }
         else if (node.type === 'save') { createJuiceText("DEFESAÇA!", "#38bdf8", x, y); addMatchLog("Defesa espetacular!", 'success'); }
     } else {
-        if (traitBonus > 0 && node.riskLevel !== "safe") {
-            matchState.advantageFailCounter++;
-        }
-
         matchState.momentum = clamp(matchState.momentum - 1, -3, 3);
         matchState.combo = 0; matchState.nextBuff = 0;
         document.getElementById("game-container").classList.add("shake");
@@ -484,13 +488,10 @@ function finishMatchRewards() {
             document.getElementById("pm-score").innerText = `${matchState.userScore} x ${matchState.rivalScore}`;
             document.getElementById("pm-info").innerText = "A campanha terminou mais cedo. Você não sobreviveu ao mapa.";
 
-            // --- REMOÇÃO DA PREMIAÇÃO ---
-            // Escondemos o elemento que mostra as moedas na tela de derrota
             document.querySelector(".pm-rewards").style.display = "none";
 
             document.querySelector("#post-match-overlay .btn-primary").innerText = "VOLTAR AO MENU";
             document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
-                // Restauramos o display caso o jogador ganhe uma partida no futuro
                 document.querySelector(".pm-rewards").style.display = "flex";
                 document.getElementById('post-match-overlay').style.display = 'none';
                 returnToTitle();
@@ -505,8 +506,6 @@ function finishMatchRewards() {
         let mult = threat.coinMult;
         let coins = Math.floor(base * (1 + Math.min(matchState.combo, 6) * GAME_BALANCE.mechanics.comboCoinMultiplier)) * mult;
 
-        // --- SISTEMA ANTIGO DE NÍVEL AUTOMÁTICO FOI REMOVIDO DAQUI ---
-
         gameState.coins += coins;
         updateRosterUI();
         fireConfetti();
@@ -520,18 +519,13 @@ function finishMatchRewards() {
         let rewardsText = `+${coins} 💰`;
         document.getElementById("pm-coins").innerText = rewardsText;
 
-        // --- NOVO SISTEMA DE DISTRIBUIÇÃO DE PONTOS NO CLIQUE DO BOTÃO ---
         document.querySelector("#post-match-overlay .btn-primary").innerText = "DISTRIBUIR NÍVEIS";
         document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
-            // Fecha o modal de vitória
             document.getElementById('post-match-overlay').style.display = 'none';
 
-            // Calcula os pontos baseado na ameaça (normal, elite, boss)
             let niveisGanhos = threat.expReward || 1;
 
-            // Chama o novo modal de distribuição
             showLevelDistribution(niveisGanhos, () => {
-                // Avança no mapa apenas após confirmar a distribuição
                 advanceMapNode();
             });
         };
@@ -540,7 +534,6 @@ function finishMatchRewards() {
     }, 500);
 }
 
-// Essa função foi mantida caso você chame ela de algum outro lugar do seu código
 function advanceMapAfterMatch() {
     document.getElementById('post-match-overlay').style.display = 'none';
     advanceMapNode();

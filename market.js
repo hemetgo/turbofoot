@@ -26,55 +26,54 @@ function showMarketScreen() {
     const list = document.getElementById('market-list');
     list.innerHTML = '';
 
-    // Atualizamos os títulos
     document.getElementById('market-title').innerText = "MERCADO DA BOLA";
     document.getElementById('market-sub').innerText = "Invista suas moedas para fortalecer o elenco.";
 
     draftedPlayers.forEach((p, idx) => {
-        // Se o jogador já foi comprado (marcado como null)
         if (!p) {
-            let starLabel = p.isStar ? `<span style="font-size: 1.1rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
-
+            // Renderiza corretamente o Slot Esgotado
             list.innerHTML += `
-            <div class="market-card">
-                <div class="card-emoji">${p.emoji}</div>
+            <div class="market-card" style="opacity:0.5; filter:grayscale(1);">
+                <div class="card-emoji" style="font-size: 2.2rem;">❌</div>
                 <div class="market-info">
-                
-                    <div class="market-name">${p.name} ${starLabel} <small style="color:var(--text-muted);font-weight:700; margin-left: 4px;">Lvl ${p.level}</small></div>
-                    <div class="market-stats">
-                        ${perksHtml}
-                    </div>
+                    <div class="market-name" style="color:var(--text-muted);">Esgotado</div>
                 </div>
-                <button class="market-buy-btn" ${disabledAttr} onclick="promptReplace(${idx})">COMPRAR (${p.price} 💰)</button>
-            </div>
-        `;
+            </div>`;
             return;
         }
 
         let disabledAttr = (gameState.coins < p.price) ? "disabled" : "";
 
-        // Agrupa fundamentos visualmente no mercado
         let perkCounts = {};
-        p.perks.forEach(perk => {
-            if (!perkCounts[perk.id]) perkCounts[perk.id] = { ...perk, count: 1 };
-            else perkCounts[perk.id].count++;
-        });
+        if (p.perks) {
+            p.perks.forEach(perk => {
+                if (!perkCounts[perk.id]) perkCounts[perk.id] = { ...perk, count: 1 };
+                else perkCounts[perk.id].count++;
+            });
+        }
 
         let perksHtml = Object.values(perkCounts).map(perk => {
             let countLabel = perk.count > 1 ? ` <b style="color:var(--accent-gold);">(x${perk.count})</b>` : "";
-            return `<span data-tip="${perk.desc}">${perk.emoji} ${perk.name}${countLabel}</span>`;
-        }).join('');
+            return `<span data-tip="${perk.desc}" style="display:inline-flex; align-items:center; gap:4px;">${perk.emoji} ${perk.name}${countLabel}</span>`;
+        }).join(' <span style="color:var(--border-light)">|</span> ');
+
+        if (!perksHtml) perksHtml = `<span style="color:var(--text-muted);">Sem Habilidade</span>`;
+
+        let starLabel = p.isStar ? `<span style="font-size: 1.1rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
 
         list.innerHTML += `
             <div class="market-card">
-                <div class="card-emoji">${p.emoji}</div>
+                <div class="card-emoji" style="font-size: 2.2rem;">${p.emoji}</div>
                 <div class="market-info">
-                    <div class="market-name">${p.name} <span style="color:${getRankColor(p.rank)}">${p.rank}</span> <small style="color:var(--text-muted);font-weight:700">Lvl ${p.level}</small></div>
-                    <div class="market-stats">
+                    <div class="market-name" style="display:flex; align-items:center;">
+                        ${p.name} ${starLabel} 
+                        <small style="color:var(--text-muted); font-weight:700; margin-left: 8px; background:rgba(0,0,0,0.4); padding:2px 6px; border-radius:4px;">Nv ${p.level}</small>
+                    </div>
+                    <div class="market-stats" style="margin-top:4px; font-size:0.75rem;">
                         ${perksHtml}
                     </div>
                 </div>
-                <button class="market-buy-btn" ${disabledAttr} onclick="promptReplace(${idx})">COMPRAR (${p.price} 💰)</button>
+                <button class="market-buy-btn" ${disabledAttr} onclick="promptReplace(${idx})">COMPRAR<br>(${p.price} 💰)</button>
             </div>
         `;
     });

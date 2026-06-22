@@ -569,6 +569,36 @@ button {
     color: #94a3b8;
 }
 
+#mobile-fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-blue-dark), var(--accent-blue));
+    color: white;
+    font-size: 1.8rem;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(2, 132, 199, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    z-index: 999;
+    cursor: pointer;
+}
+
+/* O FAB só aparece no Mobile e apenas durante uma Jornada ativa (in-run) */
+body.in-run #mobile-fab.mobile-only {
+    display: flex;
+}
+
+@media (min-width: 900px) {
+    body.in-run #mobile-fab.mobile-only {
+        display: none !important;
+    }
+}
+
 /* ==================== CABEÇALHO DO CARD (NÍVEL E RANK) ==================== */
 .card-header-stats {
     display: flex;

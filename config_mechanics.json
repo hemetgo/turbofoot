@@ -4,6 +4,7 @@
     "matchActionsMin": 10,
     "matchActionsMax": 15,
     "safeActionChance": 0.15,
+    "safePity": 4,
     "luckEvents": {
         "chance": 0.08,
         "penaltyMult": 0.85,
