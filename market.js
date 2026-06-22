@@ -31,7 +31,6 @@ function showMarketScreen() {
 
     draftedPlayers.forEach((p, idx) => {
         if (!p) {
-            // Renderiza corretamente o Slot Esgotado
             list.innerHTML += `
             <div class="market-card" style="opacity:0.5; filter:grayscale(1);">
                 <div class="card-emoji" style="font-size: 2.2rem;">❌</div>
@@ -53,23 +52,26 @@ function showMarketScreen() {
         }
 
         let perksHtml = Object.values(perkCounts).map(perk => {
-            let countLabel = perk.count > 1 ? ` <b style="color:var(--accent-gold);">(x${perk.count})</b>` : "";
-            return `<span data-tip="${perk.desc}" style="display:inline-flex; align-items:center; gap:4px;">${perk.emoji} ${perk.name}${countLabel}</span>`;
-        }).join(' <span style="color:var(--border-light)">|</span> ');
+            let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold); font-weight:900;">x${perk.count}</span>` : "";
+            // Usando a tag visual padrão unificada
+            return `<span data-tip="${perk.desc}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 6px; border: 1px solid var(--border-light); font-size: 0.75rem; font-weight: 800; white-space: nowrap; color: #e2e8f0; pointer-events: auto;">${perk.emoji} ${perk.name}${countLabel}</span>`;
+        }).join('');
 
-        if (!perksHtml) perksHtml = `<span style="color:var(--text-muted);">Sem Habilidade</span>`;
+        if (!perksHtml) perksHtml = `<span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800;">Sem Habilidade</span>`;
 
         let starLabel = p.isStar ? `<span style="font-size: 1.1rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
+
+        // Badge de Nível padronizado
+        let levelBadge = `<span style="display: inline-flex; align-items: center; padding: 2px 6px; font-size: 0.7rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid var(--border-light); border-radius: 6px; margin-left: 8px;">Nv <span style="color: var(--accent-green); margin-left: 4px;">${p.level}</span></span>`;
 
         list.innerHTML += `
             <div class="market-card">
                 <div class="card-emoji" style="font-size: 2.2rem;">${p.emoji}</div>
                 <div class="market-info">
                     <div class="market-name" style="display:flex; align-items:center;">
-                        ${p.name} ${starLabel} 
-                        <small style="color:var(--text-muted); font-weight:700; margin-left: 8px; background:rgba(0,0,0,0.4); padding:2px 6px; border-radius:4px;">Nv ${p.level}</small>
+                        ${p.name} ${starLabel} ${levelBadge}
                     </div>
-                    <div class="market-stats" style="margin-top:4px; font-size:0.75rem;">
+                    <div class="market-stats" style="margin-top:8px; display: flex; flex-wrap: wrap; gap: 4px;">
                         ${perksHtml}
                     </div>
                 </div>

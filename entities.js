@@ -49,35 +49,13 @@ function generatePlayer(level, isPremium = false) {
     };
 }
 
-function generateCaptain(baseLevel = 1) {
-    let iden = generateIdentity(false);
-    let perks = [];
-
-    if (iden.isPreset) {
-        perks = iden.presetPerks.map(pId => PERK_LIST.find(p => p.id === pId)).filter(Boolean);
-    } else {
-        perks = [rndWeighted(PERK_LIST), rndWeighted(PERK_LIST)];
-    }
-
-    return {
-        id: `p_${Date.now()}_${Math.random()}`,
-        name: "©️ " + iden.name, // Braçadeira de Capitão
-        emoji: iden.emoji,
-        flag: iden.flag,
-        level: baseLevel + 2, perks: perks, isStar: true, isCaptain: true
-    };
-}
-
 function generateBasePlayer(baseLevel = 1, numTraits = 0, focusTraitId = null, focusChance = 0) {
     let iden = generateIdentity(true);
     let perks = [];
 
     if (numTraits > 0) {
         for (let i = 0; i < numTraits; i++) {
-            // ESCOLA DE TALENTOS (meta): chance de o jogador da base nascer
-            // com o mesmo trait do Capitão, ajudando a fechar a build mais
-            // rápido. Só aplica se o trait sorteado ainda não estiver no card
-            // (evita duplicar e desperdiçar o "puxão" da meta).
+            // ESCOLA DE TALENTOS (meta): puxa o trait do DNA da base.
             let alreadyHasFocus = perks.some(p => p.id === focusTraitId);
             if (focusTraitId && !alreadyHasFocus && Math.random() < focusChance) {
                 let focusPerk = PERK_LIST.find(p => p.id === focusTraitId);
@@ -117,36 +95,36 @@ function getPlayerCardHTML(p, onClickAttr = "") {
         });
 
         let perksArray = Object.values(perkCounts).map(perk => {
-            let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold); font-weight:900;">(x${perk.count})</span>` : "";
-            // position: relative destrava a tooltip e cursor: help indica que é "passável"
-            return `<div data-tip="${perk.desc}" style="position: relative; display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 6px; white-space: nowrap; width: 100%; box-sizing: border-box; z-index: 10;">${perk.emoji} ${perk.name}${countLabel}</div>`;
+            let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold); font-weight:900;">x${perk.count}</span>` : "";
+            // Tags redesenhadas para casar com a tela de seleção de clubes
+            return `<div data-tip="${perk.desc}" style="display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 6px; border: 1px solid var(--border-light); font-size: 0.75rem; font-weight: 800; white-space: nowrap; width: 100%; color: #e2e8f0; pointer-events: auto;">${perk.emoji} ${perk.name}${countLabel}</div>`;
         });
 
-        perksHTML = `<div style="display: flex; flex-direction: column; width: 100%; gap: 4px;">${perksArray.join('')}</div>`;
+        perksHTML = `<div style="display: flex; flex-direction: column; width: 100%; gap: 4px; z-index: 10;">${perksArray.join('')}</div>`;
     } else {
-        perksHTML = `<div style="position: relative; color:var(--text-muted); width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.4); border-radius: 6px; padding: 4px; box-sizing: border-box; z-index: 10;" data-tip="Não possui bônus de habilidade.">Sem Habilidade</div>`;
+        perksHTML = `<div data-tip="Não possui bônus de habilidade." style="display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); border: 1px dashed var(--border-light); border-radius: 6px; padding: 4px; font-size: 0.75rem; color: var(--text-muted); width: 100%; height: 100%; pointer-events: auto;">Sem Habilidade</div>`;
     }
 
-    let nameSize = Math.min(0.92, 13 / Math.max(10, p.name.length));
+    let nameSize = Math.min(0.85, 12 / Math.max(10, p.name.length));
+    let starBadge = p.isStar ? `<div style="position: absolute; top: -8px; right: -8px; font-size: 1.4rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); z-index: 5;">⭐</div>` : '';
 
-    // Removido o 'overflow: hidden' que cortava o balãozinho! Adicionado flex: 1 para ocupar espaços.
     return `
-        <div class="player-card" data-perks="${dataPerks}" ${onClickAttr} style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 10px 8px; width: 100%; height: 100%; min-height: 155px; box-sizing: border-box; flex: 1; transition: all 0.2s;">
+        <div class="player-card" data-perks="${dataPerks}" ${onClickAttr} style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 12px; width: 100%; min-height: 160px; box-sizing: border-box; position: relative; flex: 1; transition: all 0.2s;">
             
-            <div style="position: relative; width: 100%; display: flex; justify-content: center; align-items: flex-start; height: 55px; flex-shrink: 0;">
-                <div style="position: absolute; top: 0; left: 0; font-size: 1.5rem; line-height: 1; z-index: 2;">${p.flag || '🏳️'}</div>
-                <div class="card-emoji" style="font-size: 2.4rem; line-height: 1; margin: 10px 0 0 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); z-index: 1;">${p.emoji}</div>
-                <div style="position: absolute; top: 0; right: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; z-index: 2;">
-                    <span class="card-lvl" style="padding: 2px 6px; font-size: 0.7rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px;">Nv ${p.level}</span>
-                    ${p.isStar ? '<span style="font-size: 1.1rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); line-height: 1;">⭐</span>' : ''}
-                </div>
+            ${starBadge}
+            
+            <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div style="font-size: 1.2rem; line-height: 1; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));">${p.flag || '🏳️'}</div>
+                <div style="padding: 2px 6px; font-size: 0.7rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid var(--border-light); border-radius: 6px;">Nv <span style="color: var(--accent-green);">${p.level}</span></div>
             </div>
             
-            <div class="card-name" style="font-size: ${nameSize}rem; text-align: center; width: 100%; font-weight: 900; white-space: nowrap; color: #fff; letter-spacing: -0.5px; margin: auto 0; padding: 0; z-index: 2;">
+            <div class="card-emoji" style="font-size: 3rem; line-height: 1; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); margin: 0 0 8px 0;">${p.emoji}</div>
+            
+            <div class="card-name" style="font-size: ${nameSize}rem; text-align: center; width: 100%; font-weight: 900; color: #fff; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 12px; letter-spacing: -0.5px;">
                 ${p.name}
             </div>
             
-            <div style="display: flex; flex-direction: column; justify-content: flex-end; width: 100%; font-size: 0.65rem; color: var(--accent-blue); font-weight: 800; min-height: 48px; flex-shrink: 0;">
+            <div style="width: 100%; margin-top: auto;">
                 ${perksHTML}
             </div>
             
@@ -167,57 +145,47 @@ function getSidebarPlayerHTML(p) {
         });
 
         let perksArray = Object.values(perkCounts).map(perk => {
-            let countLabel = perk.count > 1 ? ` (x${perk.count})` : "";
-            return `<div data-tip="${perk.desc}" style="position: relative; display: flex; align-items: center; gap: 3px; z-index: 10;"><span style="font-size: 0.75rem;">${perk.emoji}</span> <span>${perk.name}${countLabel}</span></div>`;
+            let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold);">x${perk.count}</span>` : "";
+            return `<div data-tip="${perk.desc}" style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-light); pointer-events: auto;">${perk.emoji} ${perk.name}${countLabel}</div>`;
         });
 
-        perksHTML = `<div style="display: flex; gap: 8px; width: 100%; flex-wrap: wrap;">${perksArray.join('')}</div>`;
+        perksHTML = `<div style="display: flex; gap: 4px; flex-wrap: wrap;">${perksArray.join('')}</div>`;
     } else {
-        perksHTML = `<div style="position: relative; color:var(--text-muted); z-index: 10;" data-tip="Não possui bônus de habilidade.">Sem Habilidade</div>`;
+        perksHTML = `<div data-tip="Não possui bônus de habilidade." style="font-size: 0.7rem; color: var(--text-muted); pointer-events: auto;">Sem Habilidade</div>`;
     }
 
-    let isCaptain = p.name.includes("©️");
-    let cleanName = p.name.replace("©️ ", "");
-
-    let captainBadge = isCaptain ? `<span style="color:var(--accent-gold); font-size:0.8rem; margin-right: 4px;">©️</span>` : '';
     let starBadge = p.isStar ? `<span style="font-size: 0.9rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
 
     return `
-        <div class="player-card" data-perks="${dataPerks}" style="display: flex; flex-direction: row; align-items: center; background: rgba(0,0,0,0.25); border: 1px solid var(--border-light); border-radius: 8px; padding: 6px 12px; width: 100%; box-sizing: border-box; flex: 1; min-height: 56px; max-height: 70px; transition: all 0.2s;">
+        <div class="player-card" data-perks="${dataPerks}" style="display: flex; flex-direction: row; align-items: center; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px 12px; width: 100%; min-height: 60px; transition: all 0.2s;">
             
-            <div style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; width: 60px; flex-shrink: 0;">
-                <span style="font-size: 1.1rem; line-height: 1;">${p.flag || '🏳️'}</span>
-                <span style="font-size: 1.8rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${p.emoji}</span>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 55px; flex-shrink: 0;">
+                <span style="font-size: 1.1rem; line-height: 1; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));">${p.flag || '🏳️'}</span>
+                <span style="font-size: 2rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${p.emoji}</span>
             </div>
 
             <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; margin-left: 12px;">
-                <div style="display: flex; align-items: center; margin-bottom: 2px;">
-                    ${captainBadge}
-                    <span style="font-size: 0.85rem; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${cleanName}</span>
+                <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                    <span style="font-size: 0.85rem; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;">${p.name}</span>
                     ${starBadge}
                 </div>
-                <div style="font-size: 0.65rem; color: var(--accent-blue); font-weight: 800; width: 100%;">
+                <div style="color: var(--accent-blue); font-weight: 800; width: 100%;">
                     ${perksHTML}
                 </div>
             </div>
 
             <div style="flex-shrink: 0; margin-left: 8px;">
-                <span style="display: flex; justify-content: center; align-items: center; padding: 3px 8px; font-size: 0.75rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">Nv ${p.level}</span>
+                <span style="display: flex; justify-content: center; align-items: center; padding: 4px 8px; font-size: 0.8rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid var(--border-accent); border-radius: 6px;">Nv <span style="color: var(--accent-green); margin-left: 4px;">${p.level}</span></span>
             </div>
         </div>`;
 }
 
-// ====== NOVO MOTOR DE PODER SIMPLIFICADO ======
+// ====== MOTOR DE PODER ======
 
 // Pega a Média de Nível do Time
 function getTeamAverageLevel() {
-    let scale = GAME_BALANCE.mechanics.scaling || {};
-    let hasLeadership = gameState.team.some(p => p.perks && p.perks.some(perk => perk.id === 'leadership'));
-    let captainMult = (hasLeadership && (scale.leadershipCaptainMult ?? 1.35)) || 1;
-
     let totalVirtualLevel = gameState.team.reduce((acc, p) => {
         let base = p.level + (p.isStar ? 3 : 0);
-        if (p.isCaptain) base *= captainMult;
         return acc + base;
     }, 0);
     return totalVirtualLevel / Math.max(1, gameState.team.length);

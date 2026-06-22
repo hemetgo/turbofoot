@@ -149,3 +149,67 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
+// ==========================================
+// SISTEMA DE TOOLTIP GLOBAL (DELEGAÇÃO)
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+    let globalTooltip = document.querySelector('.tooltip-global');
+
+    // Cria o elemento se ele não existir
+    if (!globalTooltip) {
+        globalTooltip = document.createElement("div");
+        globalTooltip.className = "tooltip-global";
+        document.body.appendChild(globalTooltip);
+    }
+
+    const showTooltip = (e) => {
+        const target = e.target.closest('[data-tip]');
+        if (!target) return;
+
+        const tipText = target.getAttribute('data-tip');
+        if (!tipText) return;
+
+        globalTooltip.innerHTML = tipText;
+        globalTooltip.classList.add('visible');
+
+        // Calcula posicionamento
+        const rect = target.getBoundingClientRect();
+        let top = rect.top - globalTooltip.offsetHeight - 8;
+        let left = rect.left + (rect.width / 2) - (globalTooltip.offsetWidth / 2);
+
+        // Corrige se sair da tela por cima
+        if (top < 10) {
+            top = rect.bottom + 8;
+        }
+
+        // Corrige se sair pelas laterais
+        if (left < 10) left = 10;
+        if (left + globalTooltip.offsetWidth > window.innerWidth - 10) {
+            left = window.innerWidth - globalTooltip.offsetWidth - 10;
+        }
+
+        globalTooltip.style.top = `${top}px`;
+        globalTooltip.style.left = `${left}px`;
+    };
+
+    const hideTooltip = (e) => {
+        // Se saiu do elemento e não entrou em outro tooltip, esconde
+        if (!e || !e.relatedTarget || !e.relatedTarget.closest('[data-tip]')) {
+            globalTooltip.classList.remove('visible');
+        }
+    };
+
+    // Vigia eventos no documento todo
+    document.addEventListener('mouseover', showTooltip);
+    document.addEventListener('mouseout', hideTooltip);
+
+    // Suporte mobile
+    document.addEventListener('touchstart', (e) => {
+        if (e.target.closest('[data-tip]')) {
+            showTooltip(e);
+        } else {
+            globalTooltip.classList.remove('visible');
+        }
+    }, { passive: true });
+});
