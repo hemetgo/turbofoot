@@ -95,14 +95,8 @@ function promptReplace(draftIndex) {
     if (!pendingPurchase) return;
     if (gameState.coins < pendingPurchase.price) return;
 
-    // Verifica se tem jogador base para substituição automática
-    let baseIndex = gameState.team.findIndex(p => p.isBase);
-    if (baseIndex !== -1) {
-        executePurchase(baseIndex);
-        return;
-    }
-
-    // Se não tiver base, abre o modal de escolha
+    // Removemos a verificação que substituía automaticamente.
+    // Agora, o modal de elenco SEMPRE abre para o jogador escolher o substituído.
     document.getElementById('replace-overlay').style.display = 'flex';
     const list = document.getElementById('replace-list');
     list.innerHTML = '';

@@ -62,7 +62,7 @@ function startRunFlow() {
     showScreen('screen-series-select');
 }
 
-// NOVO: Ao clicar na série, sorteamos os times e mostramos a próxima tela
+// NOVO: Sorteia times com distribuição aleatória de Traits
 function selectSeries(idx) {
     selectedSeriesIndex = idx;
     pendingClubOptions = [];
@@ -72,16 +72,13 @@ function selectSeries(idx) {
 
     // LÊ AS MELHORIAS META
     let metaLevel = gameState.meta?.upgrades?.start_level || 0;
-    let metaTraits = gameState.meta?.upgrades?.start_traits || 0; // Este é o Nível do Upgrade (ex: de 1 a 10)
-    let metaFocusLvl = gameState.meta?.upgrades?.trait_focus || 0; // Nível da Escola de Talentos (0 a 5)
+    let metaTraits = gameState.meta?.upgrades?.start_traits || 0; // Nível do Celeiro (ex: de 1 a 10)
+    let metaFocusLvl = gameState.meta?.upgrades?.trait_focus || 0; // Escola de Talentos
     let startLvl = 1 + metaLevel;
 
-    // Escola de Talentos: cada nível dá +12% de chance (até 60% no nível 5)
-    // de um jogador da base nascer com o mesmo trait do Capitão.
     let focusChance = metaFocusLvl * 0.12;
 
-    // A MÁGICA DA DISTRIBUIÇÃO:
-    // Ex: Nível 3 -> floor(3/2) = 1 jogador com 2 traits. 3%2 = 1 jogador com 1 trait.
+    // Quantos jogadores ganham 2 traits e quantos ganham 1
     let playersWith2Traits = Math.floor(metaTraits / 2);
     let playersWith1Trait = metaTraits % 2;
 
@@ -90,26 +87,24 @@ function selectSeries(idx) {
         const adj = rnd(adjs);
 
         let team = [];
-        let captain = generateCaptain(startLvl); // Capitão usa a regra normal (nasce Rank S)
+        let captain = generateCaptain(startLvl); // Capitão
         team.push(captain);
 
-        // Trait "âncora" da build: o primeiro trait do Capitão, usado pela
-        // Escola de Talentos para puxar a base na mesma direção.
         let focusTraitId = (focusChance > 0 && captain.perks && captain.perks.length > 0) ? captain.perks[0].id : null;
 
+        // --- NOVA LÓGICA DE DISTRIBUIÇÃO ALEATÓRIA ---
+        // Cria um array com 10 posições, preenche com 2, 1 ou 0 traits e embaralha!
+        let traitDistribution = [];
         for (let j = 0; j < 10; j++) {
-            let numTraitsToGive = 0;
+            if (j < playersWith2Traits) traitDistribution.push(2);
+            else if (j < playersWith2Traits + playersWith1Trait) traitDistribution.push(1);
+            else traitDistribution.push(0);
+        }
+        traitDistribution = shuffle(traitDistribution);
 
-            // Os primeiros da lista recebem 2 Traits
-            if (j < playersWith2Traits) {
-                numTraitsToGive = 2;
-            }
-            // O(s) próximo(s) recebem 1 Trait (dependendo se for par ou ímpar)
-            else if (j < playersWith2Traits + playersWith1Trait) {
-                numTraitsToGive = 1;
-            }
-
-            // Agora a função generateBasePlayer sabe lidar com 0, 1 ou 2 traits
+        // Aplica os traits aleatorizados aos 10 jogadores da base
+        for (let j = 0; j < 10; j++) {
+            let numTraitsToGive = traitDistribution[j];
             team.push(generateBasePlayer(startLvl, numTraitsToGive, focusTraitId, focusChance));
         }
 
