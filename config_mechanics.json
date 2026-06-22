@@ -1,48 +1,52 @@
 {
-    "initialCoins": 80,
-    "comboCoinMultiplier": 0.15,
-    "matchActionsMin": 10,
-    "matchActionsMax": 15,
-    "safeActionChance": 0.15,
-    "safePity": 4,
-    "luckEvents": {
-        "chance": 0.08,
-        "penaltyMult": 0.85,
-        "duration": 3
+  "initialCoins": 50,
+  "matchActionsMin": 8,
+  "matchActionsMax": 12,
+  "safeActionChance": 0.15,
+  "comboCoinMultiplier": 0.2,
+  "luckEvents": {
+    "chance": 0.08,
+    "duration": 2
+  },
+  "scaling": {
+    "baseChance": 45,
+    "levelModPct": 2.5,
+    "traitFlatPct": 15,
+    "markingGlobalPct": 4,
+    "momentumPct": 5,
+    "buffPct": 2,
+    "luckPenaltyPct": 15,
+    "leagueLevelStep": 4,
+    "eliteLevelBonus": 3,
+    "bossLevelBonus": 6,
+    "leadershipCaptainMult": 1.35,
+    "traitDiminishingFactor": 0.60,
+    "traitMaxStacks": 5,
+    "visionDiversityBonus": 0.18,
+    "visionComboChance": 0.35,
+    "leadershipMitigation": 0.45
+  },
+  "threatLevels": {
+    "match": {
+      "label": "Normal",
+      "color": "#38bdf8",
+      "coinMult": 1.0,
+      "expReward": 1,
+      "extraTraits": 0
     },
-    "scaling": {
-        "playerLevelMaxMult": 0.50,
-        "traitPowerMult": 0.15,
-        "rngRangeMult": 1.00,
-        "stageDifficultyStep": 0.05
+    "elite": {
+      "label": "Desafiador",
+      "color": "#f59e0b",
+      "coinMult": 1.5,
+      "expReward": 2,
+      "extraTraits": 1
     },
-    "threatLevels": {
-        "match": {
-            "label": "MODERADA",
-            "color": "var(--accent-green)",
-            "powerMultMin": 0.90,
-            "powerMultMax": 1.00,
-            "extraTraits": 0,
-            "expReward": 1,
-            "coinMult": 1.0
-        },
-        "elite": {
-            "label": "ALTA",
-            "color": "var(--accent-gold)",
-            "powerMultMin": 1.10,
-            "powerMultMax": 1.20,
-            "extraTraits": 1,
-            "expReward": 2,
-            "coinMult": 2.0
-        },
-        "boss": {
-            "label": "INSANA",
-            "color": "var(--accent-red)",
-            "powerMultMin": 1.10,
-            "powerMultMax": 1.20,
-            "extraTraits": 2,
-            "expReward": 2,
-            "coinMult": 3.0
-        }
+    "boss": {
+      "label": "Decisivo",
+      "color": "#ef4444",
+      "coinMult": 2.5,
+      "expReward": 3,
+      "extraTraits": 2
     }
+  }
 }

@@ -188,14 +188,27 @@ function _renderPlayerButtons() {
     selected = shuffle(selected);
     wrapper.className = `field-container ${matchState.hasBall ? 'atk-theme' : 'def-theme'} pop-in`;
 
-    const leagueDiff = GAME_BALANCE.leagues[gameState.leagueLevel].difficulty;
-    const rngRange = Math.floor(leagueDiff * GAME_BALANCE.mechanics.scaling.rngRangeMult);
-    const momentumVal = Math.floor(leagueDiff * 0.03);
-    const buffScale = leagueDiff / 100;
+    // ===== NOVO MOTOR MATEMÁTICO BASEADO EM PORCENTAGENS =====
+    const scale = GAME_BALANCE.mechanics.scaling || {};
+    const BASE_CHANCE = scale.baseChance || 45;
+    const LEVEL_PCT = scale.levelModPct || 2.5;
+    const TRAIT_PCT = scale.traitFlatPct || 15;
+    const MARKING_PCT = scale.markingGlobalPct || 4;
+    const MOMENTUM_PCT = scale.momentumPct || 5;
+    const BUFF_PCT = scale.buffPct || 2;
+    const LUCK_PENALTY = scale.luckPenaltyPct || 15;
 
-    const power = getTeamPower();
+    const avgPlayerLevel = getTeamAverageLevel();
+    // Usa o Nível do Rival salvo ou calcula de forma retroativa para saves antigos
+    const rivalLevel = matchState.rivalProfile.level || ((gameState.leagueLevel * 4) + gameState.season.currentStage);
+
     const traits = getTeamTraits();
-    const markingDebuff = traits.marking * Math.floor(leagueDiff * GAME_BALANCE.mechanics.scaling.traitPowerMult);
+    let rivalTraits = {};
+    if (matchState.rivalProfile.perks) {
+        matchState.rivalProfile.perks.forEach(p => {
+            rivalTraits[p.id] = (rivalTraits[p.id] || 0) + 1;
+        });
+    }
 
     let chanceSet = [];
 
@@ -217,24 +230,57 @@ function _renderPlayerButtons() {
         }
 
         let finalMod = node.id === "bicycle" ? node.mod + (Math.min(matchState.combo, 6) * 0.1) : node.mod;
-        let traitBonus = getTraitBonusForNode(node, traits) || 0;
-        let pToUse = (node.type === 'atk' || node.type === 'shoot') ? power.atk : power.def;
+        
+        // 1. CHANCE BASE
+        let chance = BASE_CHANCE * finalMod;
 
-        let pBase = (pToUse * finalMod) + (matchState.nextBuff * buffScale) + (matchState.momentum * momentumVal) + traitBonus;
-        if (matchState.badLuckCounter > 0) pBase = Math.floor(pBase * GAME_BALANCE.mechanics.luckEvents.penaltyMult);
+        // 2. MODIFICADOR DE NÍVEL DIRETO
+        let levelDiff = avgPlayerLevel - rivalLevel;
+        chance += (levelDiff * LEVEL_PCT);
 
-        let rTraitBonus = getRivalTraitBonus(node, matchState.rivalTeamRef) || 0;
-        let rBase = Math.max(1, (matchState.hasBall ? matchState.rivalProfile.def : matchState.rivalProfile.atk) - markingDebuff) + rTraitBonus;
+        // 3. SINERGIA DE TRAITS (Player vs Rival)
+        if (node.synergy && node.synergy !== "pace") {
+            let pStacks = applyDiminishingReturns(traits[node.synergy] || 0);
+            let rStacks = applyDiminishingReturns(rivalTraits[node.synergy] || 0);
+            chance += (pStacks * TRAIT_PCT);
+            chance -= (rStacks * TRAIT_PCT);
+        }
 
-        let chance = node.riskLevel !== "safe" ? calcWinChance(pBase, rBase, rngRange) : 100;
-        chance = Math.round(chance);
-        chance = Math.max(0, Math.min(100, chance));
+        // VELOCIDADE (Afeta qualquer jogada Risco Alto)
+        if (node.riskLevel === "high") {
+            let pPace = applyDiminishingReturns(traits.pace || 0);
+            let rPace = applyDiminishingReturns(rivalTraits.pace || 0);
+            chance += (pPace * TRAIT_PCT);
+            chance -= (rPace * TRAIT_PCT);
+        }
 
-        if (node.riskLevel !== "safe") {
-            let tweakStep = Math.max(1, Math.floor(leagueDiff * 0.4));
+        // 4. MARCAÇÃO/COLOCAÇÃO (Afeta TODAS as jogadas defensivas/ofensivas de forma global)
+        if (node.type === 'def' || node.type === 'save') {
+            // Player defendendo: A marcação do PLAYER ajuda
+            let pMark = applyDiminishingReturns(traits.marking || 0);
+            chance += (pMark * MARKING_PCT);
+        } else if (node.type === 'atk' || node.type === 'shoot') {
+            // Player atacando: A marcação do RIVAL atrapalha
+            let rMark = applyDiminishingReturns(rivalTraits.marking || 0);
+            chance -= (rMark * MARKING_PCT);
+        }
+
+        // 5. FATORES DA PARTIDA (Buffs, Azar, Momentum)
+        chance += (matchState.nextBuff * BUFF_PCT);
+        chance += (matchState.momentum * MOMENTUM_PCT);
+        if (matchState.badLuckCounter > 0) chance -= LUCK_PENALTY;
+
+        if (node.riskLevel === "safe") {
+            chance = 100;
+        } else {
+            chance = Math.round(chance);
+            chance = Math.max(5, Math.min(95, chance));
+
+            // Desempate visual para não ficarem ações iguais
+            let tweakStep = Math.max(1, Math.floor((gameState.leagueLevel + 1) * 0.5));
             let attempts = 0;
             let currentChance = chance;
-
+            
             while (chanceSet.includes(currentChance) && attempts < 10) {
                 let offset = Math.ceil((attempts + 1) / 2) * tweakStep;
                 currentChance = chance + (attempts % 2 === 0 ? offset : -offset);
@@ -286,9 +332,10 @@ function _renderPlayerButtons() {
         let synHtml = synergies.map(s => `<span data-tip="${s.name}" style="font-size:0.8rem;">${s.emoji}</span>`).join('');
         let synBadge = '';
         let synergyIds = synergies.map(s => s.id);
+        let advantage = hasTraitAdvantage(node, traits);
 
         if (synergies.length > 0) {
-            if (traitBonus > 0) {
+            if (advantage) {
                 btn.classList.add("has-synergy");
                 synBadge = `<div class="action-synergy active">${synHtml} <span>BÔNUS</span></div>`;
             } else {
@@ -341,7 +388,7 @@ function _renderPlayerButtons() {
         };
         btn.onpointerenter = () => {
             renderMinimap(node);
-            if (traitBonus > 0 && canAfford) highlightSynergyPlayers(synergyIds);
+            if (advantage && canAfford) highlightSynergyPlayers(synergyIds);
         };
         btn.onpointerleave = () => {
             renderMinimap();
@@ -355,7 +402,7 @@ async function resolveProceduralNode(node, event) {
     document.querySelectorAll(".node-btn").forEach(b => { b.style.pointerEvents = "none"; });
 
     const traits = getTeamTraits();
-    const traitBonus = getTraitBonusForNode(node, traits);
+    const hasAdvantage = hasTraitAdvantage(node, traits);
 
     let isSuccess = false;
     let wasPityUsed = false;
@@ -364,7 +411,7 @@ async function resolveProceduralNode(node, event) {
     if (node.riskLevel === "safe") {
         isSuccess = true;
     } else {
-        if (traitBonus > 0 && matchState.advantageFailCounter >= 2) {
+        if (hasAdvantage && matchState.advantageFailCounter >= 2) {
             isSuccess = true;
             wasPityUsed = true;
             matchState.advantageFailCounter = 0;
@@ -372,7 +419,7 @@ async function resolveProceduralNode(node, event) {
             let roll = Math.random() * 100;
             isSuccess = roll <= node.computedChance;
 
-            if (!isSuccess && traitBonus > 0) {
+            if (!isSuccess && hasAdvantage) {
                 let roll2 = Math.random() * 100;
                 if (roll2 <= node.computedChance) {
                     isSuccess = true;
@@ -380,7 +427,7 @@ async function resolveProceduralNode(node, event) {
                 }
             }
 
-            if (traitBonus > 0) {
+            if (hasAdvantage) {
                 if (isSuccess) {
                     matchState.advantageFailCounter = 0;
                 } else {
@@ -404,6 +451,12 @@ async function resolveProceduralNode(node, event) {
         if (node.comboReq === "ALL") matchState.combo = 0; else if (node.comboReq) matchState.combo = Math.max(0, matchState.combo - node.comboReq);
         if (node.comboGen) matchState.combo += node.comboGen;
 
+        let visionBonus = getVisionComboBonus(node, traits);
+        if (visionBonus > 0) {
+            matchState.combo += visionBonus;
+            addMatchLog("🔗 Visão de jogo! O time se entende em campo.", "success");
+        }
+
         document.getElementById("game-container").classList.add("flash-success");
         setTimeout(() => document.getElementById("game-container").classList.remove("flash-success"), 400);
 
@@ -420,13 +473,16 @@ async function resolveProceduralNode(node, event) {
         else if (node.type !== 'shoot' && node.type !== 'save') { createJuiceText(matchState.nextBuff > 0 ? "Lindo! ✨" : node.name, "#34d399", x, y); addMatchLog(getRandomLog('success', node.name), 'success'); }
         else if (node.type === 'save') { createJuiceText("DEFESAÇA!", "#38bdf8", x, y); addMatchLog("Defesa espetacular!", 'success'); }
     } else {
-        matchState.momentum = clamp(matchState.momentum - 1, -3, 3);
+        let mitigation = getLeadershipMitigation(traits);
+
+        matchState.momentum = clamp(matchState.momentum - Math.max(1, Math.round(1 * mitigation)), -3, 3);
         matchState.combo = 0; matchState.nextBuff = 0;
         document.getElementById("game-container").classList.add("shake");
         setTimeout(() => document.getElementById("game-container").classList.remove("shake"), 300);
 
         if (matchState.hasBall) matchState.hasBall = false;
-        matchState.zone = Math.max(0, matchState.zone + node.failMove);
+        let mitigatedFailMove = Math.round(node.failMove * mitigation);
+        matchState.zone = Math.max(0, matchState.zone + mitigatedFailMove);
 
         if (node.type === 'save') { goalScored = true; isUserGoal = false; }
         else if (node.type !== 'shoot' && node.type !== 'save') { createJuiceText("Falhou!", "#f87171", x, y); addMatchLog(getRandomLog('fail', node.name), 'fail'); }
@@ -444,12 +500,12 @@ function handleGoal(isUserGoal) {
         matchState.userScore++; document.getElementById("score-user").innerText = matchState.userScore;
         createJuiceText("⚽ GOOOOL!!", "#f59e0b", window.innerWidth / 2, window.innerHeight / 2 - 100);
         addMatchLog(getRandomLog('goalUser'), "goal-user");
-        fireConfetti(); // 🥳 Efeito de confete ao marcar
+        fireConfetti(); 
     } else {
         matchState.rivalScore++; document.getElementById("score-rival").innerText = matchState.rivalScore;
         createJuiceText("😢 Gol", "#ef4444", window.innerWidth / 2, window.innerHeight / 2);
         addMatchLog(getRandomLog('goalRival'), "goal-rival");
-        fireDespairEffect(); // 💔 NOVO efeito de dor ao sofrer gol
+        fireDespairEffect(); 
     }
     matchState.zone = 2; matchState.hasBall = !isUserGoal; matchState.nextBuff = 0; matchState.combo = 0; matchState.momentum = 0;
 
@@ -462,13 +518,10 @@ function handleGoal(isUserGoal) {
     setTimeout(() => updateFieldState(), 700);
 }
 
-// === NOVA FUNÇÃO DO EFEITO NEGATIVO (VAI NO FINAL DO ARQUIVO) ===
-// Efeito de impacto "Crítico" ao sofrer gol
 function fireDespairEffect() {
     const cont = document.getElementById("main-content");
     const gameCont = document.getElementById("game-container");
 
-    // 1. Tremida violenta e flash vermelho interno
     gameCont.animate([
         { transform: 'translate(0, 0)', boxShadow: 'inset 0 0 0px rgba(239, 68, 68, 0)' },
         { transform: 'translate(-12px, 8px)', boxShadow: 'inset 0 0 150px rgba(220, 38, 38, 0.8)' },
@@ -478,7 +531,6 @@ function fireDespairEffect() {
         { transform: 'translate(0, 0)', boxShadow: 'inset 0 0 0px rgba(239, 68, 68, 0)' }
     ], { duration: 400, easing: 'ease-out' });
 
-    // 2. Flash de Dano (Tela fica vermelha por uma fração de segundo)
     const flash = document.createElement("div");
     flash.style.position = "absolute";
     flash.style.top = "0";
@@ -497,29 +549,28 @@ function fireDespairEffect() {
     cont.appendChild(flash);
     setTimeout(() => flash.remove(), 500);
 
-    // 3. Linhas de Impacto radiais estourando do centro
     for (let i = 0; i < 12; i++) {
         const line = document.createElement("div");
         line.style.position = "absolute";
         line.style.top = "50%";
         line.style.left = "50%";
-        line.style.width = (Math.random() * 40 + 30) + "px"; // Comprimento da linha
+        line.style.width = (Math.random() * 40 + 30) + "px"; 
         line.style.height = "4px";
-        line.style.backgroundColor = "#ef4444"; // Vermelho
+        line.style.backgroundColor = "#ef4444"; 
         line.style.borderRadius = "2px";
         line.style.transformOrigin = "left center";
         line.style.pointerEvents = "none";
         line.style.zIndex = "9999";
         line.style.boxShadow = "0 0 10px #ef4444";
 
-        const angle = (i * 30) + (Math.random() * 15 - 7.5); // Espalha em 360 graus
+        const angle = (i * 30) + (Math.random() * 15 - 7.5); 
 
         line.animate([
             { transform: `translate(0, -50%) rotate(${angle}deg) translateX(30px) scaleX(1)`, opacity: 1 },
             { transform: `translate(0, -50%) rotate(${angle}deg) translateX(180px) scaleX(0)`, opacity: 0 }
         ], {
-            duration: 350 + Math.random() * 150, // Muito rápido
-            easing: 'cubic-bezier(0.25, 1, 0.5, 1)', // Desacelera no final
+            duration: 350 + Math.random() * 150, 
+            easing: 'cubic-bezier(0.25, 1, 0.5, 1)', 
             fill: 'forwards'
         });
 

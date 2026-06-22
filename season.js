@@ -72,20 +72,16 @@ function createMapRivalNode(type, baseDiff, stageIndex = 0) {
     const base = rnd(GAME_CONTENT.clubGeneration.bases);
     const adj = rnd(GAME_CONTENT.clubGeneration.adjectives);
     const style = rnd(GAME_CONTENT.rivalStyles);
+    const scale = GAME_BALANCE.mechanics.scaling || {};
 
-    // Pega as mecânicas do JSON
-    const mechanics = GAME_BALANCE.mechanics;
-    const threat = mechanics.threatLevels[type] || mechanics.threatLevels['match'];
+    // A LIGA DEFINE A DIFICULDADE (Nível do Rival)
+    // Ex: Série E (0) começa no Lvl 0. Série S (5) começa no Lvl 20.
+    let leagueBaseLevel = (gameState.leagueLevel * (scale.leagueLevelStep || 4));
+    let rivalLevel = leagueBaseLevel + stageIndex;
 
-    let runScale = 1 + (stageIndex * mechanics.scaling.stageDifficultyStep);
-
-    // Rola uma dificuldade dinamicamente baseada nos multiplicadores do JSON
-    let minMult = threat.powerMultMin;
-    let maxMult = threat.powerMultMax;
-    let varMult = minMult + Math.random() * (maxMult - minMult);
-
-    let rAtk = Math.floor(baseDiff * style.atkMod * varMult * runScale);
-    let rDef = Math.floor(baseDiff * style.defMod * varMult * runScale);
+    // Nós Elite e Chefões são níveis acima do padrão da liga
+    if (type === 'elite') rivalLevel += (scale.eliteLevelBonus || 3);
+    if (type === 'boss') rivalLevel += (scale.bossLevelBonus || 6);
 
     return {
         id: `node_${Date.now()}_${Math.random()}`, type: type,
@@ -94,8 +90,7 @@ function createMapRivalNode(type, baseDiff, stageIndex = 0) {
             emoji: base.emoji,
             style: style,
             perks: [],
-            atk: rAtk,
-            def: rDef,
+            level: rivalLevel, // <-- O Rival agora usa Nível Direto!
             dynamicTraitsSet: false
         }
     };
@@ -219,7 +214,7 @@ function handleMapNodeClick(node) {
 
             node.rival.perks = [];
             for (let i = 0; i < rivalTraitCount; i++) {
-                node.rival.perks.push(rnd(PERK_LIST));
+                node.rival.perks.push(rndWeighted(PERK_LIST));
             }
             node.rival.dynamicTraitsSet = true;
             saveGame();

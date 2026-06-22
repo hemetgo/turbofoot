@@ -316,7 +316,7 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
                         let availablePerks = PERK_LIST.filter(perk => !p.perks.some(existing => existing.id === perk.id));
 
                         if (availablePerks.length > 0) {
-                            p.perks.push(rnd(availablePerks)); // Sorteia o novo Trait
+                            p.perks.push(rndWeighted(availablePerks)); // Sorteia o novo Trait
                             gainedTrait = true;
                         }
                     }

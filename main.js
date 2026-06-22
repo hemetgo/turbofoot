@@ -73,7 +73,12 @@ function selectSeries(idx) {
     // LÊ AS MELHORIAS META
     let metaLevel = gameState.meta?.upgrades?.start_level || 0;
     let metaTraits = gameState.meta?.upgrades?.start_traits || 0; // Este é o Nível do Upgrade (ex: de 1 a 10)
+    let metaFocusLvl = gameState.meta?.upgrades?.trait_focus || 0; // Nível da Escola de Talentos (0 a 5)
     let startLvl = 1 + metaLevel;
+
+    // Escola de Talentos: cada nível dá +12% de chance (até 60% no nível 5)
+    // de um jogador da base nascer com o mesmo trait do Capitão.
+    let focusChance = metaFocusLvl * 0.12;
 
     // A MÁGICA DA DISTRIBUIÇÃO:
     // Ex: Nível 3 -> floor(3/2) = 1 jogador com 2 traits. 3%2 = 1 jogador com 1 trait.
@@ -88,6 +93,10 @@ function selectSeries(idx) {
         let captain = generateCaptain(startLvl); // Capitão usa a regra normal (nasce Rank S)
         team.push(captain);
 
+        // Trait "âncora" da build: o primeiro trait do Capitão, usado pela
+        // Escola de Talentos para puxar a base na mesma direção.
+        let focusTraitId = (focusChance > 0 && captain.perks && captain.perks.length > 0) ? captain.perks[0].id : null;
+
         for (let j = 0; j < 10; j++) {
             let numTraitsToGive = 0;
 
@@ -101,7 +110,7 @@ function selectSeries(idx) {
             }
 
             // Agora a função generateBasePlayer sabe lidar com 0, 1 ou 2 traits
-            team.push(generateBasePlayer(startLvl, numTraitsToGive));
+            team.push(generateBasePlayer(startLvl, numTraitsToGive, focusTraitId, focusChance));
         }
 
         pendingClubOptions.push({
@@ -126,7 +135,7 @@ function selectSeries(idx) {
                         <div style="font-weight: 900; color: #fff; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 4px;">${cap.name} <span style="filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); font-size: 1.1rem;">⭐</span></div>
                         <div style="font-size: 0.8rem; color: var(--accent-blue); font-weight: 800; margin-top: 4px;">${cap.perks[0].emoji} ${cap.perks[0].name} & ${cap.perks[1].emoji} ${cap.perks[1].name}</div>
                     </div>
-                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; font-weight:700; border-top: 1px solid var(--border-light); padding-top: 8px; width: 100%;">Nível Inicial do Time: ${startLvl} | Nível do Celeiro: ${metaTraits}</div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; font-weight:700; border-top: 1px solid var(--border-light); padding-top: 8px; width: 100%;">Nível Inicial do Time: ${startLvl} | Nível do Celeiro: ${metaTraits}${metaFocusLvl > 0 ? ` | 🔗 Escola: Nv ${metaFocusLvl}` : ''}</div>
                 </div>
             </div>`;
     });
