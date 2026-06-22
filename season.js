@@ -148,8 +148,8 @@ function renderMap() {
                 icon = '👑';
                 nodeName = 'Chefão';
             } else if (node.type === 'shop') {
-                icon = '🛒';
-                nodeName = 'Mercado';
+                icon = '🕵️‍♂️';
+                nodeName = 'Olheiro';
             } else if (node.type === 'camp') {
                 icon = '🏕️';
                 nodeName = 'Treino';

@@ -26,8 +26,8 @@ function showMarketScreen() {
     const list = document.getElementById('market-list');
     list.innerHTML = '';
 
-    document.getElementById('market-title').innerText = "MERCADO DA BOLA";
-    document.getElementById('market-sub').innerText = "Invista suas moedas para fortalecer o elenco.";
+    document.getElementById('market-title').innerText = "RELATÓRIO DO OLHEIRO";
+    document.getElementById('market-sub').innerText = "O olheiro encontrou estes talentos.";
 
     draftedPlayers.forEach((p, idx) => {
         if (!p) {
