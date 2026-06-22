@@ -135,8 +135,31 @@ function renderMap() {
                 btn.classList.add('locked');
             }
 
-            let icon = node.type === 'elite' ? '🔥' : node.type === 'camp' ? '🏕️' : node.type === 'shop' ? '🛒' : node.type === 'boss' ? '👑' : '⚽';
-            btn.innerHTML = `<div class="node-icon">${icon}</div>`;
+            let icon = '⚽';
+            let nodeName = '';
+
+            if (node.type === 'match') {
+                icon = '⚽';
+                nodeName = 'Partida';
+            } else if (node.type === 'elite') {
+                icon = '⚽';
+                nodeName = 'Partida';
+            } else if (node.type === 'boss') {
+                icon = '👑';
+                nodeName = 'Chefão';
+            } else if (node.type === 'shop') {
+                icon = '🛒';
+                nodeName = 'Mercado';
+            } else if (node.type === 'camp') {
+                icon = '🏕️';
+                nodeName = 'Treino';
+            }
+
+            // O botão agora recebe apenas o ícone e a label dentro dele, sem tooltip
+            btn.innerHTML = `
+                <div class="node-icon">${icon}</div>
+                <div class="node-label">${nodeName}</div>
+            `;
 
             if (isActive) btn.onclick = () => handleMapNodeClick(node);
             row.appendChild(btn);

@@ -817,16 +817,21 @@ button {
     position: relative;
 }
 
+/* --- FORMATO BASE DO NÓ (Quadrado Arredondado) --- */
 .map-node {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
+    width: 64px;
+    /* Um pouco maior para acomodar a label */
+    height: 64px;
+    border-radius: 14px;
+    /* Formato squircle */
     background: var(--bg-card);
     border: 2px solid var(--border-accent);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 4px;
+    /* Espaço interno entre o ícone e a label */
     cursor: pointer;
     transition: all 0.2s;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
@@ -839,26 +844,30 @@ button {
     line-height: 1;
 }
 
+/* Texto agora vive naturalmente dentro do grid do botão */
 .map-node .node-label {
-    font-size: 0.5rem;
+    font-size: 0.55rem;
     font-weight: 900;
     text-transform: uppercase;
-    margin-top: 4px;
     color: var(--text-muted);
-    position: absolute;
-    bottom: -20px;
     white-space: nowrap;
+    line-height: 1;
 }
 
+/* --- ESTADOS (Ativo, Completo, Bloqueado) --- */
 .map-node.active {
     border-color: var(--accent-blue);
-    transform: scale(1.15);
+    transform: scale(1.10);
+    /* Reduzido levemente para evitar sobreposição nos quadrados */
     background: var(--accent-blue-dark);
     box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
 }
 
 .map-node.active .node-label {
-    color: var(--accent-blue);
+    color: #ffffff;
+    /* Letra branca para contrastar com o fundo azul/dourado */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    /* Sombra para melhorar a leitura */
 }
 
 .map-node.completed {
@@ -876,15 +885,66 @@ button {
     filter: grayscale(100%) brightness(0.4);
 }
 
+/* --- CHEFÃO --- */
 .map-node.boss {
-    width: 72px;
-    height: 72px;
+    width: 76px;
+    /* Aumentado proporcionalmente */
+    height: 76px;
+    border-radius: 18px;
+    /* Arredondamento proporcional ao tamanho novo */
     border-color: var(--accent-red);
     background: rgba(239, 68, 68, 0.1);
 }
 
 .map-node.boss .node-icon {
     font-size: 2rem;
+}
+
+.map-node.boss .node-label {
+    font-size: 0.6rem;
+}
+
+/* --- ELITE --- */
+.map-node.elite {
+    border-color: var(--accent-gold);
+    background: rgba(245, 158, 11, 0.15);
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+}
+
+.map-node.elite.active .node-label {
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.map-node.elite .node-label {
+    color: var(--accent-gold);
+}
+
+.map-node.elite .node-icon {
+    filter: drop-shadow(0 0 6px var(--accent-gold));
+}
+
+.map-node.elite.active {
+    background: rgba(245, 158, 11, 0.3);
+    border-color: #fff;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+}
+
+/* --- FIXES PARA QUANDO ELITE/BOSS ESTÃO BLOQUEADOS --- */
+.map-node.elite.locked,
+.map-node.boss.locked {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-accent) !important;
+    box-shadow: none !important;
+}
+
+.map-node.elite.locked .node-icon {
+    filter: none;
+}
+
+.map-node.elite.locked .node-label,
+.map-node.boss.locked .node-label {
+    color: var(--text-muted);
 }
 
 .map-line {
