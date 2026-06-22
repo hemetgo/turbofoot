@@ -40,7 +40,6 @@ function startRunFlow() {
 
     let highestUnlocked = gameState.meta?.highestSeriesUnlocked || 0;
 
-    // Alterado para buscar do GAME_BALANCE e não do chumbado
     GAME_BALANCE.leagues.forEach((series, idx) => {
         let isLocked = idx > highestUnlocked;
         let lockedAttr = isLocked ? 'style="opacity:0.3; filter:grayscale(1); pointer-events:none;"' : '';
@@ -52,8 +51,8 @@ function startRunFlow() {
                     <div class="club-select-emoji">${lockIcon}</div>
                     <div class="club-select-name" style="color: ${isLocked ? '#94a3b8' : series.color}">${series.name}</div>
                 </div>
-                <div class="captain-box" style="justify-content: center; min-height: 80px;">
-                    <div style="font-size: 0.85rem; color: #fff; font-weight: 800; text-align: center;">${series.desc}</div>
+                <div class="captain-box" style="justify-content: center; min-height: 80px; padding: 12px;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 800; text-align: center; line-height: 1.4;">${series.desc}</div>
                 </div>
             </div>
         `;
@@ -62,7 +61,7 @@ function startRunFlow() {
     showScreen('screen-series-select');
 }
 
-// NOVO: Ao clicar na série, sorteamos os times e mostramos a próxima tela
+// Sorteia times focados no coletivo, listando as habilidades geradas
 function selectSeries(idx) {
     selectedSeriesIndex = idx;
     pendingClubOptions = [];
@@ -70,14 +69,13 @@ function selectSeries(idx) {
     let bases = GAME_CONTENT.clubGeneration.bases;
     let adjs = GAME_CONTENT.clubGeneration.adjectives;
 
-    // LÊ AS MELHORIAS META
     let metaLevel = gameState.meta?.upgrades?.start_level || 0;
-    let metaTraits = gameState.meta?.upgrades?.start_traits || 0; // Este é o Nível do Upgrade (ex: de 1 a 10)
+    let metaTraits = gameState.meta?.upgrades?.start_traits || 0;
+    let metaFocusLvl = gameState.meta?.upgrades?.trait_focus || 0;
     let startLvl = 1 + metaLevel;
+    let focusChance = metaFocusLvl * 0.12;
 
-    // A MÁGICA DA DISTRIBUIÇÃO:
-    // Ex: Nível 3 -> floor(3/2) = 1 jogador com 2 traits. 3%2 = 1 jogador com 1 trait.
-    let playersWith2Traits = Math.floor(metaTraits / 2);
+    let playersWith2Traits = 1 + Math.floor(metaTraits / 2);
     let playersWith1Trait = metaTraits % 2;
 
     for (let i = 0; i < 3; i++) {
@@ -85,48 +83,77 @@ function selectSeries(idx) {
         const adj = rnd(adjs);
 
         let team = [];
-        let captain = generateCaptain(startLvl); // Capitão usa a regra normal (nasce Rank S)
-        team.push(captain);
+        let traitDistribution = [];
 
-        for (let j = 0; j < 10; j++) {
-            let numTraitsToGive = 0;
-
-            // Os primeiros da lista recebem 2 Traits
-            if (j < playersWith2Traits) {
-                numTraitsToGive = 2;
-            }
-            // O(s) próximo(s) recebem 1 Trait (dependendo se for par ou ímpar)
-            else if (j < playersWith2Traits + playersWith1Trait) {
-                numTraitsToGive = 1;
-            }
-
-            // Agora a função generateBasePlayer sabe lidar com 0, 1 ou 2 traits
-            team.push(generateBasePlayer(startLvl, numTraitsToGive));
+        for (let j = 0; j < 11; j++) {
+            if (j < playersWith2Traits) traitDistribution.push(2);
+            else if (j < playersWith2Traits + playersWith1Trait) traitDistribution.push(1);
+            else traitDistribution.push(0);
         }
+        traitDistribution = shuffle(traitDistribution);
+
+        let focusTraitId = metaFocusLvl > 0 ? rnd(PERK_LIST).id : null;
+
+        for (let j = 0; j < 11; j++) {
+            let numTraitsToGive = traitDistribution[j];
+            team.push(generateBasePlayer(startLvl, numTraitsToGive, focusTraitId, focusChance));
+        }
+
+        let traitCounts = {};
+        team.forEach(p => {
+            if (p.perks) {
+                p.perks.forEach(perk => {
+                    if (!traitCounts[perk.id]) {
+                        traitCounts[perk.id] = { count: 0, name: perk.name, emoji: perk.emoji, desc: perk.desc };
+                    }
+                    traitCounts[perk.id].count++;
+                });
+            }
+        });
 
         pendingClubOptions.push({
             club: { name: `${base.name} ${adj}`, emoji: base.emoji, isPlayer: true },
             team: team,
-            captain: captain
+            traitCounts: traitCounts
         });
     }
 
     const container = document.getElementById('club-options-container');
     container.innerHTML = '';
 
+    // NOVO: Atualiza o cabeçalho global com a informação de nível!
+    const headerBlock = document.querySelector('#screen-club-select .champ-title-block');
+    if (headerBlock) {
+        headerBlock.innerHTML = `
+            <div class="champ-league-label">ESCOLHA SEU CLUBE</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 800; margin-top: 4px; text-transform: uppercase;">
+                Elenco inicial no Nível <span style="color: var(--accent-green); font-weight: 900;">${startLvl}</span>
+            </div>
+        `;
+    }
+
     pendingClubOptions.forEach((option, idx) => {
-        const c = option.club; const cap = option.captain;
+        const c = option.club;
+
+        let traitsHtml = "";
+        let traitsArray = Object.values(option.traitCounts).sort((a, b) => b.count - a.count);
+
+        if (traitsArray.length > 0) {
+            let tags = traitsArray.map(t =>
+                `<span data-tip="${t.desc}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--border-light); white-space: nowrap; color: #e2e8f0; pointer-events: auto;">${t.emoji} ${t.name} <span style="color:var(--accent-gold); font-weight:900;">x${t.count}</span></span>`
+            ).join('');
+            traitsHtml = `<div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 8px;">${tags}</div>`;
+        }
+
         container.innerHTML += `
             <div class="club-select-card" onclick="chooseClub(${idx})">
-                <div class="club-select-header"><div class="club-select-emoji">${c.emoji}</div><div class="club-select-name">${c.name}</div></div>
-                <div class="captain-box">
-                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 900; letter-spacing: 1px;">⭐ DESTAQUE DA BASE</div>
-                    <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                        <div style="font-size: 2.2rem; line-height: 1;">${cap.emoji}</div>
-                        <div style="font-weight: 900; color: #fff; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 4px;">${cap.name} <span style="filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); font-size: 1.1rem;">⭐</span></div>
-                        <div style="font-size: 0.8rem; color: var(--accent-blue); font-weight: 800; margin-top: 4px;">${cap.perks[0].emoji} ${cap.perks[0].name} & ${cap.perks[1].emoji} ${cap.perks[1].name}</div>
-                    </div>
-                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; font-weight:700; border-top: 1px solid var(--border-light); padding-top: 8px; width: 100%;">Nível Inicial do Time: ${startLvl} | Nível do Celeiro: ${metaTraits}</div>
+                <div class="club-select-header">
+                    <div class="club-select-emoji" style="font-size: 3.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">${c.emoji}</div>
+                    <div class="club-select-name">${c.name}</div>
+                </div>
+                <div class="captain-box" style="padding: 16px;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Destaques da Base</div>
+                    ${traitsHtml}
                 </div>
             </div>`;
     });

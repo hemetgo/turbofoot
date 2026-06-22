@@ -25,6 +25,14 @@
             "maxLevel": 5,
             "baseCost": 200,
             "costMult": 2.5
+        },
+        {
+            "id": "trait_focus",
+            "name": "Escola de Talentos",
+            "desc": "Aumenta a chance de novos jogadores da base nascerem com a MESMA Habilidade do seu Capitão, ajudando a fechar uma build desde o início.",
+            "maxLevel": 5,
+            "baseCost": 120,
+            "costMult": 2.0
         }
     ]
 }

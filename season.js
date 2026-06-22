@@ -72,20 +72,16 @@ function createMapRivalNode(type, baseDiff, stageIndex = 0) {
     const base = rnd(GAME_CONTENT.clubGeneration.bases);
     const adj = rnd(GAME_CONTENT.clubGeneration.adjectives);
     const style = rnd(GAME_CONTENT.rivalStyles);
+    const scale = GAME_BALANCE.mechanics.scaling || {};
 
-    // Pega as mecânicas do JSON
-    const mechanics = GAME_BALANCE.mechanics;
-    const threat = mechanics.threatLevels[type] || mechanics.threatLevels['match'];
+    // A LIGA DEFINE A DIFICULDADE (Nível do Rival)
+    // Ex: Série E (0) começa no Lvl 0. Série S (5) começa no Lvl 20.
+    let leagueBaseLevel = (gameState.leagueLevel * (scale.leagueLevelStep || 4));
+    let rivalLevel = leagueBaseLevel + stageIndex;
 
-    let runScale = 1 + (stageIndex * mechanics.scaling.stageDifficultyStep);
-
-    // Rola uma dificuldade dinamicamente baseada nos multiplicadores do JSON
-    let minMult = threat.powerMultMin;
-    let maxMult = threat.powerMultMax;
-    let varMult = minMult + Math.random() * (maxMult - minMult);
-
-    let rAtk = Math.floor(baseDiff * style.atkMod * varMult * runScale);
-    let rDef = Math.floor(baseDiff * style.defMod * varMult * runScale);
+    // Nós Elite e Chefões são níveis acima do padrão da liga
+    if (type === 'elite') rivalLevel += (scale.eliteLevelBonus || 3);
+    if (type === 'boss') rivalLevel += (scale.bossLevelBonus || 6);
 
     return {
         id: `node_${Date.now()}_${Math.random()}`, type: type,
@@ -94,8 +90,7 @@ function createMapRivalNode(type, baseDiff, stageIndex = 0) {
             emoji: base.emoji,
             style: style,
             perks: [],
-            atk: rAtk,
-            def: rDef,
+            level: rivalLevel, // <-- O Rival agora usa Nível Direto!
             dynamicTraitsSet: false
         }
     };
@@ -219,7 +214,7 @@ function handleMapNodeClick(node) {
 
             node.rival.perks = [];
             for (let i = 0; i < rivalTraitCount; i++) {
-                node.rival.perks.push(rnd(PERK_LIST));
+                node.rival.perks.push(rndWeighted(PERK_LIST));
             }
             node.rival.dynamicTraitsSet = true;
             saveGame();
@@ -241,17 +236,18 @@ function handleMapNodeClick(node) {
         });
 
         let perksHtml = Object.values(perkCounts).map(perk => {
-            let countLabel = perk.count > 1 ? ` <b style="color:var(--accent-gold);">(x${perk.count})</b>` : "";
-            return `<span data-tip="${perk.desc}" style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.05); padding:6px 12px; border-radius:8px; ">${perk.emoji} ${perk.name}${countLabel}</span>`;
+            let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold); font-weight:900;">x${perk.count}</span>` : "";
+            // Tag visual padrão unificada
+            return `<span data-tip="${perk.desc}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-light); font-size: 0.8rem; font-weight: 800; white-space: nowrap; color: #e2e8f0; pointer-events: auto;">${perk.emoji} ${perk.name}${countLabel}</span>`;
         }).join('');
 
         details.innerHTML = `
             <div style="font-size:3.5rem; margin-bottom:10px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); text-align: center;">${node.rival.emoji}</div>
-            <h3 style="color:#fff; margin-bottom:5px; font-size:1.4rem; text-transform:uppercase; text-align:center;">${node.rival.name}</h3>
+            <h3 style="color:#fff; margin-bottom:12px; font-size:1.4rem; text-transform:uppercase; text-align:center;">${node.rival.name}</h3>
             
             <div style="background:rgba(0,0,0,0.4); border-radius:12px; padding:15px; margin-bottom:15px; border:1px solid var(--border-light); display:flex; flex-direction:column; align-items:center;">
-                <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px; font-weight:900; text-transform:uppercase; letter-spacing:1px;">Especialistas em:</div>
-                <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:10px; font-size:0.9rem; font-weight:900; color:var(--accent-blue);">
+                <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Especialistas em:</div>
+                <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:6px;">
                     ${perksHtml}
                 </div>
             </div>

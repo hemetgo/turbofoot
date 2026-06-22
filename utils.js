@@ -9,6 +9,19 @@ function showScreen(id) {
     }
 }
 
+function rndWeighted(items) {
+    let totalWeight = items.reduce((sum, item) => sum + (item.weight !== undefined ? item.weight : 1), 0);
+    let random = Math.random() * totalWeight;
+    for (let i = 0; i < items.length; i++) {
+        let weight = items[i].weight !== undefined ? items[i].weight : 1;
+        if (random < weight) {
+            return items[i];
+        }
+        random -= weight;
+    }
+    return items[items.length - 1];
+}
+
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 function rnd(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
@@ -80,123 +93,10 @@ function hardResetSave() {
     }
 }
 
-// ==========================================
-// TOOLTIPS GLOBAIS (data-tip)
-// ==========================================
-// Por que isso existe: qualquer [data-tip] que vivesse dentro de um
-// contêiner com overflow:hidden/auto (roster, mercado, modais com scroll)
-// tinha o tooltip cortado, pois o ::after antigo era posicionado DENTRO
-// do próprio elemento. z-index não resolve isso — overflow recorta antes.
-//
-// Agora existe 1 único elemento .tooltip-global, anexado direto no
-// <body>, com position:fixed. Ele nunca fica preso por overflow de
-// nenhum contêiner pai. Usamos delegação de evento (no document) então
-// funciona até para cards criados depois via innerHTML += '...'.
-(function setupGlobalTooltip() {
-    let tooltipEl = null;
-    let currentTarget = null;
-
-    function ensureTooltipEl() {
-        if (!tooltipEl) {
-            tooltipEl = document.createElement('div');
-            tooltipEl.className = 'tooltip-global';
-            document.body.appendChild(tooltipEl);
-        }
-        return tooltipEl;
-    }
-
-    function positionTooltip(target) {
-        const el = ensureTooltipEl();
-        const rect = target.getBoundingClientRect();
-        const margin = 8;
-
-        // Mede a largura/altura real do tooltip (já com o texto setado)
-        const tw = el.offsetWidth;
-        const th = el.offsetHeight;
-
-        // Tenta centralizar acima do elemento-alvo
-        let left = rect.left + rect.width / 2 - tw / 2;
-        let top = rect.top - th - margin;
-
-        // Se não houver espaço acima, desenha abaixo
-        if (top < margin) {
-            top = rect.bottom + margin;
-        }
-
-        // Clampa horizontalmente para não vazar da viewport
-        const maxLeft = window.innerWidth - tw - margin;
-        if (left < margin) left = margin;
-        if (left > maxLeft) left = Math.max(margin, maxLeft);
-
-        // Clampa verticalmente também (por segurança)
-        const maxTop = window.innerHeight - th - margin;
-        if (top > maxTop) top = Math.max(margin, maxTop);
-
-        el.style.left = left + 'px';
-        el.style.top = top + 'px';
-    }
-
-    function showTooltip(target) {
-        const text = target.getAttribute('data-tip');
-        if (!text) return;
-        const el = ensureTooltipEl();
-        currentTarget = target;
-        el.textContent = text;
-        el.classList.add('visible');
-        // Reposiciona depois do texto setado (precisa do offsetWidth/Height corretos)
-        positionTooltip(target);
-    }
-
-    function hideTooltip() {
-        currentTarget = null;
-        if (tooltipEl) tooltipEl.classList.remove('visible');
-    }
-
-    // Desktop: hover
-    document.addEventListener('mouseover', (e) => {
-        const target = e.target.closest('[data-tip]');
-        if (target) showTooltip(target);
-    });
-
-    document.addEventListener('mouseout', (e) => {
-        const target = e.target.closest('[data-tip]');
-        if (target && target === currentTarget) hideTooltip();
-    });
-
-    // Mobile/touch: toque mostra, toque fora esconde
-    document.addEventListener('touchstart', (e) => {
-        const target = e.target.closest('[data-tip]');
-        if (target) {
-            if (currentTarget === target) {
-                hideTooltip();
-            } else {
-                showTooltip(target);
-            }
-        } else if (currentTarget) {
-            hideTooltip();
-        }
-    }, { passive: true });
-
-    // Reposiciona/esconde em scroll e resize (a posição fixed pode desalinhar)
-    window.addEventListener('scroll', () => {
-        if (currentTarget) positionTooltip(currentTarget);
-    }, { passive: true, capture: true });
-
-    window.addEventListener('resize', () => {
-        if (currentTarget) positionTooltip(currentTarget);
-    });
-
-    // Some o tooltip se o clique for fora de qualquer [data-tip]
-    document.addEventListener('click', (e) => {
-        const target = e.target.closest('[data-tip]');
-        if (!target) hideTooltip();
-    });
-})();
-
 // Atalho secreto: Aperte a tecla "\" (Contra-barra) para abrir o console de debug
 document.addEventListener('keydown', (e) => {
     if (e.key === '\\') {
-        let cmd = prompt("🔧 MODO DEBUG\nComandos: addmeta X, addcoins X, win");
+        let cmd = prompt("🔧 MODO DEBUG\nComandos: addmeta X, addcoins X, win, unlockall");
         if (!cmd) return;
 
         let args = cmd.toLowerCase().trim().split(" ");
@@ -230,9 +130,86 @@ document.addEventListener('keydown', (e) => {
                 }
                 break;
 
+            // NOVO COMANDO: Liberta todas as ligas
+            case "unlockall":
+                if (!gameState.meta) gameState.meta = { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} };
+
+                if (GAME_BALANCE && GAME_BALANCE.leagues) {
+                    gameState.meta.highestSeriesUnlocked = GAME_BALANCE.leagues.length - 1;
+                    saveGame();
+                    alert("🔓 Todas as Ligas/Divisões foram desbloqueadas com sucesso! Volte ao ecrã inicial para ver as opções.");
+                } else {
+                    alert("Erro: GAME_BALANCE não carregado corretamente.");
+                }
+                break;
+
             default:
-                alert("Comando não reconhecido. Use:\naddmeta 100\naddcoins 100\nwin");
+                alert("Comando não reconhecido. Use:\naddmeta 100\naddcoins 100\nwin\nunlockall");
                 break;
         }
     }
+});
+
+// ==========================================
+// SISTEMA DE TOOLTIP GLOBAL (DELEGAÇÃO)
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+    let globalTooltip = document.querySelector('.tooltip-global');
+
+    // Cria o elemento se ele não existir
+    if (!globalTooltip) {
+        globalTooltip = document.createElement("div");
+        globalTooltip.className = "tooltip-global";
+        document.body.appendChild(globalTooltip);
+    }
+
+    const showTooltip = (e) => {
+        const target = e.target.closest('[data-tip]');
+        if (!target) return;
+
+        const tipText = target.getAttribute('data-tip');
+        if (!tipText) return;
+
+        globalTooltip.innerHTML = tipText;
+        globalTooltip.classList.add('visible');
+
+        // Calcula posicionamento
+        const rect = target.getBoundingClientRect();
+        let top = rect.top - globalTooltip.offsetHeight - 8;
+        let left = rect.left + (rect.width / 2) - (globalTooltip.offsetWidth / 2);
+
+        // Corrige se sair da tela por cima
+        if (top < 10) {
+            top = rect.bottom + 8;
+        }
+
+        // Corrige se sair pelas laterais
+        if (left < 10) left = 10;
+        if (left + globalTooltip.offsetWidth > window.innerWidth - 10) {
+            left = window.innerWidth - globalTooltip.offsetWidth - 10;
+        }
+
+        globalTooltip.style.top = `${top}px`;
+        globalTooltip.style.left = `${left}px`;
+    };
+
+    const hideTooltip = (e) => {
+        // Se saiu do elemento e não entrou em outro tooltip, esconde
+        if (!e || !e.relatedTarget || !e.relatedTarget.closest('[data-tip]')) {
+            globalTooltip.classList.remove('visible');
+        }
+    };
+
+    // Vigia eventos no documento todo
+    document.addEventListener('mouseover', showTooltip);
+    document.addEventListener('mouseout', hideTooltip);
+
+    // Suporte mobile
+    document.addEventListener('touchstart', (e) => {
+        if (e.target.closest('[data-tip]')) {
+            showTooltip(e);
+        } else {
+            globalTooltip.classList.remove('visible');
+        }
+    }, { passive: true });
 });
