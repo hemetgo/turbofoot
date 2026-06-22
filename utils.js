@@ -7,6 +7,13 @@ function showScreen(id) {
         const scrollAreas = target.querySelectorAll('.club-options-wrapper, .map-wrapper, .market-wrapper, .match-log-container');
         scrollAreas.forEach(area => area.scrollTop = 0);
     }
+
+    // Gerencia o estado "in-run" para fixar o layout no mobile
+    if (['screen-title', 'screen-series-select', 'screen-club-select'].includes(id)) {
+        document.body.classList.remove('in-run');
+    } else {
+        document.body.classList.add('in-run');
+    }
 }
 
 function rndWeighted(items) {
@@ -89,11 +96,10 @@ function closeModals() {
 function hardResetSave() {
     if (confirm("ATENÇÃO: Você vai perder TODO o seu progresso, troféus e divisões liberadas.\n\nTem certeza absoluta?")) {
         localStorage.removeItem("turboFoot_mgr_v7");
-        location.reload(); // Recarrega a página do zero
+        location.reload(); 
     }
 }
 
-// Atalho secreto: Aperte a tecla "\" (Contra-barra) para abrir o console de debug
 document.addEventListener('keydown', (e) => {
     if (e.key === '\\') {
         let cmd = prompt("🔧 MODO DEBUG\nComandos: addmeta X, addcoins X, win, unlockall");
@@ -109,7 +115,6 @@ document.addEventListener('keydown', (e) => {
                 gameState.meta.metaCoins += val;
                 saveGame();
                 alert(`+${val} Troféus adicionados!`);
-                // Se a loja estiver aberta, atualiza ela na hora
                 if (document.getElementById('meta-shop-overlay').style.display === 'flex') renderMetaShop();
                 break;
 
@@ -121,19 +126,17 @@ document.addEventListener('keydown', (e) => {
                 break;
 
             case "win":
-                // Se estiver dentro de uma partida, injeta gols pro usuário e encerra
                 if (document.getElementById('screen-match').classList.contains('active')) {
                     matchState.userScore += 10;
-                    endMatchByTime(); // Força o fim do jogo e calcula recompensas
+                    endMatchByTime(); 
                 } else {
                     alert("Você precisa estar dentro de uma partida (no campo) para usar o 'win'.");
                 }
                 break;
-
-            // NOVO COMANDO: Liberta todas as ligas
+                
             case "unlockall":
                 if (!gameState.meta) gameState.meta = { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} };
-
+                
                 if (GAME_BALANCE && GAME_BALANCE.leagues) {
                     gameState.meta.highestSeriesUnlocked = GAME_BALANCE.leagues.length - 1;
                     saveGame();
@@ -155,8 +158,7 @@ document.addEventListener('keydown', (e) => {
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     let globalTooltip = document.querySelector('.tooltip-global');
-
-    // Cria o elemento se ele não existir
+    
     if (!globalTooltip) {
         globalTooltip = document.createElement("div");
         globalTooltip.className = "tooltip-global";
@@ -166,45 +168,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const showTooltip = (e) => {
         const target = e.target.closest('[data-tip]');
         if (!target) return;
-
+        
         const tipText = target.getAttribute('data-tip');
         if (!tipText) return;
 
         globalTooltip.innerHTML = tipText;
         globalTooltip.classList.add('visible');
-
-        // Calcula posicionamento
+        
         const rect = target.getBoundingClientRect();
         let top = rect.top - globalTooltip.offsetHeight - 8;
         let left = rect.left + (rect.width / 2) - (globalTooltip.offsetWidth / 2);
-
-        // Corrige se sair da tela por cima
+        
         if (top < 10) {
             top = rect.bottom + 8;
         }
-
-        // Corrige se sair pelas laterais
+        
         if (left < 10) left = 10;
         if (left + globalTooltip.offsetWidth > window.innerWidth - 10) {
             left = window.innerWidth - globalTooltip.offsetWidth - 10;
         }
-
+        
         globalTooltip.style.top = `${top}px`;
         globalTooltip.style.left = `${left}px`;
     };
 
     const hideTooltip = (e) => {
-        // Se saiu do elemento e não entrou em outro tooltip, esconde
         if (!e || !e.relatedTarget || !e.relatedTarget.closest('[data-tip]')) {
             globalTooltip.classList.remove('visible');
         }
     };
 
-    // Vigia eventos no documento todo
     document.addEventListener('mouseover', showTooltip);
     document.addEventListener('mouseout', hideTooltip);
-
-    // Suporte mobile
+    
     document.addEventListener('touchstart', (e) => {
         if (e.target.closest('[data-tip]')) {
             showTooltip(e);

@@ -388,3 +388,25 @@ function closeHistoryDetails() {
     document.getElementById("history-details").style.display = "none";
     document.getElementById("history-footer").style.display = "none";
 }
+
+function setMobileTab(tab) {
+    const btnMap = document.getElementById('nav-btn-map');
+    const btnTeam = document.getElementById('nav-btn-team');
+
+    if (tab === 'team') {
+        document.body.classList.remove('viewing-map');
+        document.body.classList.add('viewing-team');
+
+        btnMap.classList.remove('active');
+        btnTeam.classList.add('active');
+    } else {
+        document.body.classList.remove('viewing-team');
+        document.body.classList.add('viewing-map');
+
+        btnTeam.classList.remove('active');
+        btnMap.classList.add('active');
+    }
+}
+
+// Inicializa o estado padrão ao carregar o jogo
+document.body.classList.add('viewing-map');

@@ -25,21 +25,15 @@
 }
 
 html {
-    /* Escala fluida: cresce/diminui suavemente com a largura da tela,
-       em vez de saltar em apenas 2 pontos fixos (480px/360px).
-       320px -> ~13px | 480px -> ~14.3px | 900px -> ~16px | 1440px+ -> ~17.5px */
     font-size: clamp(13px, 12.2px + 0.45vw, 17.5px);
 }
 
-/* Telas muito pequenas (ex: iPhone SE, 320px) precisam de um piso garantido */
 @media (max-width: 340px) {
     html {
         font-size: 12.5px;
     }
 }
 
-/* Telas grandes / monitores ultrawide: trava o crescimento para não
-   deixar tudo gigante, já que #game-container tem max-width próprio */
 @media (min-width: 1600px) {
     html {
         font-size: 17.5px;
@@ -62,9 +56,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    /* Fallback */
     height: 100dvh;
-    /* Garante tamanho exato sem quebrar a UI por causa do menu do navegador */
     overflow: hidden;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
@@ -85,19 +77,6 @@ body {
     text-align: center;
 }
 
-/* ==================== TOOLTIPS GLOBAIS ==================== */
-/* O tooltip antigo usava [data-tip]::after posicionado de forma absoluta
-   DENTRO do próprio elemento. Isso quebrava sempre que [data-tip] estava
-   dentro de qualquer contêiner com overflow:hidden/auto (roster, market,
-   modais, listas com scroll) — o ::after era cortado pela caixa do pai,
-   independente do z-index, porque overflow recorta o conteúdo antes do
-   z-index entrar em jogo.
-
-   Solução: o elemento [data-tip] não desenha mais o próprio tooltip.
-   Um único elemento .tooltip-global é criado 1x via JS (utils.js) e
-   anexado direto no <body>, com position:fixed. Como ele vive fora de
-   qualquer contêiner com overflow, nunca é cortado. JS calcula a posição
-   (top/left) com getBoundingClientRect() a cada hover/touch. */
 [data-tip] {
     cursor: default;
 }
@@ -129,7 +108,6 @@ body {
     opacity: 1;
 }
 
-/* ==================== LAYOUT BASE ==================== */
 #game-container {
     width: 100%;
     height: 100vh;
@@ -191,26 +169,21 @@ body {
     display: none !important;
 }
 
-.in-run-only {
-    display: none !important;
-}
-
-body.in-run .in-run-only {
-    display: flex !important;
-}
-
 @media (min-width: 900px) {
+    .desktop-only {
+        display: flex !important;
+    }
+
+    /* Adicione esta linha para garantir que a sidebar inicie oculta no desktop */
+    #desktop-sidebar {
+        display: none !important;
+    }
+
     body.in-run #desktop-sidebar.desktop-only {
         display: flex !important;
     }
 
     .mobile-only {
-        display: none !important;
-    }
-}
-
-@media (max-width: 899px) {
-    #desktop-sidebar {
         display: none !important;
     }
 }
@@ -314,7 +287,6 @@ button {
     color: var(--text-muted);
 }
 
-/* ==================== MODAIS E CARDS ==================== */
 .modal-overlay {
     position: absolute;
     top: 0;
@@ -348,7 +320,6 @@ button {
     .modal-overlay.bottom-sheet-overlay {
         padding: 0;
         justify-content: flex-end;
-        /* Bottom sheet fixa em baixo sem bugar */
     }
 
     .bottom-sheet {
@@ -455,7 +426,6 @@ button {
     font-weight: 900;
 }
 
-/* TELA DE TÍTULO */
 .title-container {
     flex: 1;
     display: flex;
@@ -515,7 +485,6 @@ button {
     }
 }
 
-/* MICRO-UI E ELENCO */
 .currency-display {
     font-size: 1rem;
     font-weight: 800;
@@ -531,29 +500,14 @@ button {
 
 .roster-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: var(--space-sm);
     align-content: start;
 }
 
-/* Faixa intermediária (tablets/notebooks pequenos): aproveita o espaço
-   extra com 3 colunas em vez de continuar no layout "mobile" de 2 */
-@media (min-width: 600px) and (max-width: 899px) {
-    .roster-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-md);
-    }
-}
-
-@media (min-width: 900px) {
+@media (min-width: 600px) {
     .roster-grid {
         grid-template-columns: repeat(2, 1fr);
-    }
-
-    #modal-roster-list.roster-grid,
-    #replace-list.roster-grid,
-    #level-team-grid.roster-grid {
-        grid-template-columns: repeat(3, 1fr);
         gap: var(--space-md);
     }
 }
@@ -563,17 +517,12 @@ button {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
     margin-top: 20px;
-    /* Agora tem espaço pq ele fica DEBAIXO do grid */
 }
 
 .player-card {
     background: linear-gradient(145deg, #1e293b, #0f172a);
     border: 1px solid var(--border-accent);
     border-radius: var(--radius-md);
-    padding: 8px 4px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     position: relative;
     transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
@@ -595,114 +544,6 @@ button {
     color: #94a3b8;
 }
 
-#mobile-fab {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-blue-dark), var(--accent-blue));
-    color: white;
-    font-size: 1.8rem;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 15px rgba(2, 132, 199, 0.5);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    z-index: 999;
-    cursor: pointer;
-}
-
-/* O FAB só aparece no Mobile e apenas durante uma Jornada ativa (in-run) */
-body.in-run #mobile-fab.mobile-only {
-    display: flex;
-}
-
-@media (min-width: 900px) {
-    body.in-run #mobile-fab.mobile-only {
-        display: none !important;
-    }
-}
-
-/* ==================== CABEÇALHO DO CARD (NÍVEL E RANK) ==================== */
-.card-header-stats {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0 2px;
-    margin-bottom: 2px;
-}
-
-.card-lvl {
-    font-size: 0.7rem;
-    font-weight: 900;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 2px 6px;
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.card-rank {
-    font-size: 0.75rem;
-    font-weight: 900;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 2px 8px;
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.card-emoji {
-    text-align: center;
-    font-size: 2rem;
-    /* Mantém o tamanho grande */
-    margin-top: -15px;
-    /* Puxa o emoji para cima, para mais perto do cabeçalho */
-    margin-bottom: 6px;
-    /* Dá um respiro antes do nome */
-    line-height: 1;
-}
-
-.card-name {
-    font-weight: 900;
-    font-size: 0.75rem;
-    text-align: center;
-    margin-bottom: 6px;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-    padding: 0 4px;
-    text-transform: uppercase;
-}
-
-.card-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    font-size: 0.7rem;
-    font-weight: 800;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 4px;
-    border-radius: 6px;
-    width: 90%;
-    margin-bottom: 4px;
-    color: var(--accent-blue);
-    text-align: center;
-}
-
-.card-perk {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    white-space: nowrap;
-}
-
-/* ==================== DISTRIBUIÇÃO DE NÍVEIS ==================== */
 .level-up-badge {
     position: absolute;
     top: -10px;
@@ -742,17 +583,11 @@ body.in-run #mobile-fab.mobile-only {
     }
 }
 
-/* == */
-
 .player-card.highlight-synergy {
     box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), inset 0 0 10px rgba(168, 85, 247, 0.2);
     border-color: #a855f7;
     transform: scale(1.02);
     z-index: 10;
-}
-
-.player-card.highlight-synergy .card-emoji {
-    filter: drop-shadow(0 0 6px #a855f7);
 }
 
 .trait-help-list {
@@ -789,7 +624,6 @@ body.in-run #mobile-fab.mobile-only {
     border-left-color: var(--text-muted);
 }
 
-/* TELAS DE ESCOLHA E MAPA */
 .champ-header {
     background: var(--bg-card);
     padding: 12px 20px;
@@ -817,6 +651,31 @@ body.in-run #mobile-fab.mobile-only {
     letter-spacing: 1.5px;
 }
 
+/* === GRID DE SÉRIES (VERTICAL E TOTALMENTE RESPONSIVO) === */
+#series-options-container {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
+    gap: var(--space-lg) !important;
+    padding: var(--space-lg) !important;
+    width: 100% !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    align-content: start !important;
+    align-items: stretch !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    flex-direction: initial !important;
+}
+
+#series-options-container .club-select-card {
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    flex: none !important;
+    margin: 0 !important;
+}
+
+/* CARROSSEL DOS CLUBES (HORIZONTAL) */
 .club-options-wrapper {
     flex: 1;
     overflow-y: auto;
@@ -857,13 +716,10 @@ body.in-run #mobile-fab.mobile-only {
         border-radius: 4px;
     }
 
-    /* O SEGREDO PRA RESOLVER O TAMANHO DOS CARDS ESTOURANDO: */
-    .club-select-card {
+    .club-options-wrapper .club-select-card {
         flex: 0 0 320px;
-        /* Trava a largura do card EXATAMENTE em 320px */
         width: 320px;
         max-width: none;
-        /* Remove o comportamento elástico */
     }
 }
 
@@ -913,9 +769,7 @@ body.in-run #mobile-fab.mobile-only {
     text-align: center;
     width: 100%;
     word-wrap: break-word;
-    /* OBRIGA palavras longas a quebrarem */
     overflow-wrap: break-word;
-    /* Evita que o texto empurre o card */
 }
 
 .captain-box {
@@ -1052,7 +906,6 @@ body.in-run #mobile-fab.mobile-only {
     stroke-width: 5;
 }
 
-/* MERCADO */
 .market-wrapper {
     flex: 1;
     overflow-y: auto;
@@ -1161,7 +1014,6 @@ body.in-run #mobile-fab.mobile-only {
     transform: none;
 }
 
-/* HISTÓRICO DE RUNS */
 .history-list {
     display: flex;
     flex-direction: column;
@@ -1271,7 +1123,6 @@ body.in-run #mobile-fab.mobile-only {
     flex-shrink: 0;
 }
 
-/* ==================== PARTIDA (ARENA) ==================== */
 .match-dashboard {
     background: var(--bg-base);
     padding: 12px 15px;
@@ -1400,8 +1251,6 @@ body.in-run #mobile-fab.mobile-only {
     overflow: visible;
 }
 
-/* Telas grandes: trava a largura da arena pra não ficar esticada
-   horizontalmente ao lado da sidebar, mantendo o minimapa proporcional */
 @media (min-width: 900px) {
     .action-arena {
         width: 100%;
@@ -1578,7 +1427,6 @@ body.in-run #mobile-fab.mobile-only {
     color: var(--accent-purple);
 }
 
-/* GRID DE AÇÕES RESPONSIVO */
 .field-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -1586,8 +1434,6 @@ body.in-run #mobile-fab.mobile-only {
     width: 100%;
 }
 
-/* Telas grandes: trava a largura máxima de cada card de ação para não
-   ficarem gigantes e espaçados, mantendo a densidade visual do jogo */
 @media (min-width: 700px) {
     .field-container {
         grid-template-columns: repeat(auto-fit, minmax(120px, 160px));
@@ -1596,7 +1442,6 @@ body.in-run #mobile-fab.mobile-only {
     }
 }
 
-/* Telas muito estreitas: reduz o mínimo para evitar overflow horizontal */
 @media (max-width: 340px) {
     .field-container {
         grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
@@ -1714,18 +1559,14 @@ body.in-run #mobile-fab.mobile-only {
     gap: 4px;
     width: 100%;
     min-width: 0;
-    /* IMPEDE QUE O TEXTO ESTOURE A LARGURA DO BOTÃO */
 }
 
 .node-footer {
     display: flex;
     flex-direction: column;
-    /* Transforma a linha em coluna (vertical) */
     align-items: center;
-    /* Centraliza os textos horizontalmente */
     justify-content: center;
     gap: 4px;
-    /* Dá um espacinho entre o Sucesso e o Fracasso */
     width: 100%;
     font-size: 0.65rem;
     font-weight: 800;
@@ -1735,7 +1576,6 @@ body.in-run #mobile-fab.mobile-only {
     text-align: center;
 }
 
-/* ==================== SINERGIA E BADGES (CARDS DE AÇÃO) ==================== */
 .node-badges-wrapper {
     display: flex;
     flex-direction: column;
@@ -1779,12 +1619,9 @@ body.in-run #mobile-fab.mobile-only {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    /* Se tiver muitas tags, quebra linha pra não vazar */
     gap: 4px;
     width: 100%;
 }
-
-/* ===== */
 
 .confirm-text {
     display: none;
@@ -1927,7 +1764,6 @@ body.in-run #mobile-fab.mobile-only {
     font-style: italic;
 }
 
-/* ANIMAÇÕES GERAIS */
 .floating-text {
     position: absolute;
     font-weight: 900;
@@ -2123,7 +1959,6 @@ body.in-run #mobile-fab.mobile-only {
     }
 }
 
-/* ==================== TAGS DE AÇÃO (GOL E BUFFS) ==================== */
 .action-tags-container {
     display: flex;
     justify-content: center;
@@ -2158,7 +1993,6 @@ body.in-run #mobile-fab.mobile-only {
     border: 1px solid rgba(168, 85, 247, 0.4);
 }
 
-/* ==================== ESTRUTURA DO CARD DE AÇÃO ==================== */
 .node-header {
     display: flex;
     justify-content: space-between;
@@ -2198,7 +2032,6 @@ body.in-run #mobile-fab.mobile-only {
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    /* Aumentamos o buraco entre o ícone e o nome */
     width: 100%;
 }
 
@@ -2217,7 +2050,6 @@ body.in-run #mobile-fab.mobile-only {
     word-wrap: break-word;
     hyphens: auto;
     margin-top: 2px;
-    /* Empurra o texto sutilmente para baixo */
 }
 
 .node-footer {
@@ -2240,7 +2072,6 @@ body.in-run #mobile-fab.mobile-only {
     gap: 4px;
     width: 100%;
     white-space: nowrap;
-    /* Mantém o sucesso/fracasso em 1 linha */
 }
 
 .outcome-row.fail {
@@ -2261,11 +2092,9 @@ body.in-run #mobile-fab.mobile-only {
     font-weight: 800;
 }
 
-/* ======== OTIMIZAÇÃO ESPECÍFICA PARA MOBILE ======== */
 @media (max-width: 600px) {
     .node-btn {
         padding: 6px 4px;
-        /* Mais espaço espremendo as bordas internas */
     }
 
     .node-chance {
@@ -2280,13 +2109,11 @@ body.in-run #mobile-fab.mobile-only {
     .node-icon-name {
         flex-direction: column;
         gap: 6px;
-        /* Garante que o espaçamento exista no mobile */
     }
 
     .node-emoji {
         font-size: 1.4rem;
         margin-bottom: 2px;
-        /* Remove qualquer margem negativa que estava puxando o texto */
         display: block;
     }
 
@@ -2294,7 +2121,6 @@ body.in-run #mobile-fab.mobile-only {
         font-size: 0.65rem;
         letter-spacing: -0.3px;
         margin-top: 4px;
-        /* Dá um respiro extra empurrando para baixo no mobile */
     }
 
     .outcome-row {
@@ -2304,35 +2130,92 @@ body.in-run #mobile-fab.mobile-only {
 
     .action-synergy {
         font-size: 0.55rem;
-        /* Aperta o badge de sinergia também */
         padding: 2px 4px;
     }
 }
 
-/* GRID EXCLUSIVO PARA A TELA DE SÉRIES NO PC */
-@media (min-width: 900px) {
-    #series-options-container.club-options-wrapper {
-        display: grid;
-        /* auto-fill e minmax criam um grid responsivo perfeito sem esticar o último card */
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: var(--space-lg);
-        padding: 40px var(--space-lg);
-        width: 100%;
-        max-width: 1000px;
-        margin: 0 auto;
+#mobile-navbar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    background: var(--bg-card, #1a1a24);
+    border-top: 1px solid var(--border-light, #2a2a35);
+    z-index: 9999;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+}
 
-        /* Substitui as regras do flexbox horizontal (scroll) */
-        align-content: start;
-        justify-content: center;
-        overflow-x: hidden;
-        overflow-y: auto;
+.nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-muted, #888);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-btn.active {
+    color: var(--accent-blue, #4dabf7);
+}
+
+.nav-btn .nav-icon {
+    font-size: 1.4rem;
+    margin-bottom: 2px;
+    filter: grayscale(100%) opacity(0.6);
+}
+
+.nav-btn.active .nav-icon {
+    filter: grayscale(0%) opacity(1);
+    transform: scale(1.1);
+}
+
+.nav-btn .nav-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+/* --- LÓGICA DE RESPONSIVIDADE E ESTADOS DA INTERFACE (MOBILE) --- */
+@media (max-width: 899px) {
+    body.in-run {
+        /* Alinha no topo para aproveitar o 100dvh e não empurrar a tela pra cima! */
+        align-items: flex-start;
     }
 
-    /* Solta as amarras do tamanho fixo de scroll para os cards das divisões */
-    #series-options-container .club-select-card {
-        flex: unset;
-        width: 100%;
-        height: 100%;
-        /* Faz todos os cards da mesma linha terem a mesma altura */
+    body.in-run #mobile-navbar {
+        display: flex;
+    }
+
+    body.in-run #game-container {
+        /* O game container vai ocupar toda a tela, descontando apenas a altura exata da Navbar */
+        height: calc(100dvh - 65px) !important;
+    }
+
+    /* Estado: Vendo Ação (Mapa/Loja/Acampamento) */
+    body.viewing-map #desktop-sidebar {
+        display: none !important;
+    }
+
+    body.viewing-map #main-content {
+        display: flex !important;
+        width: 100% !important;
+    }
+
+    /* Estado: Vendo Equipe (Lista de Jogadores na Sidebar) */
+    body.viewing-team #main-content {
+        display: none !important;
+    }
+
+    body.viewing-team #desktop-sidebar {
+        display: flex !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100% !important;
     }
 }
