@@ -1,15 +1,41 @@
 function fireConfetti() {
     const cont = document.getElementById("main-content");
-    const colors = ['#f59e0b', '#38bdf8', '#34d399', '#ec4899', '#f8fafc'];
-    for (let i = 0; i < 40; i++) {
+    const colors = ['#f59e0b', '#38bdf8', '#34d399', '#ec4899', '#f8fafc']; // Cores vibrantes de festa
+
+    // Aumentei para 80 confetes para preencher bem a tela de forma distribuída
+    for (let i = 0; i < 80; i++) {
         const c = document.createElement("div");
-        c.className = "confetti";
-        c.style.left = Math.random() * 100 + "%";
-        c.style.animationDelay = Math.random() * 0.5 + "s";
+
+        // Posicionamento inicial espalhado no topo, fora da visão do jogador
+        c.style.position = "absolute";
+        c.style.left = (Math.random() * 100) + "%"; // Brota de qualquer ponto horizontal
+        c.style.top = "-20px"; // Começa um pouco acima do topo da tela
+        c.style.width = (Math.random() * 6 + 6) + "px";
+        c.style.height = (Math.random() * 10 + 6) + "px";
         c.style.backgroundColor = rnd(colors);
+        c.style.pointerEvents = "none";
+        c.style.zIndex = "9999";
         if (Math.random() > 0.5) c.style.borderRadius = "50%";
+
+        // Configurações da queda lenta e celebração
+        const driftX = (Math.random() * 160 - 80); // Leve balanço para os lados enquanto flutua
+        const fallDuration = 2000 + Math.random() * 1500; // Bem mais lento (de 4 a 6.5 segundos de queda)
+        const startDelay = Math.random() * 500; // Efeito "chuva": eles não caem todos ao mesmo tempo
+
+        c.animate([
+            { transform: 'translateY(0) translateX(0) rotate(0deg)', opacity: 1 },
+            { transform: `translateY(45vh) translateX(${driftX}px) rotate(${Math.random() * 1440}deg)`, opacity: 0 }
+        ], {
+            duration: fallDuration,
+            easing: 'ease-out', // Suaviza a velocidade conforme eles caem
+            delay: startDelay,
+            fill: 'forwards'
+        });
+
         cont.appendChild(c);
-        setTimeout(() => c.remove(), 2500);
+
+        // Garante a remoção do elemento da memória após o término da animação individual
+        setTimeout(() => c.remove(), fallDuration + startDelay + 100);
     }
 }
 

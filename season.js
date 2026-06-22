@@ -279,7 +279,6 @@ function promptCampTrain() {
     // Chama a interface nova com 1 ponto para gastar. 
     // O 'true' no final significa que esse treinamento dá Trait extra (givesTrait = true)
     showLevelDistribution(1, () => {
-        fireConfetti();
         advanceMapNode();
     }, true);
 }

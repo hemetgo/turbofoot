@@ -4,7 +4,7 @@
         "name": "Saída Curta",
         "emoji": "🥾",
         "type": "atk",
-        "mod": 1.15,
+        "mod": 0.9,
         "successMove": 1,
         "failMove": 0,
         "comboGen": 1,
@@ -133,7 +133,7 @@
     {
         "id": "cross",
         "name": "Cruzamento",
-        "emoji": "🚁",
+        "emoji": "🦵",
         "type": "atk",
         "mod": 1.0,
         "successMove": 1,
@@ -165,22 +165,6 @@
         "synergy": "passing"
     },
     {
-        "id": "first_touch",
-        "name": "De Primeira",
-        "emoji": "💥",
-        "type": "shoot",
-        "mod": 1.0,
-        "successMove": 1,
-        "failMove": -1,
-        "comboReq": 0,
-        "zones": [
-            4
-        ],
-        "riskLevel": "med",
-        "weight": 100,
-        "synergy": "finishing"
-    },
-    {
         "id": "place",
         "name": "Chute Colocado",
         "emoji": "📐",
@@ -199,7 +183,7 @@
     {
         "id": "power",
         "name": "Bomba de Fora",
-        "emoji": "🧨",
+        "emoji": "💣",
         "type": "shoot",
         "mod": 0.80,
         "successMove": 2,
@@ -218,7 +202,7 @@
         "name": "Bicicleta",
         "emoji": "🚲",
         "type": "shoot",
-        "mod": 0.90,
+        "mod": 0.85,
         "successMove": 1,
         "failMove": -1,
         "comboReq": 3,
@@ -438,15 +422,15 @@
     },
     {
         "id": "epic_shoot",
-        "name": "Meio da Rua",
-        "emoji": "🛣️",
+        "name": "De Cabeça",
+        "emoji": "🫨",
         "type": "shoot",
-        "mod": 0.95,
+        "mod": 0.9,
         "successMove": 2,
         "failMove": -1,
         "comboReq": 2,
         "zones": [
-            3
+            4
         ],
         "riskLevel": "med",
         "weight": 15,
