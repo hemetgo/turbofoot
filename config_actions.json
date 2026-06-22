@@ -323,7 +323,7 @@
     {
         "id": "tactical_foul",
         "name": "Falta Tática",
-        "emoji": "🛑",
+        "emoji": "🟨",
         "type": "def",
         "mod": 1.0,
         "successMove": 0,
@@ -343,7 +343,7 @@
     {
         "id": "save_close",
         "name": "Fechar Ângulo",
-        "emoji": "🙅‍♂️",
+        "emoji": "🧱",
         "type": "save",
         "mod": 1.10,
         "successMove": 1,

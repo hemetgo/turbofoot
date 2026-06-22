@@ -1,37 +1,118 @@
 {
     "clubGeneration": {
         "bases": [
-            { "name": "Tigres", "emoji": "🐯" },
-            { "name": "Falcões", "emoji": "🦅" },
-            { "name": "Dragões", "emoji": "🐉" },
-            { "name": "Piratas", "emoji": "🏴‍☠️" },
-            { "name": "Ninjas", "emoji": "🥷" },
-            { "name": "Titãs", "emoji": "🗿" },
-            { "name": "Fantasmas", "emoji": "👻" },
-            { "name": "Lobos", "emoji": "🐺" },
-            { "name": "Ursos", "emoji": "🐻" },
-            { "name": "Reis", "emoji": "👑" },
-            { "name": "Guerreiros", "emoji": "⚔️" },
-            { "name": "Demônios", "emoji": "👹" },
-            { "name": "Panteras", "emoji": "🐆" },
-            { "name": "Cobras", "emoji": "🐍" },
-            { "name": "Tubarões", "emoji": "🦈" },
-            { "name": "Escorpiões", "emoji": "🦂" },
-            { "name": "Corvos", "emoji": "🐦‍⬛" },
-            { "name": "Touro", "emoji": "🐂" },
-            { "name": "Vikings", "emoji": "🛡️" },
-            { "name": "Gladiadores", "emoji": "🏛️" },
-            { "name": "Samurais", "emoji": "🎌" },
-            { "name": "Cavaleiros", "emoji": "🐴" },
-            { "name": "Krakens", "emoji": "🐙" },
-            { "name": "Fênix", "emoji": "🐦‍🔥" }
+            {
+                "name": "Leões",
+                "emoji": "🦁"
+            },
+            {
+                "name": "Galos",
+                "emoji": "🐓"
+            },
+            {
+                "name": "Raposas",
+                "emoji": "🦊"
+            },
+            {
+                "name": "Gaviões",
+                "emoji": "🦅"
+            },
+            {
+                "name": "Tigres",
+                "emoji": "🐯"
+            },
+            {
+                "name": "Porcos",
+                "emoji": "🐷"
+            },
+            {
+                "name": "Dragões",
+                "emoji": "🐉"
+            },
+            {
+                "name": "Canários",
+                "emoji": "🐤"
+            },
+            {
+                "name": "Touros",
+                "emoji": "🐂"
+            },
+            {
+                "name": "Furacões",
+                "emoji": "🌪️"
+            },
+            {
+                "name": "Almirantes",
+                "emoji": "⚓"
+            },
+            {
+                "name": "Operários",
+                "emoji": "👷"
+            },
+            {
+                "name": "Acadêmicos",
+                "emoji": "🎓"
+            },
+            {
+                "name": "Bandeirantes",
+                "emoji": "🗺️"
+            },
+            {
+                "name": "Piratas",
+                "emoji": "🏴‍☠️"
+            },
+            {
+                "name": "Gigantes",
+                "emoji": "🏟️"
+            },
+            {
+                "name": "Soberanos",
+                "emoji": "👑"
+            },
+            {
+                "name": "Imortais",
+                "emoji": "🏆"
+            },
+            {
+                "name": "Navegantes",
+                "emoji": "⛵"
+            },
+            {
+                "name": "Falcões",
+                "emoji": "🦅"
+            },
+            {
+                "name": "Lobos",
+                "emoji": "🐺"
+            }
         ],
         "adjectives": [
-            "de Fogo", "de Gelo", "Dourados", "Sombrios", "Reais", "Selvagens", 
-            "Celestes", "de Ferro", "Imortais", "Vorazes", "do Caos", "Supremos", 
-            "Tempestuosos", "Ancestrais", "Lendários", "Indomáveis", "Furiosos", 
-            "Invictos", "Abissais", "Radiantes", "Noturnos", "Colossais", 
-            "da Glória", "da Ruína"
+            "da Capital",
+            "do Norte",
+            "do Sul",
+            "do Leste",
+            "do Oeste",
+            "da Colina",
+            "da Vila",
+            "do Porto",
+            "da Baixada",
+            "da Fronteira",
+            "do Vale",
+            "da Ilha",
+            "Unidos",
+            "Independentes",
+            "Metropolitanos",
+            "Atléticos",
+            "Tricolores",
+            "Alvinegros",
+            "Rubro-Negros",
+            "Celestes",
+            "Esmeraldinos",
+            "Alvirrubros",
+            "de Regatas",
+            "F.C.",
+            "da Várzea",
+            "Tradicionais"
         ]
     }
 }
