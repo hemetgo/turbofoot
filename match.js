@@ -37,7 +37,7 @@ function startMapMatch() {
 function updateTimerDisplay() {
     let el = document.getElementById("action-counter");
     if (matchState.isExtraTime) {
-        el.innerHTML = `<span style="color:var(--accent-gold); font-weight:900; letter-spacing:0.5px; text-shadow: 0 0 8px rgba(245,158,11,0.8);">${matchState.currentAction}/${matchState.baseTotalActions} 🏆 PRORROGAÇÃO - GOL DE OURO - </span>`;
+        el.innerHTML = `<span style="color:var(--accent-gold); font-weight:900; letter-spacing:0.5px; text-shadow: 0 0 8px rgba(245,158,11,0.8);">${matchState.currentAction}/${matchState.baseTotalActions} 🏆 PRORROGAÇÃO - GOL DE OURO</span>`;
     } else {
         el.innerText = `⏱️ ${matchState.currentAction}/${matchState.baseTotalActions}`;
     }
@@ -230,7 +230,7 @@ function _renderPlayerButtons() {
         }
 
         let finalMod = node.id === "bicycle" ? node.mod + (Math.min(matchState.combo, 6) * 0.1) : node.mod;
-        
+
         // 1. CHANCE BASE
         let chance = BASE_CHANCE * finalMod;
 
@@ -280,7 +280,7 @@ function _renderPlayerButtons() {
             let tweakStep = Math.max(1, Math.floor((gameState.leagueLevel + 1) * 0.5));
             let attempts = 0;
             let currentChance = chance;
-            
+
             while (chanceSet.includes(currentChance) && attempts < 10) {
                 let offset = Math.ceil((attempts + 1) / 2) * tweakStep;
                 currentChance = chance + (attempts % 2 === 0 ? offset : -offset);
@@ -500,12 +500,12 @@ function handleGoal(isUserGoal) {
         matchState.userScore++; document.getElementById("score-user").innerText = matchState.userScore;
         createJuiceText("⚽ GOOOOL!!", "#f59e0b", window.innerWidth / 2, window.innerHeight / 2 - 100);
         addMatchLog(getRandomLog('goalUser'), "goal-user");
-        fireConfetti(); 
+        fireConfetti();
     } else {
         matchState.rivalScore++; document.getElementById("score-rival").innerText = matchState.rivalScore;
         createJuiceText("😢 Gol", "#ef4444", window.innerWidth / 2, window.innerHeight / 2);
         addMatchLog(getRandomLog('goalRival'), "goal-rival");
-        fireDespairEffect(); 
+        fireDespairEffect();
     }
     matchState.zone = 2; matchState.hasBall = !isUserGoal; matchState.nextBuff = 0; matchState.combo = 0; matchState.momentum = 0;
 
@@ -554,23 +554,23 @@ function fireDespairEffect() {
         line.style.position = "absolute";
         line.style.top = "50%";
         line.style.left = "50%";
-        line.style.width = (Math.random() * 40 + 30) + "px"; 
+        line.style.width = (Math.random() * 40 + 30) + "px";
         line.style.height = "4px";
-        line.style.backgroundColor = "#ef4444"; 
+        line.style.backgroundColor = "#ef4444";
         line.style.borderRadius = "2px";
         line.style.transformOrigin = "left center";
         line.style.pointerEvents = "none";
         line.style.zIndex = "9999";
         line.style.boxShadow = "0 0 10px #ef4444";
 
-        const angle = (i * 30) + (Math.random() * 15 - 7.5); 
+        const angle = (i * 30) + (Math.random() * 15 - 7.5);
 
         line.animate([
             { transform: `translate(0, -50%) rotate(${angle}deg) translateX(30px) scaleX(1)`, opacity: 1 },
             { transform: `translate(0, -50%) rotate(${angle}deg) translateX(180px) scaleX(0)`, opacity: 0 }
         ], {
-            duration: 350 + Math.random() * 150, 
-            easing: 'cubic-bezier(0.25, 1, 0.5, 1)', 
+            duration: 350 + Math.random() * 150,
+            easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
             fill: 'forwards'
         });
 
