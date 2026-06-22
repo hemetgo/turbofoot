@@ -146,25 +146,30 @@ function getSidebarPlayerHTML(p) {
 
         let perksArray = Object.values(perkCounts).map(perk => {
             let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold);">x${perk.count}</span>` : "";
-            return `<div data-tip="${perk.desc}" style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-light); pointer-events: auto;">${perk.emoji} ${perk.name}${countLabel}</div>`;
+            return `<div data-tip="${perk.desc}" style="display: flex; align-items: center; gap: 4px; font-size: 0.7rem; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-light); pointer-events: auto; overflow: hidden; max-width: 110px; flex-shrink: 1;">
+                        <span style="flex-shrink: 0;">${perk.emoji}</span>
+                        <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">${perk.name}${countLabel}</span>
+                    </div>`;
         });
 
-        perksHTML = `<div style="display: flex; gap: 4px; flex-wrap: wrap;">${perksArray.join('')}</div>`;
+        perksHTML = `<div style="display: flex; gap: 4px; flex-wrap: nowrap; overflow: hidden; width: 100%; height: 20px; align-items: center;">${perksArray.join('')}</div>`;
     } else {
-        perksHTML = `<div data-tip="Não possui bônus de habilidade." style="font-size: 0.7rem; color: var(--text-muted); pointer-events: auto;">Sem Habilidade</div>`;
+        perksHTML = `<div data-tip="Não possui bônus de habilidade." style="display: flex; align-items: center; font-size: 0.7rem; color: var(--text-muted); pointer-events: auto; height: 20px;">Sem Habilidade</div>`;
     }
 
     let starBadge = p.isStar ? `<span style="font-size: 0.9rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
 
     return `
-        <div class="player-card" data-perks="${dataPerks}" style="display: flex; flex-direction: row; align-items: center; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px 12px; width: 100%; min-height: 60px; transition: all 0.2s;">
+        <div class="player-card" data-perks="${dataPerks}" style="display: flex; flex-direction: row; align-items: center; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px 12px; width: 100%; height: 64px; flex-shrink: 0; overflow: hidden; transition: all 0.2s;">
             
-            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 55px; flex-shrink: 0;">
-                <span style="font-size: 1.1rem; line-height: 1; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));">${p.flag || '🏳️'}</span>
-                <span style="font-size: 2rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${p.emoji}</span>
+            <!-- Bandeira e Emoji mais próximos (gap 4px) e contêiner um pouco menor -->
+            <div style="display: flex; align-items: center; justify-content: flex-start; gap: 4px; width: 50px; flex-shrink: 0; margin-left: 2px;">
+                <span style="font-size: 1.1rem; line-height: 1; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); flex-shrink: 0;">${p.flag || '🏳️'}</span>
+                <span style="font-size: 2rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); flex-shrink: 0;">${p.emoji}</span>
             </div>
 
-            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; margin-left: 12px;">
+            <!-- Bloco de texto com mais margem à esquerda (margin-left: 14px) -->
+            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; margin-left: 24px;">
                 <div style="display: flex; align-items: center; margin-bottom: 4px;">
                     <span style="font-size: 0.85rem; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;">${p.name}</span>
                     ${starBadge}
