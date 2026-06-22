@@ -145,10 +145,12 @@ function getSidebarPlayerHTML(p) {
         });
 
         let perksArray = Object.values(perkCounts).map(perk => {
-            let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold);">x${perk.count}</span>` : "";
+            let countLabel = perk.count > 1 ? `<span style="color:var(--accent-gold); margin-left: 2px;">x${perk.count}</span>` : "";
+
+            // Retornado o nome completo. Se não couber, ganha "..." (text-overflow: ellipsis)
             return `<div data-tip="${perk.desc}" style="display: flex; align-items: center; gap: 4px; font-size: 0.7rem; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-light); pointer-events: auto; overflow: hidden; max-width: 110px; flex-shrink: 1;">
                         <span style="flex-shrink: 0;">${perk.emoji}</span>
-                        <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">${perk.name}${countLabel}</span>
+                        <span style="font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">${perk.name}${countLabel}</span>
                     </div>`;
         });
 
@@ -162,15 +164,15 @@ function getSidebarPlayerHTML(p) {
     return `
         <div class="player-card" data-perks="${dataPerks}" style="display: flex; flex-direction: row; align-items: center; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px 12px; width: 100%; height: 64px; flex-shrink: 0; overflow: hidden; transition: all 0.2s;">
             
-            <!-- Bandeira e Emoji mais próximos (gap 4px) e contêiner um pouco menor -->
-            <div style="display: flex; align-items: center; justify-content: flex-start; gap: 4px; width: 50px; flex-shrink: 0; margin-left: 2px;">
-                <span style="font-size: 1.1rem; line-height: 1; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); flex-shrink: 0;">${p.flag || '🏳️'}</span>
-                <span style="font-size: 2rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); flex-shrink: 0;">${p.emoji}</span>
+            <!-- Apenas o Emoji do jogador isolado no começo -->
+            <div style="display: flex; align-items: center; justify-content: center; width: 36px; flex-shrink: 0;">
+                <span style="font-size: 2rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${p.emoji}</span>
             </div>
 
-            <!-- Bloco de texto com mais margem à esquerda (margin-left: 14px) -->
-            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; margin-left: 24px;">
-                <div style="display: flex; align-items: center; margin-bottom: 4px;">
+            <!-- Bloco principal: Bandeira colada no Nome na primeira linha, Habilidades na segunda -->
+            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; margin-left: 12px;">
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                    <span style="font-size: 1rem; line-height: 1; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); flex-shrink: 0;">${p.flag || '🏳️'}</span>
                     <span style="font-size: 0.85rem; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;">${p.name}</span>
                     ${starBadge}
                 </div>
@@ -179,6 +181,7 @@ function getSidebarPlayerHTML(p) {
                 </div>
             </div>
 
+            <!-- Crachá de Nível na direita -->
             <div style="flex-shrink: 0; margin-left: 8px;">
                 <span style="display: flex; justify-content: center; align-items: center; padding: 4px 8px; font-size: 0.8rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid var(--border-accent); border-radius: 6px;">Nv <span style="color: var(--accent-green); margin-left: 4px;">${p.level}</span></span>
             </div>
