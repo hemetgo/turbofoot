@@ -18,18 +18,34 @@ function generateMapNodes() {
 
     for (let i = 0; i < STAGES; i++) {
         let stage = [];
-        let numNodes = (i === STAGES - 1) ? 1 : (i === 0 ? 3 : Math.floor(Math.random() * 2) + 3);
+        let numNodes = (i === STAGES - 1) ? 1 : (i === 0 ? 3 : Math.floor(Math.random() * 2) + 2);
+
 
         for (let j = 0; j < numNodes; j++) {
             let type = 'match';
-            if (i === STAGES - 1) type = 'boss';
-            else if (i === 0) type = 'match';
-            else if (i % 2 !== 0) type = Math.random() > 0.35 ? 'match' : 'elite';
+
+            if (i === STAGES - 1) {
+                type = 'boss';
+            }
+            else if (i === 0) {
+                type = 'match';
+            }
+            else if (i === 1) {
+                // No segundo estágio (i === 1), o nó da esquerda sempre será Treino
+                type = (j === 0) ? 'camp' : 'match';
+            }
             else {
+                // Estágios do meio (2 ao 8)
                 const r = Math.random();
-                if (r < 0.35) type = 'camp';
-                else if (r < 0.70) type = 'shop';
-                else type = (Math.random() > 0.5 ? 'match' : 'elite');
+
+                if (r <= 0.65) {
+                    // 65% de chance de ser Partida
+                    // Dentro desses 65%, tem 25% de chance de virar uma Elite
+                    type = Math.random() <= 0.25 ? 'elite' : 'match';
+                } else {
+                    // 35% de chance de ser nó pacífico (Treino ou Olheiro)
+                    type = Math.random() <= 0.50 ? 'shop' : 'camp';
+                }
             }
 
             let node = (type === 'camp' || type === 'shop') ? { type } : createMapRivalNode(type, diff, i);
@@ -151,7 +167,7 @@ function renderMap() {
                 icon = '🕵️‍♂️';
                 nodeName = 'Olheiro';
             } else if (node.type === 'camp') {
-                icon = '🏕️';
+                icon = '🏋️‍♂️';
                 nodeName = 'Treino';
             }
 
