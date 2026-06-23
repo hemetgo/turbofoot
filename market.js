@@ -131,6 +131,8 @@ function executePurchase(replaceIndex) {
     pendingPurchase = null;
     pendingDraftIndex = -1;
 
+    progressDailyMission('visit_market', 1);
+
     closeReplaceModal();
     updateRosterUI();
     saveGame();

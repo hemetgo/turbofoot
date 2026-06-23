@@ -340,6 +340,7 @@ function applyCamp(choice) {
 function advanceMapNode() {
     gameState.season.history[gameState.season.currentStage] = gameState.currentNode.index;
     gameState.season.currentStage++;
+    progressDailyMission('reach_stage', 1);
     saveGame();
     if (gameState.season.currentStage > 9) finishSeason(true);
     else renderMap();
@@ -364,6 +365,7 @@ function recordRun(wonSeason) {
 
 function finishSeason(wonSeason) {
     recordRun(wonSeason);
+    progressDailyMission('play_runs', 1);
 
     let subText = wonSeason ? "\n🏆 A CAMPANHA FOI UM SUCESSO!\nVocê completou o mapa!" : "\nDerrota dolorosa. Fim da jornada.";
 

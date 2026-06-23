@@ -117,6 +117,7 @@ function returnToTitle() {
     gameState.team = [];
     gameState.club = null;
     showScreen('screen-title');
+    updateMissionsBadge();
 }
 
 function updateRosterUI() {

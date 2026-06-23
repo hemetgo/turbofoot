@@ -12,8 +12,9 @@ async function initGame() {
         const leaguesData = await fetch('config_leagues.json').then(r => r.json());
         const namesData = await fetch('config_names.json').then(r => r.json());
         const presetsData = await fetch('config_presets.json').then(r => r.json());
+        const missionsData = await fetch('config_missions.json').then(r => r.json());
 
-        GAME_BALANCE = { mechanics: mechanicsData, leagues: leaguesData, meta: metaData };
+        GAME_BALANCE = { mechanics: mechanicsData, leagues: leaguesData, meta: metaData, missions: missionsData };
         GAME_CONTENT = {
             clubGeneration: generationData.clubGeneration,
             names: namesData,
@@ -28,6 +29,7 @@ async function initGame() {
 
         PERK_LIST = textsData.perks;
         loadSaveData();
+        ensureDailyMissions();
         populateHowToPlay();
         document.getElementById('loading-screen').style.display = 'none';
         returnToTitle();

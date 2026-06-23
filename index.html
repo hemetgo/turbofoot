@@ -44,6 +44,10 @@
                         <button class="btn-primary"
                             style="background: var(--accent-gold); color: #020617; box-shadow: 0 4px 15px rgba(245,158,11,0.3);"
                             onclick="openMetaShop()">💼 MINHA CARREIRA</button>
+                        <button class="btn-secondary" style="position:relative;" onclick="openDailyMissionsModal()">
+                            📅 MISSÕES DIÁRIAS
+                            <span id="missions-badge" style="display:none; position:absolute; top:-8px; right:-8px; background:var(--accent-red); color:#fff; font-size:0.7rem; font-weight:900; border-radius:50%; width:20px; height:20px; align-items:center; justify-content:center;"></span>
+                        </button>
                         <button class="btn-secondary" onclick="openHistoryModal()">📖 HISTÓRICO</button>
                         <button class="btn-secondary" onclick="openHowToPlay()">❓ COMO JOGAR</button>
                         <button class="btn-secondary" onclick="openOptions()">⚙️ OPÇÕES</button>
@@ -290,6 +294,19 @@
             </div>
         </div>
 
+        <div id="daily-missions-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header flex-between">
+                    <h2 class="options-title">📅 MISSÕES DIÁRIAS</h2>
+                    <button class="btn-icon" onclick="closeModals()">❌</button>
+                </div>
+                <div class="modal-body">
+                    <div id="daily-missions-reset-info" style="text-align:center; font-size:0.75rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:14px;"></div>
+                    <div id="daily-missions-list"></div>
+                </div>
+            </div>
+        </div>
+
         <div id="options-overlay" class="modal-overlay">
             <div class="options-box">
                 <div class="modal-header">
@@ -399,10 +416,11 @@
     </div>
 
     <footer style="position:fixed; bottom: 5px; right: 10px; font-size: 1rem; color: #475569; pointer-events: none;">
-        v0.29b
+        v0.28b
     </footer>
 
     <script src="state.js"></script>
+    <script src="daily.js"></script>
     <script src="utils.js"></script>
     <script src="ui.js"></script>
     <script src="entities.js"></script>

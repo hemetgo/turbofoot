@@ -617,6 +617,7 @@ function finishMatchRewards() {
     setTimeout(() => {
         if (!isVictory) {
             recordRun(false);
+            progressDailyMission('play_runs', 1);
 
             document.getElementById("pm-title").innerText = "ELIMINADO";
             document.getElementById("pm-title").className = `pm-title loss`;
@@ -637,6 +638,12 @@ function finishMatchRewards() {
 
         const threat = GAME_BALANCE.mechanics.threatLevels[gameState.currentNode.type] || GAME_BALANCE.mechanics.threatLevels['match'];
         const base = GAME_BALANCE.leagues[gameState.leagueLevel].rewardBase;
+
+        // Progresso de missões diárias
+        progressDailyMission('win_matches', 1);
+        progressDailyMission('score_goals', matchState.userScore);
+        if (gameState.currentNode.type === 'elite') progressDailyMission('beat_elite', 1);
+        if (gameState.currentNode.type === 'boss') progressDailyMission('beat_boss', 1);
 
         let mult = threat.coinMult;
         let coins = Math.floor(base * (1 + Math.min(matchState.combo, 6) * GAME_BALANCE.mechanics.comboCoinMultiplier)) * mult;
