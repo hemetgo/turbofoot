@@ -225,19 +225,91 @@ function openHistoryModal() {
                     <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
                         <span style="font-size:1.8rem; flex-shrink:0;">${run.club.emoji}</span>
                         <div style="min-width:0; flex:1;">
-                            <div style="font-weight:900; color:#fff; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${run.club.name}</div>
+                            <div style="width:100%; position:relative; height:1.2rem; overflow:hidden;">
+                                <div id="hist-run-name-${idx}" style="font-weight:900; color:#fff; font-size:0.9rem; white-space:nowrap; position:absolute; left:0;"></div>
+                            </div>
                             <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${run.date}</div>
                         </div>
                     </div>
                     <div style="font-weight:900; font-size:0.8rem; text-align:right; flex-shrink:0; margin-left:8px;">
                         <span style="color: ${run.result === 'CAMPEÃO' ? 'var(--accent-gold)' : 'var(--accent-red)'}">${run.result}</span><br>
-                        <span style="color:var(--text-muted);">Estágio ${run.stageReached}/10</span>
+                        <span style="color:var(--text-muted);">Estágio ${run.stageReached}/8</span>
                     </div>
                 </div>
             `;
         });
+
+        setTimeout(() => {
+            gameState.runHistory.forEach((run, idx) => {
+                setupMarquee(`hist-run-name-${idx}`, run.club.name);
+            });
+        }, 100);
     }
     document.getElementById("run-history-overlay").style.display = "flex";
+}
+
+function viewHistoryDetails(idx) {
+    const run = gameState.runHistory[idx];
+    document.getElementById("history-list").style.display = "none";
+
+    let html = `<h3 style="color:var(--text-muted); text-align:center; margin-bottom:15px; font-size:0.8rem; text-transform:uppercase;">PARTIDAS DA RUN</h3>`;
+
+    if (run.matches && run.matches.length > 0) {
+        run.matches.forEach((m, mIdx) => {
+            let isWin = m.userScore > m.rivalScore;
+            let mColor = isWin ? "var(--accent-green)" : "var(--accent-red)";
+
+            html += `
+                <div class="history-match-card" style="border-left: 3px solid ${mColor};">
+                    <div class="history-match-teams">
+                        
+                        <!-- SEU TIME (Alinhado à Direita com corte rígido) -->
+                        <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px; min-width:0; width:100%;">
+                            <div style="min-width:0; flex:1; position:relative; height:1.2rem; overflow:hidden;">
+                                <div id="hist-user-name-${mIdx}" class="history-team-name" style="position:absolute; right:0; white-space:nowrap;"></div>
+                            </div>
+                            <span class="history-team-emoji" style="flex-shrink:0;">${run.club.emoji}</span>
+                        </div>
+                        
+                        <div class="history-match-score" style="color: ${mColor};">
+                            ${m.userScore} <span style="color:var(--text-muted); font-size:0.8rem;">x</span> ${m.rivalScore}
+                        </div>
+                        
+                        <!-- RIVAL (Alinhado à Esquerda com corte rígido) -->
+                        <div style="display:flex; align-items:center; justify-content:flex-start; gap:8px; min-width:0; width:100%;">
+                            <span class="history-team-emoji" style="flex-shrink:0;">${m.rivalEmoji}</span>
+                            <div style="min-width:0; flex:1; position:relative; height:1.2rem; overflow:hidden;">
+                                <div id="hist-rival-name-${mIdx}" class="history-team-name" style="position:absolute; left:0; white-space:nowrap;"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            `;
+        });
+    } else {
+        html += `<p style="text-align:center; font-size:0.8rem; color:var(--text-muted);">Sem registros.</p>`;
+    }
+
+    html += `<h3 style="color:var(--text-muted); text-align:center; margin:24px 0 16px 0; font-size:0.8rem; text-transform:uppercase;">ELENCO FINAL</h3>`;
+    html += `<div class="roster-grid">`;
+    if (run.finalTeam) { run.finalTeam.forEach(p => { html += getPlayerCardHTML(p); }); }
+    html += `</div>`;
+
+    document.getElementById("history-details-content").innerHTML = html;
+    document.getElementById("history-details").style.display = "flex";
+    document.getElementById("history-footer").style.display = "flex";
+
+    setTimeout(() => {
+        if (run.matches) {
+            run.matches.forEach((m, mIdx) => {
+                // Passamos "true" para o seu time, ativando a rolagem reversa (da esq pra dir)
+                setupMarquee(`hist-user-name-${mIdx}`, run.club.name, true);
+                // Passamos "false" para o rival, mantendo a rolagem normal (da dir pra esq)
+                setupMarquee(`hist-rival-name-${mIdx}`, m.rivalName, false);
+            });
+        }
+    }, 100);
 }
 
 function showLevelDistribution(points, onComplete, givesTrait = false) {
@@ -338,50 +410,6 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
 
     modal.style.display = 'flex';
     render();
-}
-
-function viewHistoryDetails(idx) {
-    const run = gameState.runHistory[idx];
-    document.getElementById("history-list").style.display = "none";
-
-    let html = `<h3 style="color:var(--text-muted); text-align:center; margin-bottom:15px; font-size:0.8rem; text-transform:uppercase;">PARTIDAS DA RUN</h3>`;
-
-    if (run.matches && run.matches.length > 0) {
-        run.matches.forEach((m) => {
-            let isWin = m.userScore > m.rivalScore;
-            let mColor = isWin ? "var(--accent-green)" : "var(--accent-red)";
-            let mIcon = m.type === 'elite' ? '🔥' : m.type === 'boss' ? '👑' : '⚽';
-
-            html += `
-                <div class="history-match-card" style="border-left: 3px solid ${mColor};">
-                    <div class="history-match-teams">
-                        <div class="history-team user-team">
-                            <span class="history-team-emoji">${run.club.emoji}</span>
-                            <span class="history-team-name">${run.club.name}</span>
-                        </div>
-                        <div class="history-match-score" style="color: ${mColor};">
-                            ${m.userScore} <span style="color:var(--text-muted); font-size:0.8rem;">x</span> ${m.rivalScore}
-                        </div>
-                        <div class="history-team rival-team">
-                            <span class="history-team-emoji">${m.rivalEmoji}</span>
-                            <span class="history-team-name">${m.rivalName}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-    } else {
-        html += `<p style="text-align:center; font-size:0.8rem; color:var(--text-muted);">Sem registros.</p>`;
-    }
-
-    html += `<h3 style="color:var(--text-muted); text-align:center; margin:24px 0 16px 0; font-size:0.8rem; text-transform:uppercase;">ELENCO FINAL</h3>`;
-    html += `<div class="roster-grid">`;
-    if (run.finalTeam) { run.finalTeam.forEach(p => { html += getPlayerCardHTML(p); }); }
-    html += `</div>`;
-
-    document.getElementById("history-details-content").innerHTML = html;
-    document.getElementById("history-details").style.display = "flex";
-    document.getElementById("history-footer").style.display = "flex";
 }
 
 function closeHistoryDetails() {

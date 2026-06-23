@@ -8,6 +8,10 @@ function startNewSeason() {
     gameState.season.map = generateMapNodes();
     updateRosterUI();
     saveGame();
+
+    const mapWrap = document.getElementById('map-wrapper');
+    if (mapWrap) mapWrap.scrollTop = 0;
+
     renderMap();
 }
 
@@ -441,7 +445,7 @@ function finishSeason(wonSeason) {
     gameState.meta.metaCoins += earnedTrophies;
     saveGame();
 
-    subText += `\n\nVitórias na campanha: ${matchesWon} (+${matchesWon * metaPerWin} 🏆)`;
+    subText += `\n\nVitórias na liga: ${matchesWon} (+${matchesWon * metaPerWin} 🏆)`;
     if (wonSeason) subText += `\nBônus de Campeão: +${metaWinBonus} 🏆`;
     subText += `\n\n🏆 Você ganhou +${earnedTrophies} Troféus para usar na Sede do Clube!`;
 

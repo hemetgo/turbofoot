@@ -2,7 +2,7 @@ const IS_DESKTOP = window.matchMedia("(hover: hover) and (pointer: fine)").match
 let GAME_BALANCE = {}; let GAME_CONTENT = {};
 
 let gameState = {
-    meta: { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} }, // NOVO
+    meta: { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} }, 
     coins: 0, leagueLevel: 5, club: null, team: [], activeCampBuff: 0, currentNode: null,
     settings: { showSuspense: true, requireConfirm: !IS_DESKTOP },
     season: { number: 1, map: [], currentStage: 0, history: [], matchHistory: [] },
@@ -22,13 +22,20 @@ function loadSaveData() {
         try {
             let saved = JSON.parse(localStorage.getItem("turboFoot_mgr_v7"));
             gameState = { ...gameState, ...saved };
+            
+            // Corrige saves antigos que não tinham o requireConfirm salvo
+            if (typeof gameState.settings.requireConfirm === "undefined") {
+                gameState.settings.requireConfirm = !IS_DESKTOP;
+            }
+
             if (!gameState.meta) gameState.meta = { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} };
             if (!gameState.meta.metaCoins) gameState.meta.metaCoins = 0;
             if (!gameState.meta.upgrades) gameState.meta.upgrades = {};
         } catch (e) { }
     } else {
         gameState.coins = GAME_BALANCE.mechanics?.initialCoins || 0;
-        gameState.settings = { showSuspense: true };
+        // BEM AQUI ESTAVA O BUG: Estávamos sobrescrevendo a configuração padrão!
+        gameState.settings = { showSuspense: true, requireConfirm: !IS_DESKTOP };
     }
 
     if (!gameState.season.history) gameState.season.history = [];

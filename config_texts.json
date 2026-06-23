@@ -1,34 +1,34 @@
 {
     "suspenseTexts": {
         "userShootPrep1": [
-            "Ajeita a bola com carinho...",
-            "Olha pro goleiro...",
-            "Firma o pé de apoio..."
+            "A torcida prende a respiração...",
+            "Olhou, calculou...",
+            "É agora ou nunca..."
         ],
         "userGoal": [
-            "GOOOOOL! PINTURA! ⚽",
-            "GOLAÇO! NO ÂNGULO! ⚽",
-            "GOOOL! INDEFENSÁVEL! ⚽"
+            "GOOOOOL! QUE PINTURA! ⚽",
+            "NO ÂNGULO! IMPOSSÍVEL PEGAR! ⚽",
+            "GOOOL! A REDE BALANÇOU BONITO! ⚽"
         ],
         "userMiss": [
             "NA TRAAAAVE! 💥",
-            "ISOLOU! QUE HORROR! 🤦",
-            "DEFESAÇA DO RIVAL! 🧤"
+            "MANDOU NA ARQUIBANCADA! 🤦",
+            "MAS QUE DEFESA! 🧤"
         ],
         "rivalShootPrep1": [
-            "Rival invade a área...",
-            "A zaga parou...",
-            "Ficou cara a cara..."
+            "O rival encontra espaço...",
+            "A defesa ficou olhando...",
+            "Perigo real na área..."
         ],
         "rivalGoal": [
             "GOL DO RIVAL... 😢",
-            "GOL DELES. LAMENTÁVEL... 📉",
-            "GOL... A ZAGA DORMIU. 🚫"
+            "A DEFESA VACILOU. GOL. 📉",
+            "NÃO DEU PRA SEGURAR... ⚽"
         ],
         "rivalMiss": [
-            "DEFESA ESPETACULAR! 🧤",
-            "PRA FOOORA! QUE ALÍVIO! 💨",
-            "NO POSTE! QUASE! 💥"
+            "DEFESA MONSTRUOSA! 🧤",
+            "PASSOU TIRANDO TINTA DA TRAVE! 💨",
+            "UIA, MAS QUE SORTE! 💥"
         ]
     },
     "logTexts": {
@@ -103,7 +103,7 @@
                 "desc": "O time pensa junto! Cada vez que uma jogada de passe ou drible dá certo, gera Combo extra — mas só funciona bem se o time tiver pelo menos 2 habilidades diferentes."
             },
             {
-                "name": "©️ Liderança",
+                "name": "🗣️ Liderança",
                 "desc": "Capitão nato! Reduz o estrago de uma jogada que falha (perde menos terreno/posse) e fortalece quem usa a braçadeira. Não aumenta a chance de sucesso."
             }
         ]
@@ -168,7 +168,7 @@
         {
             "id": "leadership",
             "name": "Liderança",
-            "emoji": "©️",
+            "emoji": "🗣️",
             "desc": "Capitão nato! Reduz o estrago de jogadas que falham. Não aumenta a chance de sucesso.",
             "category": "utility",
             "weight": 70

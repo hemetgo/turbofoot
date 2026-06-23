@@ -4,11 +4,11 @@ function showScreen(id) {
     if (target) {
         target.classList.add("active");
 
-        const scrollAreas = target.querySelectorAll('.club-options-wrapper, .map-wrapper, .market-wrapper, .match-log-container');
+        // REMOVIDO: '.map-wrapper' agora está livre para manter a posição de onde parou!
+        const scrollAreas = target.querySelectorAll('.club-options-wrapper, .market-wrapper, .match-log-container');
         scrollAreas.forEach(area => area.scrollTop = 0);
     }
 
-    // Gerencia o estado "in-run" para fixar o layout no mobile
     if (['screen-title', 'screen-series-select', 'screen-club-select'].includes(id)) {
         document.body.classList.remove('in-run');
     } else {
@@ -68,19 +68,34 @@ function fitText(elementId) {
     }, 10);
 }
 
-function setupMarquee(elId, text) {
+function setupMarquee(elId, text, isReverse = false) {
     const el = document.getElementById(elId);
     if (!el) return;
     el.innerText = text;
-    el.style.animation = "none";
+
+    // Limpa animações nativas anteriores (se houver)
+    el.getAnimations().forEach(anim => anim.cancel());
     el.style.transform = "translateX(0)";
     void el.offsetWidth;
+
     setTimeout(() => {
         const parent = el.parentElement;
         if (el.scrollWidth > parent.clientWidth) {
             const dist = el.scrollWidth - parent.clientWidth + 10;
-            el.style.setProperty('--scroll-dist', `-${dist}px`);
-            el.style.animation = "marquee-swing 4s ease-in-out infinite alternate";
+            // Se isReverse for true, ele puxa o texto para o lado oposto para exibir o que cortou!
+            let move = isReverse ? `${dist}px` : `-${dist}px`;
+
+            el.animate([
+                { transform: 'translateX(0)' },
+                { transform: 'translateX(0)', offset: 0.15 },
+                { transform: `translateX(${move})`, offset: 0.85 },
+                { transform: `translateX(${move})` }
+            ], {
+                duration: 4000,
+                iterations: Infinity,
+                direction: 'alternate',
+                easing: 'ease-in-out'
+            });
         }
     }, 100);
 }
@@ -89,14 +104,10 @@ function closeModals() {
     document.querySelectorAll(".modal-overlay").forEach(m => m.style.display = 'none');
 }
 
-// ==========================================
-// MODO DEBUG E RESET DE SAVE
-// ==========================================
-
 function hardResetSave() {
     if (confirm("ATENÇÃO: Você vai perder TODO o seu progresso, troféus e divisões liberadas.\n\nTem certeza absoluta?")) {
         localStorage.removeItem("turboFoot_mgr_v7");
-        location.reload(); 
+        location.reload();
     }
 }
 
@@ -117,48 +128,37 @@ document.addEventListener('keydown', (e) => {
                 alert(`+${val} Troféus adicionados!`);
                 if (document.getElementById('meta-shop-overlay').style.display === 'flex') renderMetaShop();
                 break;
-
             case "addcoins":
                 gameState.coins += val;
                 updateRosterUI();
                 if (document.getElementById('screen-market').classList.contains('active')) showMarketScreen();
                 alert(`+${val} 💰 adicionadas!`);
                 break;
-
             case "win":
                 if (document.getElementById('screen-match').classList.contains('active')) {
                     matchState.userScore += 10;
-                    endMatchByTime(); 
+                    endMatchByTime();
                 } else {
-                    alert("Você precisa estar dentro de uma partida (no campo) para usar o 'win'.");
+                    alert("Você precisa estar dentro de uma partida para usar o 'win'.");
                 }
                 break;
-                
             case "unlockall":
                 if (!gameState.meta) gameState.meta = { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} };
-                
                 if (GAME_BALANCE && GAME_BALANCE.leagues) {
                     gameState.meta.highestSeriesUnlocked = GAME_BALANCE.leagues.length - 1;
                     saveGame();
-                    alert("🔓 Todas as Ligas/Divisões foram desbloqueadas com sucesso! Volte ao ecrã inicial para ver as opções.");
-                } else {
-                    alert("Erro: GAME_BALANCE não carregado corretamente.");
+                    alert("🔓 Todas as Divisões desbloqueadas com sucesso!");
                 }
                 break;
-
             default:
-                alert("Comando não reconhecido. Use:\naddmeta 100\naddcoins 100\nwin\nunlockall");
+                alert("Comando não reconhecido.");
                 break;
         }
     }
 });
 
-// ==========================================
-// SISTEMA DE TOOLTIP GLOBAL (DELEGAÇÃO)
-// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     let globalTooltip = document.querySelector('.tooltip-global');
-    
     if (!globalTooltip) {
         globalTooltip = document.createElement("div");
         globalTooltip.className = "tooltip-global";
@@ -168,26 +168,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const showTooltip = (e) => {
         const target = e.target.closest('[data-tip]');
         if (!target) return;
-        
         const tipText = target.getAttribute('data-tip');
         if (!tipText) return;
-
         globalTooltip.innerHTML = tipText;
         globalTooltip.classList.add('visible');
-        
         const rect = target.getBoundingClientRect();
         let top = rect.top - globalTooltip.offsetHeight - 8;
         let left = rect.left + (rect.width / 2) - (globalTooltip.offsetWidth / 2);
-        
-        if (top < 10) {
-            top = rect.bottom + 8;
-        }
-        
+        if (top < 10) top = rect.bottom + 8;
         if (left < 10) left = 10;
         if (left + globalTooltip.offsetWidth > window.innerWidth - 10) {
             left = window.innerWidth - globalTooltip.offsetWidth - 10;
         }
-        
         globalTooltip.style.top = `${top}px`;
         globalTooltip.style.left = `${left}px`;
     };
@@ -200,12 +192,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener('mouseover', showTooltip);
     document.addEventListener('mouseout', hideTooltip);
-    
     document.addEventListener('touchstart', (e) => {
-        if (e.target.closest('[data-tip]')) {
-            showTooltip(e);
-        } else {
-            globalTooltip.classList.remove('visible');
-        }
+        if (e.target.closest('[data-tip]')) showTooltip(e);
+        else globalTooltip.classList.remove('visible');
     }, { passive: true });
 });
