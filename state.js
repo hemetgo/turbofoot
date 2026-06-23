@@ -6,7 +6,8 @@ let gameState = {
     coins: 0, leagueLevel: 5, club: null, team: [], activeCampBuff: 0, currentNode: null,
     settings: { showSuspense: true, requireConfirm: !IS_DESKTOP },
     season: { number: 1, map: [], currentStage: 0, history: [], matchHistory: [] },
-    runHistory: []
+    runHistory: [],
+    tutorialSeen: false
 };
 
 let matchState = {
@@ -34,6 +35,7 @@ function loadSaveData() {
     if (!gameState.season.matchHistory) gameState.season.matchHistory = [];
     if (!gameState.runHistory) gameState.runHistory = [];
     if (typeof gameState.activeCampBuff === "undefined") gameState.activeCampBuff = 0;
+    if (typeof gameState.tutorialSeen === "undefined") gameState.tutorialSeen = false;
 }
 
 function saveGame() { localStorage.setItem("turboFoot_mgr_v7", JSON.stringify(gameState)); }

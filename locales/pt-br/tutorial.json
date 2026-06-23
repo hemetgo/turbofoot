@@ -1,0 +1,61 @@
+{
+    "firstMatch": {
+        "steps": [
+            {
+                "target": null,
+                "title": "Bem-vindo ao TurboFoot! ⚽",
+                "text": "Vamos jogar sua primeira partida juntos. Eu te mostro rapidinho como tudo funciona em campo. Vamos lá!",
+                "placement": "center"
+            },
+            {
+                "target": ".match-dashboard",
+                "title": "Placar e Cronômetro",
+                "text": "Aqui fica o placar da partida. Logo abaixo, o contador mostra quantas jogadas (ações) faltam até o fim do jogo.",
+                "placement": "bottom"
+            },
+            {
+                "target": "#minimap-display",
+                "title": "O Campo em Zonas",
+                "text": "O campo é dividido em 5 zonas. A bola ⚽ mostra onde o jogo está. Avance pelas zonas até chegar no gol adversário!",
+                "placement": "bottom"
+            },
+            {
+                "target": "#possession-badge",
+                "title": "Posse de Bola",
+                "text": "Esse selo mostra se você está ATACANDO (a bola é sua, avance!) ou DEFENDENDO (pressão do rival, segure a onda).",
+                "placement": "bottom"
+            },
+            {
+                "target": "#dynamic-nodes-wrapper",
+                "title": "Escolha sua Jogada",
+                "text": "A cada turno, você escolhe entre 2 ou 3 jogadas. Cada uma mostra a % de chance de sucesso e o que acontece se der certo ❌ ou errado ✅.",
+                "placement": "top"
+            },
+            {
+                "target": "#combo-badge",
+                "title": "Combo 🔥",
+                "text": "Acertar jogadas seguidas aumenta seu Combo. Combo alto libera jogadas especiais e multiplica a recompensa em moedas no final!",
+                "placement": "bottom"
+            },
+            {
+                "target": "#match-log-feed",
+                "title": "Transmissão ao Vivo",
+                "text": "Aqui o jogo é narrado em tempo real. Acompanhe os lances para não perder nada da partida.",
+                "placement": "top"
+            },
+            {
+                "target": null,
+                "title": "Pronto pra jogar!",
+                "text": "É isso! Escolha as jogadas com a maior chance de sucesso, monte combos e fature moedas. Boa sorte, treinador! 🏆",
+                "placement": "center"
+            }
+        ],
+        "buttons": {
+            "next": "PRÓXIMO",
+            "prev": "VOLTAR",
+            "skip": "PULAR TUTORIAL",
+            "done": "VAMOS JOGAR!"
+        },
+        "progressLabel": "{current} de {total}"
+    }
+}

@@ -32,6 +32,10 @@ function startMapMatch() {
     addMatchLog("A bola rola para o desafio no Mapa!", "system");
     if (matchState.nextBuff > 0) addMatchLog(`Seu time entra focado (+${matchState.nextBuff} Tática no 1º turno) devido ao Treinamento!`, "success");
     updateFieldState();
+
+    if (shouldShowFirstMatchTutorial()) {
+        setTimeout(() => startFirstMatchTutorial(), 500);
+    }
 }
 
 function updateTimerDisplay() {
