@@ -16,6 +16,22 @@
             "career": "💼 MINHA CARREIRA",
             "missions": "📅 MISSÕES DIÁRIAS",
             "settings": "⚙️ OPÇÕES"
+        },
+        "series": {
+            "select": "ESCOLHA A DIVISÃO"
+        },
+        "club": {
+            "select": "ESCOLHA SEU CLUBE",
+            "back": "← VOLTAR PARA DIVISÕES"
+        },
+        "map": {
+            "title": "O MAPA"
+        },
+        "market": {
+            "title": "MERCADO DA BOLA"
+        },
+        "match": {
+            "title": "PARTIDA"
         }
     },
     "ui": {

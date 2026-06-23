@@ -427,44 +427,47 @@ button {
 }
 
 /* ===== BOTÕES DE IDIOMA ===== */
+#language-buttons-container {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 .language-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 14px 16px;
+    width: 60px;
+    height: 60px;
     border-radius: var(--radius-md);
     border: 2px solid var(--border-accent);
     background: rgba(0, 0, 0, 0.3);
-    color: var(--text-main);
-    font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 2rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    padding: 0;
 }
 
 .language-btn:hover {
     border-color: var(--accent-blue);
-    background: rgba(56, 189, 248, 0.1);
-    color: var(--accent-blue);
+    background: rgba(56, 189, 248, 0.15);
+    transform: scale(1.05);
 }
 
 .language-btn-active {
     border-color: var(--accent-green);
-    background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), rgba(52, 211, 153, 0.1));
-    color: var(--accent-green);
-    box-shadow: 0 0 20px rgba(52, 211, 153, 0.2);
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.3), rgba(52, 211, 153, 0.15));
+    box-shadow: 0 0 25px rgba(52, 211, 153, 0.4), inset 0 0 15px rgba(52, 211, 153, 0.2);
+    transform: scale(1.1);
 }
 
 .language-btn-active:hover {
-    background: linear-gradient(135deg, rgba(52, 211, 153, 0.3), rgba(52, 211, 153, 0.2));
-    border-color: var(--accent-green);
-    box-shadow: 0 0 25px rgba(52, 211, 153, 0.3);
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.4), rgba(52, 211, 153, 0.25));
+    box-shadow: 0 0 30px rgba(52, 211, 153, 0.5), inset 0 0 20px rgba(52, 211, 153, 0.3);
 }
 
 .language-btn:active {
-    transform: scale(0.98);
+    transform: scale(0.95);
 }
 
 .title-container {

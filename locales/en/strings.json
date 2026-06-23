@@ -16,6 +16,22 @@
             "career": "💼 MY CAREER",
             "missions": "📅 DAILY MISSIONS",
             "settings": "⚙️ OPTIONS"
+        },
+        "series": {
+            "select": "CHOOSE A DIVISION"
+        },
+        "club": {
+            "select": "CHOOSE YOUR CLUB",
+            "back": "← BACK TO DIVISIONS"
+        },
+        "map": {
+            "title": "THE MAP"
+        },
+        "market": {
+            "title": "TRANSFER MARKET"
+        },
+        "match": {
+            "title": "MATCH"
         }
     },
     "ui": {
