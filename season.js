@@ -379,7 +379,7 @@ function finishSeason(wonSeason) {
     }
 
     // CALCULA TROFÉUS (Moeda Meta)
-    let baseTrophies = gameState.season.currentStage * 5; // Aumentado de 2 para 5 por estágio
+    let baseTrophies = gameState.season.currentStage * 15; // Recompensa generosa por progresso, mesmo sem vencer
     let diffMult = (gameState.leagueLevel + 1);
     let earnedTrophies = baseTrophies * diffMult;
     if (wonSeason) earnedTrophies += (100 * diffMult); // Bônus de vitória aumentado de 50 para 100
