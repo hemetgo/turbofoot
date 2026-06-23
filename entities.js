@@ -83,18 +83,11 @@ function getPlayerCardHTML(p, onClickAttr = "") {
 
     if (hasTraits) {
         dataPerks = p.perks.map(perk => perk.id).join(',');
-        let perkCounts = {};
-        p.perks.forEach(perk => {
-            if (!perkCounts[perk.id]) perkCounts[perk.id] = { ...perk, count: 1 };
-            else perkCounts[perk.id].count++;
-        });
 
-        let perksArray = Object.values(perkCounts).map(perk => {
-            let countLabel = perk.count > 1 ? `<span style="color:var(--accent-gold); margin-left: 2px;">x${perk.count}</span>` : "";
-
+        let perksArray = p.perks.map(perk => {
             return `<div data-tip="${perk.desc}" style="display: flex; align-items: center; gap: 4px; font-size: 0.7rem; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-light); pointer-events: auto; overflow: hidden; max-width: 110px; flex-shrink: 1;">
                         <span style="flex-shrink: 0;">${perk.emoji}</span>
-                        <span style="font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">${perk.name}${countLabel}</span>
+                        <span style="font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">${perk.name}</span>
                     </div>`;
         });
 
@@ -172,7 +165,6 @@ function hasTraitAdvantage(node, traits) {
 }
 
 function getVisionComboBonus(node, traits) {
-    // Altere 'vision' para o ID correto da habilidade de visão no seu config_texts.json
     let visionStacks = traits['vision'] || 0;
     if (visionStacks > 0 && Math.random() < (visionStacks * 0.15)) {
         return 1; // +1 Combo extra gerado pela visão de jogo
@@ -181,8 +173,43 @@ function getVisionComboBonus(node, traits) {
 }
 
 function getLeadershipMitigation(traits) {
-    // Altere 'leadership' para o ID correto da habilidade de liderança
     let leaderStacks = traits['leadership'] || 0;
-    // Multiplicador que reduz perdas de momentum e recuo (0.4 = reduz a penalidade pela metade)
     return Math.max(0.4, 1 - (leaderStacks * 0.2));
+}
+
+/**
+ * Gera um time adversário completo (5 jogadores) com base nas configurações da liga.
+ * NÃO É CHAMADA ATUALMENTE pelo fluxo do mapa (season.js usa apenas 1 "perfil" de rival
+ * com level + perks, não um elenco de 5 jogadores). Mantida disponível caso o jogo
+ * evolua para gerar elencos rivais completos em vez de um único "perfil" de dificuldade.
+ * @param {Object} leagueConfig - O objeto da liga vindo do config_leagues.json
+ * @param {Number} currentMatchIndex - O índice da rodada/partida atual dentro da liga (começa em 0)
+ * @param {Number} teamSize - Quantidade de jogadores a serem gerados no time rival (padrão 5)
+ * @returns {Array} Retorna o array de objetos de jogadores adversários
+ */
+function generateEnemyTeam(leagueConfig, currentMatchIndex, teamSize = 5) {
+    // Calcula o nível e traits aplicando o fator de crescimento (scaling) baseado na rodada atual
+    let matchLevel = Math.floor(leagueConfig.enemyBaseLevel + (leagueConfig.levelScaling * currentMatchIndex));
+    let matchTraits = Math.floor(leagueConfig.enemyBaseTraits + (leagueConfig.traitScaling * currentMatchIndex));
+
+    // Se a liga tiver escalonamento dinâmico baseado no time do jogador (ex: Liga Suprema)
+    if (leagueConfig.dynamicScaling) {
+        let playerTeamLevel = getTeamAverageLevel(); 
+        let offset = leagueConfig.levelOffset || 0; 
+        
+        // Garante que o nível do rival acompanhe o jogador caso ele esteja forte demais
+        matchLevel = Math.max(matchLevel, playerTeamLevel + offset);
+    }
+
+    // Travas de segurança para evitar valores inválidos ou negativos
+    matchLevel = Math.max(1, matchLevel);
+    matchTraits = Math.max(0, matchTraits);
+
+    // Gera o elenco adversário utilizando o gerador padrão horizontal do sistema
+    let enemyTeam = [];
+    for (let i = 0; i < teamSize; i++) {
+        enemyTeam.push(generateBasePlayer(matchLevel, matchTraits));
+    }
+
+    return enemyTeam;
 }

@@ -16,7 +16,7 @@
     "momentumPct": 5,
     "buffPct": 2,
     "luckPenaltyPct": 15,
-    "leagueLevelStep": 5,
+    "leagueLevelStep": 2,
     "eliteLevelBonus": 4,
     "bossLevelBonus": 8,
     "leadershipCaptainMult": 1.35,

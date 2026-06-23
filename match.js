@@ -200,7 +200,9 @@ function _renderPlayerButtons() {
 
     const avgPlayerLevel = getTeamAverageLevel();
     // Usa o Nível do Rival salvo ou calcula de forma retroativa para saves antigos
-    const rivalLevel = matchState.rivalProfile.level || ((gameState.leagueLevel * 4) + gameState.season.currentStage);
+    const rivalLevel = (matchState.rivalProfile.level !== undefined && matchState.rivalProfile.level !== null)
+        ? matchState.rivalProfile.level
+        : ((gameState.leagueLevel * 4) + gameState.season.currentStage);
 
     const traits = getTeamTraits();
     let rivalTraits = {};

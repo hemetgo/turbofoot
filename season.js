@@ -90,23 +90,35 @@ function createMapRivalNode(type, baseDiff, stageIndex = 0) {
     const style = rnd(GAME_CONTENT.rivalStyles);
     const scale = GAME_BALANCE.mechanics.scaling || {};
 
-    // A LIGA DEFINE A DIFICULDADE (Nível do Rival)
-    // Ex: Série E (0) começa no Lvl 0. Série S (5) começa no Lvl 20.
-    let leagueBaseLevel = (gameState.leagueLevel * (scale.leagueLevelStep || 4));
-    let rivalLevel = leagueBaseLevel + stageIndex;
+    let currentLeague = GAME_BALANCE.leagues[gameState.leagueLevel];
+    let rivalLevel = 1;
 
-    // Nós Elite e Chefões são níveis acima do padrão da liga
-    if (type === 'elite') rivalLevel += (scale.eliteLevelBonus || 3);
-    if (type === 'boss') rivalLevel += (scale.bossLevelBonus || 6);
+    // Nível base da liga + crescimento por estágio, configurados em config_leagues.json
+    let leagueBaseLevel = currentLeague.enemyBaseLevel !== undefined ? currentLeague.enemyBaseLevel : 1;
+    let leagueLevelScaling = currentLeague.levelScaling !== undefined ? currentLeague.levelScaling : 0;
+
+    rivalLevel = leagueBaseLevel + (leagueLevelScaling * stageIndex);
+
+    if (currentLeague.dynamicScaling) {
+        let teamLevel = getTeamAverageLevel();
+        let offset = currentLeague.levelOffset || 0;
+
+        // Na Liga Suprema o rival nunca fica mais fraco que o time do jogador
+        rivalLevel = Math.max(rivalLevel, teamLevel + offset);
+    }
+
+    if (type === 'elite') rivalLevel += (scale.eliteLevelBonus || 6);
+    if (type === 'boss') rivalLevel += (scale.bossLevelBonus || 12);
 
     return {
-        id: `node_${Date.now()}_${Math.random()}`, type: type,
+        id: `node_${Date.now()}_${Math.random()}`,
+        type: type,
         rival: {
             name: `${base.name} ${adj}`,
             emoji: base.emoji,
             style: style,
             perks: [],
-            level: rivalLevel, // <-- O Rival agora usa Nível Direto!
+            level: Math.max(-10, Math.floor(rivalLevel)),
             dynamicTraitsSet: false
         }
     };
@@ -237,19 +249,18 @@ function handleMapNodeClick(node) {
 
         // --- NOVA LÓGICA DE PAREAMENTO DINÂMICO USANDO JSON ---
         if (!node.rival.dynamicTraitsSet) {
-            let playerTraitCount = 0;
-            gameState.team.forEach(p => {
-                if (p.perks) playerTraitCount += p.perks.length;
-            });
+            let currentLeague = GAME_BALANCE.leagues[gameState.leagueLevel];
 
-            let variation = Math.floor(Math.random() * 5) - 2;
-            let rivalTraitCount = Math.max(0, playerTraitCount + variation);
+            // Base de traits da liga + crescimento por estágio, configurados em config_leagues.json
+            let leagueBaseTraits = currentLeague.enemyBaseTraits !== undefined ? currentLeague.enemyBaseTraits : 0;
+            let leagueTraitScaling = currentLeague.traitScaling !== undefined ? currentLeague.traitScaling : 0;
 
-            // Soma a ameaça extra que vem configurada no JSON
+            let rivalTraitCount = leagueBaseTraits + (leagueTraitScaling * node.stage);
+
+            // Soma a ameaça extra que vem configurada no JSON (elite/boss)
             rivalTraitCount += threat.extraTraits;
 
-            // NOVO: Garante que NENHUM rival terá menos de 2 traits
-            rivalTraitCount = Math.max(2, rivalTraitCount);
+            rivalTraitCount = Math.max(0, Math.floor(rivalTraitCount));
 
             node.rival.perks = [];
             for (let i = 0; i < rivalTraitCount; i++) {
