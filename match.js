@@ -296,10 +296,10 @@ function _renderPlayerButtons() {
         node.computedChance = chance;
 
         let isLegendary = (node.weight && node.weight <= 20);
-        let colorClass = chance >= 65 ? "risk-safe" : chance >= 40 ? "risk-med" : "risk-high";
+        let colorClass = chance >= 50 ? "risk-safe" : chance >= 25 ? "risk-med" : "risk-high";
         if (isLegendary) colorClass += " legendary-node";
 
-        let chanceColor = chance >= 65 ? "var(--accent-green)" : chance >= 40 ? "var(--accent-gold)" : "var(--accent-red)";
+        let chanceColor = chance >= 50 ? "var(--accent-green)" : chance >= 25 ? "var(--accent-gold)" : "var(--accent-red)";
 
         btn.className = `node-btn ${colorClass} ${gameState.settings.requireConfirm ? 'confirm-enabled' : ''}`;
 

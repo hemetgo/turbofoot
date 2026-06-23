@@ -58,10 +58,6 @@
                 "emoji": "🗺️"
             },
             {
-                "name": "Piratas",
-                "emoji": "🏴‍☠️"
-            },
-            {
                 "name": "Gigantes",
                 "emoji": "🏟️"
             },
@@ -76,10 +72,6 @@
             {
                 "name": "Navegantes",
                 "emoji": "⛵"
-            },
-            {
-                "name": "Falcões",
-                "emoji": "🦅"
             },
             {
                 "name": "Lobos",
@@ -104,15 +96,13 @@
             "Metropolitanos",
             "Atléticos",
             "Tricolores",
-            "Alvinegros",
-            "Rubro-Negros",
             "Celestes",
             "Esmeraldinos",
             "Alvirrubros",
             "de Regatas",
             "F.C.",
-            "da Várzea",
-            "Tradicionais"
+            "S.C.",
+            "da Várzea"
         ]
     }
 }

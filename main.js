@@ -45,7 +45,7 @@ function startRunFlow() {
     GAME_BALANCE.leagues.forEach((series, idx) => {
         let isLocked = idx > highestUnlocked;
         let lockedAttr = isLocked ? 'style="opacity:0.3; filter:grayscale(1); pointer-events:none;"' : '';
-        let lockIcon = isLocked ? '🔒' : '🏆';
+        let lockIcon = isLocked ? '🔒' : series.emoji;
 
         container.innerHTML += `
             <div class="club-select-card" ${lockedAttr} onclick="selectSeries(${idx})">
