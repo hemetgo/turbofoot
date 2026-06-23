@@ -15,7 +15,7 @@ function startMapMatch() {
         nextBuff: gameState.activeCampBuff || 0,
         baseTotalActions: Math.floor(Math.random() * (maxA - minA + 1)) + minA,
         currentAction: 0, badLuckCounter: 0,
-        advantageFailCounter: 0,
+        advantageFailCounter: 0, // Mantido para contagem invisível
         isExtraTime: false
     };
     matchState.totalActions = matchState.baseTotalActions;
@@ -122,17 +122,9 @@ function updateFieldState() {
         tactDisplay.setAttribute("data-tip", GAME_CONTENT.tooltips.tactical);
     } else { tactDisplay.style.display = "none"; }
 
+    // Remove qualquer resquício de UI do Pity Timer
     const pityBadge = document.getElementById("pity-badge");
-    if (pityBadge) {
-        if (matchState.advantageFailCounter > 0) {
-            pityBadge.style.display = "flex";
-            let isGuaranteed = matchState.advantageFailCounter >= 2;
-            pityBadge.innerHTML = isGuaranteed ? `✨ 100% GARANTIDO!` : `✨ Insistência: ${matchState.advantageFailCounter}/2`;
-            pityBadge.setAttribute("data-tip", "Se falhar 2 vezes seguidas com Sinergia, a 3ª tentativa será um Sucesso Garantido!");
-        } else {
-            pityBadge.style.display = "none";
-        }
-    }
+    if (pityBadge) pityBadge.style.display = "none";
 
     _renderPlayerButtons();
 }
@@ -172,11 +164,19 @@ function _renderPlayerButtons() {
     let safeNodes = pool.filter(n => n.riskLevel === "safe");
     let riskyNodes = pool.filter(n => n.riskLevel !== "safe");
 
+    // NERF DA DEFESA: Rival dita o jogo
+    let totalNodesNeeded = 3;
+    if (!matchState.hasBall) {
+        totalNodesNeeded = 2; // Quando defendendo, apenas 2 opções (Pressão!)
+        safeNodes = [];       // O rival atacando não te dá chances seguras
+    }
+    if (isCritical) totalNodesNeeded = 2; // Cara a cara com o gol sempre 2 opções
+
     if (Math.random() < (GAME_BALANCE.mechanics.safeActionChance ?? 0.15) && safeNodes.length > 0) {
         selected.push(pickWeightedNodes(safeNodes, 1)[0]);
     }
 
-    let neededRisky = (isCritical ? 2 : 3) - selected.length;
+    let neededRisky = totalNodesNeeded - selected.length;
     let chosenRisky = pickWeightedNodes(riskyNodes, neededRisky);
     selected.push(...chosenRisky);
 
@@ -188,7 +188,7 @@ function _renderPlayerButtons() {
     selected = shuffle(selected);
     wrapper.className = `field-container ${matchState.hasBall ? 'atk-theme' : 'def-theme'} pop-in`;
 
-    // ===== NOVO MOTOR MATEMÁTICO BASEADO EM PORCENTAGENS =====
+    // ===== MOTOR MATEMÁTICO =====
     const scale = GAME_BALANCE.mechanics.scaling || {};
     const BASE_CHANCE = scale.baseChance || 45;
     const LEVEL_PCT = scale.levelModPct || 2.5;
@@ -199,7 +199,6 @@ function _renderPlayerButtons() {
     const LUCK_PENALTY = scale.luckPenaltyPct || 15;
 
     const avgPlayerLevel = getTeamAverageLevel();
-    // Usa o Nível do Rival salvo ou calcula de forma retroativa para saves antigos
     const rivalLevel = (matchState.rivalProfile.level !== undefined && matchState.rivalProfile.level !== null)
         ? matchState.rivalProfile.level
         : ((gameState.leagueLevel * 4) + gameState.season.currentStage);
@@ -233,14 +232,18 @@ function _renderPlayerButtons() {
 
         let finalMod = node.id === "bicycle" ? node.mod + (Math.min(matchState.combo, 6) * 0.1) : node.mod;
 
-        // 1. CHANCE BASE
         let chance = BASE_CHANCE * finalMod;
 
-        // 2. MODIFICADOR DE NÍVEL DIRETO
+        // VANTAGEM OFENSIVA INTENSIFICADA
+        if (matchState.hasBall) {
+            chance += 15;
+        } else {
+            chance -= 15;
+        }
+
         let levelDiff = avgPlayerLevel - rivalLevel;
         chance += (levelDiff * LEVEL_PCT);
 
-        // 3. SINERGIA DE TRAITS (Player vs Rival)
         if (node.synergy && node.synergy !== "pace") {
             let pStacks = applyDiminishingReturns(traits[node.synergy] || 0);
             let rStacks = applyDiminishingReturns(rivalTraits[node.synergy] || 0);
@@ -248,7 +251,6 @@ function _renderPlayerButtons() {
             chance -= (rStacks * TRAIT_PCT);
         }
 
-        // VELOCIDADE (Afeta qualquer jogada Risco Alto)
         if (node.riskLevel === "high") {
             let pPace = applyDiminishingReturns(traits.pace || 0);
             let rPace = applyDiminishingReturns(rivalTraits.pace || 0);
@@ -256,18 +258,14 @@ function _renderPlayerButtons() {
             chance -= (rPace * TRAIT_PCT);
         }
 
-        // 4. MARCAÇÃO/COLOCAÇÃO (Afeta TODAS as jogadas defensivas/ofensivas de forma global)
         if (node.type === 'def' || node.type === 'save') {
-            // Player defendendo: A marcação do PLAYER ajuda
             let pMark = applyDiminishingReturns(traits.marking || 0);
             chance += (pMark * MARKING_PCT);
         } else if (node.type === 'atk' || node.type === 'shoot') {
-            // Player atacando: A marcação do RIVAL atrapalha
             let rMark = applyDiminishingReturns(rivalTraits.marking || 0);
             chance -= (rMark * MARKING_PCT);
         }
 
-        // 5. FATORES DA PARTIDA (Buffs, Azar, Momentum)
         chance += (matchState.nextBuff * BUFF_PCT);
         chance += (matchState.momentum * MOMENTUM_PCT);
         if (matchState.badLuckCounter > 0) chance -= LUCK_PENALTY;
@@ -278,7 +276,6 @@ function _renderPlayerButtons() {
             chance = Math.round(chance);
             chance = Math.max(5, Math.min(95, chance));
 
-            // Desempate visual para não ficarem ações iguais
             let tweakStep = Math.max(1, Math.floor((gameState.leagueLevel + 1) * 0.5));
             let attempts = 0;
             let currentChance = chance;
@@ -406,14 +403,18 @@ async function resolveProceduralNode(node, event) {
     const traits = getTeamTraits();
     const hasAdvantage = hasTraitAdvantage(node, traits);
 
+    // Variável que busca a config ou assume 99999 (impossível de ativar)
+    const pityThreshold = GAME_BALANCE.mechanics.pityThreshold;
+
     let isSuccess = false;
     let wasPityUsed = false;
     let usedSecondChance = false;
+    let wasAttacking = matchState.hasBall;
 
     if (node.riskLevel === "safe") {
         isSuccess = true;
     } else {
-        if (hasAdvantage && matchState.advantageFailCounter >= 2) {
+        if (hasAdvantage && matchState.advantageFailCounter >= pityThreshold) {
             isSuccess = true;
             wasPityUsed = true;
             matchState.advantageFailCounter = 0;
@@ -421,6 +422,7 @@ async function resolveProceduralNode(node, event) {
             let roll = Math.random() * 100;
             isSuccess = roll <= node.computedChance;
 
+            // SEGUNDA ROLAGEM INVISÍVEL (Vantagem Real)
             if (!isSuccess && hasAdvantage) {
                 let roll2 = Math.random() * 100;
                 if (roll2 <= node.computedChance) {
@@ -471,8 +473,20 @@ async function resolveProceduralNode(node, event) {
             addMatchLog("Falta feita! O rival assume o jogo.", "fail");
         }
 
+        // TEXTOS DE FEEDBACK (Sem referência explícita ao Pity Timer, camuflado como Sinergia)
         if (node.type === 'shoot' && matchState.zone >= 4) { goalScored = true; isUserGoal = true; }
-        else if (node.type !== 'shoot' && node.type !== 'save') { createJuiceText(matchState.nextBuff > 0 ? "Lindo! ✨" : node.name, "#34d399", x, y); addMatchLog(getRandomLog('success', node.name), 'success'); }
+        else if (node.type !== 'shoot' && node.type !== 'save') {
+            if (wasPityUsed || usedSecondChance) {
+                createJuiceText(`Sinergia! ✨`, "#a855f7", x, y - 50);
+                addMatchLog(`O fundamento salvou a jogada na insistência!`, "success");
+            } else if (hasAdvantage) {
+                createJuiceText(`+ Bônus!`, "#a855f7", x, y - 50);
+                addMatchLog(`Fundamento aplicado na jogada!`, "success");
+            } else {
+                createJuiceText(matchState.nextBuff > 0 ? "Lindo! ✨" : node.name, "#34d399", x, y);
+                addMatchLog(getRandomLog('success', node.name), 'success');
+            }
+        }
         else if (node.type === 'save') { createJuiceText("DEFESAÇA!", "#38bdf8", x, y); addMatchLog("Defesa espetacular!", 'success'); }
     } else {
         let mitigation = getLeadershipMitigation(traits);
@@ -484,11 +498,25 @@ async function resolveProceduralNode(node, event) {
 
         if (matchState.hasBall) matchState.hasBall = false;
         let mitigatedFailMove = Math.round(node.failMove * mitigation);
-        matchState.zone = Math.max(0, matchState.zone + mitigatedFailMove);
+
+        // CONTRA-ATAQUE MORTAL
+        if (wasAttacking && !matchState.hasBall) {
+            matchState.zone = Math.max(0, matchState.zone + mitigatedFailMove - 1);
+            createJuiceText("CONTRA-ATAQUE!", "#ef4444", x, y - 80);
+            addMatchLog("O rival roubou a bola e partiu em contra-ataque letal!", "fail");
+        } else {
+            matchState.zone = Math.max(0, matchState.zone + mitigatedFailMove);
+        }
 
         if (node.type === 'save') { goalScored = true; isUserGoal = false; }
-        else if (node.type !== 'shoot' && node.type !== 'save') { createJuiceText("Falhou!", "#f87171", x, y); addMatchLog(getRandomLog('fail', node.name), 'fail'); }
-        else if (node.type === 'shoot') { createJuiceText("Pra fora!", "#94a3b8", x, y); addMatchLog("A finalização não foi boa.", 'fail'); }
+        else if (!wasAttacking || node.type !== 'shoot') {
+            createJuiceText("Falhou!", "#f87171", x, y);
+            addMatchLog(getRandomLog('fail', node.name), 'fail');
+        }
+        else if (node.type === 'shoot') {
+            createJuiceText("Pra fora!", "#94a3b8", x, y);
+            addMatchLog("A finalização não foi boa.", 'fail');
+        }
     }
 
     if (goalScored) return handleGoal(isUserGoal);
@@ -502,14 +530,19 @@ function handleGoal(isUserGoal) {
         matchState.userScore++; document.getElementById("score-user").innerText = matchState.userScore;
         createJuiceText("⚽ GOOOOL!!", "#f59e0b", window.innerWidth / 2, window.innerHeight / 2 - 100);
         addMatchLog(getRandomLog('goalUser'), "goal-user");
+        addMatchLog("O rival reinicia o jogo furioso buscando o empate!", "fail");
         fireConfetti();
     } else {
         matchState.rivalScore++; document.getElementById("score-rival").innerText = matchState.rivalScore;
         createJuiceText("😢 Gol", "#ef4444", window.innerWidth / 2, window.innerHeight / 2);
         addMatchLog(getRandomLog('goalRival'), "goal-rival");
+        addMatchLog("Sua equipe vai para a saída de bola com sangue nos olhos!", "success");
         fireDespairEffect();
     }
-    matchState.zone = 2; matchState.hasBall = !isUserGoal; matchState.nextBuff = 0; matchState.combo = 0; matchState.momentum = 0;
+    matchState.zone = 2; matchState.hasBall = !isUserGoal; matchState.nextBuff = 0; matchState.combo = 0;
+
+    // SANGUE NOS OLHOS (Kickoff Buff)
+    matchState.momentum = isUserGoal ? -3 : 3;
 
     if (matchState.isExtraTime) {
         setTimeout(() => finishMatchRewards(), 700);
@@ -616,9 +649,7 @@ function finishMatchRewards() {
 
     setTimeout(() => {
         if (!isVictory) {
-            recordRun(false);
-            progressDailyMission('play_runs', 1);
-
+            // Removemos o recordRun(false) daqui, pois o finishSeason fará isso
             document.getElementById("pm-title").innerText = "ELIMINADO";
             document.getElementById("pm-title").className = `pm-title loss`;
             document.getElementById("pm-score").innerText = `${matchState.userScore} x ${matchState.rivalScore}`;
@@ -626,11 +657,11 @@ function finishMatchRewards() {
 
             document.querySelector(".pm-rewards").style.display = "none";
 
-            document.querySelector("#post-match-overlay .btn-primary").innerText = "VOLTAR AO MENU";
+            document.querySelector("#post-match-overlay .btn-primary").innerText = "VER RESUMO DA TEMPORADA";
             document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
                 document.querySelector(".pm-rewards").style.display = "flex";
                 document.getElementById('post-match-overlay').style.display = 'none';
-                returnToTitle();
+                finishSeason(false); // Agora redireciona para a tela que entrega os Troféus!
             };
             document.getElementById("post-match-overlay").style.display = "flex";
             return;
@@ -639,7 +670,6 @@ function finishMatchRewards() {
         const threat = GAME_BALANCE.mechanics.threatLevels[gameState.currentNode.type] || GAME_BALANCE.mechanics.threatLevels['match'];
         const base = GAME_BALANCE.leagues[gameState.leagueLevel].rewardBase;
 
-        // Progresso de missões diárias
         progressDailyMission('win_matches', 1);
         progressDailyMission('score_goals', matchState.userScore);
         if (gameState.currentNode.type === 'elite') progressDailyMission('beat_elite', 1);

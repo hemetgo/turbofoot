@@ -380,21 +380,23 @@ function finishSeason(wonSeason) {
         }
     }
 
-    // CALCULA TROFÉUS (Moeda Meta)
-    let baseTrophies = gameState.season.currentStage * 15; // Recompensa generosa por progresso, mesmo sem vencer
-    let diffMult = (gameState.leagueLevel + 1);
-    let earnedTrophies = baseTrophies * diffMult;
-    if (wonSeason) earnedTrophies += (100 * diffMult); // Bônus de vitória aumentado de 50 para 100
+    // NOVO CÁLCULO DE TROFÉUS (Meta Currency)
+    let matchesWon = gameState.season.matchHistory.filter(m => m.userScore > m.rivalScore).length;
+    let metaPerWin = (gameState.leagueLevel + 1) * 5;
+    let metaWinBonus = (gameState.leagueLevel + 1) * 50;
+
+    let earnedTrophies = matchesWon * metaPerWin;
+    if (wonSeason) earnedTrophies += metaWinBonus;
 
     if (!gameState.meta.metaCoins) gameState.meta.metaCoins = 0;
     gameState.meta.metaCoins += earnedTrophies;
     saveGame();
 
+    subText += `\n\nVitórias na campanha: ${matchesWon} (+${matchesWon * metaPerWin} 🏆)`;
+    if (wonSeason) subText += `\nBônus de Campeão: +${metaWinBonus} 🏆`;
     subText += `\n\n🏆 Você ganhou +${earnedTrophies} Troféus para usar na Sede do Clube!`;
 
     document.getElementById('se-sub').innerText = subText;
-
-    // Mostra os troféus NO LUGAR das moedas, com a formatação correta
     document.getElementById('se-coins').innerText = `+${earnedTrophies} 🏆`;
     document.getElementById('se-coins').style.color = "var(--accent-gold)";
 

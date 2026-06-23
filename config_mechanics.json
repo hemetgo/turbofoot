@@ -4,6 +4,7 @@
   "matchActionsMax": 12,
   "safeActionChance": 0.15,
   "comboCoinMultiplier": 0.25,
+  "pityThreshold": 99999,
   "luckEvents": {
     "chance": 0.08,
     "duration": 2

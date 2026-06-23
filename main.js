@@ -47,14 +47,45 @@ function startRunFlow() {
         let lockedAttr = isLocked ? 'style="opacity:0.3; filter:grayscale(1); pointer-events:none;"' : '';
         let lockIcon = isLocked ? '🔒' : series.emoji;
 
+        // Fórmula dinâmica de recompensa: Aumenta a cada divisão
+        let metaPerWin = (idx + 1) * 5;
+        let metaWinBonus = (idx + 1) * 50;
+
+        // Condição para esconder as recompensas se estiver bloqueado
+        let rewardsHtml = "";
+        if (isLocked) {
+            rewardsHtml = `
+                <div style="background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 8px; width: 100%; margin-top: 12px; border: 1px dashed var(--border-accent); display: flex; align-items: center; justify-content: center; min-height: 72px;">
+                    <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase;">🔒 Recompensas Ocultas</span>
+                </div>
+            `;
+        } else {
+            rewardsHtml = `
+                <div style="background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 8px; width: 100%; margin-top: 12px; border: 1px solid var(--border-light); min-height: 72px;">
+                    <div style="font-size: 0.7rem; color: var(--accent-gold); font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 6px;">Premiação em Troféus</div>
+                    <div style="font-size: 0.8rem; color: #fff; font-weight: 700; display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span>⚔️ Por Vitória:</span> 
+                        <span style="color: var(--accent-green);">+${metaPerWin} 🏆</span>
+                    </div>
+                    <div style="font-size: 0.8rem; color: #fff; font-weight: 700; display: flex; justify-content: space-between;">
+                        <span>👑 Campeão:</span> 
+                        <span style="color: var(--accent-gold);">+${metaWinBonus} 🏆</span>
+                    </div>
+                </div>
+            `;
+        }
+
         container.innerHTML += `
-            <div class="club-select-card" ${lockedAttr} onclick="selectSeries(${idx})">
+            <div class="club-select-card" ${lockedAttr} onclick="selectSeries(${idx})" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
                 <div class="club-select-header">
                     <div class="club-select-emoji">${lockIcon}</div>
                     <div class="club-select-name" style="color: ${isLocked ? '#94a3b8' : series.color}">${series.name}</div>
                 </div>
-                <div class="captain-box" style="justify-content: center; min-height: 80px; padding: 12px;">
-                    <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 800; text-align: center; line-height: 1.4;">${series.desc}</div>
+                <div class="captain-box" style="justify-content: center; min-height: 80px; padding: 12px; flex-grow: 1; display: flex; flex-direction: column;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 800; text-align: center; line-height: 1.4; flex-grow: 1; display: flex; align-items: center; justify-content: center;">
+                        ${series.desc}
+                    </div>
+                    ${rewardsHtml}
                 </div>
             </div>
         `;
