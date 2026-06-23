@@ -98,7 +98,7 @@ function selectSeries(idx) {
     selectedSeriesIndex = idx;
     pendingClubOptions = [];
 
-    // NOVO: Embaralha as listas originais para garantir escolhas únicas
+    // Embaralha as listas originais para garantir escolhas únicas
     let shuffledBases = shuffle(GAME_CONTENT.clubGeneration.bases);
     let shuffledAdjs = shuffle(GAME_CONTENT.clubGeneration.adjectives);
 
@@ -116,6 +116,23 @@ function selectSeries(idx) {
         const base = shuffledBases[i];
         const adj = shuffledAdjs[i];
 
+        // 🌎 LÓGICA DE NACIONALIDADES DINÂMICA
+        let shuffledNames = shuffle(GAME_CONTENT.names);
+        let clubNationalities = [];
+
+        // Puxa a matriz de distribuição diretamente do arquivo de configuração
+        let natDistribution = GAME_BALANCE.leagues[idx].natDistribution || [11];
+
+        // Preenche o "pote" de nacionalidades do clube com base na distribuição acima
+        natDistribution.forEach((count, natIndex) => {
+            for (let k = 0; k < count; k++) {
+                clubNationalities.push(shuffledNames[natIndex]);
+            }
+        });
+
+        // Embaralha as nacionalidades para não ficarem em blocos perfeitos na visualização
+        clubNationalities = shuffle(clubNationalities);
+
         let team = [];
         let traitDistribution = [];
 
@@ -130,7 +147,8 @@ function selectSeries(idx) {
 
         for (let j = 0; j < 11; j++) {
             let numTraitsToGive = traitDistribution[j];
-            team.push(generateBasePlayer(startLvl, numTraitsToGive, focusTraitId, focusChance));
+            // Passamos a nacionalidade sorteada correspondente ao índice [j]
+            team.push(generateBasePlayer(startLvl, numTraitsToGive, focusTraitId, focusChance, clubNationalities[j]));
         }
 
         let traitCounts = {};

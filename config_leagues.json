@@ -8,7 +8,8 @@
         "enemyBaseLevel": -2,
         "enemyBaseTraits": 1,
         "levelScaling": 1,
-        "traitScaling": 0.5
+        "traitScaling": 0.5,
+        "natDistribution": [11]
     },
     {
         "emoji": "🥉",
@@ -19,7 +20,8 @@
         "enemyBaseLevel": 3,
         "enemyBaseTraits": 5,
         "levelScaling": 2,
-        "traitScaling": 2
+        "traitScaling": 2,
+        "natDistribution": [10, 1]
     },
     {
         "emoji": "🥈",
@@ -30,7 +32,8 @@
         "enemyBaseLevel": 7,
         "enemyBaseTraits": 1,
         "levelScaling": 2,
-        "traitScaling": 3
+        "traitScaling": 3,
+        "natDistribution": [8, 2, 1]
     },
     {
         "emoji": "🥇",
@@ -41,7 +44,8 @@
         "enemyBaseLevel": 11,
         "enemyBaseTraits": 10,
         "levelScaling": 3,
-        "traitScaling": 3
+        "traitScaling": 3,
+        "natDistribution": [7, 2, 2]
     },
     {
         "emoji": "🎖️",
@@ -52,7 +56,8 @@
         "enemyBaseLevel": 15,
         "enemyBaseTraits": 15,
         "levelScaling": 3,
-        "traitScaling": 4
+        "traitScaling": 4,
+        "natDistribution": [5, 2, 2, 1, 1]
     },
     {
         "emoji": "🏆",
@@ -65,6 +70,7 @@
         "enemyBaseLevel": 19,
         "enemyBaseTraits": 22,
         "levelScaling": 0,
-        "traitScaling": 1
+        "traitScaling": 1,
+        "natDistribution": [4, 2, 2, 1, 1, 1]
     }
 ]

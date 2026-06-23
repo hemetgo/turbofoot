@@ -1,11 +1,13 @@
 // Função auxiliar nova que gera o "documento de identidade" do jogador
-function generateIdentity(isBase = false) {
+function generateIdentity(isBase = false, forcedNationality = null) {
+    // Presets (Jogadores Especiais/Estrelas) ignoram a nacionalidade do time base
     if (!isBase && GAME_CONTENT.presets && GAME_CONTENT.presets.length > 0 && Math.random() < 0.05) {
         let preset = rnd(GAME_CONTENT.presets);
         return { name: preset.name, emoji: preset.face, flag: preset.flag, isPreset: true, presetPerks: preset.perks };
     }
 
-    let nat = rnd(GAME_CONTENT.names);
+    // Se recebermos uma nacionalidade forçada, usamos ela. Se não, sorteia.
+    let nat = forcedNationality ? forcedNationality : rnd(GAME_CONTENT.names);
     let first = rnd(nat.firstNames);
     let last = rnd(nat.lastNames);
     let face = rnd(nat.faces);
@@ -14,7 +16,7 @@ function generateIdentity(isBase = false) {
 }
 
 function generatePlayer(level, isPremium = false) {
-    let iden = generateIdentity(false);
+    let iden = generateIdentity(false); // Mantém aleatório para o Mercado da Bola
     let perks = [];
     let isStar = false;
 
@@ -45,8 +47,8 @@ function generatePlayer(level, isPremium = false) {
     };
 }
 
-function generateBasePlayer(baseLevel = 1, numTraits = 0, focusTraitId = null, focusChance = 0) {
-    let iden = generateIdentity(true);
+function generateBasePlayer(baseLevel = 1, numTraits = 0, focusTraitId = null, focusChance = 0, forcedNationality = null) {
+    let iden = generateIdentity(true, forcedNationality);
     let perks = [];
 
     if (numTraits > 0) {
@@ -194,9 +196,9 @@ function generateEnemyTeam(leagueConfig, currentMatchIndex, teamSize = 5) {
 
     // Se a liga tiver escalonamento dinâmico baseado no time do jogador (ex: Liga Suprema)
     if (leagueConfig.dynamicScaling) {
-        let playerTeamLevel = getTeamAverageLevel(); 
-        let offset = leagueConfig.levelOffset || 0; 
-        
+        let playerTeamLevel = getTeamAverageLevel();
+        let offset = leagueConfig.levelOffset || 0;
+
         // Garante que o nível do rival acompanhe o jogador caso ele esteja forte demais
         matchLevel = Math.max(matchLevel, playerTeamLevel + offset);
     }
