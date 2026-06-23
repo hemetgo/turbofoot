@@ -649,11 +649,10 @@ function finishMatchRewards() {
 
     setTimeout(() => {
         if (!isVictory) {
-            // Removemos o recordRun(false) daqui, pois o finishSeason fará isso
             document.getElementById("pm-title").innerText = "ELIMINADO";
             document.getElementById("pm-title").className = `pm-title loss`;
             document.getElementById("pm-score").innerText = `${matchState.userScore} x ${matchState.rivalScore}`;
-            document.getElementById("pm-info").innerText = "A campanha terminou mais cedo. Você não sobreviveu ao mapa.";
+            document.getElementById("pm-info").innerText = "Fim da linha. Uma derrota dura que custa a eliminação precoce na liga.";
 
             document.querySelector(".pm-rewards").style.display = "none";
 
@@ -661,7 +660,7 @@ function finishMatchRewards() {
             document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
                 document.querySelector(".pm-rewards").style.display = "flex";
                 document.getElementById('post-match-overlay').style.display = 'none';
-                finishSeason(false); // Agora redireciona para a tela que entrega os Troféus!
+                finishSeason(false);
             };
             document.getElementById("post-match-overlay").style.display = "flex";
             return;
@@ -684,22 +683,33 @@ function finishMatchRewards() {
         document.getElementById("pm-title").innerText = "VITÓRIA!";
         document.getElementById("pm-title").className = `pm-title victory`;
         document.getElementById("pm-score").innerText = `${matchState.userScore} x ${matchState.rivalScore}`;
-
         document.getElementById("pm-info").innerText = gameState.currentNode.type === 'boss' ? "O CHEFÃO CAIU! MAPA VENCIDO!" : "O caminho está livre. Continue subindo!";
 
-        let rewardsText = `+${coins} 💰`;
-        document.getElementById("pm-coins").innerText = rewardsText;
-
-        document.querySelector("#post-match-overlay .btn-primary").innerText = "DISTRIBUIR NÍVEIS";
-        document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
-            document.getElementById('post-match-overlay').style.display = 'none';
-
-            let niveisGanhos = threat.expReward || 1;
-
-            showLevelDistribution(niveisGanhos, () => {
+        // SE FOR O CHEFÃO: Pula a recompensa inútil e vai pro final
+        if (gameState.currentNode.type === 'boss') {
+            document.querySelector(".pm-rewards").style.display = "none";
+            document.querySelector("#post-match-overlay .btn-primary").innerText = "VER RESUMO DA TEMPORADA";
+            document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
+                document.getElementById('post-match-overlay').style.display = 'none';
+                document.querySelector(".pm-rewards").style.display = "flex"; // Reseta para a próxima run
                 advanceMapNode();
-            });
-        };
+            };
+        }
+        // SE FOR PARTIDA NORMAL: Exibe moedas e distribui níveis
+        else {
+            document.querySelector(".pm-rewards").style.display = "flex";
+            let rewardsText = `+${coins} 💰`;
+            document.getElementById("pm-coins").innerText = rewardsText;
+
+            document.querySelector("#post-match-overlay .btn-primary").innerText = "DISTRIBUIR NÍVEIS";
+            document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
+                document.getElementById('post-match-overlay').style.display = 'none';
+                let niveisGanhos = threat.expReward || 1;
+                showLevelDistribution(niveisGanhos, () => {
+                    advanceMapNode();
+                });
+            };
+        }
 
         document.getElementById("post-match-overlay").style.display = "flex";
     }, 500);

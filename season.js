@@ -410,16 +410,23 @@ function finishSeason(wonSeason) {
     recordRun(wonSeason);
     progressDailyMission('play_runs', 1);
 
-    let subText = wonSeason ? "\n🏆 A CAMPANHA FOI UM SUCESSO!\nVocê completou o mapa!" : "\nDerrota dolorosa. Fim da jornada.";
+    // Atualiza o ícone do Modal de Fim de Temporada com o Emoji da Liga
+    let currentLeague = GAME_BALANCE.leagues[gameState.leagueLevel];
+    let leagueEmoji = currentLeague.emoji || '🏆';
+    const endIcon = document.querySelector('.champ-end-icon');
+    if (endIcon) {
+        endIcon.innerText = leagueEmoji;
+    }
+
+    let subText = wonSeason ? "\n🏆 TEMPORADA PERFEITA!\nO título é nosso e a torcida está em festa!" : "\n❌ ELIMINADO.\nUm tropeço duro. Junte os cacos e prepare o time para a próxima tentativa.";
 
     if (wonSeason) {
-        let currentSeries = gameState.leagueLevel;
         let highest = gameState.meta.highestSeriesUnlocked || 0;
 
-        if (currentSeries === highest && highest < GAME_BALANCE.leagues.length - 1) {
+        if (gameState.leagueLevel === highest && highest < GAME_BALANCE.leagues.length - 1) {
             gameState.meta.highestSeriesUnlocked = highest + 1;
             let nextSeriesName = GAME_BALANCE.leagues[highest + 1].name;
-            subText += `\n\n⭐ META ALCANÇADA! ⭐\nNova Divisão Desbloqueada:\n👉 ${nextSeriesName} 👈`;
+            subText += `\n\n⭐ META ALCANÇADA! ⭐\nNova Liga Desbloqueada:\n👉 ${nextSeriesName} 👈`;
         }
     }
 
