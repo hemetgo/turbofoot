@@ -357,5 +357,1880 @@
             "👨🏼",
             "👨🏻‍🦱"
         ]
+    },
+    {
+        "country": "Portugal",
+        "flag": "pt",
+        "firstNames": [
+            "João",
+            "Diogo",
+            "Gonçalo",
+            "Tiago",
+            "Rafael",
+            "André",
+            "Miguel",
+            "Nuno"
+        ],
+        "lastNames": [
+            "Silva",
+            "Santos",
+            "Ferreira",
+            "Pereira",
+            "Costa",
+            "Oliveira",
+            "Martins",
+            "Rodrigues"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏽",
+            "👨🏻‍🦱"
+        ]
+    },
+    {
+        "country": "Holanda",
+        "flag": "nl",
+        "firstNames": [
+            "Daan",
+            "Sem",
+            "Lucas",
+            "Finn",
+            "Milan",
+            "Noah",
+            "Jesse",
+            "Lars"
+        ],
+        "lastNames": [
+            "De Jong",
+            "Van Dijk",
+            "Bakker",
+            "Visser",
+            "Smit",
+            "Mulder",
+            "Bos",
+            "Dekker"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼",
+            "👨🏾"
+        ]
+    },
+    {
+        "country": "Bélgica",
+        "flag": "be",
+        "firstNames": [
+            "Arthur",
+            "Louis",
+            "Noah",
+            "Lucas",
+            "Jules",
+            "Victor",
+            "Liam",
+            "Thomas"
+        ],
+        "lastNames": [
+            "Peeters",
+            "Janssens",
+            "Maes",
+            "Jacobs",
+            "Mertens",
+            "Willems",
+            "Claes",
+            "Goossens"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "👨🏾",
+            "👨🏿",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Croácia",
+        "flag": "hr",
+        "firstNames": [
+            "Luka",
+            "Ivan",
+            "Marko",
+            "Matej",
+            "Josip",
+            "Filip",
+            "Ante",
+            "Petar"
+        ],
+        "lastNames": [
+            "Horvat",
+            "Kovačević",
+            "Babić",
+            "Marić",
+            "Jurić",
+            "Novak",
+            "Knežević",
+            "Perić"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "👨🏻‍🦱"
+        ]
+    },
+    {
+        "country": "Uruguai",
+        "flag": "uy",
+        "firstNames": [
+            "Santiago",
+            "Facundo",
+            "Matías",
+            "Agustín",
+            "Nicolás",
+            "Bruno",
+            "Martín",
+            "Ignacio"
+        ],
+        "lastNames": [
+            "Rodríguez",
+            "González",
+            "Pérez",
+            "Fernández",
+            "Silva",
+            "Martínez",
+            "Sosa",
+            "Suárez"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "👨🏻‍🦱"
+        ]
+    },
+    {
+        "country": "México",
+        "flag": "mx",
+        "firstNames": [
+            "José",
+            "Juan",
+            "Luis",
+            "Miguel",
+            "Carlos",
+            "Diego",
+            "Santiago",
+            "Alejandro"
+        ],
+        "lastNames": [
+            "Hernández",
+            "García",
+            "Martínez",
+            "López",
+            "González",
+            "Pérez",
+            "Ramírez",
+            "Torres"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏽",
+            "👨🏽‍🦱"
+        ]
+    },
+    {
+        "country": "Nigéria",
+        "flag": "ng",
+        "firstNames": [
+            "Tunde",
+            "Emeka",
+            "Chinedu",
+            "Ibrahim",
+            "Samuel",
+            "David",
+            "Musa",
+            "Victor"
+        ],
+        "lastNames": [
+            "Okafor",
+            "Adeyemi",
+            "Balogun",
+            "Adebayo",
+            "Musa",
+            "Eze",
+            "Nwosu",
+            "Ibrahim"
+        ],
+        "faces": [
+            "👨🏾",
+            "👨🏿",
+            "🧔🏿",
+            "👨🏿‍🦲",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Marrocos",
+        "flag": "ma",
+        "firstNames": [
+            "Youssef",
+            "Achraf",
+            "Hakim",
+            "Amine",
+            "Rachid",
+            "Karim",
+            "Omar",
+            "Bilal"
+        ],
+        "lastNames": [
+            "El Amrani",
+            "Alaoui",
+            "Bennani",
+            "Idrissi",
+            "Mansouri",
+            "Tazi",
+            "Benjelloun",
+            "Chraibi"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "🧔🏽",
+            "🧔🏾",
+            "👨🏽‍🦱"
+        ]
+    },
+    {
+        "country": "Turquia",
+        "flag": "tr",
+        "firstNames": [
+            "Mehmet",
+            "Ahmet",
+            "Mustafa",
+            "Emre",
+            "Burak",
+            "Kerem",
+            "Can",
+            "Yusuf"
+        ],
+        "lastNames": [
+            "Yılmaz",
+            "Kaya",
+            "Demir",
+            "Şahin",
+            "Çelik",
+            "Arslan",
+            "Doğan",
+            "Aydın"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏽",
+            "👨🏾",
+            "🧔🏻",
+            "🧔🏽"
+        ]
+    },
+    {
+        "country": "China",
+        "flag": "cn",
+        "firstNames": [
+            "Wei",
+            "Jun",
+            "Ming",
+            "Hao",
+            "Jie",
+            "Peng",
+            "Lei",
+            "Tao"
+        ],
+        "lastNames": [
+            "Wang",
+            "Li",
+            "Zhang",
+            "Liu",
+            "Chen",
+            "Yang",
+            "Huang",
+            "Zhao"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏻‍🦱"
+        ]
+    },
+    {
+        "country": "Austrália",
+        "flag": "au",
+        "firstNames": [
+            "Liam",
+            "Noah",
+            "Jack",
+            "Cooper",
+            "William",
+            "Thomas",
+            "Oliver",
+            "Ethan"
+        ],
+        "lastNames": [
+            "Smith",
+            "Jones",
+            "Williams",
+            "Brown",
+            "Taylor",
+            "Wilson",
+            "Anderson",
+            "Martin"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼",
+            "👨🏾"
+        ]
+    },
+    {
+        "country": "Canadá",
+        "flag": "ca",
+        "firstNames": [
+            "Liam",
+            "Noah",
+            "Logan",
+            "Benjamin",
+            "Lucas",
+            "Nathan",
+            "Ethan",
+            "Jacob"
+        ],
+        "lastNames": [
+            "Smith",
+            "Brown",
+            "Martin",
+            "Roy",
+            "Wilson",
+            "Gagnon",
+            "Taylor",
+            "Johnson"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "👨🏾",
+            "👨🏿",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Colômbia",
+        "flag": "co",
+        "firstNames": [
+            "Santiago",
+            "Sebastián",
+            "Mateo",
+            "Juan",
+            "Andrés",
+            "David",
+            "Nicolás",
+            "Camilo"
+        ],
+        "lastNames": [
+            "Rodríguez",
+            "Gómez",
+            "Martínez",
+            "García",
+            "López",
+            "Hernández",
+            "Moreno",
+            "Castro"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏽",
+            "👨🏽‍🦱"
+        ]
+    },
+    {
+        "country": "Chile",
+        "flag": "cl",
+        "firstNames": [
+            "Benjamín",
+            "Vicente",
+            "Martín",
+            "Tomás",
+            "Matías",
+            "Joaquín",
+            "Diego",
+            "Lucas"
+        ],
+        "lastNames": [
+            "González",
+            "Muñoz",
+            "Rojas",
+            "Díaz",
+            "Pérez",
+            "Soto",
+            "Contreras",
+            "Silva"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "👨🏻‍🦱"
+        ]
+    },
+    {
+        "country": "Peru",
+        "flag": "pe",
+        "firstNames": [
+            "José",
+            "Luis",
+            "Carlos",
+            "Diego",
+            "Miguel",
+            "André",
+            "Juan",
+            "Cristian"
+        ],
+        "lastNames": [
+            "Flores",
+            "Ramírez",
+            "Torres",
+            "Castillo",
+            "Vargas",
+            "Rojas",
+            "Paredes",
+            "Mendoza"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏽",
+            "👨🏽‍🦱"
+        ]
+    },
+    {
+        "country": "Equador",
+        "flag": "ec",
+        "firstNames": [
+            "Kevin",
+            "Michael",
+            "José",
+            "Andrés",
+            "Luis",
+            "Carlos",
+            "Jhon",
+            "Ángel"
+        ],
+        "lastNames": [
+            "Valencia",
+            "Mina",
+            "Caicedo",
+            "Castillo",
+            "Mendoza",
+            "Quiñónez",
+            "Cedeño",
+            "Preciado"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "👨🏿",
+            "🧔🏿",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Polônia",
+        "flag": "pl",
+        "firstNames": [
+            "Jan",
+            "Piotr",
+            "Jakub",
+            "Kacper",
+            "Michał",
+            "Filip",
+            "Szymon",
+            "Mateusz"
+        ],
+        "lastNames": [
+            "Nowak",
+            "Kowalski",
+            "Wiśniewski",
+            "Wójcik",
+            "Kamiński",
+            "Lewandowski",
+            "Zieliński",
+            "Mazur"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Sérvia",
+        "flag": "rs",
+        "firstNames": [
+            "Nikola",
+            "Luka",
+            "Stefan",
+            "Marko",
+            "Miloš",
+            "Nemanja",
+            "Filip",
+            "Aleksandar"
+        ],
+        "lastNames": [
+            "Jovanović",
+            "Petrović",
+            "Nikolić",
+            "Marković",
+            "Stojanović",
+            "Pavlović",
+            "Ilić",
+            "Milenković"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Suécia",
+        "flag": "se",
+        "firstNames": [
+            "Liam",
+            "Noah",
+            "William",
+            "Lucas",
+            "Oscar",
+            "Elias",
+            "Hugo",
+            "Adam"
+        ],
+        "lastNames": [
+            "Andersson",
+            "Johansson",
+            "Karlsson",
+            "Nilsson",
+            "Eriksson",
+            "Larsson",
+            "Olsson",
+            "Persson"
+        ],
+        "faces": [
+            "👨🏻",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼",
+            "👨🏼"
+        ]
+    },
+    {
+        "country": "Dinamarca",
+        "flag": "dk",
+        "firstNames": [
+            "William",
+            "Noah",
+            "Lucas",
+            "Oliver",
+            "Victor",
+            "Magnus",
+            "Emil",
+            "Oscar"
+        ],
+        "lastNames": [
+            "Jensen",
+            "Nielsen",
+            "Hansen",
+            "Pedersen",
+            "Andersen",
+            "Christensen",
+            "Larsen",
+            "Sørensen"
+        ],
+        "faces": [
+            "👨🏻",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼",
+            "👨🏼"
+        ]
+    },
+    {
+        "country": "Noruega",
+        "flag": "no",
+        "firstNames": [
+            "Magnus",
+            "Emil",
+            "Lucas",
+            "Oliver",
+            "Noah",
+            "Elias",
+            "Filip",
+            "Henrik"
+        ],
+        "lastNames": [
+            "Hansen",
+            "Johansen",
+            "Olsen",
+            "Larsen",
+            "Andersen",
+            "Nilsen",
+            "Kristiansen",
+            "Berg"
+        ],
+        "faces": [
+            "👨🏻",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Egito",
+        "flag": "eg",
+        "firstNames": [
+            "Mohamed",
+            "Ahmed",
+            "Omar",
+            "Mahmoud",
+            "Youssef",
+            "Mostafa",
+            "Karim",
+            "Hassan"
+        ],
+        "lastNames": [
+            "Hassan",
+            "Ali",
+            "Ibrahim",
+            "Mahmoud",
+            "Abdelrahman",
+            "Fathy",
+            "Nasser",
+            "Sayed"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "🧔🏽",
+            "🧔🏾",
+            "👨🏽‍🦱"
+        ]
+    },
+    {
+        "country": "Camarões",
+        "flag": "cm",
+        "firstNames": [
+            "Samuel",
+            "Vincent",
+            "André",
+            "Bryan",
+            "Christian",
+            "Patrick",
+            "Jean",
+            "Junior"
+        ],
+        "lastNames": [
+            "Eto'o",
+            "Aboubakar",
+            "N'Koulou",
+            "Moukandjo",
+            "Ngadeu",
+            "Tchouaméni",
+            "Ekambi",
+            "Fai"
+        ],
+        "faces": [
+            "👨🏾",
+            "👨🏿",
+            "🧔🏿",
+            "👨🏿‍🦲",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Costa do Marfim",
+        "flag": "ci",
+        "firstNames": [
+            "Didier",
+            "Yaya",
+            "Kolo",
+            "Franck",
+            "Nicolas",
+            "Jean",
+            "Wilfried",
+            "Sébastien"
+        ],
+        "lastNames": [
+            "Touré",
+            "Drogba",
+            "Koné",
+            "Bamba",
+            "Traoré",
+            "Diallo",
+            "Kouassi",
+            "Kessié"
+        ],
+        "faces": [
+            "👨🏾",
+            "👨🏿",
+            "🧔🏿",
+            "👨🏿‍🦲",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Gana",
+        "flag": "gh",
+        "firstNames": [
+            "Jordan",
+            "André",
+            "Thomas",
+            "Daniel",
+            "Kwame",
+            "Emmanuel",
+            "Isaac",
+            "Mohammed"
+        ],
+        "lastNames": [
+            "Ayew",
+            "Mensah",
+            "Boateng",
+            "Owusu",
+            "Asante",
+            "Appiah",
+            "Osei",
+            "Acquah"
+        ],
+        "faces": [
+            "👨🏾",
+            "👨🏿",
+            "🧔🏿",
+            "👨🏿‍🦲",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "África do Sul",
+        "flag": "za",
+        "firstNames": [
+            "Sipho",
+            "Themba",
+            "Thabo",
+            "Bongani",
+            "Lebo",
+            "Nkosi",
+            "Sibusiso",
+            "Mandla"
+        ],
+        "lastNames": [
+            "Nkosi",
+            "Dlamini",
+            "Mokoena",
+            "Khumalo",
+            "Zulu",
+            "Ndlovu",
+            "Mahlangu",
+            "Mthembu"
+        ],
+        "faces": [
+            "👨🏾",
+            "👨🏿",
+            "🧔🏿",
+            "👨🏿‍🦲",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Arábia Saudita",
+        "flag": "sa",
+        "firstNames": [
+            "Fahad",
+            "Salem",
+            "Nawaf",
+            "Abdullah",
+            "Saud",
+            "Turki",
+            "Mohammed",
+            "Yasser"
+        ],
+        "lastNames": [
+            "Al-Qahtani",
+            "Al-Dossari",
+            "Al-Harbi",
+            "Al-Ghamdi",
+            "Al-Shahrani",
+            "Al-Otaibi",
+            "Al-Malki",
+            "Al-Zahrani"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "🧔🏽",
+            "🧔🏾"
+        ]
+    },
+    {
+        "country": "Suíça",
+        "flag": "ch",
+        "firstNames": [
+            "Luca",
+            "Noah",
+            "Leon",
+            "Nico",
+            "Jan",
+            "David",
+            "Simon",
+            "Jonas"
+        ],
+        "lastNames": [
+            "Müller",
+            "Meier",
+            "Schmid",
+            "Keller",
+            "Weber",
+            "Fischer",
+            "Steiner",
+            "Baumann"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼",
+            "👨🏽"
+        ]
+    },
+    {
+        "country": "Áustria",
+        "flag": "at",
+        "firstNames": [
+            "Lukas",
+            "David",
+            "Maximilian",
+            "Paul",
+            "Felix",
+            "Jonas",
+            "Leon",
+            "Tobias"
+        ],
+        "lastNames": [
+            "Gruber",
+            "Huber",
+            "Wagner",
+            "Pichler",
+            "Moser",
+            "Steiner",
+            "Berger",
+            "Hofer"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "República Tcheca",
+        "flag": "cz",
+        "firstNames": [
+            "Jan",
+            "Tomáš",
+            "Jakub",
+            "Matěj",
+            "Adam",
+            "Filip",
+            "Ondřej",
+            "Martin"
+        ],
+        "lastNames": [
+            "Novák",
+            "Svoboda",
+            "Novotný",
+            "Dvořák",
+            "Černý",
+            "Procházka",
+            "Kučera",
+            "Veselý"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "🧔🏻",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Ucrânia",
+        "flag": "ua",
+        "firstNames": [
+            "Andriy",
+            "Oleksandr",
+            "Maksym",
+            "Artem",
+            "Dmytro",
+            "Ivan",
+            "Mykhailo",
+            "Yaroslav"
+        ],
+        "lastNames": [
+            "Shevchenko",
+            "Kovalenko",
+            "Melnyk",
+            "Bondarenko",
+            "Tkachenko",
+            "Boyko",
+            "Kravchenko",
+            "Polishchuk"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Romênia",
+        "flag": "ro",
+        "firstNames": [
+            "Andrei",
+            "Alexandru",
+            "Mihai",
+            "Stefan",
+            "Cristian",
+            "Florin",
+            "George",
+            "Vlad"
+        ],
+        "lastNames": [
+            "Popescu",
+            "Ionescu",
+            "Stan",
+            "Dumitru",
+            "Georgescu",
+            "Radu",
+            "Marin",
+            "Stoica"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻"
+        ]
+    },
+    {
+        "country": "Grécia",
+        "flag": "gr",
+        "firstNames": [
+            "Nikos",
+            "Giorgos",
+            "Dimitris",
+            "Kostas",
+            "Andreas",
+            "Vasilis",
+            "Panagiotis",
+            "Alexis"
+        ],
+        "lastNames": [
+            "Papadopoulos",
+            "Nikolaidis",
+            "Georgiou",
+            "Kostas",
+            "Pappas",
+            "Vlachos",
+            "Alexiou",
+            "Ioannou"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏽"
+        ]
+    },
+    {
+        "country": "Irlanda",
+        "flag": "ie",
+        "firstNames": [
+            "Jack",
+            "Conor",
+            "Sean",
+            "Ryan",
+            "Adam",
+            "Cian",
+            "Dylan",
+            "Oisin"
+        ],
+        "lastNames": [
+            "Murphy",
+            "Kelly",
+            "Byrne",
+            "O'Brien",
+            "Ryan",
+            "Walsh",
+            "Doyle",
+            "McCarthy"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Finlândia",
+        "flag": "fi",
+        "firstNames": [
+            "Elias",
+            "Oliver",
+            "Leo",
+            "Onni",
+            "Eetu",
+            "Mikael",
+            "Aleksi",
+            "Juho"
+        ],
+        "lastNames": [
+            "Korhonen",
+            "Virtanen",
+            "Mäkinen",
+            "Nieminen",
+            "Mäkelä",
+            "Laine",
+            "Heikkinen",
+            "Lehtonen"
+        ],
+        "faces": [
+            "👨🏻",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Islândia",
+        "flag": "is",
+        "firstNames": [
+            "Jón",
+            "Aron",
+            "Magnús",
+            "Kristján",
+            "Birkir",
+            "Gunnar",
+            "Ólafur",
+            "Sigurður"
+        ],
+        "lastNames": [
+            "Jónsson",
+            "Sigurðsson",
+            "Guðmundsson",
+            "Einarsson",
+            "Björnsson",
+            "Magnússon",
+            "Arnarson",
+            "Kristjánsson"
+        ],
+        "faces": [
+            "👨🏻",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Argélia",
+        "flag": "dz",
+        "firstNames": [
+            "Riyad",
+            "Sofiane",
+            "Islam",
+            "Yacine",
+            "Amine",
+            "Nabil",
+            "Karim",
+            "Samir"
+        ],
+        "lastNames": [
+            "Brahimi",
+            "Benzema",
+            "Belhadj",
+            "Bouzid",
+            "Mansouri",
+            "Meziane",
+            "Haddad",
+            "Zidane"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "🧔🏽",
+            "🧔🏾"
+        ]
+    },
+    {
+        "country": "Tunísia",
+        "flag": "tn",
+        "firstNames": [
+            "Youssef",
+            "Mohamed",
+            "Hamza",
+            "Ali",
+            "Aymen",
+            "Nader",
+            "Karim",
+            "Walid"
+        ],
+        "lastNames": [
+            "Ben Ali",
+            "Trabelsi",
+            "Jaziri",
+            "Gharbi",
+            "Mansouri",
+            "Haddad",
+            "Ben Youssef",
+            "Chaouch"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "🧔🏽",
+            "🧔🏾"
+        ]
+    },
+    {
+        "country": "Mali",
+        "flag": "ml",
+        "firstNames": [
+            "Moussa",
+            "Ibrahima",
+            "Amadou",
+            "Cheick",
+            "Bakary",
+            "Seydou",
+            "Mamadou",
+            "Oumar"
+        ],
+        "lastNames": [
+            "Traoré",
+            "Diarra",
+            "Coulibaly",
+            "Keita",
+            "Koné",
+            "Diallo",
+            "Sissoko",
+            "Sangaré"
+        ],
+        "faces": [
+            "👨🏾",
+            "👨🏿",
+            "🧔🏿",
+            "👨🏿‍🦲",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Jamaica",
+        "flag": "jm",
+        "firstNames": [
+            "Andre",
+            "Leon",
+            "Dwayne",
+            "Ricardo",
+            "Devon",
+            "Kemar",
+            "Shamar",
+            "Jamal"
+        ],
+        "lastNames": [
+            "Brown",
+            "Johnson",
+            "Williams",
+            "Campbell",
+            "Reid",
+            "Bailey",
+            "Grant",
+            "Thomas"
+        ],
+        "faces": [
+            "👨🏾",
+            "👨🏿",
+            "🧔🏿",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Costa Rica",
+        "flag": "cr",
+        "firstNames": [
+            "José",
+            "Luis",
+            "Carlos",
+            "Andrés",
+            "Daniel",
+            "Bryan",
+            "Esteban",
+            "Johan"
+        ],
+        "lastNames": [
+            "Rodríguez",
+            "Ramírez",
+            "Vargas",
+            "Mora",
+            "Castro",
+            "Rojas",
+            "Jiménez",
+            "Alvarado"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏽"
+        ]
+    },
+    {
+        "country": "Paraguai",
+        "flag": "py",
+        "firstNames": [
+            "Miguel",
+            "Juan",
+            "José",
+            "Carlos",
+            "Diego",
+            "Ángel",
+            "Matías",
+            "Richard"
+        ],
+        "lastNames": [
+            "González",
+            "Benítez",
+            "Martínez",
+            "Ferreira",
+            "Ramírez",
+            "Cáceres",
+            "Rojas",
+            "Vera"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏽"
+        ]
+    },
+    {
+        "country": "Venezuela",
+        "flag": "ve",
+        "firstNames": [
+            "José",
+            "Luis",
+            "Carlos",
+            "Miguel",
+            "Andrés",
+            "Daniel",
+            "Jesús",
+            "Alejandro"
+        ],
+        "lastNames": [
+            "Rodríguez",
+            "González",
+            "Pérez",
+            "Martínez",
+            "García",
+            "Torres",
+            "Flores",
+            "Rojas"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏽"
+        ]
+    },
+    {
+        "country": "Nova Zelândia",
+        "flag": "nz",
+        "firstNames": [
+            "Noah",
+            "Jack",
+            "Oliver",
+            "Leo",
+            "Luca",
+            "George",
+            "Hunter",
+            "James"
+        ],
+        "lastNames": [
+            "Smith",
+            "Wilson",
+            "Taylor",
+            "Brown",
+            "Williams",
+            "Thompson",
+            "Anderson",
+            "Martin"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "👱🏼",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Irã",
+        "flag": "ir",
+        "firstNames": [
+            "Ali",
+            "Reza",
+            "Amir",
+            "Mehdi",
+            "Hossein",
+            "Saeed",
+            "Mohammad",
+            "Arash"
+        ],
+        "lastNames": [
+            "Ahmadi",
+            "Mohammadi",
+            "Karimi",
+            "Hosseini",
+            "Rahimi",
+            "Jafari",
+            "Ebrahimi",
+            "Yousefi"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "🧔🏽",
+            "🧔🏾"
+        ]
+    },
+    {
+        "country": "Índia",
+        "flag": "in",
+        "firstNames": [
+            "Arjun",
+            "Rahul",
+            "Vikram",
+            "Amit",
+            "Rohan",
+            "Karan",
+            "Raj",
+            "Anil"
+        ],
+        "lastNames": [
+            "Sharma",
+            "Patel",
+            "Singh",
+            "Kumar",
+            "Gupta",
+            "Verma",
+            "Reddy",
+            "Malhotra"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "🧔🏽",
+            "👨🏽‍🦱"
+        ]
+    },
+    {
+        "country": "País de Gales",
+        "flag": "gb-wls",
+        "firstNames": [
+            "Owen",
+            "Rhys",
+            "Dylan",
+            "Evan",
+            "Morgan",
+            "Lewis",
+            "Jack",
+            "Harri"
+        ],
+        "lastNames": [
+            "Jones",
+            "Evans",
+            "Williams",
+            "Davies",
+            "Thomas",
+            "Roberts",
+            "Lewis",
+            "Morgan"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Escócia",
+        "flag": "gb-sct",
+        "firstNames": [
+            "Callum",
+            "Fraser",
+            "Angus",
+            "Ross",
+            "Liam",
+            "Scott",
+            "Jamie",
+            "Ryan"
+        ],
+        "lastNames": [
+            "Campbell",
+            "Stewart",
+            "MacDonald",
+            "Robertson",
+            "Murray",
+            "Scott",
+            "Ross",
+            "Fraser"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Albânia",
+        "flag": "al",
+        "firstNames": [
+            "Ardit",
+            "Ermir",
+            "Besnik",
+            "Luan",
+            "Florian",
+            "Edison",
+            "Kristian",
+            "Endri"
+        ],
+        "lastNames": [
+            "Hoxha",
+            "Shehu",
+            "Krasniqi",
+            "Dervishi",
+            "Gashi",
+            "Berisha",
+            "Kola",
+            "Leka"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏽"
+        ]
+    },
+    {
+        "country": "Geórgia",
+        "flag": "ge",
+        "firstNames": [
+            "Giorgi",
+            "Nika",
+            "Levan",
+            "Saba",
+            "Luka",
+            "Tornike",
+            "Vakhtang",
+            "Zaza"
+        ],
+        "lastNames": [
+            "Beridze",
+            "Kvaratskhelia",
+            "Gelashvili",
+            "Kapanadze",
+            "Japaridze",
+            "Mchedlidze",
+            "Abashidze",
+            "Khmaladze"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏽"
+        ]
+    },
+    {
+        "country": "Eslovênia",
+        "flag": "si",
+        "firstNames": [
+            "Luka",
+            "Jan",
+            "Žan",
+            "Marko",
+            "Nejc",
+            "Tilen",
+            "Miha",
+            "Jure"
+        ],
+        "lastNames": [
+            "Novak",
+            "Horvat",
+            "Kovačič",
+            "Zupančič",
+            "Krajnc",
+            "Mlakar",
+            "Vidmar",
+            "Bizjak"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Eslováquia",
+        "flag": "sk",
+        "firstNames": [
+            "Martin",
+            "Jakub",
+            "Tomáš",
+            "Filip",
+            "Adam",
+            "Peter",
+            "Marek",
+            "Samuel"
+        ],
+        "lastNames": [
+            "Horváth",
+            "Kováč",
+            "Varga",
+            "Tóth",
+            "Baláž",
+            "Molnár",
+            "Mikula",
+            "Hudák"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "👱🏻",
+            "🧔🏼"
+        ]
+    },
+    {
+        "country": "Bósnia e Herzegovina",
+        "flag": "ba",
+        "firstNames": [
+            "Edin",
+            "Amar",
+            "Adnan",
+            "Mirza",
+            "Tarik",
+            "Haris",
+            "Denis",
+            "Emir"
+        ],
+        "lastNames": [
+            "Hadžić",
+            "Kovačević",
+            "Begović",
+            "Džeko",
+            "Mešić",
+            "Čolić",
+            "Šehić",
+            "Salihović"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏽",
+            "🧔🏻",
+            "🧔🏽"
+        ]
+    },
+    {
+        "country": "Cabo Verde",
+        "flag": "cv",
+        "firstNames": [
+            "Dylan",
+            "Ryan",
+            "Kevin",
+            "Jorge",
+            "Elvis",
+            "Patrick",
+            "Márcio",
+            "Nuno"
+        ],
+        "lastNames": [
+            "Tavares",
+            "Lopes",
+            "Semedo",
+            "Monteiro",
+            "Fortes",
+            "Andrade",
+            "Pina",
+            "Rocha"
+        ],
+        "faces": [
+            "👨🏾",
+            "👨🏿",
+            "🧔🏿",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Congo RD",
+        "flag": "cd",
+        "firstNames": [
+            "Cedric",
+            "Gaël",
+            "Christian",
+            "Jordan",
+            "Samuel",
+            "Arthur",
+            "Steve",
+            "Ben"
+        ],
+        "lastNames": [
+            "Mbemba",
+            "Bokadi",
+            "Masuaku",
+            "Kalulu",
+            "Wissa",
+            "Mpoku",
+            "Mubele",
+            "Bongonda"
+        ],
+        "faces": [
+            "👨🏾",
+            "👨🏿",
+            "🧔🏿",
+            "👨🏿‍🦲",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Curaçao",
+        "flag": "cw",
+        "firstNames": [
+            "Juninho",
+            "Jair",
+            "Quincy",
+            "Leandro",
+            "Jürgen",
+            "Shanon",
+            "Rangelo",
+            "Elson"
+        ],
+        "lastNames": [
+            "Bacuna",
+            "Martina",
+            "Pieters",
+            "Maria",
+            "Cato",
+            "Koeiman",
+            "Antonisse",
+            "Pinas"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "👨🏿",
+            "🧔🏾",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Haiti",
+        "flag": "ht",
+        "firstNames": [
+            "Jean",
+            "Samuel",
+            "Frantz",
+            "Duckens",
+            "Ricardo",
+            "Steeven",
+            "Alex",
+            "Mikael"
+        ],
+        "lastNames": [
+            "Pierre",
+            "Joseph",
+            "Louis",
+            "Jean",
+            "Fils",
+            "Charles",
+            "Lafrance",
+            "Dorvil"
+        ],
+        "faces": [
+            "👨🏾",
+            "👨🏿",
+            "🧔🏿",
+            "👨🏿‍🦲",
+            "👨🏾‍🦱"
+        ]
+    },
+    {
+        "country": "Panamá",
+        "flag": "pa",
+        "firstNames": [
+            "José",
+            "Luis",
+            "Gabriel",
+            "Carlos",
+            "Michael",
+            "Ismael",
+            "Alberto",
+            "Andrés"
+        ],
+        "lastNames": [
+            "Rodríguez",
+            "Torres",
+            "Murillo",
+            "Díaz",
+            "Martínez",
+            "Gómez",
+            "Pérez",
+            "Barcenas"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "👨🏿",
+            "🧔🏽"
+        ]
+    },
+    {
+        "country": "Iraque",
+        "flag": "iq",
+        "firstNames": [
+            "Ali",
+            "Hussein",
+            "Mustafa",
+            "Ahmed",
+            "Mohammed",
+            "Zaid",
+            "Amir",
+            "Haider"
+        ],
+        "lastNames": [
+            "Hassan",
+            "Abbas",
+            "Jassim",
+            "Karim",
+            "Salman",
+            "Mahdi",
+            "Nasser",
+            "Kadhim"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "🧔🏽",
+            "🧔🏾"
+        ]
+    },
+    {
+        "country": "Jordânia",
+        "flag": "jo",
+        "firstNames": [
+            "Ahmad",
+            "Yazan",
+            "Omar",
+            "Mahmoud",
+            "Sami",
+            "Khaled",
+            "Ammar",
+            "Nour"
+        ],
+        "lastNames": [
+            "Al-Naimat",
+            "Al-Rawabdeh",
+            "Al-Tamari",
+            "Haddad",
+            "Salem",
+            "Khalil",
+            "Yousef",
+            "Hamdan"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "🧔🏽",
+            "🧔🏾"
+        ]
+    },
+    {
+        "country": "Catar",
+        "flag": "qa",
+        "firstNames": [
+            "Akram",
+            "Hassan",
+            "Saad",
+            "Abdulaziz",
+            "Mohammed",
+            "Ahmed",
+            "Khalid",
+            "Nasser"
+        ],
+        "lastNames": [
+            "Afif",
+            "Al-Haydos",
+            "Almoez",
+            "Al-Rawi",
+            "Al-Bayati",
+            "Al-Mohannadi",
+            "Al-Yazidi",
+            "Al-Kuwari"
+        ],
+        "faces": [
+            "👨🏽",
+            "👨🏾",
+            "🧔🏽",
+            "🧔🏾"
+        ]
     }
 ]
