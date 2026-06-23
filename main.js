@@ -98,8 +98,9 @@ function selectSeries(idx) {
     selectedSeriesIndex = idx;
     pendingClubOptions = [];
 
-    let bases = GAME_CONTENT.clubGeneration.bases;
-    let adjs = GAME_CONTENT.clubGeneration.adjectives;
+    // NOVO: Embaralha as listas originais para garantir escolhas únicas
+    let shuffledBases = shuffle(GAME_CONTENT.clubGeneration.bases);
+    let shuffledAdjs = shuffle(GAME_CONTENT.clubGeneration.adjectives);
 
     let metaLevel = gameState.meta?.upgrades?.start_level || 0;
     let metaTraits = gameState.meta?.upgrades?.start_traits || 0;
@@ -111,8 +112,9 @@ function selectSeries(idx) {
     let playersWith1Trait = metaTraits % 2;
 
     for (let i = 0; i < 3; i++) {
-        const base = rnd(bases);
-        const adj = rnd(adjs);
+        // Pega sempre índices diferentes (0, 1 e 2) das listas embaralhadas
+        const base = shuffledBases[i];
+        const adj = shuffledAdjs[i];
 
         let team = [];
         let traitDistribution = [];
