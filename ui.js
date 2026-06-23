@@ -316,12 +316,28 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
     const modal = document.getElementById('level-modal-overlay');
     const grid = document.getElementById('level-team-grid');
     const pointsText = document.getElementById('level-points-text');
-    const btnReset = document.getElementById('btn-level-reset');
     const btnConfirm = document.getElementById('btn-level-confirm');
 
     let available = points;
     let originalPoints = points;
     let allocations = {};
+
+    // 1. TEXTO EXPLICATIVO: Dica sobre ganhar Habilidades (Traits)
+    let infoBox = document.getElementById('level-info-box');
+    if (!infoBox) {
+        infoBox = document.createElement('div');
+        infoBox.id = 'level-info-box';
+        infoBox.style.fontSize = '0.75rem';
+        infoBox.style.color = 'var(--text-muted)';
+        infoBox.style.textAlign = 'center';
+        infoBox.style.marginBottom = '16px';
+        infoBox.style.padding = '8px';
+        infoBox.style.background = 'rgba(0,0,0,0.3)';
+        infoBox.style.borderRadius = '8px';
+        infoBox.style.borderLeft = '3px solid var(--accent-purple)';
+        infoBox.innerHTML = `💡 Evoluir um jogador com menos de 2 habilidades garante a ele uma <strong style="color:var(--accent-purple);">Nova Habilidade Aleatória!</strong>`;
+        grid.parentNode.insertBefore(infoBox, grid);
+    }
 
     // Inicia todo mundo com 0 níveis extras
     gameState.team.forEach(p => allocations[p.id] = 0);
@@ -333,22 +349,17 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
         gameState.team.forEach(p => {
             let currentBonus = allocations[p.id];
 
-            let levelDisplay = p.level;
-            if (currentBonus > 0) {
-                levelDisplay = `${p.level} <span style="color: var(--accent-green); font-weight: 900; margin-left: 2px;">+${currentBonus}</span>`;
-            }
-
-            let tempPlayer = { ...p, level: levelDisplay };
+            // Gera o card original intacto
             let tempDiv = document.createElement('div');
-            tempDiv.innerHTML = getPlayerCardHTML(tempPlayer);
+            tempDiv.innerHTML = getPlayerCardHTML(p);
             let cardDiv = tempDiv.firstElementChild;
 
+            // Feedback visual de card selecionado
             if (currentBonus > 0) {
                 cardDiv.style.borderColor = "var(--accent-green)";
-                cardDiv.style.boxShadow = "0 0 15px rgba(52, 211, 153, 0.2)";
+                cardDiv.style.boxShadow = "inset 0 0 15px rgba(52, 211, 153, 0.15)";
             }
 
-            // Removida a trava de nível máximo (isMaxLevel). O nível agora é infinito!
             if (available > 0) {
                 cardDiv.classList.add('can-level-up');
                 cardDiv.onclick = () => {
@@ -358,38 +369,83 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
                 };
             }
 
+            // O TRUQUE DE MESTRE: Modifica apenas a área do Nível (lado direito do card)
+            // Sem alterar a grid, sem botões flutuantes!
+            let levelSection = cardDiv.lastElementChild;
+
+            if (currentBonus > 0) {
+                levelSection.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <div class="remove-pt-btn" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.4); border-radius: 6px; cursor: pointer; z-index: 10;">
+                            <div style="width: 10px; height: 3px; background: var(--accent-red); border-radius: 2px;"></div>
+                        </div>
+                        <span style="display: flex; justify-content: center; align-items: center; padding: 4px 8px; font-size: 0.8rem; font-weight: 900; color: #fff; background: rgba(52, 211, 153, 0.15); border: 1px solid var(--accent-green); border-radius: 6px; box-shadow: 0 0 10px rgba(52, 211, 153, 0.2);">
+                            Nv <span style="color: #fff; margin-left: 4px;">${p.level}</span>
+                            <span style="color: var(--accent-green); margin-left: 4px;">+${currentBonus}</span>
+                        </span>
+                    </div>
+                `;
+
+                let minusBtn = levelSection.querySelector('.remove-pt-btn');
+                minusBtn.onclick = (e) => {
+                    e.stopPropagation(); // Evita que o clique no "-" dê um nível sem querer
+                    allocations[p.id]--;
+                    available++;
+                    render();
+                };
+            }
+
             grid.appendChild(cardDiv);
         });
 
-        btnConfirm.disabled = (available > 0);
+        btnConfirm.disabled = false;
+
+        if (available === 0) {
+            btnConfirm.style.background = "var(--accent-green)";
+            btnConfirm.style.color = "#000";
+            btnConfirm.style.boxShadow = "0 0 15px rgba(52, 211, 153, 0.4)";
+            btnConfirm.innerText = "CONFIRMAR";
+        } else {
+            btnConfirm.style.background = "";
+            btnConfirm.style.color = "";
+            btnConfirm.style.boxShadow = "";
+            btnConfirm.innerText = "CONFIRMAR";
+        }
     }
 
-    btnReset.onclick = () => {
-        available = originalPoints;
-        gameState.team.forEach(p => allocations[p.id] = 0);
-        render();
-    };
+    btnConfirm.onclick = (e) => {
+        // AVISO VISUAL: O jogador esqueceu de usar os pontos
+        if (available > 0) {
+            btnConfirm.classList.add("shake");
+            pointsText.parentElement.classList.add("shake");
 
-    // Botão Confirmar salva no jogo
-    btnConfirm.onclick = () => {
+            setTimeout(() => {
+                btnConfirm.classList.remove("shake");
+                pointsText.parentElement.classList.remove("shake");
+            }, 300);
+
+            const tx = e.clientX || window.innerWidth / 2;
+            const ty = (e.clientY || window.innerHeight / 2) - 40;
+            createJuiceText("USE TODOS OS PONTOS!", "var(--accent-red)", tx, ty);
+            return;
+        }
+
         let gainedTrait = false;
 
         gameState.team.forEach(p => {
             let levelsGained = allocations[p.id];
 
             if (levelsGained > 0) {
-                p.level += levelsGained; // Sobe o nível
+                p.level += levelsGained;
 
-                // Lógica de Trait: Roda 1 vez para cada nível ganho
                 for (let i = 0; i < levelsGained; i++) {
                     if (!p.perks) p.perks = [];
 
-                    // Só ganha se tiver menos de 2 Traits
                     if (p.perks.length < 2) {
                         let availablePerks = PERK_LIST.filter(perk => !p.perks.some(existing => existing.id === perk.id));
 
                         if (availablePerks.length > 0) {
-                            p.perks.push(rndWeighted(availablePerks)); // Sorteia o novo Trait
+                            p.perks.push(rndWeighted(availablePerks));
                             gainedTrait = true;
                         }
                     }
@@ -400,7 +456,10 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
         saveGame();
         modal.style.display = 'none';
 
-        // Feedback visual se qualquer jogador aprendeu uma habilidade nova
+        btnConfirm.style.background = "";
+        btnConfirm.style.color = "";
+        btnConfirm.style.boxShadow = "";
+
         if (gainedTrait) {
             createJuiceText("NOVO TRAIT! ✨", "var(--accent-purple)", window.innerWidth / 2, window.innerHeight / 2 - 50);
         }
