@@ -13,42 +13,43 @@ function startNewSeason() {
 
 function generateMapNodes() {
     const diff = GAME_BALANCE.leagues[gameState.leagueLevel].difficulty;
-    const STAGES = 10;
+    const totalStages = GAME_BALANCE.mechanics.runStages || 8;
     let map = [];
 
-    for (let i = 0; i < STAGES; i++) {
-        let stage = [];
-        let numNodes = (i === STAGES - 1) ? 1 : (i === 0 ? 3 : Math.floor(Math.random() * 2) + 2);
+    // O formato perfeito do mapa (largura de cada estágio) para formar uma teia bonita
+    const stageWidths = [3, 2, 2, 3, 2, 2, 2, 1];
 
+    for (let i = 0; i < totalStages; i++) {
+        let stage = [];
+        let numNodes = stageWidths[i] || 2;
 
         for (let j = 0; j < numNodes; j++) {
             let type = 'match';
 
-            if (i === STAGES - 1) {
-                type = 'boss';
+            if (i === totalStages - 1) {
+                type = 'boss'; // Último estágio é sempre o Chefão
             }
-            else if (i === 0) {
-                type = 'match';
-            }
-            else if (i === 1) {
-                // No segundo estágio (i === 1), o nó da esquerda sempre será Treino
-                type = (j === 0) ? 'camp' : 'match';
+            else if (i === 2 || i === 5) {
+                // RITMO PERFEITO: Estágios 2 e 5 são os "Respiros" (As 2 opções que não são partida)
+                // O nó da esquerda (j=0) sempre será Loja. O da direita (j=1) sempre será Treino.
+                if (j === 0) {
+                    type = 'shop';
+                } else {
+                    type = Math.random() > 0.5 ? 'camp_physical' : 'camp_tactical';
+                }
             }
             else {
-                // Estágios do meio (2 ao 8)
-                const r = Math.random();
-
-                if (r <= 0.65) {
-                    // 65% de chance de ser Partida
-                    // Dentro desses 65%, tem 25% de chance de virar uma Elite
-                    type = Math.random() <= 0.25 ? 'elite' : 'match';
+                // ESTÁGIOS DE PARTIDA
+                if (i === 0) {
+                    type = 'match'; // O primeiro estágio nunca tem "Clássicos" (Elite) para ser um aquecimento
                 } else {
-                    // 35% de chance de ser nó pacífico (Treino ou Olheiro)
-                    type = Math.random() <= 0.50 ? 'shop' : 'camp';
+                    // Nos outros estágios, há chance de aparecer um Clássico (Elite) para maior risco/recompensa
+                    let eliteChance = (i >= 3) ? 0.35 : 0.15;
+                    type = Math.random() <= eliteChance ? 'elite' : 'match';
                 }
             }
 
-            let node = (type === 'camp' || type === 'shop') ? { type } : createMapRivalNode(type, diff, i);
+            let node = (type.startsWith('camp') || type === 'shop') ? { type } : createMapRivalNode(type, diff, i);
             node.id = `n_${i}_${j}`;
             node.stage = i;
             node.index = j;
@@ -59,18 +60,24 @@ function generateMapNodes() {
         map.push(stage);
     }
 
-    for (let i = 0; i < STAGES - 1; i++) {
+    // CONECTAR OS NÓS (Teia / Branching Paths)
+    for (let i = 0; i < totalStages - 1; i++) {
         let curr = map[i];
         let next = map[i + 1];
 
         curr.forEach((node, cIdx) => {
             let validNext = next.map((n, nIdx) => ({ nIdx, dist: Math.abs(node.x - n.x) })).sort((a, b) => a.dist - b.dist);
+
+            // Liga com o nó mais alinhado verticalmente
             node.next.push(validNext[0].nIdx);
+
+            // 40% de chance de abrir um caminho diagonal (cruzar a teia)
             if (validNext.length > 1 && Math.random() < 0.4 && validNext[1].dist <= 0.6) {
                 node.next.push(validNext[1].nIdx);
             }
         });
 
+        // Garantir que nenhum nó da próxima linha fique "órfão" (sem pai)
         next.forEach((nextNode, nIdx) => {
             let hasIncoming = curr.some(n => n.next.includes(nIdx));
             if (!hasIncoming) {
@@ -79,6 +86,7 @@ function generateMapNodes() {
             }
         });
 
+        // Remove conexões duplicadas acidentais
         curr.forEach(node => node.next = [...new Set(node.next)]);
     }
     return map;
@@ -93,7 +101,6 @@ function createMapRivalNode(type, baseDiff, stageIndex = 0) {
     let currentLeague = GAME_BALANCE.leagues[gameState.leagueLevel];
     let rivalLevel = 1;
 
-    // Nível base da liga + crescimento por estágio, configurados em config_leagues.json
     let leagueBaseLevel = currentLeague.enemyBaseLevel !== undefined ? currentLeague.enemyBaseLevel : 1;
     let leagueLevelScaling = currentLeague.levelScaling !== undefined ? currentLeague.levelScaling : 0;
 
@@ -102,8 +109,6 @@ function createMapRivalNode(type, baseDiff, stageIndex = 0) {
     if (currentLeague.dynamicScaling) {
         let teamLevel = getTeamAverageLevel();
         let offset = currentLeague.levelOffset || 0;
-
-        // Na Liga Suprema o rival nunca fica mais fraco que o time do jogador
         rivalLevel = Math.max(rivalLevel, teamLevel + offset);
     }
 
@@ -135,8 +140,9 @@ function renderMap() {
     let currentLeagueName = GAME_BALANCE.leagues[gameState.leagueLevel].name;
     document.getElementById('map-league-title').innerText = `${currentLeagueName}`;
 
-    // MAPA AGORA RENDERIZA DE CIMA PARA BAIXO (Invertido)
-    for (let sIdx = 0; sIdx <= 9; sIdx++) {
+    const totalStages = GAME_BALANCE.mechanics.runStages || 8;
+
+    for (let sIdx = 0; sIdx < totalStages; sIdx++) {
         let stage = gameState.season.map[sIdx];
         let row = document.createElement('div');
         row.className = 'map-stage';
@@ -144,7 +150,10 @@ function renderMap() {
         stage.forEach(node => {
             let btn = document.createElement('div');
             btn.id = `map-node-${node.stage}-${node.index}`;
-            btn.className = `map-node ${node.type}`;
+
+            // Padrão visual único
+            let baseClass = node.type === 'boss' ? 'map-node boss' : 'map-node';
+            btn.className = baseClass;
 
             let isActive = false;
 
@@ -164,26 +173,15 @@ function renderMap() {
             }
 
             let icon = '⚽';
-            let nodeName = '';
+            let nodeName = 'Partida';
 
-            if (node.type === 'match') {
-                icon = '⚽';
-                nodeName = 'Partida';
-            } else if (node.type === 'elite') {
-                icon = '⚽';
-                nodeName = 'Partida';
-            } else if (node.type === 'boss') {
-                icon = '👑';
-                nodeName = 'Chefão';
-            } else if (node.type === 'shop') {
-                icon = '🕵️‍♂️';
-                nodeName = 'Olheiro';
-            } else if (node.type === 'camp') {
-                icon = '🏋️‍♂️';
-                nodeName = 'Treino';
-            }
+            if (node.type === 'match') { icon = '⚽'; nodeName = 'Partida'; }
+            else if (node.type === 'elite') { icon = '⚽'; nodeName = 'Partida'; }
+            else if (node.type === 'boss') { icon = '👑'; nodeName = 'Final'; }
+            else if (node.type === 'shop') { icon = '🕵️‍♂️'; nodeName = 'Olheiro'; }
+            else if (node.type === 'camp_physical') { icon = '🏋️‍♂️'; nodeName = 'Treino Físico'; }
+            else if (node.type === 'camp_tactical') { icon = '🧠'; nodeName = 'Preleção'; }
 
-            // O botão agora recebe apenas o ícone e a label dentro dele, sem tooltip
             btn.innerHTML = `
                 <div class="node-icon">${icon}</div>
                 <div class="node-label">${nodeName}</div>
@@ -247,19 +245,14 @@ function handleMapNodeClick(node) {
     if (node.type === 'match' || node.type === 'elite' || node.type === 'boss') {
         const threat = GAME_BALANCE.mechanics.threatLevels[node.type] || GAME_BALANCE.mechanics.threatLevels['match'];
 
-        // --- NOVA LÓGICA DE PAREAMENTO DINÂMICO USANDO JSON ---
         if (!node.rival.dynamicTraitsSet) {
             let currentLeague = GAME_BALANCE.leagues[gameState.leagueLevel];
 
-            // Base de traits da liga + crescimento por estágio, configurados em config_leagues.json
             let leagueBaseTraits = currentLeague.enemyBaseTraits !== undefined ? currentLeague.enemyBaseTraits : 0;
             let leagueTraitScaling = currentLeague.traitScaling !== undefined ? currentLeague.traitScaling : 0;
 
             let rivalTraitCount = leagueBaseTraits + (leagueTraitScaling * node.stage);
-
-            // Soma a ameaça extra que vem configurada no JSON (elite/boss)
             rivalTraitCount += threat.extraTraits;
-
             rivalTraitCount = Math.max(0, Math.floor(rivalTraitCount));
 
             node.rival.perks = [];
@@ -269,12 +262,10 @@ function handleMapNodeClick(node) {
             node.rival.dynamicTraitsSet = true;
             saveGame();
         }
-        // ------------------------------------------
 
         const modal = document.getElementById('pre-match-overlay');
         const details = document.getElementById('pre-match-details');
 
-        // Puxa as cores e textos do JSON
         let threatColor = threat.color;
         let threatLabel = threat.label;
         let levelGain = threat.expReward;
@@ -287,7 +278,6 @@ function handleMapNodeClick(node) {
 
         let perksHtml = Object.values(perkCounts).map(perk => {
             let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold); font-weight:900;">x${perk.count}</span>` : "";
-            // Tag visual padrão unificada
             return `<span data-tip="${perk.desc}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-light); font-size: 0.8rem; font-weight: 800; white-space: nowrap; color: #e2e8f0; pointer-events: auto;">${perk.emoji} ${perk.name}${countLabel}</span>`;
         }).join('');
 
@@ -311,38 +301,70 @@ function handleMapNodeClick(node) {
             </div>
         `;
         modal.style.display = 'flex';
-    } else if (node.type === 'camp') {
-        document.getElementById('camp-overlay').style.display = 'flex';
+    } else if (node.type === 'camp_physical' || node.type === 'camp_tactical') {
+        showCampModal(node.type);
     } else if (node.type === 'shop') {
         openShopNode();
     }
 }
 
-function promptCampTrain() {
-    // Esconde o menu do acampamento
-    document.getElementById('camp-overlay').style.display = 'none';
+function showCampModal(type) {
+    const modal = document.getElementById('camp-overlay');
+    const box = modal.querySelector('.options-box');
 
-    // Chama a interface nova com 1 ponto para gastar. 
-    // O 'true' no final significa que esse treinamento dá Trait extra (givesTrait = true)
+    if (type === 'camp_physical') {
+        box.innerHTML = `
+            <div class="modal-header">
+                <h2 class="options-title text-success">TREINO FÍSICO 🏋️‍♂️</h2>
+                <p class="modal-subtitle">Aprimore as capacidades de um atleta.</p>
+            </div>
+            <div class="modal-body" style="display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding-top: 30px;">
+                <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));">🏃‍♂️</div>
+                <p style="color:var(--text-muted); font-size:0.95rem; line-height: 1.5;">O preparador físico garantiu <strong style="color:var(--accent-green);">1 Ponto de Nível</strong> para você focar no desenvolvimento de um jogador à sua escolha.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="executePhysicalCamp()">DISTRIBUIR NÍVEL</button>
+            </div>
+        `;
+    } else {
+        box.innerHTML = `
+            <div class="modal-header">
+                <h2 class="options-title" style="color:var(--accent-blue);">PRELEÇÃO TÁTICA 🧠</h2>
+                <p class="modal-subtitle">Estudos e ajustes para o próximo confronto.</p>
+            </div>
+            <div class="modal-body" style="display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding-top: 30px;">
+                <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));">📋</div>
+                <p style="color:var(--text-muted); font-size:0.95rem; line-height: 1.5;">A equipe está perfeitamente alinhada! Vocês terão <strong style="color:var(--accent-blue);">+15 de Bônus Tático</strong> em todas as jogadas do primeiro turno da próxima partida!</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="executeTacticalCamp()">ENTENDIDO</button>
+            </div>
+        `;
+    }
+    modal.style.display = 'flex';
+}
+
+window.executePhysicalCamp = function () {
+    document.getElementById('camp-overlay').style.display = 'none';
     showLevelDistribution(1, () => {
         advanceMapNode();
     }, true);
-}
+};
 
-function applyCamp(choice) {
-    if (choice === 'buff') {
-        gameState.activeCampBuff = 15;
-    }
-    updateRosterUI();
-    closeModals(); advanceMapNode();
-}
+window.executeTacticalCamp = function () {
+    gameState.activeCampBuff = 15;
+    document.getElementById('camp-overlay').style.display = 'none';
+    advanceMapNode();
+};
 
 function advanceMapNode() {
     gameState.season.history[gameState.season.currentStage] = gameState.currentNode.index;
     gameState.season.currentStage++;
     progressDailyMission('reach_stage', 1);
     saveGame();
-    if (gameState.season.currentStage > 9) finishSeason(true);
+
+    const totalStages = GAME_BALANCE.mechanics.runStages || 8;
+    if (gameState.season.currentStage >= totalStages) finishSeason(true);
     else renderMap();
 }
 
@@ -380,7 +402,6 @@ function finishSeason(wonSeason) {
         }
     }
 
-    // NOVO CÁLCULO DE TROFÉUS (Meta Currency)
     let matchesWon = gameState.season.matchHistory.filter(m => m.userScore > m.rivalScore).length;
     let metaPerWin = (gameState.leagueLevel + 1) * 5;
     let metaWinBonus = (gameState.leagueLevel + 1) * 50;

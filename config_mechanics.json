@@ -5,6 +5,16 @@
   "safeActionChance": 0.15,
   "comboCoinMultiplier": 0.25,
   "pityThreshold": 99999,
+  "runTrack": [
+    "match",
+    "shop",
+    "match",
+    "camp_random",
+    "elite",
+    "shop",
+    "match",
+    "boss"
+  ],
   "luckEvents": {
     "chance": 0.08,
     "duration": 2
