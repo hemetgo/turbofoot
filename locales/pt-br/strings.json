@@ -15,7 +15,12 @@
             "play": "▶ JOGAR",
             "career": "💼 MINHA CARREIRA",
             "missions": "📅 MISSÕES DIÁRIAS",
+            "history": "📖 HISTÓRICO",
+            "howToPlay": "❓ COMO JOGAR",
             "settings": "⚙️ OPÇÕES"
+        },
+        "match": {
+            "title": "PARTIDA"
         },
         "series": {
             "select": "ESCOLHA A DIVISÃO"
@@ -25,13 +30,63 @@
             "back": "← VOLTAR PARA DIVISÕES"
         },
         "map": {
-            "title": "O MAPA"
+            "title": "O MAPA",
+            "back": "← VOLTAR AO MAPA"
         },
         "market": {
-            "title": "MERCADO DA BOLA"
+            "title": "MERCADO DA BOLA",
+            "subtitle": "ESCOLHA 1 NOVO JOGADOR",
+            "paid": "Os 💰 já foram pagos."
         },
-        "match": {
-            "title": "PARTIDA"
+        "levelUp": {
+            "title": "📈 TREINAMENTO PÓS-JOGO",
+            "tip": "💡 Evoluir um jogador com menos de 2 habilidades garante a ele uma <strong style='color:var(--accent-purple);'>Nova Habilidade Aleatória!</strong>",
+            "use_all": "USE TODOS OS PONTOS!",
+            "new_trait": "NOVO TRAIT! ✨",
+            "levels_to_distribute": " níveis para distribuir!"
+        },
+        "camp": {
+            "title": "ACAMPAMENTO DE TREINO 🏕️",
+            "subtitle": "Aproveite para melhorar sua equipe.",
+            "train_title": "TREINAMENTO INDIVIDUAL",
+            "train_desc": "Escolha 1 jogador para subir de Nível",
+            "focus_title": "FOCO TÁTICO",
+            "focus_desc": "Bônus de Força no próximo jogo"
+        },
+        "history": {
+            "title": "HISTÓRICO",
+            "empty": "Nenhuma partida registrada ainda.",
+            "stage": "Estágio",
+            "matches": "PARTIDAS DA RUN",
+            "final_roster": "ELENCO FINAL",
+            "back": "← VOLTAR PRA LISTA"
+        },
+        "options": {
+            "title": "CONFIGURAÇÕES",
+            "hard_reset": "⚠️ APAGAR TODO O PROGRESSO",
+            "hard_reset_warning": "ATENÇÃO: Você vai perder TODO o seu progresso, troféus e divisões liberadas.\n\nTem certeza absoluta?"
+        },
+        "replace": {
+            "title": "QUEM VAI SAIR?",
+            "subtitle": "Substitua jogadores para liberar vaga no time."
+        },
+        "preMatch": {
+            "title": "ADVERSÁRIO ENCONTRADO",
+            "enter": "ENTRAR EM CAMPO ⚽"
+        },
+        "refund": {
+            "title": "RESETAR CARREIRA?",
+            "question": "Deseja desfazer todos os aprimoramentos?"
+        },
+        "postMatch": {
+            "victory": "VITÓRIA!",
+            "reward": "Premiação:",
+            "continue": "CONTINUAR A JORNADA"
+        },
+        "seasonEnd": {
+            "title": "FIM DE TEMPORADA!",
+            "summary": "Resumo...",
+            "back_menu": "VOLTAR AO MENU"
         }
     },
     "ui": {
@@ -43,7 +98,19 @@
         "rewards_trophies": "Premiação em Troféus",
         "per_win": "⚔️ Por Vitória:",
         "champion": "👑 Campeão:",
-        "trophy": "🏆"
+        "trophy": "🏆",
+        "loading": "⚽ Carregando...",
+        "cancel": "CANCELAR",
+        "confirm": "CONFIRMAR",
+        "continue": "CONTINUAR",
+        "level": "Nv",
+        "no_skill": "Sem Habilidade",
+        "no_skill_desc": "Não possui bônus de habilidade.",
+        "attack": "⚽ ATAQUE",
+        "defense": "🛡️ DEFESA",
+        "your_team": "SEU TIME",
+        "rival": "RIVAL",
+        "live_feed": "TRANSMISSÃO AO VIVO 📻"
     },
     "series": {
         "selected": "Série selecionada",

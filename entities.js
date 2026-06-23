@@ -78,6 +78,7 @@ function generateBasePlayer(baseLevel = 1, numTraits = 0, focusTraitId = null, f
 }
 
 // ÚNICO GERADOR DE CARD - Padrão Horizontal de Alta Qualidade (ATUALIZADO PARA FLAG ICONS)
+// ÚNICO GERADOR DE CARD - Padrão Horizontal de Alta Qualidade (ATUALIZADO PARA FLAG ICONS)
 function getPlayerCardHTML(p, onClickAttr = "") {
     let hasTraits = p.perks && p.perks.length > 0;
     let perksHTML = "";
@@ -95,7 +96,8 @@ function getPlayerCardHTML(p, onClickAttr = "") {
 
         perksHTML = `<div style="display: flex; gap: 4px; flex-wrap: nowrap; overflow: hidden; width: 100%; height: 20px; align-items: center;">${perksArray.join('')}</div>`;
     } else {
-        perksHTML = `<div data-tip="Não possui bônus de habilidade." style="display: flex; align-items: center; font-size: 0.7rem; color: var(--text-muted); pointer-events: auto; height: 20px;">Sem Habilidade</div>`;
+        // CORREÇÃO 1: Aqui fica o "Sem Habilidade" envelopado nas crases e salvo no perksHTML
+        perksHTML = `<div data-tip="${_('ui.no_skill_desc')}" style="display: flex; align-items: center; font-size: 0.7rem; color: var(--text-muted); pointer-events: auto; height: 20px;">${_('ui.no_skill')}</div>`;
     }
 
     let starBadge = p.isStar ? `<span style="font-size: 0.9rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
@@ -120,7 +122,8 @@ function getPlayerCardHTML(p, onClickAttr = "") {
             </div>
 
             <div style="flex-shrink: 0; margin-left: 8px;">
-                <span style="display: flex; justify-content: center; align-items: center; padding: 4px 8px; font-size: 0.8rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid var(--border-accent); border-radius: 6px;">Nv <span style="color: var(--accent-green); margin-left: 4px;">${p.level}</span></span>
+                <!-- CORREÇÃO 2: O Nível traduzido entra corretamente aqui embaixo -->
+                <span style="display: flex; justify-content: center; align-items: center; padding: 4px 8px; font-size: 0.8rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid var(--border-accent); border-radius: 6px;">${_('ui.level')} <span style="color: var(--accent-green); margin-left: 4px;">${p.level}</span></span>
             </div>
         </div>`;
 }

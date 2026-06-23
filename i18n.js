@@ -177,7 +177,7 @@ let I18N = {
             } else if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
                 el.value = translation;
             } else {
-                el.textContent = translation;
+                el.innerHTML = translation;
             }
         });
         console.log(`✅ UI translations applied for ${this.currentLanguage}`);
