@@ -1,7 +1,7 @@
 [
     {
         "country": "Brasil",
-        "flag": "🇧🇷",
+        "flag": "br",
         "firstNames": [
             "Manoel",
             "César",
@@ -42,7 +42,7 @@
     },
     {
         "country": "Japão",
-        "flag": "🇯🇵",
+        "flag": "jp",
         "firstNames": [
             "Satoshi",
             "Kenji",
@@ -71,7 +71,7 @@
     },
     {
         "country": "EUA",
-        "flag": "🇺🇸",
+        "flag": "us",
         "firstNames": [
             "John",
             "Michael",
@@ -105,7 +105,7 @@
     },
     {
         "country": "Espanha",
-        "flag": "🇪🇸",
+        "flag": "es",
         "firstNames": [
             "Alejandro",
             "Daniel",
@@ -138,7 +138,7 @@
     },
     {
         "country": "Alemanha",
-        "flag": "🇩🇪",
+        "flag": "de",
         "firstNames": [
             "Lukas",
             "Leon",
@@ -172,7 +172,7 @@
     },
     {
         "country": "Itália",
-        "flag": "🇮🇹",
+        "flag": "it",
         "firstNames": [
             "Francesco",
             "Alessandro",
@@ -203,7 +203,7 @@
     },
     {
         "country": "Inglaterra",
-        "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+        "flag": "en",
         "firstNames": [
             "Harry",
             "Jack",
@@ -237,7 +237,7 @@
     },
     {
         "country": "França",
-        "flag": "🇫🇷",
+        "flag": "fr",
         "firstNames": [
             "Lucas",
             "Hugo",
@@ -271,7 +271,7 @@
     },
     {
         "country": "Argentina",
-        "flag": "🇦🇷",
+        "flag": "ar",
         "firstNames": [
             "Thiago",
             "Mateo",
@@ -303,7 +303,7 @@
     },
     {
         "country": "Senegal",
-        "flag": "🇸🇳",
+        "flag": "sn",
         "firstNames": [
             "Sadio",
             "Moussa",
@@ -333,7 +333,7 @@
     },
     {
         "country": "Coreia do Sul",
-        "flag": "🇰🇷",
+        "flag": "kr",
         "firstNames": [
             "Ji-Hoon",
             "Min-Jun",

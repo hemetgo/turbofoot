@@ -75,7 +75,7 @@ function generateBasePlayer(baseLevel = 1, numTraits = 0, focusTraitId = null, f
     };
 }
 
-// ÚNICO GERADOR DE CARD - Padrão Horizontal de Alta Qualidade
+// ÚNICO GERADOR DE CARD - Padrão Horizontal de Alta Qualidade (ATUALIZADO PARA FLAG ICONS)
 function getPlayerCardHTML(p, onClickAttr = "") {
     let hasTraits = p.perks && p.perks.length > 0;
     let perksHTML = "";
@@ -115,7 +115,7 @@ function getPlayerCardHTML(p, onClickAttr = "") {
 
             <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; margin-left: 12px;">
                 <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                    <span style="font-size: 1rem; line-height: 1; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); flex-shrink: 0;">${p.flag || '🏳️'}</span>
+                    <span class="fi fi-${p.flag || 'xx'}" style="font-size: 0.8rem; border-radius: 2px; flex-shrink: 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));"></span>
                     <span style="font-size: 0.85rem; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;">${p.name}</span>
                     ${starBadge}
                 </div>

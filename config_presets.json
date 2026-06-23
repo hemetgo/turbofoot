@@ -1,38 +1,56 @@
 [
     {
         "name": "L. Pulga",
-        "flag": "🇦🇷",
+        "flag": "ar",
         "face": "🧔🏻",
-        "perks": ["finishing", "passing"]
+        "perks": [
+            "finishing",
+            "passing"
+        ]
     },
     {
         "name": "C. Robô",
-        "flag": "🇵🇹",
+        "flag": "pt",
         "face": "👨🏻",
-        "perks": ["finishing", "pace"]
+        "perks": [
+            "finishing",
+            "pace"
+        ]
     },
     {
         "name": "N. Magia",
-        "flag": "🇧🇷",
+        "flag": "br",
         "face": "👨🏽",
-        "perks": ["passing", "pace"]
+        "perks": [
+            "passing",
+            "pace"
+        ]
     },
     {
         "name": "M. Muralha",
-        "flag": "🇩🇪",
+        "flag": "de",
         "face": "👱🏻",
-        "perks": ["reflexes", "marking"]
+        "perks": [
+            "reflexes",
+            "marking"
+        ]
     },
     {
         "name": "P. Dinamo",
-        "flag": "🇮🇹",
+        "flag": "it",
         "face": "🧔🏻",
-        "perks": ["tackling", "marking"]
+        "perks": [
+            "tackling",
+            "marking"
+        ]
     },
     {
         "name": "K. Tartaruga",
-        "flag": "🇫🇷",
+        "flag": "fr",
         "face": "👨🏾",
-        "perks": ["pace", "finishing"]
+        "perks": [
+            "pace",
+            "finishing"
+        ]
     }
 ]
