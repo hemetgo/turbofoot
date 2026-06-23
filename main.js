@@ -1,8 +1,12 @@
 let pendingClubOptions = [];
 let selectedSeriesIndex = 0;
 
+// Inicializa o jogo: i18n → carrega dados → renderiza
 async function initGame() {
     try {
+        // Aguarda o i18n ser inicializado
+        await I18N.init();
+
         const mechanicsData = await fetch('config_mechanics.json').then(r => r.json());
         const generationData = await fetch('config_generation.json').then(r => r.json());
         const rivalsData = await fetch('config_rivals.json').then(r => r.json());

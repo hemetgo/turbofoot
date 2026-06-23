@@ -93,11 +93,41 @@ async function playSuspenseSequence(isUser, isSuccess) {
 function openOptions() {
     document.getElementById('toggle-suspense').checked = gameState.settings.showSuspense;
     document.getElementById('toggle-confirm').checked = gameState.settings.requireConfirm;
+
+    // Renderiza os botões de idioma
+    renderLanguageButtons();
+
     document.getElementById('options-overlay').style.display = 'flex';
 }
+
+// Renderiza os botões de idioma dinamicamente
+function renderLanguageButtons() {
+    const container = document.getElementById('language-buttons-container');
+    container.innerHTML = '';
+
+    const languages = I18N.getAvailableLanguages();
+    const currentLang = gameState.settings.language;
+
+    languages.forEach(lang => {
+        const button = document.createElement('button');
+        button.className = `language-btn ${currentLang === lang.code ? 'language-btn-active' : ''}`;
+        button.innerHTML = `<span style="font-size: 1.4rem; margin-right: 8px;">${lang.emoji}</span><span>${lang.name}</span>`;
+        button.onclick = () => changeLanguage(lang.code);
+        container.appendChild(button);
+    });
+}
+
 function toggleConfirm() { gameState.settings.requireConfirm = document.getElementById('toggle-confirm').checked; }
 function closeOptions() { document.getElementById('options-overlay').style.display = 'none'; saveGame(); }
 function toggleSuspense() { gameState.settings.showSuspense = document.getElementById('toggle-suspense').checked; }
+
+// Muda o idioma do jogo
+function changeLanguage(lang) {
+    gameState.settings.language = lang;
+    I18N.setLanguage(lang);
+    saveGame();
+}
+
 function openTraitsHelp() { document.getElementById('traits-help-overlay').style.display = 'flex'; }
 function closeModals() { document.querySelectorAll(".modal-overlay").forEach(m => m.style.display = 'none'); }
 
