@@ -105,7 +105,7 @@ function closeModals() {
 }
 
 function hardResetSave() {
-    if (confirm(_('options.hard_reset_warning'))) {
+    if (confirm("ATENÇÃO: Você vai perder TODO o seu progresso, troféus e divisões liberadas.\n\nTem certeza absoluta?")) {
         localStorage.removeItem("turboFoot_mgr_v7");
         location.reload();
     }

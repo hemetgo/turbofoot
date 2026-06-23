@@ -68,7 +68,7 @@ async function playSuspenseSequence(isUser, isSuccess) {
     const teamEl = document.getElementById("suspense-team");
 
     ov.style.display = "flex";
-    teamEl.innerText = isUser ? _('match.your_team_attacking') : _('match.rival_attacking');
+    teamEl.innerText = isUser ? "🔵 SEU TIME ATACANDO" : "🔴 RIVAL ATACANDO";
     teamEl.className = `suspense-team ${isUser ? "user" : "rival"}`;
 
     const d = GAME_CONTENT.suspenseTexts;
@@ -209,8 +209,7 @@ function openHowToPlay() {
 }
 
 function populateHowToPlay() {
-    // Agora pega do sistema de tradução!
-    const data = I18N.translations.howToPlay;
+    const data = GAME_CONTENT.howToPlay;
     if (!data) return;
     document.getElementById('htp-title').innerText = data.title;
 
@@ -246,7 +245,7 @@ function openHistoryModal() {
     list.innerHTML = "";
 
     if (!gameState.runHistory || gameState.runHistory.length === 0) {
-        list.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding: 20px;">${_('screens.history.empty')}</p>`;
+        list.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding: 20px;">Nenhuma partida registrada ainda.</p>`;
     } else {
         gameState.runHistory.forEach((run, idx) => {
             let cls = run.result === "CAMPEÃO" ? "victory" : "loss";
@@ -263,7 +262,7 @@ function openHistoryModal() {
                     </div>
                     <div style="font-weight:900; font-size:0.8rem; text-align:right; flex-shrink:0; margin-left:8px;">
                         <span style="color: ${run.result === 'CAMPEÃO' ? 'var(--accent-gold)' : 'var(--accent-red)'}">${run.result}</span><br>
-                        <span style="color:var(--text-muted);">${_('screens.history.stage')} ${run.stageReached}/8</span>
+                        <span style="color:var(--text-muted);">Estágio ${run.stageReached}/8</span>
                     </div>
                 </div>
             `;
@@ -282,7 +281,7 @@ function viewHistoryDetails(idx) {
     const run = gameState.runHistory[idx];
     document.getElementById("history-list").style.display = "none";
 
-    let html = `<h3 style="color:var(--text-muted); text-align:center; margin-bottom:15px; font-size:0.8rem; text-transform:uppercase;">${_('screens.history.matches')}</h3>`;
+    let html = `<h3 style="color:var(--text-muted); text-align:center; margin-bottom:15px; font-size:0.8rem; text-transform:uppercase;">PARTIDAS DA RUN</h3>`;
 
     if (run.matches && run.matches.length > 0) {
         run.matches.forEach((m, mIdx) => {
@@ -292,6 +291,8 @@ function viewHistoryDetails(idx) {
             html += `
                 <div class="history-match-card" style="border-left: 3px solid ${mColor};">
                     <div class="history-match-teams">
+                        
+                        <!-- SEU TIME (Alinhado à Direita com corte rígido) -->
                         <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px; min-width:0; width:100%;">
                             <div style="min-width:0; flex:1; position:relative; height:1.2rem; overflow:hidden;">
                                 <div id="hist-user-name-${mIdx}" class="history-team-name" style="position:absolute; right:0; white-space:nowrap;"></div>
@@ -303,21 +304,23 @@ function viewHistoryDetails(idx) {
                             ${m.userScore} <span style="color:var(--text-muted); font-size:0.8rem;">x</span> ${m.rivalScore}
                         </div>
                         
+                        <!-- RIVAL (Alinhado à Esquerda com corte rígido) -->
                         <div style="display:flex; align-items:center; justify-content:flex-start; gap:8px; min-width:0; width:100%;">
                             <span class="history-team-emoji" style="flex-shrink:0;">${m.rivalEmoji}</span>
                             <div style="min-width:0; flex:1; position:relative; height:1.2rem; overflow:hidden;">
                                 <div id="hist-rival-name-${mIdx}" class="history-team-name" style="position:absolute; left:0; white-space:nowrap;"></div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             `;
         });
     } else {
-        html += `<p style="text-align:center; font-size:0.8rem; color:var(--text-muted);">${_('screens.history.empty')}</p>`;
+        html += `<p style="text-align:center; font-size:0.8rem; color:var(--text-muted);">Sem registros.</p>`;
     }
 
-    html += `<h3 style="color:var(--text-muted); text-align:center; margin:24px 0 16px 0; font-size:0.8rem; text-transform:uppercase;">${_('screens.history.final_roster')}</h3>`;
+    html += `<h3 style="color:var(--text-muted); text-align:center; margin:24px 0 16px 0; font-size:0.8rem; text-transform:uppercase;">ELENCO FINAL</h3>`;
     html += `<div class="roster-grid">`;
     if (run.finalTeam) { run.finalTeam.forEach(p => { html += getPlayerCardHTML(p); }); }
     html += `</div>`;
@@ -329,7 +332,9 @@ function viewHistoryDetails(idx) {
     setTimeout(() => {
         if (run.matches) {
             run.matches.forEach((m, mIdx) => {
+                // Passamos "true" para o seu time, ativando a rolagem reversa (da esq pra dir)
                 setupMarquee(`hist-user-name-${mIdx}`, run.club.name, true);
+                // Passamos "false" para o rival, mantendo a rolagem normal (da dir pra esq)
                 setupMarquee(`hist-rival-name-${mIdx}`, m.rivalName, false);
             });
         }
@@ -359,7 +364,7 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
         infoBox.style.background = 'rgba(0,0,0,0.3)';
         infoBox.style.borderRadius = '8px';
         infoBox.style.borderLeft = '3px solid var(--accent-purple)';
-        infoBox.innerHTML = _('screens.levelUp.tip');
+        infoBox.innerHTML = `💡 Evoluir um jogador com menos de 2 habilidades garante a ele uma <strong style="color:var(--accent-purple);">Nova Habilidade Aleatória!</strong>`;
         grid.parentNode.insertBefore(infoBox, grid);
     }
 
@@ -404,7 +409,7 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
                             <div style="width: 10px; height: 3px; background: var(--accent-red); border-radius: 2px;"></div>
                         </div>
                         <span style="display: flex; justify-content: center; align-items: center; padding: 4px 8px; font-size: 0.8rem; font-weight: 900; color: #fff; background: rgba(52, 211, 153, 0.15); border: 1px solid var(--accent-green); border-radius: 6px; box-shadow: 0 0 10px rgba(52, 211, 153, 0.2);">
-                            ${_('ui.level')} <span style="color: #fff; margin-left: 4px;">${p.level}</span>
+                            Nv <span style="color: #fff; margin-left: 4px;">${p.level}</span>
                             <span style="color: var(--accent-green); margin-left: 4px;">+${currentBonus}</span>
                         </span>
                     </div>
@@ -428,12 +433,12 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
             btnConfirm.style.background = "var(--accent-green)";
             btnConfirm.style.color = "#000";
             btnConfirm.style.boxShadow = "0 0 15px rgba(52, 211, 153, 0.4)";
-            btnConfirm.innerText = _('ui.confirm');
+            btnConfirm.innerText = "CONFIRMAR";
         } else {
             btnConfirm.style.background = "";
             btnConfirm.style.color = "";
             btnConfirm.style.boxShadow = "";
-            btnConfirm.innerText = _('ui.confirm');
+            btnConfirm.innerText = "CONFIRMAR";
         }
     }
 
@@ -450,7 +455,7 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
 
             const tx = e.clientX || window.innerWidth / 2;
             const ty = (e.clientY || window.innerHeight / 2) - 40;
-            createJuiceText(_('screens.levelUp.use_all'), "var(--accent-red)", tx, ty);
+            createJuiceText("USE TODOS OS PONTOS!", "var(--accent-red)", tx, ty);
             return;
         }
 
@@ -485,7 +490,7 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
         btnConfirm.style.boxShadow = "";
 
         if (gainedTrait) {
-            createJuiceText(_('screens.levelUp.new_trait'), "var(--accent-purple)", window.innerWidth / 2, window.innerHeight / 2 - 50);
+            createJuiceText("NOVO TRAIT! ✨", "var(--accent-purple)", window.innerWidth / 2, window.innerHeight / 2 - 50);
         }
 
         if (onComplete) onComplete();
