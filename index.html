@@ -40,21 +40,18 @@
                     <h1 class="game-title">TURBOFOOT</h1>
                     <h2 class="game-subtitle">MANAGER ROGUELITE</h2>
                     <div class="title-menu">
-                        <button class="btn-primary" onclick="startRunFlow()" data-i18n="screens.mainMenu.play">▶
-                            JOGAR</button>
+                        <button class="btn-primary" onclick="startRunFlow()">▶ JOGAR</button>
                         <button class="btn-primary"
                             style="background: var(--accent-gold); color: #020617; box-shadow: 0 4px 15px rgba(245,158,11,0.3);"
-                            onclick="openMetaShop()" data-i18n="screens.mainMenu.career">💼 MINHA CARREIRA</button>
-                        <button class="btn-secondary" style="position:relative;" onclick="openDailyMissionsModal()"
-                            data-i18n="screens.mainMenu.missions">
+                            onclick="openMetaShop()">💼 MINHA CARREIRA</button>
+                        <button class="btn-secondary" style="position:relative;" onclick="openDailyMissionsModal()">
                             📅 MISSÕES DIÁRIAS
                             <span id="missions-badge"
                                 style="display:none; position:absolute; top:-8px; right:-8px; background:var(--accent-red); color:#fff; font-size:0.7rem; font-weight:900; border-radius:50%; width:20px; height:20px; align-items:center; justify-content:center;"></span>
                         </button>
                         <button class="btn-secondary" onclick="openHistoryModal()">📖 HISTÓRICO</button>
                         <button class="btn-secondary" onclick="openHowToPlay()">❓ COMO JOGAR</button>
-                        <button class="btn-secondary" onclick="openOptions()" data-i18n="screens.mainMenu.settings">⚙️
-                            OPÇÕES</button>
+                        <button class="btn-secondary" onclick="openOptions()">⚙️ OPÇÕES</button>
                     </div>
                 </div>
             </div>
@@ -62,26 +59,24 @@
             <div id="screen-series-select" class="screen">
                 <div class="champ-header">
                     <div class="champ-title-block">
-                        <div class="champ-league-label" data-i18n="screens.series.select">ESCOLHA A DIVISÃO</div>
+                        <div class="champ-league-label">ESCOLHA A DIVISÃO</div>
                     </div>
                 </div>
                 <div class="club-options-wrapper" id="series-options-container"></div>
                 <div class="bottom-action-bar">
-                    <button class="btn-secondary" onclick="returnToTitle()" data-i18n="common.back">← VOLTAR AO
-                        MENU</button>
+                    <button class="btn-secondary" onclick="returnToTitle()">← VOLTAR AO MENU</button>
                 </div>
             </div>
 
             <div id="screen-club-select" class="screen">
                 <div class="champ-header">
                     <div class="champ-title-block">
-                        <div class="champ-league-label" data-i18n="screens.club.select">ESCOLHA SEU CLUBE</div>
+                        <div class="champ-league-label">ESCOLHA SEU CLUBE</div>
                     </div>
                 </div>
                 <div class="club-options-wrapper" id="club-options-container"></div>
                 <div class="bottom-action-bar">
-                    <button class="btn-secondary" onclick="showScreen('screen-series-select')"
-                        data-i18n="screens.club.back">← VOLTAR PARA
+                    <button class="btn-secondary" onclick="showScreen('screen-series-select')">← VOLTAR PARA
                         DIVISÕES</button>
                 </div>
             </div>
@@ -89,12 +84,12 @@
             <div id="screen-map" class="screen">
                 <div class="champ-header">
                     <div class="champ-title-block">
-                        <div class="champ-league-label" data-i18n="screens.map.title">O MAPA</div>
+                        <div class="champ-league-label" id="map-league-title">O MAPA</div>
                     </div>
                     <div class="mobile-only" style="display:flex; gap:8px;">
                         <div class="currency-display">💰 <span id="map-coins">0</span></div>
                         <button class="btn-icon" style="color:var(--accent-red); border-color:var(--accent-red);"
-                            onclick="openQuitConfirm()" data-i18n="ui.quit">🚊</button>
+                            onclick="openQuitConfirm()">🚪</button>
                     </div>
                 </div>
                 <div class="map-wrapper" id="map-wrapper">
@@ -317,15 +312,15 @@
         <div id="options-overlay" class="modal-overlay">
             <div class="options-box">
                 <div class="modal-header">
-                    <h2 class="options-title" data-i18n="options.title">CONFIGURAÇÕES</h2>
+                    <h2 class="options-title">CONFIGURAÇÕES</h2>
                 </div>
                 <div class="modal-body">
                     <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-suspense"
-                                onchange="toggleSuspense()"><span class="checkmark"></span><span class="toggle-text"
-                                data-i18n="options.suspense">Suspense</span></label></div>
+                                onchange="toggleSuspense()"><span class="checkmark"></span><span
+                                class="toggle-text">Suspense</span></label></div>
                     <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-confirm"
-                                onchange="toggleConfirm()"><span class="checkmark"></span><span class="toggle-text"
-                                data-i18n="options.confirm">Confirmação Cliques</span></label></div>
+                                onchange="toggleConfirm()"><span class="checkmark"></span><span
+                                class="toggle-text">Confirmação Cliques</span></label></div>
 
                     <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light);">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
@@ -333,7 +328,7 @@
                             <span
                                 style="color: var(--text-primary); font-weight: 800; font-size: 0.9rem; text-transform: uppercase;">Idioma</span>
                         </div>
-                        <div id="language-buttons-container">
+                        <div id="language-buttons-container" style="display: grid; gap: 8px;">
                             <!-- Buttons serão inseridos aqui pelo JavaScript -->
                         </div>
                     </div>

@@ -7,9 +7,6 @@ async function initGame() {
         // Aguarda o i18n ser inicializado
         await I18N.init();
 
-        // Traduz a UI após i18n estar pronto
-        I18N.translateUI();
-
         const mechanicsData = await fetch('config_mechanics.json').then(r => r.json());
         const generationData = await fetch('config_generation.json').then(r => r.json());
         const rivalsData = await fetch('config_rivals.json').then(r => r.json());

@@ -7,22 +7,16 @@ let I18N = {
     availableLanguages: [],
 
     // Carrega a lista de idiomas disponíveis
-    // Carrega a lista de idiomas disponíveis
     async loadLanguages() {
         try {
-            // 👇 Aqui ele busca exatamente o arquivo que você criou
             const response = await fetch('locales/index.json');
             if (!response.ok) throw new Error('Failed to load languages index');
-
             const data = await response.json();
-
-            // 👇 Aqui ele pega o array "languages" do seu JSON e salva no sistema
             this.availableLanguages = data.languages || [];
-
             console.log(`✅ Languages loaded: ${this.availableLanguages.map(l => l.code).join(', ')}`);
         } catch (e) {
             console.error('Failed to load languages:', e);
-            // Fallback de segurança caso o arquivo não seja encontrado
+            // Fallback com pt-br como padrão
             this.availableLanguages = [
                 { code: 'pt-br', name: 'Português (Brasil)', emoji: '🇧🇷', nativeName: 'Português' }
             ];
@@ -52,19 +46,9 @@ let I18N = {
             const savedLang = localStorage.getItem('turboFoot_language');
             this.currentLanguage = savedLang || this.detectDeviceLanguage();
 
-            console.log(`🌐 Loading language: ${this.currentLanguage} (saved: ${savedLang})`);
-
-            // Sincroniza com gameState (se existir no seu escopo)
-            if (typeof gameState !== 'undefined' && gameState.settings) {
-                gameState.settings.language = this.currentLanguage;
-            }
-
             // Carrega o JSON de strings
             const response = await fetch(`locales/${this.currentLanguage}/strings.json`);
-            if (!response.ok) {
-                console.error(`❌ Failed to load strings.json for ${this.currentLanguage}: ${response.status} ${response.statusText}`);
-                throw new Error(`Failed to load ${this.currentLanguage}`);
-            }
+            if (!response.ok) throw new Error(`Failed to load ${this.currentLanguage}`);
 
             this.translations = await response.json();
             console.log(`✅ i18n initialized with language: ${this.currentLanguage}`);
@@ -72,35 +56,22 @@ let I18N = {
             console.error('Failed to initialize i18n:', e);
             // Carrega pt-br como fallback
             this.currentLanguage = 'pt-br';
-            try {
-                const response = await fetch('locales/pt-br/strings.json');
-                this.translations = await response.json();
-                console.log(`✅ Fallback: i18n loaded with pt-br`);
-            } catch (fallbackError) {
-                console.error('Failed to load fallback language:', fallbackError);
-            }
+            const response = await fetch('locales/pt-br/strings.json');
+            this.translations = await response.json();
         }
     },
 
-    // Função principal de tradução que estava faltando
+    // Obtém uma tradução usando notação com pontos: "screens.title", "common.close"
     t(key, replacements = {}) {
-        if (!this.translations) return key;
-
-        // Permite buscar chaves aninhadas (ex: "menu.buttons.start")
         const keys = key.split('.');
         let value = this.translations;
 
         for (const k of keys) {
-            if (value === undefined || value === null) {
+            if (!value || typeof value !== 'object') {
                 console.warn(`Translation key not found: ${key}`);
-                return key;
+                return key; // Retorna a chave se não encontrar
             }
             value = value[k];
-        }
-
-        if (value === undefined || value === null) {
-            console.warn(`Translation key not found: ${key}`);
-            return key;
         }
 
         if (typeof value !== 'string') {
@@ -118,41 +89,16 @@ let I18N = {
     },
 
     // Muda o idioma
-    async setLanguage(lang) {
-        if (this.currentLanguage === lang) {
-            console.log(`ℹ️ Language already set to ${lang}`);
-            return;
-        }
+    setLanguage(lang) {
+        if (this.currentLanguage === lang) return;
 
-        try {
-            console.log(`🔄 Switching language from ${this.currentLanguage} to ${lang}...`);
+        const oldLang = this.currentLanguage;
+        this.currentLanguage = lang;
+        localStorage.setItem('turboFoot_language', lang);
 
-            // Tenta carregar o arquivo de strings do novo idioma
-            const response = await fetch(`locales/${lang}/strings.json`);
-            if (!response.ok) {
-                throw new Error(`Failed to load strings for ${lang}`);
-            }
-
-            const newTranslations = await response.json();
-
-            // Se carregou com sucesso, atualiza tudo
-            this.currentLanguage = lang;
-            this.translations = newTranslations;
-            localStorage.setItem('turboFoot_language', lang);
-
-            // Sincroniza com gameState
-            if (typeof gameState !== 'undefined' && gameState.settings) {
-                gameState.settings.language = lang;
-                if (typeof saveGame === 'function') saveGame();
-            }
-
-            console.log(`✅ Language switched to ${lang} successfully!`);
-
-            // Recarrega a página para aplicar as mudanças em toda a UI
-            location.reload();
-        } catch (e) {
-            console.error(`❌ Failed to switch language to ${lang}:`, e);
-        }
+        // Recarrega a página para aplicar as mudanças
+        // (Alternativa: você pode emitir um evento e atualizar a UI dinamicamente)
+        location.reload();
     },
 
     // Retorna o idioma atual
@@ -163,24 +109,6 @@ let I18N = {
     // Retorna a lista de idiomas disponíveis com suas informações
     getAvailableLanguages() {
         return this.availableLanguages;
-    },
-
-    // Traduz todos os elementos com data-i18n
-    translateUI() {
-        const elements = document.querySelectorAll('[data-i18n]');
-        elements.forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            const translation = this.t(key);
-
-            if (el.tagName === 'INPUT' && el.type === 'placeholder') {
-                el.placeholder = translation;
-            } else if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                el.value = translation;
-            } else {
-                el.textContent = translation;
-            }
-        });
-        console.log(`✅ UI translations applied for ${this.currentLanguage}`);
     }
 };
 

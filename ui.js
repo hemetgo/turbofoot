@@ -106,13 +106,12 @@ function renderLanguageButtons() {
     container.innerHTML = '';
 
     const languages = I18N.getAvailableLanguages();
-    const currentLang = I18N.currentLanguage;
+    const currentLang = gameState.settings.language;
 
     languages.forEach(lang => {
         const button = document.createElement('button');
         button.className = `language-btn ${currentLang === lang.code ? 'language-btn-active' : ''}`;
-        button.innerHTML = `${lang.emoji}`;
-        button.title = lang.name;
+        button.innerHTML = `<span style="font-size: 1.4rem; margin-right: 8px;">${lang.emoji}</span><span>${lang.name}</span>`;
         button.onclick = () => changeLanguage(lang.code);
         container.appendChild(button);
     });
@@ -124,7 +123,9 @@ function toggleSuspense() { gameState.settings.showSuspense = document.getElemen
 
 // Muda o idioma do jogo
 function changeLanguage(lang) {
+    gameState.settings.language = lang;
     I18N.setLanguage(lang);
+    saveGame();
 }
 
 function openTraitsHelp() { document.getElementById('traits-help-overlay').style.display = 'flex'; }
