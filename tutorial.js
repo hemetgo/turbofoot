@@ -93,12 +93,14 @@ function renderTutorialStep() {
         .replace("{current}", tutorialStepIndex + 1)
         .replace("{total}", tutorialActiveSteps.length);
 
-    // Posiciona o spotlight e o cartão de acordo com o elemento alvo (ou centro da tela)
     const targetEl = step.target ? document.querySelector(step.target) : null;
 
     if (targetEl) {
         const rect = targetEl.getBoundingClientRect();
         const pad = 8;
+
+        // Limpa o fundo quando o holofote está ativo
+        overlay.style.backgroundColor = "transparent";
 
         spotlight.style.display = "block";
         spotlight.style.top = `${rect.top - pad}px`;
@@ -110,6 +112,9 @@ function renderTutorialStep() {
         positionCardNear(card, rect, step.placement || "bottom");
         targetEl.scrollIntoView({ block: "nearest", behavior: "smooth" });
     } else {
+        // Pinta o fundo de escuro quando não há holofote (Primeiro e último passo)
+        overlay.style.backgroundColor = "rgba(2, 6, 23, 0.85)";
+
         spotlight.style.display = "none";
         card.classList.add("centered");
         card.style.top = "";
