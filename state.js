@@ -2,9 +2,9 @@ const IS_DESKTOP = window.matchMedia("(hover: hover) and (pointer: fine)").match
 let GAME_BALANCE = {}; let GAME_CONTENT = {};
 
 let gameState = {
-    meta: { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} },
+    meta: { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} }, 
     coins: 0, leagueLevel: 5, club: null, team: [], activeCampBuff: 0, currentNode: null,
-    settings: { showSuspense: true, requireConfirm: !IS_DESKTOP, language: 'pt-br' },
+    settings: { showSuspense: true, requireConfirm: !IS_DESKTOP },
     season: { number: 1, map: [], currentStage: 0, history: [], matchHistory: [] },
     runHistory: [],
     tutorialSeen: false
@@ -22,7 +22,7 @@ function loadSaveData() {
         try {
             let saved = JSON.parse(localStorage.getItem("turboFoot_mgr_v7"));
             gameState = { ...gameState, ...saved };
-
+            
             // Corrige saves antigos que não tinham o requireConfirm salvo
             if (typeof gameState.settings.requireConfirm === "undefined") {
                 gameState.settings.requireConfirm = !IS_DESKTOP;
