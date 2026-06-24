@@ -61,20 +61,20 @@ function startRunFlow() {
         if (isLocked) {
             rewardsHtml = `
                 <div style="background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 8px; width: 100%; margin-top: 12px; border: 1px dashed var(--border-accent); display: flex; align-items: center; justify-content: center; min-height: 72px;">
-                    <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase;">🔒 Recompensas Ocultas</span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase;">🔒 ${t('LEAGUE_REWARDS_TITLE_LOCKED')}</span>
                 </div>
             `;
         } else {
             rewardsHtml = `
                 <div style="background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 8px; width: 100%; margin-top: 12px; border: 1px solid var(--border-light); min-height: 72px;">
-                    <div style="font-size: 0.7rem; color: var(--accent-gold); font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 6px;">Premiação em Troféus</div>
+                    <div style="font-size: 0.7rem; color: var(--accent-gold); font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 6px;">${t('LEAGUE_REWARDS_TITLE')}</div>
                     <div style="font-size: 0.8rem; color: #fff; font-weight: 700; display: flex; justify-content: space-between; margin-bottom: 4px;">
-                        <span>⚔️ Por Vitória:</span> 
-                        <span style="color: var(--accent-green);">+${metaPerWin} 🏆</span>
+                        <span>🎉 ${t('LEAGUE_REWARDS_PER_VICTORY')}:</span> 
+                        <span style="color: var(--accent-green);">x${metaPerWin}🏆</span>
                     </div>
                     <div style="font-size: 0.8rem; color: #fff; font-weight: 700; display: flex; justify-content: space-between;">
-                        <span>👑 Campeão:</span> 
-                        <span style="color: var(--accent-gold);">+${metaWinBonus} 🏆</span>
+                        <span>👑 ${t('LEAGUE_REWARDS_CHAMPION')}:</span> 
+                        <span style="color: var(--accent-gold);">+${metaWinBonus}🏆</span>
                     </div>
                 </div>
             `;
@@ -202,7 +202,7 @@ function selectSeries(idx) {
                     <div class="club-select-name">${tClub(c.name)}</div>
                 </div>
                 <div class="captain-box" style="padding: 16px;">
-                    <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Destaques da Base</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">${t('CLUB_ABILITIES')}</div>
                     ${traitsHtml}
                 </div>
             </div>`;

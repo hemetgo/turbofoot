@@ -24,12 +24,12 @@ function startMapMatch() {
 
     document.getElementById("score-user").innerText = "0";
     document.getElementById("score-rival").innerText = "0";
-    setupMarquee("match-user-name", `${gameState.club.emoji} ${gameState.club.name}`);
-    setupMarquee("match-rival-name", `${rivalTeam.emoji} ${t(rivalTeam.name)}`);
+    setupMarquee("match-user-name", `${gameState.club.emoji} ${tClub(gameState.club.name)}`);
+    setupMarquee("match-rival-name", `${rivalTeam.emoji} ${tClub(rivalTeam.name)}`);
 
     showScreen("screen-match");
     document.getElementById('match-log-feed').innerHTML = '';
-    
+
     addMatchLog(t('LOG_MATCH_START'), "system");
     if (matchState.nextBuff > 0) {
         addMatchLog(t('LOG_TACTICAL_FOCUS', { buff: matchState.nextBuff }), "success");
@@ -486,9 +486,9 @@ async function resolveProceduralNode(node, event) {
                 addMatchLog(t(getRandomLog('success'), { action: t(node.name) }), 'success');
             }
         }
-        else if (node.type === 'save') { 
-            createJuiceText(t('LOG_GREAT_DEFENSE_TITLE'), "#38bdf8", x, y); 
-            addMatchLog(t('LOG_GREAT_DEFENSE_TEXT'), 'success'); 
+        else if (node.type === 'save') {
+            createJuiceText(t('LOG_GREAT_DEFENSE_TITLE'), "#38bdf8", x, y);
+            addMatchLog(t('LOG_GREAT_DEFENSE_TEXT'), 'success');
         }
     } else {
         let mitigation = getLeadershipMitigation(traits);
@@ -690,7 +690,7 @@ function finishMatchRewards() {
             document.querySelector("#post-match-overlay .btn-primary").innerText = t('BTN_VIEW_SEASON_SUMMARY');
             document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
                 document.getElementById('post-match-overlay').style.display = 'none';
-                document.querySelector(".pm-rewards").style.display = "flex"; 
+                document.querySelector(".pm-rewards").style.display = "flex";
                 advanceMapNode();
             };
         }

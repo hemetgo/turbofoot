@@ -19,8 +19,7 @@
 
         <aside id="desktop-sidebar" class="desktop-only in-run-only">
             <div class="sidebar-header">
-                <div id="sidebar-club-info" data-i18n="SIDEBAR_CLUB_LABEL"
-                    style="display:flex; align-items:center; gap:8px;">🛡️ MEU CLUBE</div>
+                <div id="sidebar-club-info" style="display:flex; align-items:center; gap:8px;">🛡️ MEU CLUBE</div>
                 <div class="currency-display">💰 <span id="sidebar-coins">0</span></div>
             </div>
             <div class="sidebar-body">
@@ -258,11 +257,11 @@
                     <div id="pre-match-details"></div>
                 </div>
                 <div class="modal-footer">
+                    <button class="btn-secondary" data-i18n="BTN_BACK_MAP" "
+                        onclick=" closeModals()">← VOLTAR AO
+                        MAPA</button>
                     <button class="btn-primary" data-i18n="BTN_ENTER_MATCH" onclick="startMapMatch()">ENTRAR EM CAMPO
                         ⚽</button>
-                    <button class="btn-secondary" data-i18n="BTN_BACK_MAP" style="margin-top:8px;"
-                        onclick="closeModals()">← VOLTAR AO
-                        MAPA</button>
                 </div>
             </div>
         </div>
@@ -359,9 +358,9 @@
         <div id="how-to-play-overlay" class="modal-overlay">
             <div class="options-box">
                 <div class="modal-header">
-                    <h2 class="options-title" id="htp-title"">t(GAME_CONTENT.howToPlay.title)</h2>
+                    <h2 class="options-title" id="htp-title" data-i18n="TITLE_HOW_TO_PLAY">COMO JOGAR</h2>
                 </div>
-                <div class=" modal-body" id="htp-body">
+                <div class="modal-body" id="htp-body">
                 </div>
                 <div class="modal-footer">
                     <button class="btn-secondary" data-i18n="BTN_REPLAY_TUTORIAL"

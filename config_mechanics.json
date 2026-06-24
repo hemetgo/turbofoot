@@ -39,21 +39,21 @@
   },
   "threatLevels": {
     "match": {
-      "label": "Normal",
+      "label": "THREAHT_NORMAL",
       "color": "#38bdf8",
       "coinMult": 1.0,
       "expReward": 1,
       "extraTraits": 0
     },
     "elite": {
-      "label": "Desafiador",
+      "label": "THREAHT_HARD",
       "color": "#f59e0b",
       "coinMult": 1.5,
       "expReward": 2,
       "extraTraits": 1
     },
     "boss": {
-      "label": "Decisivo",
+      "label": "THREAHT_INSANE",
       "color": "#ef4444",
       "coinMult": 2.5,
       "expReward": 3,

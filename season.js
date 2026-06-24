@@ -142,7 +142,7 @@ function renderMap() {
     container.innerHTML = `<svg id="map-lines" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;"></svg>`;
 
     let currentLeagueName = GAME_BALANCE.leagues[gameState.leagueLevel].name;
-    document.getElementById('map-league-title').innerText = `${currentLeagueName}`;
+    document.getElementById('map-league-title').innerText = `${GAME_BALANCE.leagues[gameState.leagueLevel].emoji}${t(currentLeagueName)}`;
 
     const totalStages = GAME_BALANCE.mechanics.runStages || 8;
 
@@ -179,12 +179,12 @@ function renderMap() {
             let icon = '⚽';
             let nodeName = 'Partida';
 
-            if (node.type === 'match') { icon = '⚽'; nodeName = 'Partida'; }
-            else if (node.type === 'elite') { icon = '⚽'; nodeName = 'Partida'; }
-            else if (node.type === 'boss') { icon = '👑'; nodeName = 'Final'; }
-            else if (node.type === 'shop') { icon = '🕵️‍♂️'; nodeName = 'Olheiro'; }
-            else if (node.type === 'camp_physical') { icon = '🏋️‍♂️'; nodeName = 'Treino Físico'; }
-            else if (node.type === 'camp_tactical') { icon = '🧠'; nodeName = 'Preleção'; }
+            if (node.type === 'match') { icon = '⚽'; nodeName = t('MAP_NODE_MATCH'); }
+            else if (node.type === 'elite') { icon = '⚽'; nodeName = t('MAP_NODE_MATCH'); }
+            else if (node.type === 'boss') { icon = '👑'; nodeName = t('MAP_NODE_FINAL'); }
+            else if (node.type === 'shop') { icon = '🕵️‍♂️'; nodeName = t('MAP_NODE_SCOUT'); }
+            else if (node.type === 'camp_physical') { icon = '🏋️‍♂️'; nodeName = t('MAP_NODE_TRAINING'); }
+            else if (node.type === 'camp_tactical') { icon = '🧠'; nodeName = t('MAP_NODE_LECTURE'); }
 
             btn.innerHTML = `
                 <div class="node-icon">${icon}</div>
@@ -271,7 +271,7 @@ function handleMapNodeClick(node) {
         const details = document.getElementById('pre-match-details');
 
         let threatColor = threat.color;
-        let threatLabel = threat.label;
+        let threatLabel = t(threat.label);
         let levelGain = threat.expReward;
 
         let perkCounts = {};
@@ -301,13 +301,8 @@ function handleMapNodeClick(node) {
                 <h3 style="color:#fff; font-size:1.5rem; text-transform:uppercase; letter-spacing: 1px;">${tClub(node.rival.name)}</h3>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 800; color: var(--text-muted); justify-content: center; margin-bottom: 16px;">
-                <span>Estilo Tático:</span>
-                <span style="color: #fff; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-light);">${node.rival.style.emoji} ${t(node.rival.style.name)}</span>
-            </div>
-
             <div style="background:rgba(0,0,0,0.25); border-radius:12px; padding:16px; margin-bottom:16px; border:1px solid var(--border-accent); display:flex; flex-direction:column; align-items:center;">
-                <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px; font-weight:900; text-transform:uppercase; letter-spacing:1px;">📊 Destaques do Elenco</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px; font-weight:900; text-transform:uppercase; letter-spacing:1px;">📊 ${t('CLUB_ABILITIES')}</div>
                 <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:6px;">
                     ${perksHtml}
                 </div>
@@ -315,12 +310,12 @@ function handleMapNodeClick(node) {
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <div style="background:rgba(0,0,0,0.3); padding: 12px; border-radius:8px; border-bottom: 3px solid ${threatColor}; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                    <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">Ameaça</span>
+                    <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">${t('LABEL_THREAT')}</span>
                     <span style="font-size:0.9rem; font-weight:900; color:${threatColor}; text-transform:uppercase; text-align:center;">${t(threatLabel)}</span>
                 </div>
                 <div style="background:rgba(0,0,0,0.3); padding: 12px; border-radius:8px; border-bottom: 3px solid var(--accent-blue); display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                    <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">Recompensa</span>
-                    <span style="font-size:0.9rem; font-weight:900; color:var(--accent-blue); text-transform:uppercase; text-align:center;">+${levelGain} Nível</span>
+                    <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">${t('LABEL_REWARD')}</span>
+                    <span style="font-size:0.9rem; font-weight:900; color:var(--accent-blue); text-transform:uppercase; text-align:center;">+${levelGain} ${t('LABEL_LEVEL')}</span>
                 </div>
             </div>
         `;

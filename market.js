@@ -57,7 +57,7 @@ function showMarketScreen() {
             return `<span data-tip="${t(perk.desc)}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 6px; border: 1px solid var(--border-light); font-size: 0.75rem; font-weight: 800; white-space: nowrap; color: #e2e8f0; pointer-events: auto;">${perk.emoji} ${t(perk.name)}${countLabel}</span>`;
         }).join('');
 
-        if (!perksHtml) perksHtml = `<span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800;">Sem Habilidade</span>`;
+        if (!perksHtml) perksHtml = `<span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800;">${t('PERK_NONE_NAME')}</span>`;
 
         let starLabel = p.isStar ? `<span style="font-size: 1.1rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
 

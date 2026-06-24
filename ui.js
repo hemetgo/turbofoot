@@ -151,10 +151,10 @@ function updateRosterUI() {
     }
 
     const sbClubInfo = document.getElementById("sidebar-club-info");
-    if (sbClubInfo && gameState.club) sbClubInfo.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${gameState.club.name}`;
+    if (sbClubInfo && gameState.club) sbClubInfo.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${tClub(gameState.club.name)}`;
 
     const mobTitle = document.getElementById("mobile-roster-title");
-    if (mobTitle && gameState.club) mobTitle.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${gameState.club.name}`;
+    if (mobTitle && gameState.club) mobTitle.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${tClub(gameState.club.name)}`;
 
     const sbList = document.getElementById("sidebar-list");
     const sbCoins = document.getElementById("sidebar-coins");
@@ -255,7 +255,7 @@ function viewHistoryDetails(idx) {
     const run = gameState.runHistory[idx];
     document.getElementById("history-list").style.display = "none";
 
-    let html = `<h3 style="color:var(--text-muted); text-align:center; margin-bottom:15px; font-size:0.8rem; text-transform:uppercase;">PARTIDAS DA RUN</h3>`;
+    let html = `<h3 style="color:var(--text-muted); text-align:center; margin-bottom:15px; font-size:0.8rem; text-transform:uppercase;">${t('HISTORY_MATCHES')}</h3>`;
 
     if (run.matches && run.matches.length > 0) {
         run.matches.forEach((m, mIdx) => {
@@ -289,10 +289,10 @@ function viewHistoryDetails(idx) {
             `;
         });
     } else {
-        html += `<p style="text-align:center; font-size:0.8rem; color:var(--text-muted);">Sem registros.</p>`;
+        html += `<p style="text-align:center; font-size:0.8rem; color:var(--text-muted);">${t('HISTORY_NO_RECORDS_YET')}</p>`;
     }
 
-    html += `<h3 style="color:var(--text-muted); text-align:center; margin:24px 0 16px 0; font-size:0.8rem; text-transform:uppercase;">ELENCO FINAL</h3>`;
+    html += `<h3 style="color:var(--text-muted); text-align:center; margin:24px 0 16px 0; font-size:0.8rem; text-transform:uppercase;">${t('HISTORY_FINAL_TEAM')}</h3>`;
     html += `<div class="roster-grid">`;
     if (run.finalTeam) { run.finalTeam.forEach(p => { html += getPlayerCardHTML(p); }); }
     html += `</div>`;
