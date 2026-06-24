@@ -68,7 +68,8 @@ function showMarketScreen() {
                 <div class="card-emoji" style="font-size: 2.2rem;">${p.emoji}</div>
                 <div class="market-info">
                     <div class="market-name" style="display:flex; align-items:center;">
-                        ${p.name} ${starLabel} ${levelBadge}
+                        <span class="fi fi-${p.flag || 'xx'}" style="font-size: 0.8rem; border-radius: 2px; flex-shrink: 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));"></span>
+                          ${p.name} ${starLabel} ${levelBadge}
                     </div>
                     <div class="market-stats" style="margin-top:8px; display: flex; flex-wrap: wrap; gap: 4px;">
                         ${perksHtml}
