@@ -372,6 +372,7 @@ TITLE_SETTINGS=SETTINGS
 
 LABEL_SUSPENSE_TOGGLE=Suspense
 LABEL_CONFIRM_CLICKS_TOGGLE=Click Confirmation
+LABEL_LANGUAGE=Language
 
 BTN_HARD_RESET=⚠️ ERASE ALL PROGRESS
 BTN_CLOSE=CLOSE
@@ -405,3 +406,36 @@ ALERT_CHEAT_ALL_UNLOCKED=🔓 All Divisions unlocked successfully!
 ALERT_CHEAT_UNKNOWN=Unknown command.
 ALERT_CHEAT_TROPHIES=+{val} Trophies added!
 ALERT_CHEAT_COINS=+{val} 💰 added!
+
+# --- Guided Tutorial ---
+TUTORIAL_WELCOME_TITLE=Welcome to TurboFoot! ⚽
+TUTORIAL_WELCOME_TEXT=Let's play your first match together. I'll quickly show you how everything works on the pitch. Let's go!
+
+TUTORIAL_SCOREBOARD_TITLE=Scoreboard & Match Timer
+TUTORIAL_SCOREBOARD_TEXT=This is where the match score is displayed. Below it, the counter shows how many plays (actions) remain until the end of the game.
+
+TUTORIAL_FIELD_TITLE=The Pitch Zones
+TUTORIAL_FIELD_TEXT=The pitch is divided into 5 zones. The ⚽ shows where the action is happening. Advance through the zones until you reach the opponent's goal!
+
+TUTORIAL_POSSESSION_TITLE=Ball Possession
+TUTORIAL_POSSESSION_TEXT=This badge shows whether you're ATTACKING (the ball is yours, move forward!) or DEFENDING (the rival is pressuring, hold your ground).
+
+TUTORIAL_ACTIONS_TITLE=Choose Your Play
+TUTORIAL_ACTIONS_TEXT=Each turn, you'll choose between 2 or 3 plays. Each one shows its success chance and what happens if it succeeds ✅ or fails ❌.
+
+TUTORIAL_COMBO_TITLE=Combo 🔥
+TUTORIAL_COMBO_TEXT=Successful plays increase your Combo. Higher Combos unlock special plays and multiply your coin rewards at the end of the match!
+
+TUTORIAL_FEED_TITLE=Live Commentary
+TUTORIAL_FEED_TEXT=The match is narrated here in real time. Follow the action and don't miss a thing.
+
+TUTORIAL_FINISH_TITLE=Ready to Play!
+TUTORIAL_FINISH_TEXT=That's it! Pick the plays with the best chance of success, build Combos, and earn coins. Good luck, manager! 🏆
+
+TUTORIAL_BTN_NEXT=NEXT
+TUTORIAL_BTN_PREV=BACK
+TUTORIAL_BTN_SKIP=SKIP TUTORIAL
+TUTORIAL_BTN_DONE=LET'S PLAY!
+
+TUTORIAL_PROGRESS={current} of {total}
+TUTORIAL_NEXT_MATCH_ALERT=The tutorial will automatically appear in your next match!

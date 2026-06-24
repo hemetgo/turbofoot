@@ -71,7 +71,7 @@ LABEL_MAP_DEFAULT=MAPA
 MAP_NODE_MATCH=Partida
 MAP_NODE_FINAL=Final
 MAP_NODE_SCOUT=Olheiro
-MAP_NODE_TRAINING=Treinamento
+MAP_NODE_TRAINING=Treino
 MAP_NODE_LECTURE=Preleção
 
 # --- Mercado ---
@@ -369,6 +369,7 @@ TITLE_SETTINGS=CONFIGURAÇÕES
 
 LABEL_SUSPENSE_TOGGLE=Suspense
 LABEL_CONFIRM_CLICKS_TOGGLE=Confirmação Cliques
+LABEL_LANGUAGE=Idioma
 
 BTN_HARD_RESET=⚠️ APAGAR TODO O PROGRESSO
 BTN_CLOSE=FECHAR
@@ -409,3 +410,36 @@ PERK_REFLEXES_NAME=Reflexos
 PERK_MARKING_NAME=Posicionamento
 PERK_VISION_NAME=Visão de Jogo
 PERK_LEADERSHIP_NAME=Liderança
+
+# --- Tutorial Guiado ---
+TUTORIAL_WELCOME_TITLE=Bem-vindo ao TurboFoot! ⚽
+TUTORIAL_WELCOME_TEXT=Vamos jogar sua primeira partida juntos. Eu te mostro rapidinho como tudo funciona em campo. Vamos lá!
+
+TUTORIAL_SCOREBOARD_TITLE=Placar e Cronômetro
+TUTORIAL_SCOREBOARD_TEXT=Aqui fica o placar da partida. Logo abaixo, o contador mostra quantas jogadas (ações) faltam até o fim do jogo.
+
+TUTORIAL_FIELD_TITLE=O Campo em Zonas
+TUTORIAL_FIELD_TEXT=O campo é dividido em 5 zonas. A bola ⚽ mostra onde o jogo está. Avance pelas zonas até chegar no gol adversário!
+
+TUTORIAL_POSSESSION_TITLE=Posse de Bola
+TUTORIAL_POSSESSION_TEXT=Esse selo mostra se você está ATACANDO (a bola é sua, avance!) ou DEFENDENDO (pressão do rival, segure a onda).
+
+TUTORIAL_ACTIONS_TITLE=Escolha sua Jogada
+TUTORIAL_ACTIONS_TEXT=A cada turno, você escolhe entre 2 ou 3 jogadas. Cada uma mostra a % de chance de sucesso e o que acontece se der certo ✅ ou errado ❌.
+
+TUTORIAL_COMBO_TITLE=Combo 🔥
+TUTORIAL_COMBO_TEXT=Acertar jogadas seguidas aumenta seu Combo. Combo alto libera jogadas especiais e multiplica a recompensa em moedas no final!
+
+TUTORIAL_FEED_TITLE=Transmissão ao Vivo
+TUTORIAL_FEED_TEXT=Aqui o jogo é narrado em tempo real. Acompanhe os lances para não perder nada da partida.
+
+TUTORIAL_FINISH_TITLE=Pronto pra jogar!
+TUTORIAL_FINISH_TEXT=É isso! Escolha as jogadas com a maior chance de sucesso, monte combos e fature moedas. Boa sorte, treinador! 🏆
+
+TUTORIAL_BTN_NEXT=PRÓXIMO
+TUTORIAL_BTN_PREV=VOLTAR
+TUTORIAL_BTN_SKIP=PULAR TUTORIAL
+TUTORIAL_BTN_DONE=VAMOS JOGAR!
+
+TUTORIAL_PROGRESS={current} de {total}
+TUTORIAL_NEXT_MATCH_ALERT=O tutorial vai aparecer automaticamente na sua próxima partida!

@@ -1,63 +1,126 @@
 // ==========================================
 // SISTEMA DE LOCALIZAÇÃO (i18n)
-// Textos em locales/<idioma>/strings.txt (formato chave=valor)
+// Textos em locales/<idioma>.txt
 // ==========================================
 
 let CURRENT_LANG = "en";
 let I18N_STRINGS = {};
 
-// Carrega e faz parse do arquivo strings.txt
 async function loadLocale(lang = CURRENT_LANG) {
     CURRENT_LANG = lang;
     I18N_STRINGS = {};
+
     try {
         const res = await fetch(`locales/${lang}.txt`);
         const raw = await res.text();
+
         raw.split("\n").forEach(line => {
             line = line.trim();
+
             if (!line || line.startsWith("#")) return;
+
             const sepIndex = line.indexOf("=");
+
             if (sepIndex === -1) return;
+
             const key = line.slice(0, sepIndex).trim();
-            const value = line.slice(sepIndex + 1).replace(/\\n/g, "\n");
+            const value = line
+                .slice(sepIndex + 1)
+                .replace(/\\n/g, "\n");
+
             I18N_STRINGS[key] = value;
         });
+
     } catch (e) {
-        console.error(`[i18n] Falha ao carregar locales/${lang}/strings.txt`, e);
+        console.error(`[i18n] Failed loading locales/${lang}.txt`, e);
     }
+
     return I18N_STRINGS;
 }
 
-// Busca uma string localizada pela chave. Suporta placeholders {var} via segundo argumento.
-function t(key, vars) {
+function t(key, vars = null) {
     let str = I18N_STRINGS[key];
+
     if (str === undefined) {
-        console.warn(`[i18n] Chave ausente: "${key}"`);
+        console.warn(`[i18n] Missing key: ${key}`);
         return key;
     }
+
     if (vars) {
         Object.keys(vars).forEach(k => {
-            str = str.split(`{${k}}`).join(vars[k]);
+            str = str.replaceAll(`{${k}}`, vars[k]);
         });
     }
+
     return str;
 }
 
-// NOVA FUNÇÃO: Traduz nomes de clubes compostos por múltiplas chaves (ex: "TEAM_BASE_HURRICANES TEAM_ADJ_SOUTH")
 function tClub(compositeName) {
     if (!compositeName) return "";
-    return compositeName.split(" ").map(word => t(word)).join(" ");
+
+    return compositeName
+        .split(" ")
+        .map(word => t(word))
+        .join(" ");
 }
 
-// Aplica as strings estáticas no HTML
 function applyStaticI18n() {
+
     document.querySelectorAll("[data-i18n]").forEach(el => {
-        el.textContent = t(el.getAttribute("data-i18n"));
+        const key = el.getAttribute("data-i18n");
+
+        if (el.tagName === "OPTION") {
+            el.innerText = t(key);
+        } else {
+            el.textContent = t(key);
+        }
     });
+
     document.querySelectorAll("[data-i18n-html]").forEach(el => {
-        el.innerHTML = t(el.getAttribute("data-i18n-html"));
+        const key = el.getAttribute("data-i18n-html");
+        el.innerHTML = t(key);
     });
+
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        el.setAttribute("placeholder", t(el.getAttribute("data-i18n-placeholder")));
+        const key = el.getAttribute("data-i18n-placeholder");
+        el.placeholder = t(key);
     });
 }
+
+async function changeLanguage(lang) {
+
+    localStorage.setItem("language", lang);
+
+    await loadLocale(lang);
+
+    applyStaticI18n();
+
+    console.log("[i18n] language changed to", lang);
+}
+
+async function loadLanguagePreference() {
+    // 1. Tenta pegar o idioma salvo
+    let lang = localStorage.getItem("language");
+
+    // 2. Se não tiver nada salvo (primeiro acesso), verifica o idioma do navegador
+    if (!lang) {
+        lang = navigator.language.toLowerCase().startsWith("pt") ? "pt-br" : "en";
+    }
+
+    // 3. Carrega as strings e aplica no HTML
+    await loadLocale(lang);
+    applyStaticI18n();
+
+    // 4. Atualiza a caixinha de seleção no menu de opções
+    const select = document.getElementById("language-select");
+    if (select) {
+        select.value = lang;
+    }
+
+    console.log("[i18n] language loaded:", lang);
+}
+
+window.t = t;
+window.tClub = tClub;
+window.changeLanguage = changeLanguage;
+window.loadLanguagePreference = loadLanguagePreference;

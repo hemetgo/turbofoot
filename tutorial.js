@@ -12,7 +12,7 @@ let tutorialActiveSteps = [];
 async function loadTutorialTexts() {
     if (TUTORIAL_DATA) return TUTORIAL_DATA;
     try {
-        const res = await fetch(`locales/${TUTORIAL_LOCALE}/tutorial.json`);
+        const res = await fetch(`/config_tutorial.json`);
         TUTORIAL_DATA = await res.json();
     } catch (e) {
         console.error("Falha ao carregar textos do tutorial:", e);
@@ -76,19 +76,26 @@ function renderTutorialStep() {
     const spotlight = document.getElementById("tutorial-spotlight");
     const card = document.getElementById("tutorial-card");
 
-    document.getElementById("tutorial-title").innerText = step.title || "";
-    document.getElementById("tutorial-text").innerText = step.text || "";
-    document.getElementById("tutorial-skip-btn").innerText = data.buttons?.skip || "Pular";
-    document.getElementById("tutorial-prev-btn").innerText = data.buttons?.prev || "Voltar";
+    document.getElementById("tutorial-title").innerText = t(step.title || "");
+    document.getElementById("tutorial-text").innerText = t(step.text || "");
+
+    document.getElementById("tutorial-skip-btn").innerText =
+        t(data.buttons?.skip || "TUTORIAL_BTN_SKIP");
+
+    document.getElementById("tutorial-prev-btn").innerText =
+        t(data.buttons?.prev || "TUTORIAL_BTN_PREV");
 
     const isLast = tutorialStepIndex === tutorialActiveSteps.length - 1;
+
     document.getElementById("tutorial-next-btn").innerText = isLast
-        ? (data.buttons?.done || "OK")
-        : (data.buttons?.next || "Próximo");
+        ? t(data.buttons?.done || "TUTORIAL_BTN_DONE")
+        : t(data.buttons?.next || "TUTORIAL_BTN_NEXT");
 
-    document.getElementById("tutorial-prev-btn").style.visibility = tutorialStepIndex === 0 ? "hidden" : "visible";
+    document.getElementById("tutorial-prev-btn").style.visibility =
+        tutorialStepIndex === 0 ? "hidden" : "visible";
 
-    const progressTpl = data.progressLabel || "{current}/{total}";
+    const progressTpl = t(data.progressLabel || "TUTORIAL_PROGRESS");
+
     document.getElementById("tutorial-progress").innerText = progressTpl
         .replace("{current}", tutorialStepIndex + 1)
         .replace("{total}", tutorialActiveSteps.length);
@@ -99,7 +106,6 @@ function renderTutorialStep() {
         const rect = targetEl.getBoundingClientRect();
         const pad = 8;
 
-        // Limpa o fundo quando o holofote está ativo
         overlay.style.backgroundColor = "transparent";
 
         spotlight.style.display = "block";
@@ -110,9 +116,12 @@ function renderTutorialStep() {
 
         card.classList.remove("centered");
         positionCardNear(card, rect, step.placement || "bottom");
-        targetEl.scrollIntoView({ block: "nearest", behavior: "smooth" });
+
+        targetEl.scrollIntoView({
+            block: "nearest",
+            behavior: "smooth"
+        });
     } else {
-        // Pinta o fundo de escuro quando não há holofote (Primeiro e último passo)
         overlay.style.backgroundColor = "rgba(2, 6, 23, 0.85)";
 
         spotlight.style.display = "none";
@@ -183,6 +192,6 @@ function replayFirstMatchTutorial() {
         startFirstMatchTutorial();
     } else {
         closeModals();
-        alert("O tutorial vai aparecer automaticamente na sua próxima partida!");
+        alert(t('TUTORIAL_NEXT_MATCH_ALERT'));
     }
 }

@@ -4,11 +4,8 @@ let selectedSeriesIndex = 0;
 // Inicializa o jogo: i18n → carrega dados → renderiza
 async function initGame() {
     try {
-        // Inicializa o idioma e baixa o txt usando a função do i18n.js
-        await loadLocale();
-
-        // Traduz o HTML estático
-        applyStaticI18n();
+        // Inicializa a preferência de idioma (isso já baixa o txt correto e aplica no HTML)
+        await loadLanguagePreference();
 
         const mechanicsData = await fetch('config_mechanics.json').then(r => r.json());
         const generationData = await fetch('config_generation.json').then(r => r.json());

@@ -2393,3 +2393,27 @@ button {
     flex: 1;
     /* Faz com que ambos ocupem o mesmo espaço */
 }
+
+/* Container dos botões */
+.modal-footer {
+    display: flex;
+    flex-direction: row-reverse;
+    /* Inverte a ordem: o "Voltar" fica na esquerda, "Entrar" na direita */
+    gap: 10px;
+    /* Espaçamento entre eles */
+    align-items: stretch;
+    /* Força a mesma altura */
+}
+
+/* Força os botões a dividirem o espaço igualmente e terem altura fixa */
+.modal-footer button {
+    flex: 1;
+    /* Ambos ocupam 50% do espaço */
+    height: 60px;
+    /* Altura fixa (ajuste se quiser mais alto ou baixo) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    /* Remove margens extras */
+}

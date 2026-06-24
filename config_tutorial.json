@@ -1,0 +1,61 @@
+{
+    "firstMatch": {
+        "steps": [
+            {
+                "target": null,
+                "title": "TUTORIAL_WELCOME_TITLE",
+                "text": "TUTORIAL_WELCOME_TEXT",
+                "placement": "center"
+            },
+            {
+                "target": ".match-dashboard",
+                "title": "TUTORIAL_SCOREBOARD_TITLE",
+                "text": "TUTORIAL_SCOREBOARD_TEXT",
+                "placement": "bottom"
+            },
+            {
+                "target": "#minimap-display",
+                "title": "TUTORIAL_FIELD_TITLE",
+                "text": "TUTORIAL_FIELD_TEXT",
+                "placement": "bottom"
+            },
+            {
+                "target": "#possession-badge",
+                "title": "TUTORIAL_POSSESSION_TITLE",
+                "text": "TUTORIAL_POSSESSION_TEXT",
+                "placement": "bottom"
+            },
+            {
+                "target": "#dynamic-nodes-wrapper",
+                "title": "TUTORIAL_ACTIONS_TITLE",
+                "text": "TUTORIAL_ACTIONS_TEXT",
+                "placement": "top"
+            },
+            {
+                "target": "#combo-badge",
+                "title": "TUTORIAL_COMBO_TITLE",
+                "text": "TUTORIAL_COMBO_TEXT",
+                "placement": "bottom"
+            },
+            {
+                "target": "#match-log-feed",
+                "title": "TUTORIAL_FEED_TITLE",
+                "text": "TUTORIAL_FEED_TEXT",
+                "placement": "top"
+            },
+            {
+                "target": null,
+                "title": "TUTORIAL_FINISH_TITLE",
+                "text": "TUTORIAL_FINISH_TEXT",
+                "placement": "center"
+            }
+        ],
+        "buttons": {
+            "next": "TUTORIAL_BTN_NEXT",
+            "prev": "TUTORIAL_BTN_PREV",
+            "skip": "TUTORIAL_BTN_SKIP",
+            "done": "TUTORIAL_BTN_DONE"
+        },
+        "progressLabel": "TUTORIAL_PROGRESS"
+    }
+}
