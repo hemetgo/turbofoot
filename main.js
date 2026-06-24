@@ -176,7 +176,7 @@ function selectSeries(idx) {
         headerBlock.innerHTML = `
             <div class="champ-league-label">${t('LABEL_CHOOSE_CLUB')}</div>
             <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 800; margin-top: 4px; text-transform: uppercase;">
-                Elenco inicial no Nível <span style="color: var(--accent-green); font-weight: 900;">${startLvl}</span>
+                ${t('LABEL_CHOOSE_CLUB_SUBTITLE')} <span style="color: var(--accent-green); font-weight: 900;">${startLvl}</span>
             </div>
         `;
     }

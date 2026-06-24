@@ -1,19 +1,65 @@
 {
     "suspenseTexts": {
-        "userShootPrep1": ["SUSPENSE_USER_PREP_1", "SUSPENSE_USER_PREP_2", "SUSPENSE_USER_PREP_3"],
-        "userGoal": ["SUSPENSE_USER_GOAL_1", "SUSPENSE_USER_GOAL_2", "SUSPENSE_USER_GOAL_3"],
-        "userMiss": ["SUSPENSE_USER_MISS_1", "SUSPENSE_USER_MISS_2", "SUSPENSE_USER_MISS_3"],
-        "rivalShootPrep1": ["SUSPENSE_RIVAL_PREP_1", "SUSPENSE_RIVAL_PREP_2", "SUSPENSE_RIVAL_PREP_3"],
-        "rivalGoal": ["SUSPENSE_RIVAL_GOAL_1", "SUSPENSE_RIVAL_GOAL_2", "SUSPENSE_RIVAL_GOAL_3"],
-        "rivalMiss": ["SUSPENSE_RIVAL_MISS_1", "SUSPENSE_RIVAL_MISS_2", "SUSPENSE_RIVAL_MISS_3"]
+        "userShootPrep1": [
+            "SUSPENSE_USER_PREP_1",
+            "SUSPENSE_USER_PREP_2",
+            "SUSPENSE_USER_PREP_3"
+        ],
+        "userGoal": [
+            "SUSPENSE_USER_GOAL_1",
+            "SUSPENSE_USER_GOAL_2",
+            "SUSPENSE_USER_GOAL_3"
+        ],
+        "userMiss": [
+            "SUSPENSE_USER_MISS_1",
+            "SUSPENSE_USER_MISS_2",
+            "SUSPENSE_USER_MISS_3"
+        ],
+        "rivalShootPrep1": [
+            "SUSPENSE_RIVAL_PREP_1",
+            "SUSPENSE_RIVAL_PREP_2",
+            "SUSPENSE_RIVAL_PREP_3"
+        ],
+        "rivalGoal": [
+            "SUSPENSE_RIVAL_GOAL_1",
+            "SUSPENSE_RIVAL_GOAL_2",
+            "SUSPENSE_RIVAL_GOAL_3"
+        ],
+        "rivalMiss": [
+            "SUSPENSE_RIVAL_MISS_1",
+            "SUSPENSE_RIVAL_MISS_2",
+            "SUSPENSE_RIVAL_MISS_3"
+        ]
     },
     "logTexts": {
-        "success": ["LOG_SUCCESS_1", "LOG_SUCCESS_2", "LOG_SUCCESS_3"],
-        "fail": ["LOG_FAIL_1", "LOG_FAIL_2", "LOG_FAIL_3"],
-        "goalUser": ["LOG_GOAL_USER_1", "LOG_GOAL_USER_2", "LOG_GOAL_USER_3"],
-        "goalRival": ["LOG_GOAL_RIVAL_1", "LOG_GOAL_RIVAL_2", "LOG_GOAL_RIVAL_3"],
-        "matchStart": ["LOG_START_1", "LOG_START_2"],
-        "matchEnd": ["LOG_END_1", "LOG_END_2"]
+        "success": [
+            "LOG_SUCCESS_1",
+            "LOG_SUCCESS_2",
+            "LOG_SUCCESS_3"
+        ],
+        "fail": [
+            "LOG_FAIL_1",
+            "LOG_FAIL_2",
+            "LOG_FAIL_3"
+        ],
+        "goalUser": [
+            "LOG_GOAL_USER_1",
+            "LOG_GOAL_USER_2",
+            "LOG_GOAL_USER_3"
+        ],
+        "goalRival": [
+            "LOG_GOAL_RIVAL_1",
+            "LOG_GOAL_RIVAL_2",
+            "LOG_GOAL_RIVAL_3"
+        ],
+        "matchStart": [
+            "LOG_START_1",
+            "LOG_START_2"
+        ],
+        "matchEnd": [
+            "LOG_END_1",
+            "LOG_END_2"
+        ]
     },
     "tooltips": {
         "possessionAtk": "TOOLTIP_POSSESSION_ATK",
@@ -28,24 +74,104 @@
         "traitsTitle": "HOW_TO_PLAY_TRAITS_TITLE",
         "traitsIntro": "HOW_TO_PLAY_TRAITS_INTRO",
         "traits": [
-            { "name": "HOW_TO_PLAY_TRAIT_FINISHING_NAME", "desc": "HOW_TO_PLAY_TRAIT_FINISHING_DESC" },
-            { "name": "HOW_TO_PLAY_TRAIT_PASSING_NAME", "desc": "HOW_TO_PLAY_TRAIT_PASSING_DESC" },
-            { "name": "HOW_TO_PLAY_TRAIT_PACE_NAME", "desc": "HOW_TO_PLAY_TRAIT_PACE_DESC" },
-            { "name": "HOW_TO_PLAY_TRAIT_TACKLING_NAME", "desc": "HOW_TO_PLAY_TRAIT_TACKLING_DESC" },
-            { "name": "HOW_TO_PLAY_TRAIT_REFLEXES_NAME", "desc": "HOW_TO_PLAY_TRAIT_REFLEXES_DESC" },
-            { "name": "HOW_TO_PLAY_TRAIT_MARKING_NAME", "desc": "HOW_TO_PLAY_TRAIT_MARKING_DESC" },
-            { "name": "HOW_TO_PLAY_TRAIT_VISION_NAME", "desc": "HOW_TO_PLAY_TRAIT_VISION_DESC" },
-            { "name": "HOW_TO_PLAY_TRAIT_LEADERSHIP_NAME", "desc": "HOW_TO_PLAY_TRAIT_LEADERSHIP_DESC" }
+            {
+                "name": "HOW_TO_PLAY_TRAIT_FINISHING_NAME",
+                "desc": "HOW_TO_PLAY_TRAIT_FINISHING_DESC"
+            },
+            {
+                "name": "HOW_TO_PLAY_TRAIT_PASSING_NAME",
+                "desc": "HOW_TO_PLAY_TRAIT_PASSING_DESC"
+            },
+            {
+                "name": "HOW_TO_PLAY_TRAIT_PACE_NAME",
+                "desc": "HOW_TO_PLAY_TRAIT_PACE_DESC"
+            },
+            {
+                "name": "HOW_TO_PLAY_TRAIT_TACKLING_NAME",
+                "desc": "HOW_TO_PLAY_TRAIT_TACKLING_DESC"
+            },
+            {
+                "name": "HOW_TO_PLAY_TRAIT_REFLEXES_NAME",
+                "desc": "HOW_TO_PLAY_TRAIT_REFLEXES_DESC"
+            },
+            {
+                "name": "HOW_TO_PLAY_TRAIT_MARKING_NAME",
+                "desc": "HOW_TO_PLAY_TRAIT_MARKING_DESC"
+            },
+            {
+                "name": "HOW_TO_PLAY_TRAIT_VISION_NAME",
+                "desc": "HOW_TO_PLAY_TRAIT_VISION_DESC"
+            },
+            {
+                "name": "HOW_TO_PLAY_TRAIT_LEADERSHIP_NAME",
+                "desc": "HOW_TO_PLAY_TRAIT_LEADERSHIP_DESC"
+            }
         ]
     },
     "perks": [
-        { "id": "finishing", "name": "PERK_FINISHING_NAME", "emoji": "🎯", "desc": "PERK_FINISHING_DESC", "category": "attack", "weight": 100 },
-        { "id": "passing", "name": "PERK_PASSING_NAME", "emoji": "👟", "desc": "PERK_PASSING_DESC", "category": "attack", "weight": 100 },
-        { "id": "pace", "name": "PERK_PACE_NAME", "emoji": "⚡", "desc": "PERK_PACE_DESC", "category": "hybrid", "weight": 100 },
-        { "id": "tackling", "name": "PERK_TACKLING_NAME", "emoji": "🪓", "desc": "PERK_TACKLING_DESC", "category": "defense", "weight": 100 },
-        { "id": "reflexes", "name": "PERK_REFLEXES_NAME", "emoji": "🧤", "desc": "PERK_REFLEXES_DESC", "category": "defense", "weight": 90 },
-        { "id": "marking", "name": "PERK_MARKING_NAME", "emoji": "🛡️", "desc": "PERK_MARKING_DESC", "category": "utility", "weight": 80 },
-        { "id": "vision", "name": "PERK_VISION_NAME", "emoji": "🔗", "desc": "PERK_VISION_DESC", "category": "utility", "weight": 70 },
-        { "id": "leadership", "name": "PERK_LEADERSHIP_NAME", "emoji": "🗣️", "desc": "PERK_LEADERSHIP_DESC", "category": "utility", "weight": 70 }
+        {
+            "id": "finishing",
+            "name": "PERK_FINISHING_NAME",
+            "emoji": "🎯",
+            "desc": "HOW_TO_PLAY_TRAIT_FINISHING_DESC",
+            "category": "attack",
+            "weight": 100
+        },
+        {
+            "id": "passing",
+            "name": "PERK_PASSING_NAME",
+            "emoji": "👟",
+            "desc": "HOW_TO_PLAY_TRAIT_PASSING_DESC",
+            "category": "attack",
+            "weight": 100
+        },
+        {
+            "id": "pace",
+            "name": "PERK_PACE_NAME",
+            "emoji": "⚡",
+            "desc": "HOW_TO_PLAY_TRAIT_PACE_DESC",
+            "category": "hybrid",
+            "weight": 100
+        },
+        {
+            "id": "tackling",
+            "name": "PERK_TACKLING_NAME",
+            "emoji": "🪓",
+            "desc": "HOW_TO_PLAY_TRAIT_TACKLING_DESC",
+            "category": "defense",
+            "weight": 100
+        },
+        {
+            "id": "reflexes",
+            "name": "PERK_REFLEXES_NAME",
+            "emoji": "🧤",
+            "desc": "HOW_TO_PLAY_TRAIT_REFLEXES_DESC",
+            "category": "defense",
+            "weight": 90
+        },
+        {
+            "id": "marking",
+            "name": "PERK_MARKING_NAME",
+            "emoji": "🛡️",
+            "desc": "HOW_TO_PLAY_TRAIT_MARKING_DESC",
+            "category": "utility",
+            "weight": 80
+        },
+        {
+            "id": "vision",
+            "name": "PERK_VISION_NAME",
+            "emoji": "🔗",
+            "desc": "HOW_TO_PLAY_TRAIT_VISION_DESC",
+            "category": "utility",
+            "weight": 70
+        },
+        {
+            "id": "leadership",
+            "name": "PERK_LEADERSHIP_NAME",
+            "emoji": "🗣️",
+            "desc": "HOW_TO_PLAY_TRAIT_LEADERSHIP_DESC",
+            "category": "utility",
+            "weight": 70
+        }
     ]
 }

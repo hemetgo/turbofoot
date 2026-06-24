@@ -77,12 +77,12 @@ async function playSuspenseSequence(isUser, isSuccess) {
         ? (isSuccess ? d.userGoal : d.userMiss)
         : (isSuccess ? d.rivalMiss : d.rivalGoal);
 
-    textEl.innerText = rnd(prep);
+    textEl.innerText = t(rnd(prep));
     textEl.className = "suspense-text";
     textEl.style.color = "#fff";
     await sleep(800);
 
-    textEl.innerText = rnd(result);
+    textEl.innerText = t(rnd(result));
     textEl.className = "suspense-text pop";
     textEl.style.color = (isUser && isSuccess) || (!isUser && isSuccess) ? "#34d399" : "#f87171";
     await sleep(1200);
@@ -335,7 +335,7 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
         infoBox.style.background = 'rgba(0,0,0,0.3)';
         infoBox.style.borderRadius = '8px';
         infoBox.style.borderLeft = '3px solid var(--accent-purple)';
-        infoBox.innerHTML = `💡 Evoluir um jogador com menos de 2 habilidades garante a ele uma <strong style="color:var(--accent-purple);">Nova Habilidade Aleatória!</strong>`;
+        infoBox.innerHTML = `${t('TEXT_TRAIN_TIP')}`;
         grid.parentNode.insertBefore(infoBox, grid);
     }
 

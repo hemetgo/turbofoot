@@ -95,7 +95,7 @@ function getPlayerCardHTML(p, onClickAttr = "") {
 
         perksHTML = `<div style="display: flex; gap: 4px; flex-wrap: nowrap; overflow: hidden; width: 100%; height: 20px; align-items: center;">${perksArray.join('')}</div>`;
     } else {
-        perksHTML = `<div data-tip="Não possui bônus de habilidade." style="display: flex; align-items: center; font-size: 0.7rem; color: var(--text-muted); pointer-events: auto; height: 20px;">${t('PERK_NONE_NAME')}</div>`;
+        perksHTML = `<div style="display: flex; align-items: center; font-size: 0.7rem; color: var(--text-muted); pointer-events: auto; height: 20px;">${t('PERK_NONE_NAME')}</div>`;
     }
 
     let starBadge = p.isStar ? `<span style="font-size: 0.9rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';

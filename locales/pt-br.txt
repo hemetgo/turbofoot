@@ -23,6 +23,7 @@ BTN_OPTIONS=⚙️ OPÇÕES
 # --- Seleção de Série/Clube ---
 LABEL_CHOOSE_DIVISION=ESCOLHA A LIGA
 LABEL_CHOOSE_CLUB=ESCOLHA SEU CLUBE
+LABEL_CHOOSE_CLUB_SUBTITLE=Elenco inicial no Nível
 LEAGUE_REWARDS_TITLE=RECOMPENSAS
 LEAGUE_REWARDS_TITLE_LOCKED=RECOMPENSAS OCULTAS
 LEAGUE_REWARDS_PER_VICTORY=VITÓRIAS
@@ -35,6 +36,35 @@ BTN_BACK_DIVISIONS=← VOLTAR PARA DIVISÕES
 HOW_TO_PLAY_TITLE=COMO JOGAR
 BTN_REPLAY_TUTORIAL=▶️ REVER TUTORIAL GUIADO
 BTN_UNDERSTOOD=ENTENDI
+
+HOW_TO_PLAY_INTRO=Bem-vindo ao TurboFoot! Você assume o comando de um clube de futebol em ascensão. Sua jornada é guiar seu time pelo mapa, derrotar adversários, juntar moedas e contratar reforços no mercado de transferências para superar os maiores campeões da temporada!\n\nEm campo, cada jogada importa. Suas chances de sucesso dependem da força e da química do seu time em comparação com o rival. Escolher a jogada certa no momento certo é a chave para fazer gols.
+
+HOW_TO_PLAY_TRAITS_TITLE=O PODER DOS ESPECIALISTAS
+HOW_TO_PLAY_TRAITS_INTRO=Cada Habilidade leva seu time a um estilo de jogo diferente! Acumular a MESMA habilidade repetidamente dá retornos cada vez menores — o segredo é montar um elenco com 2 ou 3 especialidades complementares, e não onze jogadores idênticos. Toda força vem com uma fraqueza.
+
+HOW_TO_PLAY_TRAIT_FINISHING_NAME=🎯 Finalização
+HOW_TO_PLAY_TRAIT_FINISHING_DESC=Artilheiros natos! Bônus ALTO ao finalizar. Não traz benefício fora da área.
+
+HOW_TO_PLAY_TRAIT_PASSING_NAME=👟 Passe
+HOW_TO_PLAY_TRAIT_PASSING_DESC=Maestros do meio-campo! Bônus em jogadas de Risco Baixo/Médio. Não ajuda em ações de Risco Alto.
+
+HOW_TO_PLAY_TRAIT_PACE_NAME=⚡ Velocidade
+HOW_TO_PLAY_TRAIT_PACE_DESC=Futebol de contra-ataque puro! Bônus em QUALQUER jogada de Risco Alto, no ataque ou na defesa. Não ajuda em ações seguras.
+
+HOW_TO_PLAY_TRAIT_TACKLING_NAME=🪓 Desarme
+HOW_TO_PLAY_TRAIT_TACKLING_DESC=Cães de guarda! Bônus em marcações e desarmes. Não ajuda goleiros.
+
+HOW_TO_PLAY_TRAIT_REFLEXES_NAME=🧤 Reflexos
+HOW_TO_PLAY_TRAIT_REFLEXES_DESC=Uma muralha entre as traves! Bônus enorme em defesas do goleiro. Só funciona dentro da sua própria área.
+
+HOW_TO_PLAY_TRAIT_MARKING_NAME=🛡️ Posicionamento
+HOW_TO_PLAY_TRAIT_MARKING_DESC=Inteligência tática! Reduz a força do RIVAL em todas as jogadas dele.
+
+HOW_TO_PLAY_TRAIT_VISION_NAME=🔗 Visão de Jogo
+HOW_TO_PLAY_TRAIT_VISION_DESC=O time pensa como um só! Passes e dribles bem-sucedidos geram Combo extra, mas só funciona bem se o time tiver pelo menos 2 habilidades diferentes.
+
+HOW_TO_PLAY_TRAIT_LEADERSHIP_NAME=🗣️ Liderança
+HOW_TO_PLAY_TRAIT_LEADERSHIP_DESC=Capitão nato! Reduz o dano de jogadas falhas e fortalece o jogador que usa a braçadeira.
 
 # --- Mapa ---
 LABEL_MAP_DEFAULT=MAPA
@@ -307,6 +337,7 @@ TEXT_NEW_TRAIT=NOVO TRAIT! ✨
 BTN_CONFIRM=CONFIRMAR
 TITLE_POST_MATCH_TRAINING=📈 TREINAMENTO PÓS-JOGO
 TEXT_LEVEL_POINTS_INFO=Você tem <strong id="level-points-text" style="color: var(--accent-green); font-size: 1.1rem;">0</strong> níveis para distribuir!
+TEXT_TRAIN_TIP=💡 Evoluir um jogador com menos de 2 habilidades garante a ele uma <strong style="color:var(--accent-purple);">Nova Habilidade Aleatória!</strong>
 TITLE_CAREER=MINHA CARREIRA
 
 TITLE_QUIT_CONFIRM=DESISTIR?
@@ -342,9 +373,6 @@ LABEL_CONFIRM_CLICKS_TOGGLE=Confirmação Cliques
 BTN_HARD_RESET=⚠️ APAGAR TODO O PROGRESSO
 BTN_CLOSE=FECHAR
 
-BTN_REPLAY_TUTORIAL=▶️ REVER TUTORIAL GUIADO
-BTN_UNDERSTOOD=ENTENDI
-
 TITLE_RESET_CAREER=RESETAR CARREIRA?
 TEXT_REFUND_INFO=Você vai recuperar todos os <strong id="refund-amount-text" class="text-gold">0</strong> 🏆 gastos!
 TEXT_REFUND_CONFIRM_QUESTION=Deseja desfazer todos os aprimoramentos?
@@ -375,9 +403,9 @@ ALERT_CHEAT_COINS=+{val} 💰 adicionadas!
 PERK_NONE_NAME=Nenhuma
 PERK_FINISHING_NAME=Finalização
 PERK_PASSING_NAME=Passe
-PERK_PACE_NAME=Colocação
+PERK_PACE_NAME=Velocidade
 PERK_TACKLING_NAME=Desarme
-PERK_REFLEXES_NAME=Reflexo
-PERK_MARKING_NAME=Marcação
+PERK_REFLEXES_NAME=Reflexos
+PERK_MARKING_NAME=Posicionamento
 PERK_VISION_NAME=Visão de Jogo
 PERK_LEADERSHIP_NAME=Liderança
