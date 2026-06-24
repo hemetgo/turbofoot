@@ -92,7 +92,6 @@ function updateFieldState() {
     if (matchState.badLuckCounter <= 0) {
         if (Math.random() < GAME_BALANCE.mechanics.luckEvents.chance) {
             matchState.badLuckCounter = GAME_BALANCE.mechanics.luckEvents.duration;
-            addMatchLog(t('LOG_BAD_LUCK'), "fail");
         }
     } else { matchState.badLuckCounter = 0; }
 
