@@ -87,9 +87,9 @@ function getPlayerCardHTML(p, onClickAttr = "") {
         dataPerks = p.perks.map(perk => perk.id).join(',');
 
         let perksArray = p.perks.map(perk => {
-            return `<div data-tip="${perk.desc}" style="display: flex; align-items: center; gap: 4px; font-size: 0.7rem; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-light); pointer-events: auto; overflow: hidden; max-width: 110px; flex-shrink: 1;">
+            return `<div data-tip="${t(perk.desc)}" style="display: flex; align-items: center; gap: 4px; font-size: 0.7rem; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-light); pointer-events: auto; overflow: hidden; max-width: 110px; flex-shrink: 1;">
                         <span style="flex-shrink: 0;">${perk.emoji}</span>
-                        <span style="font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">${perk.name}</span>
+                        <span style="font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">${t(perk.name)}</span>
                     </div>`;
         });
 

@@ -1,8 +1,15 @@
 let pendingClubOptions = [];
 let selectedSeriesIndex = 0;
 
+// Inicializa o jogo: i18n → carrega dados → renderiza
 async function initGame() {
     try {
+        // Inicializa o idioma e baixa o txt usando a função do i18n.js
+        await loadLocale();
+
+        // Traduz o HTML estático
+        applyStaticI18n();
+
         const mechanicsData = await fetch('config_mechanics.json').then(r => r.json());
         const generationData = await fetch('config_generation.json').then(r => r.json());
         const rivalsData = await fetch('config_rivals.json').then(r => r.json());
@@ -47,11 +54,9 @@ function startRunFlow() {
         let lockedAttr = isLocked ? 'style="opacity:0.3; filter:grayscale(1); pointer-events:none;"' : '';
         let lockIcon = isLocked ? '🔒' : series.emoji;
 
-        // Fórmula dinâmica de recompensa: Aumenta a cada divisão
         let metaPerWin = (idx + 1) * 5;
         let metaWinBonus = (idx + 1) * 50;
 
-        // Condição para esconder as recompensas se estiver bloqueado
         let rewardsHtml = "";
         if (isLocked) {
             rewardsHtml = `
@@ -79,11 +84,11 @@ function startRunFlow() {
             <div class="club-select-card" ${lockedAttr} onclick="selectSeries(${idx})" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
                 <div class="club-select-header">
                     <div class="club-select-emoji">${lockIcon}</div>
-                    <div class="club-select-name" style="color: ${isLocked ? '#94a3b8' : series.color}">${series.name}</div>
+                    <div class="club-select-name" style="color: ${isLocked ? '#94a3b8' : series.color}">${t(series.name)}</div>
                 </div>
                 <div class="captain-box" style="justify-content: center; min-height: 80px; padding: 12px; flex-grow: 1; display: flex; flex-direction: column;">
                     <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 800; text-align: center; line-height: 1.4; flex-grow: 1; display: flex; align-items: center; justify-content: center;">
-                        ${series.desc}
+                        ${t(series.desc)}
                     </div>
                     ${rewardsHtml}
                 </div>
@@ -98,7 +103,6 @@ function selectSeries(idx) {
     selectedSeriesIndex = idx;
     pendingClubOptions = [];
 
-    // Embaralha as listas originais para garantir escolhas únicas
     let shuffledBases = shuffle(GAME_CONTENT.clubGeneration.bases);
     let shuffledAdjs = shuffle(GAME_CONTENT.clubGeneration.adjectives);
 
@@ -112,25 +116,20 @@ function selectSeries(idx) {
     let playersWith1Trait = metaTraits % 2;
 
     for (let i = 0; i < 3; i++) {
-        // Pega sempre índices diferentes (0, 1 e 2) das listas embaralhadas
         const base = shuffledBases[i];
         const adj = shuffledAdjs[i];
 
-        // 🌎 LÓGICA DE NACIONALIDADES DINÂMICA
         let shuffledNames = shuffle(GAME_CONTENT.names);
         let clubNationalities = [];
 
-        // Puxa a matriz de distribuição diretamente do arquivo de configuração
         let natDistribution = GAME_BALANCE.leagues[idx].natDistribution || [11];
 
-        // Preenche o "pote" de nacionalidades do clube com base na distribuição acima
         natDistribution.forEach((count, natIndex) => {
             for (let k = 0; k < count; k++) {
                 clubNationalities.push(shuffledNames[natIndex]);
             }
         });
 
-        // Embaralha as nacionalidades para não ficarem em blocos perfeitos na visualização
         clubNationalities = shuffle(clubNationalities);
 
         let team = [];
@@ -147,7 +146,6 @@ function selectSeries(idx) {
 
         for (let j = 0; j < 11; j++) {
             let numTraitsToGive = traitDistribution[j];
-            // Passamos a nacionalidade sorteada correspondente ao índice [j]
             team.push(generateBasePlayer(startLvl, numTraitsToGive, focusTraitId, focusChance, clubNationalities[j]));
         }
 
@@ -176,7 +174,7 @@ function selectSeries(idx) {
     const headerBlock = document.querySelector('#screen-club-select .champ-title-block');
     if (headerBlock) {
         headerBlock.innerHTML = `
-            <div class="champ-league-label">ESCOLHA SEU CLUBE</div>
+            <div class="champ-league-label">${t('LABEL_CHOOSE_CLUB')}</div>
             <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 800; margin-top: 4px; text-transform: uppercase;">
                 Elenco inicial no Nível <span style="color: var(--accent-green); font-weight: 900;">${startLvl}</span>
             </div>
@@ -190,8 +188,9 @@ function selectSeries(idx) {
         let traitsArray = Object.values(option.traitCounts).sort((a, b) => b.count - a.count);
 
         if (traitsArray.length > 0) {
-            let tags = traitsArray.map(t =>
-                `<span data-tip="${t.desc}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--border-light); white-space: nowrap; color: #e2e8f0; pointer-events: auto;">${t.emoji} ${t.name} <span style="color:var(--accent-gold); font-weight:900;">x${t.count}</span></span>`
+            // Alterado de 't' para 'trait' para evitar conflito com a função de tradução t()
+            let tags = traitsArray.map(trait =>
+                `<span data-tip="${t(trait.desc)}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--border-light); white-space: nowrap; color: #e2e8f0; pointer-events: auto;">${trait.emoji} ${t(trait.name)} <span style="color:var(--accent-gold); font-weight:900;">x${trait.count}</span></span>`
             ).join('');
             traitsHtml = `<div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 8px;">${tags}</div>`;
         }
@@ -200,7 +199,7 @@ function selectSeries(idx) {
             <div class="club-select-card" onclick="chooseClub(${idx})">
                 <div class="club-select-header">
                     <div class="club-select-emoji" style="font-size: 3.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">${c.emoji}</div>
-                    <div class="club-select-name">${c.name}</div>
+                    <div class="club-select-name">${tClub(c.name)}</div>
                 </div>
                 <div class="captain-box" style="padding: 16px;">
                     <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Destaques da Base</div>
@@ -242,36 +241,31 @@ function getTotalSpent() {
     return total;
 }
 
-let pendingRefundAmount = 0; // Guarda o valor temporariamente
+let pendingRefundAmount = 0;
 
-// 1. Abre a tela de confirmação customizada
 function refundMetaUpgrades() {
     pendingRefundAmount = getTotalSpent();
     if (pendingRefundAmount <= 0) return;
 
-    // Atualiza o valor no texto do HTML e mostra o modal
     document.getElementById('refund-amount-text').innerText = pendingRefundAmount;
     document.getElementById('refund-confirm-overlay').style.display = 'flex';
 }
 
-// 2. Cancela e fecha a tela
 function closeRefundConfirm() {
     document.getElementById('refund-confirm-overlay').style.display = 'none';
     pendingRefundAmount = 0;
 }
 
-// 3. Executa a ação caso o jogador clique em CONFIRMAR
 function executeRefund() {
     if (pendingRefundAmount > 0) {
         gameState.meta.metaCoins += pendingRefundAmount;
-        gameState.meta.upgrades = {}; // Zera os upgrades
+        gameState.meta.upgrades = {};
         saveGame();
         renderMetaShop();
 
-        // Feedback visual da grana voltando
         createJuiceText(`+${pendingRefundAmount} 🏆`, "var(--accent-gold)", window.innerWidth / 2, window.innerHeight / 2);
     }
-    closeRefundConfirm(); // Fecha o modal ao final
+    closeRefundConfirm();
 }
 
 function openMetaShop() {
@@ -293,26 +287,26 @@ function renderMetaShop() {
         let btnHtml = "";
 
         if (isMax) {
-            btnHtml = `<button class="btn-secondary btn-sm" disabled style="width: 120px; opacity: 0.4; cursor: not-allowed; border-color: rgba(255,255,255,0.1);">MÁXIMO</button>`;
+            btnHtml = `<button class="btn-secondary btn-sm" disabled style="width: 120px; opacity: 0.4; cursor: not-allowed; border-color: rgba(255,255,255,0.1);">${t('UPGRADE_BTN_MAX')}</button>`;
         } else if (!canAfford) {
             btnHtml = `
                 <button class="btn-secondary btn-sm" disabled style="width: 120px; opacity: 0.3; filter: grayscale(100%); cursor: not-allowed; display:flex; flex-direction:column; align-items:center; gap:4px;">
-                    <span style="font-weight:900;">COMPRAR</span>
-                    <span style="font-size:0.9rem;">${cost} 🏆</span>
+                    <span style="font-weight:900;">${t('UPGRADE_BTN_BUY')}</span>
+                    <span style="font-size:0.9rem;">${cost}🏆</span>
                 </button>`;
         } else {
             btnHtml = `
                 <button class="btn-primary btn-sm" onclick="buyMetaUpgrade('${upg.id}', ${cost})" style="width: 120px; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--accent-gold); box-shadow: 0 4px 15px rgba(245,158,11,0.15); display:flex; flex-direction:column; align-items:center; gap:4px;">
-                    <span style="color:var(--accent-gold); font-weight:900;">COMPRAR</span>
-                    <span style="color:#fff; font-size:0.9rem;">${cost} 🏆</span>
+                    <span style="color:var(--accent-gold); font-weight:900;">${t('UPGRADE_BTN_BUY')}</span>
+                    <span style="color:#fff; font-size:0.9rem;">${cost}🏆</span>
                 </button>`;
         }
 
         list.innerHTML += `
             <div class="options-row" style="display:flex; justify-content:space-between; align-items:center; gap: 16px; border-left: 4px solid var(--accent-gold);">
                 <div style="flex:1;">
-                    <div style="font-weight:900; color:var(--accent-gold); font-size:1.1rem; text-transform:uppercase;">${upg.name} <span style="color:#fff; font-size:0.8rem; background:rgba(0,0,0,0.4); padding:2px 6px; border-radius:6px; vertical-align: middle;">Nv. ${currentLvl}/${upg.maxLevel}</span></div>
-                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">${upg.desc}</div>
+                    <div style="font-weight:900; color:var(--accent-gold); font-size:1.1rem; text-transform:uppercase;">${t(upg.name)} <span style="color:#fff; font-size:0.8rem; background:rgba(0,0,0,0.4); padding:2px 6px; border-radius:6px; vertical-align: middle;">Nv. ${currentLvl}/${upg.maxLevel}</span></div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">${t(upg.desc)}</div>
                 </div>
                 <div>${btnHtml}</div>
             </div>`;
@@ -323,7 +317,7 @@ function renderMetaShop() {
         list.innerHTML += `
             <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light); text-align: center;">
                 <button class="btn-secondary" style="border-color: var(--accent-red); color: var(--accent-red); width: 100%;" onclick="refundMetaUpgrades()">
-                    🔄 REEMBOLSAR TUDO (${totalSpent} 🏆)
+                    🔄 ${t('UPGRADE_BTN_REFUND')} (${totalSpent}🏆)
                 </button>
             </div>
         `;

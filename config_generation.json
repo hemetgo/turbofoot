@@ -1,108 +1,28 @@
 {
     "clubGeneration": {
         "bases": [
-            {
-                "name": "Leões",
-                "emoji": "🦁"
-            },
-            {
-                "name": "Galos",
-                "emoji": "🐓"
-            },
-            {
-                "name": "Raposas",
-                "emoji": "🦊"
-            },
-            {
-                "name": "Gaviões",
-                "emoji": "🦅"
-            },
-            {
-                "name": "Tigres",
-                "emoji": "🐯"
-            },
-            {
-                "name": "Porcos",
-                "emoji": "🐷"
-            },
-            {
-                "name": "Dragões",
-                "emoji": "🐉"
-            },
-            {
-                "name": "Canários",
-                "emoji": "🐤"
-            },
-            {
-                "name": "Touros",
-                "emoji": "🐂"
-            },
-            {
-                "name": "Furacões",
-                "emoji": "🌪️"
-            },
-            {
-                "name": "Almirantes",
-                "emoji": "⚓"
-            },
-            {
-                "name": "Operários",
-                "emoji": "👷"
-            },
-            {
-                "name": "Acadêmicos",
-                "emoji": "🎓"
-            },
-            {
-                "name": "Bandeirantes",
-                "emoji": "🗺️"
-            },
-            {
-                "name": "Gigantes",
-                "emoji": "🏟️"
-            },
-            {
-                "name": "Soberanos",
-                "emoji": "👑"
-            },
-            {
-                "name": "Imortais",
-                "emoji": "🧟"
-            },
-            {
-                "name": "Navegantes",
-                "emoji": "⛵"
-            },
-            {
-                "name": "Lobos",
-                "emoji": "🐺"
-            }
+            { "name": "TEAM_BASE_LIONS", "emoji": "🦁" },
+            { "name": "TEAM_BASE_ROOSTERS", "emoji": "🐓" },
+            { "name": "TEAM_BASE_FOXES", "emoji": "🦊" },
+            { "name": "TEAM_BASE_HAWKS", "emoji": "🦅" },
+            { "name": "TEAM_BASE_TIGERS", "emoji": "🐯" },
+            { "name": "TEAM_BASE_PIGS", "emoji": "🐷" },
+            { "name": "TEAM_BASE_DRAGONS", "emoji": "🐉" },
+            { "name": "TEAM_BASE_CANARIES", "emoji": "🐤" },
+            { "name": "TEAM_BASE_BULLS", "emoji": "🐂" },
+            { "name": "TEAM_BASE_HURRICANES", "emoji": "🌪️" },
+            { "name": "TEAM_BASE_ADMIRALS", "emoji": "⚓" },
+            { "name": "TEAM_BASE_WORKERS", "emoji": "👷" },
+            { "name": "TEAM_BASE_ACADEMICS", "emoji": "🎓" },
+            { "name": "TEAM_BASE_PIONEERS", "emoji": "🗺️" },
+            { "name": "TEAM_BASE_GIANTS", "emoji": "🏟️" },
+            { "name": "TEAM_BASE_SOVEREIGNS", "emoji": "👑" },
+            { "name": "TEAM_BASE_IMMORTALS", "emoji": "🧟" },
+            { "name": "TEAM_BASE_NAVIGATORS", "emoji": "⛵" },
+            { "name": "TEAM_BASE_WOLVES", "emoji": "🐺" }
         ],
         "adjectives": [
-            "da Capital",
-            "do Norte",
-            "do Sul",
-            "do Leste",
-            "do Oeste",
-            "da Colina",
-            "da Vila",
-            "do Porto",
-            "da Baixada",
-            "da Fronteira",
-            "do Vale",
-            "da Ilha",
-            "Unidos",
-            "Independentes",
-            "Metropolitanos",
-            "Atléticos",
-            "Tricolores",
-            "Celestes",
-            "Esmeraldinos",
-            "Alvirrubros",
-            "de Regatas",
-            "F.C.",
-            "S.C.",
-            "da Várzea"
+            "TEAM_ADJ_CAPITAL", "TEAM_ADJ_NORTH", "TEAM_ADJ_SOUTH", "TEAM_ADJ_EAST", "TEAM_ADJ_WEST", "TEAM_ADJ_HILL", "TEAM_ADJ_VILLAGE", "TEAM_ADJ_PORT", "TEAM_ADJ_VALLEY", "TEAM_ADJ_BORDER", "TEAM_ADJ_VALLEY2", "TEAM_ADJ_ISLAND", "TEAM_ADJ_UNITED", "TEAM_ADJ_INDEPENDENT", "TEAM_ADJ_METRO", "TEAM_ADJ_ATHLETIC", "TEAM_ADJ_TRICOLOR", "TEAM_ADJ_CELESTIAL", "TEAM_ADJ_EMERALD", "TEAM_ADJ_REDWHITE", "TEAM_ADJ_REGATAS", "TEAM_ADJ_FC", "TEAM_ADJ_SC", "TEAM_ADJ_VARZEA"
         ]
     }
 }

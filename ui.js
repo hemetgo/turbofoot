@@ -68,7 +68,7 @@ async function playSuspenseSequence(isUser, isSuccess) {
     const teamEl = document.getElementById("suspense-team");
 
     ov.style.display = "flex";
-    teamEl.innerText = isUser ? "🔵 SEU TIME ATACANDO" : "🔴 RIVAL ATACANDO";
+    teamEl.innerText = isUser ? t("BADGE_USER_ATTACKING") : t("BADGE_RIVAL_ATTACKING");
     teamEl.className = `suspense-team ${isUser ? "user" : "rival"}`;
 
     const d = GAME_CONTENT.suspenseTexts;
@@ -182,17 +182,18 @@ function openHowToPlay() {
 function populateHowToPlay() {
     const data = GAME_CONTENT.howToPlay;
     if (!data) return;
-    document.getElementById('htp-title').innerText = data.title;
+    document.getElementById('htp-title').innerText = t(data.title);
 
-    let html = `<p style="font-size:0.95rem; color:var(--text-muted); margin-bottom:20px; line-height:1.5;">${data.intro.replace(/\n/g, '<br>')}</p>`;
-    html += `<h3 style="color:var(--accent-blue); margin-bottom:8px; font-size:1rem; text-transform:uppercase;">${data.traitsTitle}</h3>`;
-    html += `<p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">${data.traitsIntro}</p>`;
+    let html = `<p style="font-size:0.95rem; color:var(--text-muted); margin-bottom:20px; line-height:1.5;">${t(data.intro).replace(/\n/g, '<br>')}</p>`;
+    html += `<h3 style="color:var(--accent-blue); margin-bottom:8px; font-size:1rem; text-transform:uppercase;">${t(data.traitsTitle)}</h3>`;
+    html += `<p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">${t(data.traitsIntro)}</p>`;
     html += `<div class="trait-help-list">`;
 
     const colors = ['trait-gold', 'trait-blue', 'trait-purple', 'trait-green', 'trait-muted', 'trait-blue', 'trait-green'];
 
-    data.traits.forEach((t, i) => {
-        html += `<div class="trait-help-item ${colors[i % colors.length]}"><strong>${t.name}</strong><br><span style="font-weight:600; color:var(--text-muted);">${t.desc}</span></div>`;
+    // Variável alterada de 't' para 'trait' para podermos usar a função t() livremente
+    data.traits.forEach((trait, i) => {
+        html += `<div class="trait-help-item ${colors[i % colors.length]}"><strong>${t(trait.name)}</strong><br><span style="font-weight:600; color:var(--text-muted);">${t(trait.desc)}</span></div>`;
     });
     html += `</div>`;
 
@@ -216,10 +217,11 @@ function openHistoryModal() {
     list.innerHTML = "";
 
     if (!gameState.runHistory || gameState.runHistory.length === 0) {
-        list.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding: 20px;">Nenhuma partida registrada ainda.</p>`;
+        list.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding: 20px;">${t("TEXT_NO_RUNS_YET")}</p>`;
     } else {
         gameState.runHistory.forEach((run, idx) => {
             let cls = run.result === "CAMPEÃO" ? "victory" : "loss";
+            let resultLabel = run.result === "CAMPEÃO" ? t("LABEL_CHAMPION") : t("LABEL_ELIMINATED");
             list.innerHTML += `
                 <div class="history-item ${cls}" onclick="viewHistoryDetails(${idx})">
                     <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
@@ -232,8 +234,8 @@ function openHistoryModal() {
                         </div>
                     </div>
                     <div style="font-weight:900; font-size:0.8rem; text-align:right; flex-shrink:0; margin-left:8px;">
-                        <span style="color: ${run.result === 'CAMPEÃO' ? 'var(--accent-gold)' : 'var(--accent-red)'}">${run.result}</span><br>
-                        <span style="color:var(--text-muted);">Estágio ${run.stageReached}/8</span>
+                        <span style="color: ${run.result === 'CAMPEÃO' ? 'var(--accent-gold)' : 'var(--accent-red)'}">${resultLabel}</span><br>
+                        <span style="color:var(--text-muted);">${t("LABEL_STAGE_REACHED", { stage: run.stageReached })}</span>
                     </div>
                 </div>
             `;
@@ -241,7 +243,8 @@ function openHistoryModal() {
 
         setTimeout(() => {
             gameState.runHistory.forEach((run, idx) => {
-                setupMarquee(`hist-run-name-${idx}`, run.club.name);
+                // Utilização do tClub para traduzir o nome composto no histórico
+                setupMarquee(`hist-run-name-${idx}`, tClub(run.club.name));
             });
         }, 100);
     }
@@ -263,7 +266,6 @@ function viewHistoryDetails(idx) {
                 <div class="history-match-card" style="border-left: 3px solid ${mColor};">
                     <div class="history-match-teams">
                         
-                        <!-- SEU TIME (Alinhado à Direita com corte rígido) -->
                         <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px; min-width:0; width:100%;">
                             <div style="min-width:0; flex:1; position:relative; height:1.2rem; overflow:hidden;">
                                 <div id="hist-user-name-${mIdx}" class="history-team-name" style="position:absolute; right:0; white-space:nowrap;"></div>
@@ -275,7 +277,6 @@ function viewHistoryDetails(idx) {
                             ${m.userScore} <span style="color:var(--text-muted); font-size:0.8rem;">x</span> ${m.rivalScore}
                         </div>
                         
-                        <!-- RIVAL (Alinhado à Esquerda com corte rígido) -->
                         <div style="display:flex; align-items:center; justify-content:flex-start; gap:8px; min-width:0; width:100%;">
                             <span class="history-team-emoji" style="flex-shrink:0;">${m.rivalEmoji}</span>
                             <div style="min-width:0; flex:1; position:relative; height:1.2rem; overflow:hidden;">
@@ -303,10 +304,9 @@ function viewHistoryDetails(idx) {
     setTimeout(() => {
         if (run.matches) {
             run.matches.forEach((m, mIdx) => {
-                // Passamos "true" para o seu time, ativando a rolagem reversa (da esq pra dir)
-                setupMarquee(`hist-user-name-${mIdx}`, run.club.name, true);
-                // Passamos "false" para o rival, mantendo a rolagem normal (da dir pra esq)
-                setupMarquee(`hist-rival-name-${mIdx}`, m.rivalName, false);
+                // Utilização do tClub para traduzir o detalhe das partidas
+                setupMarquee(`hist-user-name-${mIdx}`, tClub(run.club.name), true);
+                setupMarquee(`hist-rival-name-${mIdx}`, tClub(m.rivalName), false);
             });
         }
     }, 100);
@@ -404,12 +404,12 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
             btnConfirm.style.background = "var(--accent-green)";
             btnConfirm.style.color = "#000";
             btnConfirm.style.boxShadow = "0 0 15px rgba(52, 211, 153, 0.4)";
-            btnConfirm.innerText = "CONFIRMAR";
+            btnConfirm.innerText = t("BTN_CONFIRM");
         } else {
             btnConfirm.style.background = "";
             btnConfirm.style.color = "";
             btnConfirm.style.boxShadow = "";
-            btnConfirm.innerText = "CONFIRMAR";
+            btnConfirm.innerText = t("BTN_CONFIRM");
         }
     }
 
@@ -426,7 +426,7 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
 
             const tx = e.clientX || window.innerWidth / 2;
             const ty = (e.clientY || window.innerHeight / 2) - 40;
-            createJuiceText("USE TODOS OS PONTOS!", "var(--accent-red)", tx, ty);
+            createJuiceText(t("TEXT_USE_ALL_POINTS"), "var(--accent-red)", tx, ty);
             return;
         }
 
@@ -461,7 +461,7 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
         btnConfirm.style.boxShadow = "";
 
         if (gainedTrait) {
-            createJuiceText("NOVO TRAIT! ✨", "var(--accent-purple)", window.innerWidth / 2, window.innerHeight / 2 - 50);
+            createJuiceText(t("TEXT_NEW_TRAIT"), "var(--accent-purple)", window.innerWidth / 2, window.innerHeight / 2 - 50);
         }
 
         if (onComplete) onComplete();

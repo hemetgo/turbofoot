@@ -15,7 +15,7 @@ function startMapMatch() {
         nextBuff: gameState.activeCampBuff || 0,
         baseTotalActions: Math.floor(Math.random() * (maxA - minA + 1)) + minA,
         currentAction: 0, badLuckCounter: 0,
-        advantageFailCounter: 0, // Mantido para contagem invisível
+        advantageFailCounter: 0,
         isExtraTime: false
     };
     matchState.totalActions = matchState.baseTotalActions;
@@ -25,12 +25,15 @@ function startMapMatch() {
     document.getElementById("score-user").innerText = "0";
     document.getElementById("score-rival").innerText = "0";
     setupMarquee("match-user-name", `${gameState.club.emoji} ${gameState.club.name}`);
-    setupMarquee("match-rival-name", `${rivalTeam.emoji} ${rivalTeam.name}`);
+    setupMarquee("match-rival-name", `${rivalTeam.emoji} ${t(rivalTeam.name)}`);
 
     showScreen("screen-match");
     document.getElementById('match-log-feed').innerHTML = '';
-    addMatchLog("A bola rola para o desafio no Mapa!", "system");
-    if (matchState.nextBuff > 0) addMatchLog(`Seu time entra focado (+${matchState.nextBuff} Tática no 1º turno) devido ao Treinamento!`, "success");
+    
+    addMatchLog(t('LOG_MATCH_START'), "system");
+    if (matchState.nextBuff > 0) {
+        addMatchLog(t('LOG_TACTICAL_FOCUS', { buff: matchState.nextBuff }), "success");
+    }
     updateFieldState();
 
     if (shouldShowFirstMatchTutorial()) {
@@ -41,7 +44,7 @@ function startMapMatch() {
 function updateTimerDisplay() {
     let el = document.getElementById("action-counter");
     if (matchState.isExtraTime) {
-        el.innerHTML = `<span style="color:var(--accent-gold); font-weight:900; letter-spacing:0.5px; text-shadow: 0 0 8px rgba(245,158,11,0.8);">${matchState.currentAction}/${matchState.baseTotalActions} 🏆 PRORROGAÇÃO - GOL DE OURO</span>`;
+        el.innerHTML = `<span style="color:var(--accent-gold); font-weight:900; letter-spacing:0.5px; text-shadow: 0 0 8px rgba(245,158,11,0.8);">${matchState.currentAction}/${matchState.baseTotalActions} 🏆 ${t('MATCH_EXTRA_TIME')}</span>`;
     } else {
         el.innerText = `⏱️ ${matchState.currentAction}/${matchState.baseTotalActions}`;
     }
@@ -89,7 +92,7 @@ function updateFieldState() {
     if (matchState.badLuckCounter <= 0) {
         if (Math.random() < GAME_BALANCE.mechanics.luckEvents.chance) {
             matchState.badLuckCounter = GAME_BALANCE.mechanics.luckEvents.duration;
-            addMatchLog("⚠️ Momento de azar! Precisão reduzida.", "fail");
+            addMatchLog(t('LOG_BAD_LUCK'), "fail");
         }
     } else { matchState.badLuckCounter = 0; }
 
@@ -98,35 +101,34 @@ function updateFieldState() {
 
     const possBadge = document.getElementById("possession-badge");
     if (matchState.hasBall) {
-        possBadge.innerHTML = "⚽ SEU ATAQUE";
+        possBadge.innerHTML = `⚽ ${t('BADGE_USER_ATTACKING_BALL')}`;
         possBadge.style.color = "var(--accent-green)";
         possBadge.style.borderColor = "rgba(52, 211, 153, 0.4)";
         possBadge.style.background = "rgba(52, 211, 153, 0.1)";
-        possBadge.setAttribute("data-tip", GAME_CONTENT.tooltips.possessionAtk);
+        possBadge.setAttribute("data-tip", t(GAME_CONTENT.tooltips.possessionAtk));
         document.querySelector('.team-section.user').style.opacity = '1';
         document.querySelector('.team-section.rival').style.opacity = '0.35';
     } else {
-        possBadge.innerHTML = "🛡️ DEFENDENDO";
+        possBadge.innerHTML = `🛡️ ${t('BADGE_DEFENDING')}`;
         possBadge.style.color = "var(--accent-red)";
         possBadge.style.borderColor = "rgba(248, 113, 113, 0.4)";
         possBadge.style.background = "rgba(248, 113, 113, 0.1)";
-        possBadge.setAttribute("data-tip", GAME_CONTENT.tooltips.possessionDef);
+        possBadge.setAttribute("data-tip", t(GAME_CONTENT.tooltips.possessionDef));
         document.querySelector('.team-section.user').style.opacity = '0.35';
         document.querySelector('.team-section.rival').style.opacity = '1';
     }
 
     const comboBadge = document.getElementById("combo-badge");
-    comboBadge.innerText = `🔥 Combo: ${matchState.combo}`;
-    comboBadge.setAttribute("data-tip", GAME_CONTENT.tooltips.combo);
+    comboBadge.innerText = `🔥 ${t('LABEL_COMBO')}: ${matchState.combo}`;
+    comboBadge.setAttribute("data-tip", t(GAME_CONTENT.tooltips.combo));
 
     const tactDisplay = document.getElementById("tactical-bonus-display");
     if (matchState.nextBuff > 0) {
-        tactDisplay.innerHTML = `✨ +${matchState.nextBuff} Tática`;
+        tactDisplay.innerHTML = `✨ +${matchState.nextBuff} ${t('LABEL_TACTICAL')}`;
         tactDisplay.style.display = "flex";
-        tactDisplay.setAttribute("data-tip", GAME_CONTENT.tooltips.tactical);
+        tactDisplay.setAttribute("data-tip", t(GAME_CONTENT.tooltips.tactical));
     } else { tactDisplay.style.display = "none"; }
 
-    // Remove qualquer resquício de UI do Pity Timer
     const pityBadge = document.getElementById("pity-badge");
     if (pityBadge) pityBadge.style.display = "none";
 
@@ -168,13 +170,12 @@ function _renderPlayerButtons() {
     let safeNodes = pool.filter(n => n.riskLevel === "safe");
     let riskyNodes = pool.filter(n => n.riskLevel !== "safe");
 
-    // NERF DA DEFESA: Rival dita o jogo
     let totalNodesNeeded = 3;
     if (!matchState.hasBall) {
-        totalNodesNeeded = 2; // Quando defendendo, apenas 2 opções (Pressão!)
-        safeNodes = [];       // O rival atacando não te dá chances seguras
+        totalNodesNeeded = 2;
+        safeNodes = [];
     }
-    if (isCritical) totalNodesNeeded = 2; // Cara a cara com o gol sempre 2 opções
+    if (isCritical) totalNodesNeeded = 2;
 
     if (Math.random() < (GAME_BALANCE.mechanics.safeActionChance ?? 0.15) && safeNodes.length > 0) {
         selected.push(pickWeightedNodes(safeNodes, 1)[0]);
@@ -192,7 +193,6 @@ function _renderPlayerButtons() {
     selected = shuffle(selected);
     wrapper.className = `field-container ${matchState.hasBall ? 'atk-theme' : 'def-theme'} pop-in`;
 
-    // ===== MOTOR MATEMÁTICO =====
     const scale = GAME_BALANCE.mechanics.scaling || {};
     const BASE_CHANCE = scale.baseChance || 45;
     const LEVEL_PCT = scale.levelModPct || 2.5;
@@ -224,7 +224,7 @@ function _renderPlayerButtons() {
 
         if (node.comboReq === "ALL") {
             if (matchState.combo <= 0) canAfford = false;
-            comboBadge = canAfford ? `<span class="combo-badge">TUDO 🔥</span>` : `<span class="combo-badge" style="color:var(--accent-red); border-color:var(--accent-red); background:rgba(248,113,113,0.15);">-${node.comboReq}🔥</span>`;
+            comboBadge = canAfford ? `<span class="combo-badge">${t('BADGE_COMBO_ALL')} 🔥</span>` : `<span class="combo-badge" style="color:var(--accent-red); border-color:var(--accent-red); background:rgba(248,113,113,0.15);">-${node.comboReq}🔥</span>`;
         }
         else if (node.comboReq > 0) {
             if (matchState.combo < node.comboReq) canAfford = false;
@@ -238,7 +238,6 @@ function _renderPlayerButtons() {
 
         let chance = BASE_CHANCE * finalMod;
 
-        // VANTAGEM OFENSIVA INTENSIFICADA
         if (matchState.hasBall) {
             chance += 15;
         } else {
@@ -313,18 +312,18 @@ function _renderPlayerButtons() {
         }
 
         let succLabel = "";
-        if (node.type === 'shoot') succLabel = "Gol";
-        else if (node.type === 'save') succLabel = "Defesa";
-        else if (node.successMove < 0) succLabel = `Recua ${Math.abs(node.successMove)}`;
-        else succLabel = node.successMove > 0 ? `Avança +${node.successMove}` : "Mantém";
+        if (node.type === 'shoot') succLabel = t('OUTCOME_GOAL');
+        else if (node.type === 'save') succLabel = t('OUTCOME_SAVE');
+        else if (node.successMove < 0) succLabel = t('OUTCOME_RETREAT', { val: Math.abs(node.successMove) });
+        else succLabel = node.successMove > 0 ? t('OUTCOME_ADVANCE', { val: node.successMove }) : t('OUTCOME_MAINTAIN');
 
         if (node.nextBuff && node.nextBuff > 0) succLabel += ` <span class="buff-text">(+✨)</span>`;
 
         let failLabel = "";
         let failClass = "fail";
-        if (node.riskLevel === "safe") { failLabel = "Sem Risco"; failClass += " safe"; }
-        else if (node.type === 'save') failLabel = "Sofre Gol";
-        else failLabel = node.failMove < 0 ? `Recua ${Math.abs(node.failMove)}` : "Perde Posse";
+        if (node.riskLevel === "safe") { failLabel = t('OUTCOME_SAFE'); failClass += " safe"; }
+        else if (node.type === 'save') failLabel = t('OUTCOME_CONCEDE');
+        else failLabel = node.failMove < 0 ? t('OUTCOME_RETREAT', { val: Math.abs(node.failMove) }) : t('OUTCOME_LOSE_POSSESSION');
 
         let synergies = [];
         if (node.synergy) {
@@ -332,7 +331,7 @@ function _renderPlayerButtons() {
             if (foundPerk) synergies.push(foundPerk);
         }
 
-        let synHtml = synergies.map(s => `<span data-tip="${s.name}" style="font-size:0.8rem;">${s.emoji}</span>`).join('');
+        let synHtml = synergies.map(s => `<span data-tip="${t(s.name)}" style="font-size:0.8rem;">${s.emoji}</span>`).join('');
         let synBadge = '';
         let synergyIds = synergies.map(s => s.id);
         let advantage = hasTraitAdvantage(node, traits);
@@ -340,9 +339,9 @@ function _renderPlayerButtons() {
         if (synergies.length > 0) {
             if (advantage) {
                 btn.classList.add("has-synergy");
-                synBadge = `<div class="action-synergy active">${synHtml} <span>BÔNUS</span></div>`;
+                synBadge = `<div class="action-synergy active">${synHtml} <span>${t('LABEL_BONUS')}</span></div>`;
             } else {
-                synBadge = `<div class="action-synergy inactive">${synHtml} <span>Sinergia</span></div>`;
+                synBadge = `<div class="action-synergy inactive">${synHtml} <span>${t('LABEL_SYNERGY')}</span></div>`;
             }
         }
 
@@ -354,7 +353,7 @@ function _renderPlayerButtons() {
             <div class="node-center">
                 <div class="node-icon-name">
                     <span class="node-emoji">${node.emoji}</span>
-                    <span class="node-name">${node.name}</span>
+                    <span class="node-name">${t(node.name)}</span>
                 </div>
                 <div class="node-badges-wrapper">
                     ${synBadge}
@@ -364,14 +363,14 @@ function _renderPlayerButtons() {
                 <div class="outcome-row ${failClass}">❌ ${failLabel}</div>
                 <div class="outcome-row succ">✅ ${succLabel}</div>
             </div>
-            <div class="confirm-text">TOQUE P/ CONFIRMAR</div>
+            <div class="confirm-text">${t('LABEL_TAP_CONFIRM')}</div>
         `;
 
         btn.onclick = async (e) => {
             if (!canAfford) {
                 const tx = e.clientX || window.innerWidth / 2;
                 const ty = e.clientY || window.innerHeight / 2;
-                createJuiceText("COMBO INSUFICIENTE!", "#f87171", tx, ty - 30);
+                createJuiceText(t('LOG_COMBO_INSUFFICIENT'), "#f87171", tx, ty - 30);
 
                 btn.classList.add("shake");
                 setTimeout(() => btn.classList.remove("shake"), 300);
@@ -406,8 +405,6 @@ async function resolveProceduralNode(node, event) {
 
     const traits = getTeamTraits();
     const hasAdvantage = hasTraitAdvantage(node, traits);
-
-    // Variável que busca a config ou assume 99999 (impossível de ativar)
     const pityThreshold = GAME_BALANCE.mechanics.pityThreshold;
 
     let isSuccess = false;
@@ -426,7 +423,6 @@ async function resolveProceduralNode(node, event) {
             let roll = Math.random() * 100;
             isSuccess = roll <= node.computedChance;
 
-            // SEGUNDA ROLAGEM INVISÍVEL (Vantagem Real)
             if (!isSuccess && hasAdvantage) {
                 let roll2 = Math.random() * 100;
                 if (roll2 <= node.computedChance) {
@@ -462,7 +458,7 @@ async function resolveProceduralNode(node, event) {
         let visionBonus = getVisionComboBonus(node, traits);
         if (visionBonus > 0) {
             matchState.combo += visionBonus;
-            addMatchLog("🔗 Visão de jogo! O time se entende em campo.", "success");
+            addMatchLog(t('LOG_VISION_PLAY'), "success");
         }
 
         document.getElementById("game-container").classList.add("flash-success");
@@ -474,24 +470,26 @@ async function resolveProceduralNode(node, event) {
 
         if (node.forcePossessionLoss) {
             matchState.hasBall = false;
-            addMatchLog("Falta feita! O rival assume o jogo.", "fail");
+            addMatchLog(t('LOG_FOUL'), "fail");
         }
 
-        // TEXTOS DE FEEDBACK (Sem referência explícita ao Pity Timer, camuflado como Sinergia)
         if (node.type === 'shoot' && matchState.zone >= 4) { goalScored = true; isUserGoal = true; }
         else if (node.type !== 'shoot' && node.type !== 'save') {
             if (wasPityUsed || usedSecondChance) {
-                createJuiceText(`Sinergia! ✨`, "#a855f7", x, y - 50);
-                addMatchLog(`O fundamento salvou a jogada na insistência!`, "success");
+                createJuiceText(t('JUICE_SYNERGY'), "#a855f7", x, y - 50);
+                addMatchLog(t('LOG_PITY_SAVE'), "success");
             } else if (hasAdvantage) {
-                createJuiceText(`+ Bônus!`, "#a855f7", x, y - 50);
-                addMatchLog(`Fundamento aplicado na jogada!`, "success");
+                createJuiceText(t('JUICE_BONUS'), "#a855f7", x, y - 50);
+                addMatchLog(t('LOG_BONUS_APPLIED'), "success");
             } else {
-                createJuiceText(matchState.nextBuff > 0 ? "Lindo! ✨" : node.name, "#34d399", x, y);
-                addMatchLog(getRandomLog('success', node.name), 'success');
+                createJuiceText(matchState.nextBuff > 0 ? t('LOG_NICE') : t(node.name), "#34d399", x, y);
+                addMatchLog(t(getRandomLog('success'), { action: t(node.name) }), 'success');
             }
         }
-        else if (node.type === 'save') { createJuiceText("DEFESAÇA!", "#38bdf8", x, y); addMatchLog("Defesa espetacular!", 'success'); }
+        else if (node.type === 'save') { 
+            createJuiceText(t('LOG_GREAT_DEFENSE_TITLE'), "#38bdf8", x, y); 
+            addMatchLog(t('LOG_GREAT_DEFENSE_TEXT'), 'success'); 
+        }
     } else {
         let mitigation = getLeadershipMitigation(traits);
 
@@ -503,23 +501,22 @@ async function resolveProceduralNode(node, event) {
         if (matchState.hasBall) matchState.hasBall = false;
         let mitigatedFailMove = Math.round(node.failMove * mitigation);
 
-        // CONTRA-ATAQUE MORTAL
         if (wasAttacking && !matchState.hasBall) {
             matchState.zone = Math.max(0, matchState.zone + mitigatedFailMove - 1);
-            createJuiceText("CONTRA-ATAQUE!", "#ef4444", x, y - 80);
-            addMatchLog("O rival roubou a bola e partiu em contra-ataque letal!", "fail");
+            createJuiceText(t('LOG_COUNTER_ATTACK_TITLE'), "#ef4444", x, y - 80);
+            addMatchLog(t('LOG_COUNTER_ATTACK_TEXT'), "fail");
         } else {
             matchState.zone = Math.max(0, matchState.zone + mitigatedFailMove);
         }
 
         if (node.type === 'save') { goalScored = true; isUserGoal = false; }
         else if (!wasAttacking || node.type !== 'shoot') {
-            createJuiceText("Falhou!", "#f87171", x, y);
-            addMatchLog(getRandomLog('fail', node.name), 'fail');
+            createJuiceText(t('LOG_FAILED'), "#f87171", x, y);
+            addMatchLog(t(getRandomLog('fail'), { action: t(node.name) }), 'fail');
         }
         else if (node.type === 'shoot') {
-            createJuiceText("Pra fora!", "#94a3b8", x, y);
-            addMatchLog("A finalização não foi boa.", 'fail');
+            createJuiceText(t('LOG_MISSED'), "#94a3b8", x, y);
+            addMatchLog(t('LOG_BAD_SHOT'), 'fail');
         }
     }
 
@@ -532,20 +529,19 @@ function handleGoal(isUserGoal) {
     document.getElementById("dynamic-nodes-wrapper").innerHTML = "";
     if (isUserGoal) {
         matchState.userScore++; document.getElementById("score-user").innerText = matchState.userScore;
-        createJuiceText("⚽ GOOOOL!!", "#f59e0b", window.innerWidth / 2, window.innerHeight / 2 - 100);
-        addMatchLog(getRandomLog('goalUser'), "goal-user");
-        addMatchLog("O rival reinicia o jogo furioso buscando o empate!", "fail");
+        createJuiceText(t('JUICE_GOAL_USER'), "#f59e0b", window.innerWidth / 2, window.innerHeight / 2 - 100);
+        addMatchLog(t(getRandomLog('goalUser')), "goal-user");
+        addMatchLog(t('LOG_RIVAL_RESTART'), "fail");
         fireConfetti();
     } else {
         matchState.rivalScore++; document.getElementById("score-rival").innerText = matchState.rivalScore;
-        createJuiceText("😢 Gol", "#ef4444", window.innerWidth / 2, window.innerHeight / 2);
-        addMatchLog(getRandomLog('goalRival'), "goal-rival");
-        addMatchLog("Sua equipe vai para a saída de bola com sangue nos olhos!", "success");
+        createJuiceText(t('LOG_GOAL_AGAINST'), "#ef4444", window.innerWidth / 2, window.innerHeight / 2);
+        addMatchLog(t(getRandomLog('goalRival')), "goal-rival");
+        addMatchLog(t('LOG_TEAM_FURIOUS'), "success");
         fireDespairEffect();
     }
     matchState.zone = 2; matchState.hasBall = !isUserGoal; matchState.nextBuff = 0; matchState.combo = 0;
 
-    // SANGUE NOS OLHOS (Kickoff Buff)
     matchState.momentum = isUserGoal ? -3 : 3;
 
     if (matchState.isExtraTime) {
@@ -624,8 +620,8 @@ function endMatchByTime() {
             matchState.isExtraTime = true;
             matchState.totalActions++;
 
-            addMatchLog("Fim do tempo regulamentar. PRORROGAÇÃO COM GOL DE OURO!", "system");
-            createJuiceText("GOL DE OURO!", "#f59e0b", window.innerWidth / 2, window.innerHeight / 2);
+            addMatchLog(t('LOG_GOLDEN_GOAL_INTRO'), "system");
+            createJuiceText(t('LOG_GOLDEN_GOAL_TITLE'), "#f59e0b", window.innerWidth / 2, window.innerHeight / 2);
             updateFieldState();
             return;
         } else {
@@ -640,7 +636,7 @@ function endMatchByTime() {
 
 function finishMatchRewards() {
     const isVictory = matchState.userScore > matchState.rivalScore;
-    addMatchLog(getRandomLog('matchEnd'), "system");
+    addMatchLog(t(getRandomLog('matchEnd')), "system");
 
     if (!gameState.season.matchHistory) gameState.season.matchHistory = [];
     gameState.season.matchHistory.push({
@@ -653,14 +649,14 @@ function finishMatchRewards() {
 
     setTimeout(() => {
         if (!isVictory) {
-            document.getElementById("pm-title").innerText = "ELIMINADO";
+            document.getElementById("pm-title").innerText = t('LABEL_ELIMINATED');
             document.getElementById("pm-title").className = `pm-title loss`;
             document.getElementById("pm-score").innerText = `${matchState.userScore} x ${matchState.rivalScore}`;
-            document.getElementById("pm-info").innerText = "Fim da linha. Uma derrota dura que custa a eliminação precoce na liga.";
+            document.getElementById("pm-info").innerText = t('TEXT_ELIMINATED_DESC');
 
             document.querySelector(".pm-rewards").style.display = "none";
 
-            document.querySelector("#post-match-overlay .btn-primary").innerText = "VER RESUMO DA TEMPORADA";
+            document.querySelector("#post-match-overlay .btn-primary").innerText = t('BTN_VIEW_SEASON_SUMMARY');
             document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
                 document.querySelector(".pm-rewards").style.display = "flex";
                 document.getElementById('post-match-overlay').style.display = 'none';
@@ -684,28 +680,26 @@ function finishMatchRewards() {
         gameState.coins += coins;
         updateRosterUI();
 
-        document.getElementById("pm-title").innerText = "VITÓRIA!";
+        document.getElementById("pm-title").innerText = t('LABEL_VICTORY');
         document.getElementById("pm-title").className = `pm-title victory`;
         document.getElementById("pm-score").innerText = `${matchState.userScore} x ${matchState.rivalScore}`;
-        document.getElementById("pm-info").innerText = gameState.currentNode.type === 'boss' ? "O CHEFÃO CAIU! MAPA VENCIDO!" : "O caminho está livre. Continue subindo!";
+        document.getElementById("pm-info").innerText = gameState.currentNode.type === 'boss' ? t('TEXT_BOSS_DEFEATED') : t('TEXT_PATH_CLEAR');
 
-        // SE FOR O CHEFÃO: Pula a recompensa inútil e vai pro final
         if (gameState.currentNode.type === 'boss') {
             document.querySelector(".pm-rewards").style.display = "none";
-            document.querySelector("#post-match-overlay .btn-primary").innerText = "VER RESUMO DA TEMPORADA";
+            document.querySelector("#post-match-overlay .btn-primary").innerText = t('BTN_VIEW_SEASON_SUMMARY');
             document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
                 document.getElementById('post-match-overlay').style.display = 'none';
-                document.querySelector(".pm-rewards").style.display = "flex"; // Reseta para a próxima run
+                document.querySelector(".pm-rewards").style.display = "flex"; 
                 advanceMapNode();
             };
         }
-        // SE FOR PARTIDA NORMAL: Exibe moedas e distribui níveis
         else {
             document.querySelector(".pm-rewards").style.display = "flex";
             let rewardsText = `+${coins} 💰`;
             document.getElementById("pm-coins").innerText = rewardsText;
 
-            document.querySelector("#post-match-overlay .btn-primary").innerText = "DISTRIBUIR NÍVEIS";
+            document.querySelector("#post-match-overlay .btn-primary").innerText = t('BTN_DISTRIBUTE_LEVELS');
             document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
                 document.getElementById('post-match-overlay').style.display = 'none';
                 let niveisGanhos = threat.expReward || 1;

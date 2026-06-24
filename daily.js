@@ -136,7 +136,7 @@ function renderDailyMissionsModal() {
             <div style="display:flex; align-items:center; gap:12px; background:var(--bg-card); border:1px solid var(--border-light); border-radius:10px; padding:12px; margin-bottom:10px; ${m.claimed ? 'opacity:0.5;' : ''}">
                 <div style="font-size:1.8rem; flex-shrink:0;">${m.emoji}</div>
                 <div style="flex:1; min-width:0;">
-                    <div style="font-weight:900; color:#fff; font-size:0.9rem; margin-bottom:6px;">${m.label}</div>
+                    <div style="font-weight:900; color:#fff; font-size:0.9rem; margin-bottom:6px;">${t(m.label, { target: m.target })}</div>
                     <div style="background:rgba(0,0,0,0.4); border-radius:6px; height:8px; overflow:hidden;">
                         <div style="background:${isDone ? 'var(--accent-green)' : 'var(--accent-blue)'}; height:100%; width:${pct}%; transition: width 0.3s;"></div>
                     </div>
@@ -148,7 +148,6 @@ function renderDailyMissionsModal() {
             </div>`;
     });
 
-    // Contador de tempo até resetar (meia-noite local)
     const resetInfo = document.getElementById('daily-missions-reset-info');
     if (resetInfo) {
         let now = new Date();

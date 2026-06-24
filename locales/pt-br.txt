@@ -1,0 +1,353 @@
+# ==========================================
+# TURBOFOOT - STRINGS PT-BR
+# Formato: CHAVE=valor
+# ==========================================
+
+# --- Geral / Loading ---
+LOADING_TEXT=⚽ Carregando...
+
+# --- Sidebar (desktop) ---
+SIDEBAR_CLUB_LABEL=🛡️ MEU CLUBE
+BTN_QUIT_SIDEBAR=🚪 DESISTIR
+
+# --- Tela Título ---
+TITLE_GAME_NAME=TURBOFOOT
+TITLE_SUBTITLE=MANAGER ROGUELITE
+BTN_PLAY=▶ JOGAR
+BTN_CAREER=💼 MINHA CARREIRA
+BTN_DAILY_MISSIONS=📅 MISSÕES DIÁRIAS
+BTN_HISTORY=📖 HISTÓRICO
+BTN_HOW_TO_PLAY=❓ COMO JOGAR
+BTN_OPTIONS=⚙️ OPÇÕES
+
+# --- Seleção de Série/Clube ---
+LABEL_CHOOSE_DIVISION=ESCOLHA A DIVISÃO
+LABEL_CHOOSE_CLUB=ESCOLHA SEU CLUBE
+BTN_BACK_MENU=← VOLTAR AO MENU
+BTN_BACK_DIVISIONS=← VOLTAR PARA DIVISÕES
+
+# --- Como Jogar ---
+HOW_TO_PLAY_TITLE=COMO JOGAR
+BTN_REPLAY_TUTORIAL=▶️ REVER TUTORIAL GUIADO
+BTN_UNDERSTOOD=ENTENDI
+
+# --- Mapa ---
+LABEL_MAP_DEFAULT=O MAPA
+
+# --- Mercado ---
+LABEL_MARKET_TITLE=MERCADO DA BOLA
+MARKET_TITLE_DEFAULT=ESCOLHA 1 NOVO JOGADOR
+MARKET_SUB_DEFAULT=Os 💰 já foram pagos.
+MARKET_SCOUT_TITLE=RELATÓRIO DO OLHEIRO
+MARKET_SCOUT_SUB=O olheiro encontrou estes talentos.
+MARKET_SOLD_OUT=Esgotada
+MARKET_BTN_BUY=CONTRATAR
+BTN_CONTINUE=CONTINUAR
+
+# --- Partida (UI e Eventos) ---
+LABEL_YOUR_TEAM_DEFAULT=SEU TIME
+LABEL_RIVAL_DEFAULT=RIVAL
+BADGE_ATTACK_DEFAULT=⚽ ATAQUE
+BADGE_COMBO_DEFAULT=🔥 x0
+BADGE_TACTICAL_DEFAULT=✨ +0 Tática
+LABEL_LIVE_FEED=TRANSMISSÃO AO VIVO 📻
+BADGE_USER_ATTACKING=🔵 SEU TIME ATACANDO
+BADGE_RIVAL_ATTACKING=🔴 RIVAL ATACANDO
+BADGE_DEFENDING=🛡️ DEFENDENDO
+BADGE_USER_ATTACKING_BALL=SEU ATAQUE
+LABEL_COMBO=Combo
+LABEL_TACTICAL=Tática
+BADGE_COMBO_ALL=TUDO
+LABEL_BONUS=BÔNUS
+LABEL_SYNERGY=Sinergia
+LABEL_TAP_CONFIRM=TOQUE P/ CONFIRMAR
+
+# --- Match Log ---
+LOG_MATCH_START=A bola rola para o desafio no Mapa!
+LOG_TACTICAL_FOCUS=Seu time entra focado (+{buff} Tática no 1º turno) devido ao Treinamento!
+LOG_BAD_LUCK=⚠️ Momento de azar! Precisão reduzida.
+LOG_COMBO_INSUFFICIENT=COMBO INSUFICIENTE!
+LOG_VISION_PLAY=🔗 Visão de jogo! O time se entende em campo.
+LOG_FOUL=Falta feita! O rival assume o jogo.
+LOG_NICE=Lindo! ✨
+LOG_GREAT_DEFENSE_TITLE=DEFESAÇA!
+LOG_GREAT_DEFENSE_TEXT=Defesa espetacular!
+LOG_COUNTER_ATTACK_TITLE=CONTRA-ATAQUE!
+LOG_COUNTER_ATTACK_TEXT=O rival roubou a bola e partiu em contra-ataque letal!
+LOG_FAILED=Falhou!
+LOG_MISSED=Pra fora!
+LOG_BAD_SHOT=A finalização não foi boa.
+LOG_RIVAL_RESTART=O rival reinicia o jogo furioso buscando o empate!
+LOG_GOAL_AGAINST=😢 Gol
+LOG_TEAM_FURIOUS=Sua equipe vai para a saída de bola com sangue nos olhos!
+LOG_GOLDEN_GOAL_INTRO=Fim do tempo regulamentar. PRORROGAÇÃO COM GOL DE OURO!
+LOG_GOLDEN_GOAL_TITLE=GOL DE OURO!
+LOG_PITY_SAVE=O fundamento salvou a jogada na insistência!
+LOG_BONUS_APPLIED=Fundamento aplicado na jogada!
+JUICE_SYNERGY=Sinergia! ✨
+JUICE_BONUS=+ Bônus!
+JUICE_GOAL_USER=⚽ GOOOOL!!
+MATCH_EXTRA_TIME=PRORROGAÇÃO - GOL DE OURO
+
+# --- Post Match ---
+LABEL_ELIMINATED=ELIMINADO
+TEXT_NO_RUNS_YET=Nenhuma partida registrada ainda.
+LABEL_STAGE_REACHED=Estágio {stage}/8
+TEXT_ELIMINATED_DESC=Fim da linha. Uma derrota dura que custa a eliminação precoce na liga.
+BTN_VIEW_SEASON_SUMMARY=VER RESUMO DA TEMPORADA
+LABEL_VICTORY=VITÓRIA!
+LABEL_DEFEAT=DERROTA!
+LABEL_DRAW=EMPATE!
+TEXT_BOSS_DEFEATED=O CHEFÃO CAIU! MAPA VENCIDO!
+TEXT_PATH_CLEAR=O caminho está livre. Continue subindo!
+BTN_DISTRIBUTE_LEVELS=DISTRIBUIR NÍVEIS
+
+# --- Outcomes ---
+OUTCOME_GOAL=Gol
+OUTCOME_SAVE=Defesa
+OUTCOME_ADVANCE=Avança +{val}
+OUTCOME_MAINTAIN=Mantém
+OUTCOME_SAFE=Sem Risco
+OUTCOME_CONCEDE=Sofre Gol
+OUTCOME_RETREAT=Recua {val}
+OUTCOME_LOSE_POSSESSION=Perde Posse
+
+# --- Config: Actions ---
+ACTION_SHORT_OUT=Saída Curta
+ACTION_LONG_OUT=Lançamento
+ACTION_BACK_PASS=Recuo
+ACTION_PASS=Passe Seguro
+ACTION_TRIANGLE=Triangulação
+ACTION_INVERT=Inversão de Jogo
+ACTION_DRIBBLE=Drible Rápido
+ACTION_THROUGH=Enfiada
+ACTION_CROSS=Cruzamento
+ACTION_LONG_PASS=Passe Longo
+ACTION_PLACE=Chute Colocado
+ACTION_POWER=Bomba de Fora
+ACTION_BICYCLE=Bicicleta
+ACTION_TRICK=Cavadinha
+ACTION_LOW_LINE=Retranca
+ACTION_MARK=Marcação
+ACTION_HIGH_PRESS=Abafar
+ACTION_INTERCEPT=Antecipar
+ACTION_TACKLE=Carrinho
+ACTION_TACTICAL_FOUL=Falta Tática
+ACTION_SAVE_CLOSE=Fechar Ângulo
+ACTION_SAVE_DIVE=Salto
+ACTION_SAVE_RUSH=Sair nos Pés
+ACTION_SAVE_SAFE=Espalmar
+ACTION_EPIC_PASS=Passe Mágico
+ACTION_EPIC_SHOOT=De Cabeça
+ACTION_EPIC_SAVE=Milagre
+
+# --- Config: Generation ---
+TEAM_BASE_LIONS=Leões
+TEAM_BASE_ROOSTERS=Galos
+TEAM_BASE_FOXES=Raposas
+TEAM_BASE_HAWKS=Gaviões
+TEAM_BASE_TIGERS=Tigres
+TEAM_BASE_PIGS=Porcos
+TEAM_BASE_DRAGONS=Dragões
+TEAM_BASE_CANARIES=Canários
+TEAM_BASE_BULLS=Touros
+TEAM_BASE_HURRICANES=Furacões
+TEAM_BASE_ADMIRALS=Almirantes
+TEAM_BASE_WORKERS=Operários
+TEAM_BASE_ACADEMICS=Acadêmicos
+TEAM_BASE_PIONEERS=Bandeirantes
+TEAM_BASE_GIANTS=Gigantes
+TEAM_BASE_SOVEREIGNS=Soberanos
+TEAM_BASE_IMMORTALS=Imortais
+TEAM_BASE_NAVIGATORS=Navegantes
+TEAM_BASE_WOLVES=Lobos
+
+TEAM_ADJ_CAPITAL=da Capital
+TEAM_ADJ_NORTH=do Norte
+TEAM_ADJ_SOUTH=do Sul
+TEAM_ADJ_EAST=do Leste
+TEAM_ADJ_WEST=do Oeste
+TEAM_ADJ_HILL=da Colina
+TEAM_ADJ_VILLAGE=da Vila
+TEAM_ADJ_PORT=do Porto
+TEAM_ADJ_VALLEY=da Baixada
+TEAM_ADJ_BORDER=da Fronteira
+TEAM_ADJ_VALLEY2=do Vale
+TEAM_ADJ_ISLAND=da Ilha
+TEAM_ADJ_UNITED=Unidos
+TEAM_ADJ_INDEPENDENT=Independentes
+TEAM_ADJ_METRO=Metropolitanos
+TEAM_ADJ_ATHLETIC=Atléticos
+TEAM_ADJ_TRICOLOR=Tricolores
+TEAM_ADJ_CELESTIAL=Celestes
+TEAM_ADJ_EMERALD=Esmeraldinos
+TEAM_ADJ_REDWHITE=Alvirrubros
+TEAM_ADJ_REGATAS=de Regatas
+TEAM_ADJ_FC=F.C.
+TEAM_ADJ_SC=S.C.
+TEAM_ADJ_VARZEA=da Várzea
+
+# --- Config: Leagues ---
+LEAGUE_REGIONAL_NAME=Liga Regional
+LEAGUE_REGIONAL_DESC=Futebol de várzea. O começo de tudo.
+LEAGUE_D_NAME=Série D
+LEAGUE_D_DESC=A coisa começa a ficar mais física e organizada.
+LEAGUE_C_NAME=Série C
+LEAGUE_C_DESC=Lutando pelo profissionalismo de elite.
+LEAGUE_B_NAME=Série B
+LEAGUE_B_DESC=Acesso suado. Qualquer erro custa caro.
+LEAGUE_A_NAME=Série A
+LEAGUE_A_DESC=A elite do futebol. Apenas os melhores sobrevivem.
+LEAGUE_BEST_NAME=Liga dos Melhores
+LEAGUE_BEST_DESC=O desafio final e eterno. Os adversários acompanham a sua força.
+
+# --- Config: Meta Upgrades ---
+UPGRADE_START_COINS_NAME=Patrocínio
+UPGRADE_START_COINS_DESC=Comece cada jornada com +15 💰 extras por nível.
+UPGRADE_START_TRAITS_NAME=Celeiro de Craques
+UPGRADE_START_TRAITS_DESC=Fortalece a base! Intercala entre dar 1 Habilidade para um jogador ou aprimorar para 2 Habilidades.
+UPGRADE_START_LEVEL_NAME=CT de Ponta
+UPGRADE_START_LEVEL_DESC=Aumenta o Nível inicial de TODO o time em +1.
+UPGRADE_BTN_BUY=COMPRAR
+UPGRADE_BTN_MAX=MÁXIMO
+UPGRADE_BTN_REFUND=REEMBOLSAR TUDO
+
+# --- Config: Missions ---
+MISSION_WIN_MATCHES=Vença {target} partidas
+MISSION_SCORE_GOALS=Marque {target} gols
+MISSION_REACH_STAGE=Avance {target} estágios na liga
+MISSION_PLAY_RUNS=Complete {target} ligas
+MISSION_BEAT_ELITE=Vença {target} confrontos Desafiadores
+MISSION_BEAT_BOSS=Vença uma liga
+MISSION_VISIT_MARKET=Contrate {target} jogador(es) no Mercado
+
+# --- Config: Rivals ---
+RIVAL_RETRANQUEIRO=Retranqueiro
+RIVAL_OFENSIVO=Ofensivo
+RIVAL_EQUILIBRADO=Equilibrado
+RIVAL_AGRESSIVO=Agressivo
+RIVAL_TIKITAKA=Tiki-Taka
+
+# --- Config: Texts (Suspense & Logs) ---
+SUSPENSE_USER_PREP_1=A torcida prende a respiração...
+SUSPENSE_USER_PREP_2=Olhou, calculou...
+SUSPENSE_USER_PREP_3=É agora ou nunca...
+SUSPENSE_USER_GOAL_1=GOOOOOL! QUE PINTURA! ⚽
+SUSPENSE_USER_GOAL_2=NO ÂNGULO! IMPOSSÍVEL PEGAR! ⚽
+SUSPENSE_USER_GOAL_3=GOOOL! A REDE BALANÇOU BONITO! ⚽
+SUSPENSE_USER_MISS_1=NA TRAAAAVE! 💥
+SUSPENSE_USER_MISS_2=MANDOU NA ARQUIBANCADA! 🤦
+SUSPENSE_USER_MISS_3=MAS QUE DEFESA! 🧤
+
+SUSPENSE_RIVAL_PREP_1=O rival encontra espaço...
+SUSPENSE_RIVAL_PREP_2=A defesa ficou olhando...
+SUSPENSE_RIVAL_PREP_3=Perigo real na área...
+SUSPENSE_RIVAL_GOAL_1=GOL DO RIVAL... 😢
+SUSPENSE_RIVAL_GOAL_2=A DEFESA VACILOU. GOL. 📉
+SUSPENSE_RIVAL_GOAL_3=NÃO DEU PRA SEGURAR... ⚽
+SUSPENSE_RIVAL_MISS_1=DEFESA MONSTRUOSA! 🧤
+SUSPENSE_RIVAL_MISS_2=PASSOU TIRANDO TINTA DA TRAVE! 💨
+SUSPENSE_RIVAL_MISS_3=UIA, MAS QUE SORTE! 💥
+
+LOG_SUCCESS_1=Incrível execução de {action}!
+LOG_SUCCESS_2={action} com maestria.
+LOG_SUCCESS_3=Bela jogada de {action}.
+LOG_FAIL_1=Tentou {action}, mas falhou.
+LOG_FAIL_2=Deu ruim no {action}.
+LOG_FAIL_3=Péssima escolha tentar {action}.
+LOG_GOAL_USER_1=⚽ GOOOOOOL! É DO SEU TIME!
+LOG_GOAL_USER_2=⚽ É GOLAÇO!
+LOG_GOAL_USER_3=⚽ BOLA NA REDE!
+LOG_GOAL_RIVAL_1=⚽ Gol do Rival.
+LOG_GOAL_RIVAL_2=⚽ Gol deles...
+LOG_GOAL_RIVAL_3=⚽ Que vacilo. Gol do adversário.
+LOG_START_1=Começa a partida!
+LOG_START_2=Rola a bola!
+LOG_END_1=FIM DE JOGO!
+LOG_END_2=Apita o árbitro! Fim de papo!
+
+# --- Config: Tooltips & How to Play ---
+TOOLTIP_POSSESSION_ATK=A bola é nossa!
+TOOLTIP_POSSESSION_DEF=Sem a bola!
+TOOLTIP_COMBO=O time tá on fire!
+TOOLTIP_TACTICAL=Preleção que deu certo!
+TOOLTIP_MOMENTUM=O balanço do jogo.
+
+# --- Outros Mapa/Nodes ---
+NODE_RESPIROS=Respiros
+NODE_CLASSICOS=Clássicos
+NODE_PARTIDA=Partida
+NODE_FINAL=Final
+NODE_SCOUT_ICON=🕵️‍♂️
+NODE_SCOUT=Olheiro
+NODE_TRAINING_ICON=🏋️‍♂️
+NODE_PHYSICAL_TRAINING=Treino Físico
+NODE_PEP_TALK=Preleção
+LABEL_CHAMPION=CAMPEÃO
+
+# --- Treinamento ---
+TEXT_USE_ALL_POINTS=USE TODOS OS PONTOS!
+TEXT_NEW_TRAIT=NOVO TRAIT! ✨
+BTN_CONFIRM=CONFIRMAR
+TITLE_POST_MATCH_TRAINING=📈 TREINAMENTO PÓS-JOGO
+TEXT_LEVEL_POINTS_INFO=Você tem <strong id="level-points-text" style="color: var(--accent-green); font-size: 1.1rem;">0</strong> níveis para distribuir!
+TITLE_CAREER=MINHA CARREIRA
+
+TITLE_QUIT_CONFIRM=DESISTIR?
+TEXT_QUIT_WARNING=Você perderá o progresso, o time será desfeito e nada será salvo.
+TEXT_ARE_YOU_SURE=Tem certeza absoluta?
+BTN_CANCEL=CANCELAR
+BTN_QUIT_CONFIRM=DESISTIR
+
+TITLE_REPLACE_PLAYER=QUEM VAI SAIR?
+TEXT_REPLACE_SUBTITLE=Substitua jogadores para liberar vaga no time.
+
+TITLE_OPPONENT_FOUND=ADVERSÁRIO ENCONTRADO
+BTN_ENTER_MATCH=ENTRAR EM CAMPO ⚽
+BTN_BACK_MAP=← VOLTAR AO MAPA
+
+TITLE_CAMP=ACAMPAMENTO DE TREINO 🏕️
+TEXT_CAMP_SUBTITLE=Aproveite para melhorar sua equipe.
+BTN_CAMP_INDIVIDUAL=TREINAMENTO INDIVIDUAL<br><small>Escolha 1 jogador para subir de Nível</small>
+BTN_CAMP_TACTICAL=FOCO TÁTICO<br><small>Bônus de Força no próximo jogo</small>
+
+TITLE_MY_ROSTER=MEU ELENCO
+TITLE_HISTORY=HISTÓRICO
+BTN_BACK_LIST=← VOLTAR PRA LISTA
+TITLE_SETTINGS=CONFIGURAÇÕES
+
+LABEL_SUSPENSE_TOGGLE=Suspense
+LABEL_CONFIRM_CLICKS_TOGGLE=Confirmação Cliques
+
+BTN_HARD_RESET=⚠️ APAGAR TODO O PROGRESSO
+BTN_CLOSE=FECHAR
+
+BTN_REPLAY_TUTORIAL=▶️ REVER TUTORIAL GUIADO
+BTN_UNDERSTOOD=ENTENDI
+
+TITLE_RESET_CAREER=RESETAR CARREIRA?
+TEXT_REFUND_INFO=Você vai recuperar todos os <strong id="refund-amount-text" class="text-gold">0</strong> 🏆 gastos!
+TEXT_REFUND_CONFIRM_QUESTION=Deseja desfazer todos os aprimoramentos?
+
+TEXT_SUSPENSE_DEFAULT=Se prepara...
+
+PM_TITLE_DEFAULT=VITÓRIA!
+PM_SCORE_DEFAULT=2 x 1
+PM_REWARDS_LABEL=Premiação:
+PM_COINS_DEFAULT=+50 💰
+
+BTN_CONTINUE_JOURNEY=CONTINUAR A JORNADA
+
+TITLE_SEASON_END=FIM DE TEMPORADA!
+TEXT_SEASON_SUMMARY_DEFAULT=Resumo...
+SE_COINS_DEFAULT=+0 💰
+
+NAV_LABEL_ACTION=Ação
+NAV_LABEL_TEAM=Equipe
+
+ALERT_TUTORIAL_NEXT_MATCH=O tutorial vai aparecer automaticamente na sua próxima partida!
+ALERT_CHEAT_NEED_MATCH=Você precisa estar dentro de uma partida para usar o 'win'.
+ALERT_CHEAT_ALL_UNLOCKED=🔓 Todas as Divisões desbloqueadas com sucesso!
+ALERT_CHEAT_UNKNOWN=Comando não reconhecido.
+ALERT_CHEAT_TROPHIES=+{val} Troféus adicionados!
+ALERT_CHEAT_COINS=+{val} 💰 adicionadas!

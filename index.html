@@ -12,21 +12,22 @@
 <body>
     <div id="loading-screen">
         <div class="spinner"></div>
-        <h2>⚽ Carregando...</h2>
+        <h2 data-i18n="LOADING_TEXT">⚽ Carregando...</h2>
     </div>
 
     <div id="game-container">
 
         <aside id="desktop-sidebar" class="desktop-only in-run-only">
             <div class="sidebar-header">
-                <div id="sidebar-club-info" style="display:flex; align-items:center; gap:8px;">🛡️ MEU CLUBE</div>
+                <div id="sidebar-club-info" data-i18n="SIDEBAR_CLUB_LABEL"
+                    style="display:flex; align-items:center; gap:8px;">🛡️ MEU CLUBE</div>
                 <div class="currency-display">💰 <span id="sidebar-coins">0</span></div>
             </div>
             <div class="sidebar-body">
                 <div class="roster-grid" id="sidebar-list"></div>
             </div>
             <div class="sidebar-footer desktop-only">
-                <button class="btn-secondary btn-sm"
+                <button class="btn-secondary btn-sm" data-i18n="BTN_QUIT_SIDEBAR"
                     style="color:var(--accent-red); border-color:rgba(248,113,113,0.3); background:rgba(248,113,113,0.1);"
                     onclick="openQuitConfirm()">🚪 DESISTIR</button>
             </div>
@@ -37,21 +38,23 @@
             <div id="screen-title" class="screen active">
                 <div class="title-container">
                     <div class="title-logo">🏆</div>
-                    <h1 class="game-title">TURBOFOOT</h1>
-                    <h2 class="game-subtitle">MANAGER ROGUELITE</h2>
+                    <h1 class="game-title" data-i18n="TITLE_GAME_NAME">TURBOFOOT</h1>
+                    <h2 class="game-subtitle" data-i18n="TITLE_SUBTITLE">MANAGER ROGUELITE</h2>
                     <div class="title-menu">
-                        <button class="btn-primary" onclick="startRunFlow()">▶ JOGAR</button>
-                        <button class="btn-primary"
+                        <button class="btn-primary" data-i18n="BTN_PLAY" onclick="startRunFlow()">▶ JOGAR</button>
+                        <button class="btn-primary" data-i18n="BTN_CAREER"
                             style="background: var(--accent-gold); color: #020617; box-shadow: 0 4px 15px rgba(245,158,11,0.3);"
                             onclick="openMetaShop()">💼 MINHA CARREIRA</button>
                         <button class="btn-secondary" style="position:relative;" onclick="openDailyMissionsModal()">
-                            📅 MISSÕES DIÁRIAS
+                            <span data-i18n="BTN_DAILY_MISSIONS">📅 MISSÕES DIÁRIAS</span>
                             <span id="missions-badge"
                                 style="display:none; position:absolute; top:-8px; right:-8px; background:var(--accent-red); color:#fff; font-size:0.7rem; font-weight:900; border-radius:50%; width:20px; height:20px; align-items:center; justify-content:center;"></span>
                         </button>
-                        <button class="btn-secondary" onclick="openHistoryModal()">📖 HISTÓRICO</button>
-                        <button class="btn-secondary" onclick="openHowToPlay()">❓ COMO JOGAR</button>
-                        <button class="btn-secondary" onclick="openOptions()">⚙️ OPÇÕES</button>
+                        <button class="btn-secondary" data-i18n="BTN_HISTORY" onclick="openHistoryModal()">📖
+                            HISTÓRICO</button>
+                        <button class="btn-secondary" data-i18n="BTN_HOW_TO_PLAY" onclick="openHowToPlay()">❓ COMO
+                            JOGAR</button>
+                        <button class="btn-secondary" data-i18n="BTN_OPTIONS" onclick="openOptions()">⚙️ OPÇÕES</button>
                     </div>
                 </div>
             </div>
@@ -59,24 +62,26 @@
             <div id="screen-series-select" class="screen">
                 <div class="champ-header">
                     <div class="champ-title-block">
-                        <div class="champ-league-label">ESCOLHA A DIVISÃO</div>
+                        <div class="champ-league-label" data-i18n="LABEL_CHOOSE_DIVISION">ESCOLHA A DIVISÃO</div>
                     </div>
                 </div>
                 <div class="club-options-wrapper" id="series-options-container"></div>
                 <div class="bottom-action-bar">
-                    <button class="btn-secondary" onclick="returnToTitle()">← VOLTAR AO MENU</button>
+                    <button class="btn-secondary" data-i18n="BTN_BACK_MENU" onclick="returnToTitle()">← VOLTAR AO
+                        MENU</button>
                 </div>
             </div>
 
             <div id="screen-club-select" class="screen">
                 <div class="champ-header">
                     <div class="champ-title-block">
-                        <div class="champ-league-label">ESCOLHA SEU CLUBE</div>
+                        <div class="champ-league-label" data-i18n="LABEL_CHOOSE_CLUB">ESCOLHA SEU CLUBE</div>
                     </div>
                 </div>
                 <div class="club-options-wrapper" id="club-options-container"></div>
                 <div class="bottom-action-bar">
-                    <button class="btn-secondary" onclick="showScreen('screen-series-select')">← VOLTAR PARA
+                    <button class="btn-secondary" data-i18n="BTN_BACK_DIVISIONS"
+                        onclick="showScreen('screen-series-select')">← VOLTAR PARA
                         DIVISÕES</button>
                 </div>
             </div>
@@ -84,7 +89,7 @@
             <div id="screen-map" class="screen">
                 <div class="champ-header">
                     <div class="champ-title-block">
-                        <div class="champ-league-label" id="map-league-title">O MAPA</div>
+                        <div class="champ-league-label" id="map-league-title" data-i18n="LABEL_MAP_DEFAULT">O MAPA</div>
                     </div>
                     <div class="mobile-only" style="display:flex; gap:8px;">
                         <div class="currency-display">💰 <span id="map-coins">0</span></div>
@@ -100,7 +105,7 @@
             <div id="screen-market" class="screen">
                 <div class="champ-header">
                     <div class="champ-title-block">
-                        <div class="champ-league-label">MERCADO DA BOLA</div>
+                        <div class="champ-league-label" data-i18n="LABEL_MARKET_TITLE">MERCADO DA BOLA</div>
                     </div>
                     <div class="mobile-only" style="display:flex; gap:8px;">
                         <div class="currency-display">💰 <span id="market-coins">0</span></div>
@@ -109,11 +114,12 @@
                 <div class="market-wrapper">
                     <div class="market-panel">
                         <div class="market-header">
-                            <h3 id="market-title">ESCOLHA 1 NOVO JOGADOR</h3>
-                            <p id="market-sub">Os 💰 já foram pagos.</p>
+                            <h3 id="market-title" data-i18n="MARKET_TITLE_DEFAULT">ESCOLHA 1 NOVO JOGADOR</h3>
+                            <p id="market-sub" data-i18n="MARKET_SUB_DEFAULT">Os 💰 já foram pagos.</p>
                         </div>
                         <div id="market-list" class="market-list"></div>
-                        <button class="btn-secondary" onclick="cancelMarket()">CONTINUAR</button>
+                        <button class="btn-secondary" data-i18n="BTN_CONTINUE"
+                            onclick="cancelMarket()">CONTINUAR</button>
                     </div>
                 </div>
             </div>
@@ -123,7 +129,8 @@
                     <div class="scoreboard-container">
                         <div class="team-section user">
                             <div class="team-name-wrapper">
-                                <div id="match-user-name" class="team-name-content">SEU TIME</div>
+                                <div id="match-user-name" class="team-name-content" data-i18n="LABEL_YOUR_TEAM_DEFAULT">
+                                    SEU TIME</div>
                             </div>
                         </div>
                         <div class="score-section">
@@ -133,7 +140,8 @@
                         </div>
                         <div class="team-section rival">
                             <div class="team-name-wrapper">
-                                <div id="match-rival-name" class="team-name-content">RIVAL</div>
+                                <div id="match-rival-name" class="team-name-content" data-i18n="LABEL_RIVAL_DEFAULT">
+                                    RIVAL</div>
                             </div>
                         </div>
                     </div>
@@ -146,17 +154,18 @@
                         <div id="minimap-display"></div>
                     </div>
                     <div class="arena-status-row">
-                        <div id="possession-badge" class="arena-badge">⚽ ATAQUE</div>
+                        <div id="possession-badge" class="arena-badge" data-i18n="BADGE_ATTACK_DEFAULT">⚽ ATAQUE</div>
                         <div style="display: flex; gap: 6px;">
-                            <div id="combo-badge" class="arena-badge combo">🔥 x0</div>
-                            <div id="tactical-bonus-display" class="arena-badge buff" style="display:none;">✨ +0 Tática
+                            <div id="combo-badge" class="arena-badge combo" data-i18n="BADGE_COMBO_DEFAULT">🔥 x0</div>
+                            <div id="tactical-bonus-display" class="arena-badge buff" data-i18n="BADGE_TACTICAL_DEFAULT"
+                                style="display:none;">✨ +0 Tática
                             </div>
                         </div>
                     </div>
                     <div class="field-container" id="dynamic-nodes-wrapper"></div>
                 </div>
                 <div class="match-log-container">
-                    <div class="log-header">TRANSMISSÃO AO VIVO 📻</div>
+                    <div class="log-header" data-i18n="LABEL_LIVE_FEED">TRANSMISSÃO AO VIVO 📻</div>
                     <div id="match-log-feed" class="log-feed"></div>
                 </div>
             </div>
@@ -166,8 +175,9 @@
         <div id="level-modal-overlay" class="modal-overlay" style="z-index: 9999;">
             <div class="options-box">
                 <div class="modal-header">
-                    <h2 class="options-title text-success">📈 TREINAMENTO PÓS-JOGO</h2>
-                    <p class="modal-subtitle">
+                    <h2 class="options-title text-success" data-i18n="TITLE_POST_MATCH_TRAINING">📈 TREINAMENTO PÓS-JOGO
+                    </h2>
+                    <p class="modal-subtitle" data-i18n-html="TEXT_LEVEL_POINTS_INFO">
                         Você tem <strong id="level-points-text"
                             style="color: var(--accent-green); font-size: 1.1rem;">0</strong> níveis para distribuir!
                     </p>
@@ -178,7 +188,8 @@
                 </div>
 
                 <div class="modal-footer" style="flex-direction: row; gap: 10px;">
-                    <button id="btn-level-confirm" class="btn-primary" style="flex: 2;" disabled>CONFIRMAR</button>
+                    <button id="btn-level-confirm" class="btn-primary" data-i18n="BTN_CONFIRM" style="flex: 2;"
+                        disabled>CONFIRMAR</button>
                 </div>
             </div>
         </div>
@@ -186,7 +197,7 @@
         <div id="meta-shop-overlay" class="modal-overlay">
             <div class="options-box">
                 <div class="modal-header flex-between">
-                    <h2 class="options-title text-gold">MINHA CARREIRA</h2>
+                    <h2 class="options-title text-gold" data-i18n="TITLE_CAREER">MINHA CARREIRA</h2>
                     <div class="currency-display" style="font-size: 1.2rem;">🏆 <span id="meta-coins-display">0</span>
                     </div>
                 </div>
@@ -194,7 +205,8 @@
                     style="display:flex; flex-direction:column; gap:8px; padding-top: 24px;">
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-secondary" onclick="closeModals()">← VOLTAR AO MENU</button>
+                    <button class="btn-secondary" data-i18n="BTN_BACK_MENU" onclick="closeModals()">← VOLTAR AO
+                        MENU</button>
                 </div>
             </div>
         </div>
@@ -202,16 +214,20 @@
         <div id="quit-confirm-overlay" class="modal-overlay" style="z-index: 999;">
             <div class="options-box text-center">
                 <div class="modal-header">
-                    <h2 class="options-title text-danger">DESISTIR?</h2>
+                    <h2 class="options-title text-danger" data-i18n="TITLE_QUIT_CONFIRM">DESISTIR?</h2>
                 </div>
                 <div class="modal-body">
-                    <p class="modal-subtitle" style="margin-top:0;">Você perderá o progresso, o time será desfeito e
+                    <p class="modal-subtitle" data-i18n="TEXT_QUIT_WARNING" style="margin-top:0;">Você perderá o
+                        progresso, o time será desfeito e
                         nada será salvo.</p>
-                    <p style="color:#fff; font-weight:bold; margin-top:10px;">Tem certeza absoluta?</p>
+                    <p data-i18n="TEXT_ARE_YOU_SURE" style="color:#fff; font-weight:bold; margin-top:10px;">Tem certeza
+                        absoluta?</p>
                 </div>
                 <div class="modal-footer" style="flex-direction:row; gap:10px;">
-                    <button class="btn-secondary" style="flex:1;" onclick="closeModals()">CANCELAR</button>
-                    <button class="btn-primary" style="flex:1; background:var(--accent-red); box-shadow:none;"
+                    <button class="btn-secondary" data-i18n="BTN_CANCEL" style="flex:1;"
+                        onclick="closeModals()">CANCELAR</button>
+                    <button class="btn-primary" data-i18n="BTN_QUIT_CONFIRM"
+                        style="flex:1; background:var(--accent-red); box-shadow:none;"
                         onclick="confirmQuitRun()">DESISTIR</button>
                 </div>
             </div>
@@ -220,14 +236,15 @@
         <div id="replace-overlay" class="modal-overlay">
             <div class="options-box">
                 <div class="modal-header">
-                    <h2 class="options-title">QUEM VAI SAIR?</h2>
-                    <p class="modal-subtitle">Substitua jogadores para liberar vaga no time.</p>
+                    <h2 class="options-title" data-i18n="TITLE_REPLACE_PLAYER">QUEM VAI SAIR?</h2>
+                    <p class="modal-subtitle" data-i18n="TEXT_REPLACE_SUBTITLE">Substitua jogadores para liberar vaga no
+                        time.</p>
                 </div>
                 <div class="modal-body">
                     <div id="replace-list" class="roster-grid"></div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-secondary" onclick="closeReplaceModal()">CANCELAR</button>
+                    <button class="btn-secondary" data-i18n="BTN_CANCEL" onclick="closeReplaceModal()">CANCELAR</button>
                 </div>
             </div>
         </div>
@@ -235,14 +252,16 @@
         <div id="pre-match-overlay" class="modal-overlay">
             <div class="options-box">
                 <div class="modal-header">
-                    <h2 class="options-title text-danger">ADVERSÁRIO ENCONTRADO</h2>
+                    <h2 class="options-title text-danger" data-i18n="TITLE_OPPONENT_FOUND">ADVERSÁRIO ENCONTRADO</h2>
                 </div>
                 <div class="modal-body" style="padding: 16px;">
                     <div id="pre-match-details"></div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-primary" onclick="startMapMatch()">ENTRAR EM CAMPO ⚽</button>
-                    <button class="btn-secondary" style="margin-top:8px;" onclick="closeModals()">← VOLTAR AO
+                    <button class="btn-primary" data-i18n="BTN_ENTER_MATCH" onclick="startMapMatch()">ENTRAR EM CAMPO
+                        ⚽</button>
+                    <button class="btn-secondary" data-i18n="BTN_BACK_MAP" style="margin-top:8px;"
+                        onclick="closeModals()">← VOLTAR AO
                         MAPA</button>
                 </div>
             </div>
@@ -251,13 +270,15 @@
         <div id="camp-overlay" class="modal-overlay">
             <div class="options-box">
                 <div class="modal-header">
-                    <h2 class="options-title text-success">ACAMPAMENTO DE TREINO 🏕️</h2>
-                    <p class="modal-subtitle">Aproveite para melhorar sua equipe.</p>
+                    <h2 class="options-title text-success" data-i18n="TITLE_CAMP">ACAMPAMENTO DE TREINO 🏕️</h2>
+                    <p class="modal-subtitle" data-i18n="TEXT_CAMP_SUBTITLE">Aproveite para melhorar sua equipe.</p>
                 </div>
                 <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
-                    <button class="btn-primary" onclick="promptCampTrain()">TREINAMENTO INDIVIDUAL<br><small>Escolha 1
+                    <button class="btn-primary" data-i18n-html="BTN_CAMP_INDIVIDUAL"
+                        onclick="promptCampTrain()">TREINAMENTO INDIVIDUAL<br><small>Escolha 1
                             jogador para subir de Nível</small></button>
-                    <button class="btn-primary btn-epic" onclick="applyCamp('buff')">FOCO TÁTICO<br><small>Bônus de
+                    <button class="btn-primary btn-epic" data-i18n-html="BTN_CAMP_TACTICAL"
+                        onclick="applyCamp('buff')">FOCO TÁTICO<br><small>Bônus de
                             Força no próximo jogo</small></button>
                 </div>
             </div>
@@ -266,7 +287,7 @@
         <div id="roster-overlay" class="modal-overlay">
             <div class="options-box bottom-sheet">
                 <div class="modal-header flex-between">
-                    <h2 class="options-title" id="mobile-roster-title"
+                    <h2 class="options-title" id="mobile-roster-title" data-i18n="TITLE_MY_ROSTER"
                         style="display:flex; align-items:center; gap:8px;">MEU ELENCO</h2>
                     <button class="btn-icon" onclick="closeModals()">❌</button>
                 </div>
@@ -279,7 +300,7 @@
         <div id="run-history-overlay" class="modal-overlay">
             <div class="options-box">
                 <div class="modal-header flex-between">
-                    <h2 class="options-title">HISTÓRICO</h2>
+                    <h2 class="options-title" data-i18n="TITLE_HISTORY">HISTÓRICO</h2>
                     <button class="btn-icon" onclick="closeModals()">❌</button>
                 </div>
                 <div class="modal-body" style="padding: 0;">
@@ -289,7 +310,8 @@
                     </div>
                 </div>
                 <div class="modal-footer" id="history-footer" style="display:none;">
-                    <button class="btn-secondary" onclick="closeHistoryDetails()">← VOLTAR PRA LISTA</button>
+                    <button class="btn-secondary" data-i18n="BTN_BACK_LIST" onclick="closeHistoryDetails()">← VOLTAR PRA
+                        LISTA</button>
                 </div>
             </div>
         </div>
@@ -297,7 +319,7 @@
         <div id="daily-missions-overlay" class="modal-overlay">
             <div class="options-box">
                 <div class="modal-header flex-between">
-                    <h2 class="options-title">📅 MISSÕES DIÁRIAS</h2>
+                    <h2 class="options-title" data-i18n="BTN_DAILY_MISSIONS">📅 MISSÕES DIÁRIAS</h2>
                     <button class="btn-icon" onclick="closeModals()">❌</button>
                 </div>
                 <div class="modal-body">
@@ -312,24 +334,24 @@
         <div id="options-overlay" class="modal-overlay">
             <div class="options-box">
                 <div class="modal-header">
-                    <h2 class="options-title">CONFIGURAÇÕES</h2>
+                    <h2 class="options-title" data-i18n="TITLE_SETTINGS">CONFIGURAÇÕES</h2>
                 </div>
                 <div class="modal-body">
                     <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-suspense"
-                                onchange="toggleSuspense()"><span class="checkmark"></span><span
-                                class="toggle-text">Suspense</span></label></div>
+                                onchange="toggleSuspense()"><span class="checkmark"></span><span class="toggle-text"
+                                data-i18n="LABEL_SUSPENSE_TOGGLE">Suspense</span></label></div>
                     <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-confirm"
-                                onchange="toggleConfirm()"><span class="checkmark"></span><span
-                                class="toggle-text">Confirmação Cliques</span></label></div>
+                                onchange="toggleConfirm()"><span class="checkmark"></span><span class="toggle-text"
+                                data-i18n="LABEL_CONFIRM_CLICKS_TOGGLE">Confirmação Cliques</span></label></div>
 
-                    <button class="btn-secondary"
+                    <button class="btn-secondary" data-i18n="BTN_HARD_RESET"
                         style="width:100%; margin-top:16px; color:var(--accent-red); border-color:rgba(248,113,113,0.3); background:rgba(248,113,113,0.1);"
                         onclick="hardResetSave()">
                         ⚠️ APAGAR TODO O PROGRESSO
                     </button>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-primary" onclick="closeOptions()">FECHAR</button>
+                    <button class="btn-primary" data-i18n="BTN_CLOSE" onclick="closeOptions()">FECHAR</button>
                 </div>
             </div>
         </div>
@@ -337,13 +359,14 @@
         <div id="how-to-play-overlay" class="modal-overlay">
             <div class="options-box">
                 <div class="modal-header">
-                    <h2 class="options-title" id="htp-title">COMO JOGAR</h2>
+                    <h2 class="options-title" id="htp-title"">t(GAME_CONTENT.howToPlay.title)</h2>
                 </div>
-                <div class="modal-body" id="htp-body">
+                <div class=" modal-body" id="htp-body">
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-secondary" onclick="replayFirstMatchTutorial()">▶️ REVER TUTORIAL GUIADO</button>
-                    <button class="btn-primary" onclick="closeModals()">ENTENDI</button>
+                    <button class="btn-secondary" data-i18n="BTN_REPLAY_TUTORIAL"
+                        onclick="replayFirstMatchTutorial()">▶️ REVER TUTORIAL GUIADO</button>
+                    <button class="btn-primary" data-i18n="BTN_UNDERSTOOD" onclick="closeModals()">ENTENDI</button>
                 </div>
             </div>
         </div>
@@ -351,19 +374,22 @@
         <div id="refund-confirm-overlay" class="modal-overlay" style="z-index: 999;">
             <div class="options-box text-center">
                 <div class="modal-header">
-                    <h2 class="options-title text-danger">RESETAR CARREIRA?</h2>
+                    <h2 class="options-title text-danger" data-i18n="TITLE_RESET_CAREER">RESETAR CARREIRA?</h2>
                 </div>
                 <div class="modal-body">
-                    <p class="modal-subtitle" style="margin-top:0;">
+                    <p class="modal-subtitle" data-i18n-html="TEXT_REFUND_INFO" style="margin-top:0;">
                         Você vai recuperar todos os <strong id="refund-amount-text" class="text-gold">0</strong> 🏆
                         gastos!
                     </p>
-                    <p style="color:#fff; font-weight:bold; margin-top:10px;">Deseja desfazer todos os aprimoramentos?
+                    <p data-i18n="TEXT_REFUND_CONFIRM_QUESTION" style="color:#fff; font-weight:bold; margin-top:10px;">
+                        Deseja desfazer todos os aprimoramentos?
                     </p>
                 </div>
                 <div class="modal-footer" style="flex-direction:row; gap:10px;">
-                    <button class="btn-secondary" style="flex:1;" onclick="closeRefundConfirm()">CANCELAR</button>
-                    <button class="btn-primary" style="flex:1; background:var(--accent-red); box-shadow:none;"
+                    <button class="btn-secondary" data-i18n="BTN_CANCEL" style="flex:1;"
+                        onclick="closeRefundConfirm()">CANCELAR</button>
+                    <button class="btn-primary" data-i18n="BTN_CONFIRM"
+                        style="flex:1; background:var(--accent-red); box-shadow:none;"
                         onclick="executeRefund()">CONFIRMAR</button>
                 </div>
             </div>
@@ -371,22 +397,23 @@
 
         <div id="suspense-overlay">
             <div id="suspense-team"></div>
-            <div id="suspense-text" class="suspense-text">Se prepara...</div>
+            <div id="suspense-text" class="suspense-text" data-i18n="TEXT_SUSPENSE_DEFAULT">Se prepara...</div>
         </div>
 
         <div id="post-match-overlay" class="modal-overlay" style="z-index: 900;">
             <div class="options-box text-center">
                 <div class="modal-body" style="padding-top: 40px;">
-                    <h1 id="pm-title" class="pm-title">VITÓRIA!</h1>
-                    <div class="pm-score-display"><span id="pm-score">2 x 1</span></div>
+                    <h1 id="pm-title" class="pm-title" data-i18n="PM_TITLE_DEFAULT">VITÓRIA!</h1>
+                    <div class="pm-score-display"><span id="pm-score" data-i18n="PM_SCORE_DEFAULT">2 x 1</span></div>
                     <p id="pm-info" class="modal-subtitle" style="margin: 16px 0;"></p>
                     <div class="pm-rewards">
-                        <span class="pm-label">Premiação:</span>
-                        <span id="pm-coins" class="pm-val-coins">+50 💰</span>
+                        <span class="pm-label" data-i18n="PM_REWARDS_LABEL">Premiação:</span>
+                        <span id="pm-coins" class="pm-val-coins" data-i18n="PM_COINS_DEFAULT">+50 💰</span>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="pm-btn" class="btn-primary" onclick="advanceMapAfterMatch()">CONTINUAR A
+                    <button id="pm-btn" class="btn-primary" data-i18n="BTN_CONTINUE_JOURNEY"
+                        onclick="advanceMapAfterMatch()">CONTINUAR A
                         JORNADA</button>
                 </div>
             </div>
@@ -396,12 +423,15 @@
             <div class="options-box text-center">
                 <div class="modal-body" style="padding-top: 40px;">
                     <div class="champ-end-icon">🏆</div>
-                    <h1 class="pm-title text-gold">FIM DE TEMPORADA!</h1>
-                    <p id="se-sub" class="modal-subtitle" style="white-space: pre-line; margin: 16px 0;">Resumo...</p>
-                    <div class="pm-rewards"><span id="se-coins" class="pm-val-coins">+0 💰</span></div>
+                    <h1 class="pm-title text-gold" data-i18n="TITLE_SEASON_END">FIM DE TEMPORADA!</h1>
+                    <p id="se-sub" class="modal-subtitle" data-i18n="TEXT_SEASON_SUMMARY_DEFAULT"
+                        style="white-space: pre-line; margin: 16px 0;">Resumo...</p>
+                    <div class="pm-rewards"><span id="se-coins" class="pm-val-coins" data-i18n="SE_COINS_DEFAULT">+0
+                            💰</span></div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-primary" onclick="returnToTitle()">VOLTAR AO MENU</button>
+                    <button class="btn-primary" data-i18n="BTN_BACK_MENU" onclick="returnToTitle()">VOLTAR AO
+                        MENU</button>
                 </div>
             </div>
         </div>
@@ -410,11 +440,11 @@
     <div id="mobile-navbar">
         <button id="nav-btn-map" class="nav-btn active" onclick="setMobileTab('map')">
             <span class="nav-icon">🗺️</span>
-            <span class="nav-label">Ação</span>
+            <span class="nav-label" data-i18n="NAV_LABEL_ACTION">Ação</span>
         </button>
         <button id="nav-btn-team" class="nav-btn" onclick="setMobileTab('team')">
             <span class="nav-icon">🛡️</span>
-            <span class="nav-label">Equipe</span>
+            <span class="nav-label" data-i18n="NAV_LABEL_TEAM">Equipe</span>
         </button>
     </div>
 
@@ -422,6 +452,7 @@
         v0.32b
     </footer>
 
+    <script src="i18n.js"></script>
     <script src="state.js"></script>
     <script src="daily.js"></script>
     <script src="utils.js"></script>

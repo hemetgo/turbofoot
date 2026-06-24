@@ -1,0 +1,388 @@
+# ==========================================
+# TURBOFOOT - STRINGS EN
+# ==========================================
+
+# --- General / Loading ---
+LOADING_TEXT=⚽ Loading...
+
+# --- Sidebar (desktop) ---
+SIDEBAR_CLUB_LABEL=🛡️ MY CLUB
+BTN_QUIT_SIDEBAR=🚪 GIVE UP
+
+# --- Title Screen ---
+TITLE_GAME_NAME=TURBOFOOT
+TITLE_SUBTITLE=ROGUELITE MANAGER
+BTN_PLAY=▶ PLAY
+BTN_CAREER=💼 MY CAREER
+BTN_DAILY_MISSIONS=📅 DAILY MISSIONS
+BTN_HISTORY=📖 HISTORY
+BTN_HOW_TO_PLAY=❓ HOW TO PLAY
+BTN_OPTIONS=⚙️ SETTINGS
+
+# --- Division/Club Selection ---
+LABEL_CHOOSE_DIVISION=CHOOSE DIVISION
+LABEL_CHOOSE_CLUB=CHOOSE YOUR CLUB
+BTN_BACK_MENU=← BACK TO MENU
+BTN_BACK_DIVISIONS=← BACK TO DIVISIONS
+
+# --- Como Jogar/How to Play
+HOW_TO_PLAY_TITLE=COMO JOGAR
+BTN_REPLAY_TUTORIAL=▶️ JOGAR TUTORIAL GUIADO NOVAMENTE
+BTN_UNDERSTOOD=ENTENDIDO
+
+# --- Map ---
+LABEL_MAP_DEFAULT=THE MAP
+
+# --- Market ---
+LABEL_MARKET_TITLE=TRANSFER MARKET
+MARKET_TITLE_DEFAULT=CHOOSE 1 NEW PLAYER
+MARKET_SUB_DEFAULT=The 💰 have already been paid.
+MARKET_SCOUT_TITLE=SCOUT REPORT
+MARKET_SCOUT_SUB=The scout found these talents.
+MARKET_SOLD_OUT=Sold Out
+MARKET_BTN_BUY=SCOUT
+BTN_CONTINUE=CONTINUE
+
+# --- Match (UI & Events) ---
+LABEL_YOUR_TEAM_DEFAULT=YOUR TEAM
+LABEL_RIVAL_DEFAULT=RIVAL
+BADGE_ATTACK_DEFAULT=⚽ ATTACK
+BADGE_COMBO_DEFAULT=🔥 x0
+BADGE_TACTICAL_DEFAULT=✨ +0 Tactical
+LABEL_LIVE_FEED=LIVE COMMENTARY 📻
+BADGE_USER_ATTACKING=🔵 YOUR TEAM ATTACKING
+BADGE_RIVAL_ATTACKING=🔴 RIVAL ATTACKING
+BADGE_DEFENDING=🛡️ DEFENDING
+BADGE_USER_ATTACKING_BALL=YOUR ATTACK
+LABEL_COMBO=Combo
+LABEL_TACTICAL=Tactical
+BADGE_COMBO_ALL=ALL
+LABEL_BONUS=BONUS
+LABEL_SYNERGY=Synergy
+LABEL_TAP_CONFIRM=TAP TO CONFIRM
+
+# --- Match Log ---
+LOG_MATCH_START=The ball is rolling for the challenge on the Map!
+LOG_TACTICAL_FOCUS=Your team starts focused (+{buff} Tactical on Turn 1) thanks to Training!
+LOG_BAD_LUCK=⚠️ Unlucky moment! Accuracy reduced.
+LOG_COMBO_INSUFFICIENT=INSUFFICIENT COMBO!
+LOG_VISION_PLAY=🔗 Vision play! The team understands each other on the field.
+LOG_FOUL=Foul committed! The rival takes control.
+LOG_NICE=Nice!
+LOG_GREAT_DEFENSE_TITLE=GREAT SAVE!
+LOG_GREAT_DEFENSE_TEXT=An incredible save!
+LOG_COUNTER_ATTACK_TITLE=COUNTERATTACK!
+LOG_COUNTER_ATTACK_TEXT=The rival stole the ball and launched a deadly counterattack!
+LOG_FAILED=Failed!
+LOG_MISSED=Off target!
+LOG_BAD_SHOT=The shot wasn't good enough.
+LOG_RIVAL_RESTART=The rival restarts play furiously searching for an equalizer!
+LOG_GOAL_AGAINST=😢 Goal
+LOG_TEAM_FURIOUS=Your team restarts with fire in their eyes!
+LOG_GOLDEN_GOAL_INTRO=End of regular time. EXTRA TIME WITH GOLDEN GOAL!
+LOG_GOLDEN_GOAL_TITLE=GOLDEN GOAL!
+LOG_PITY_SAVE=The skill saved the play through persistence!
+LOG_BONUS_APPLIED=Skill bonus applied to the play!
+JUICE_SYNERGY=Synergy! ✨
+JUICE_BONUS=+ Bonus!
+JUICE_GOAL_USER=⚽ GOOOOAL!!
+MATCH_EXTRA_TIME=EXTRA TIME - GOLDEN GOAL
+
+# --- Post Match ---
+LABEL_ELIMINATED=ELIMINATED
+TEXT_NO_RUNS_YET=No matches recorded yet.
+LABEL_STAGE_REACHED=Stage {stage}/8
+TEXT_ELIMINATED_DESC=The journey ends here. A tough defeat that leads to an early league elimination.
+BTN_VIEW_SEASON_SUMMARY=VIEW SEASON SUMMARY
+LABEL_VICTORY=VICTORY!
+LABEL_DEFEAT=DEFEAT!
+LABEL_DRAW=DRAW!
+TEXT_BOSS_DEFEATED=THE BOSS HAS FALLEN! MAP CLEARED!
+TEXT_PATH_CLEAR=The path is clear. Keep climbing!
+BTN_DISTRIBUTE_LEVELS=DISTRIBUTE LEVELS
+
+# --- Outcomes ---
+OUTCOME_GOAL=Goal
+OUTCOME_SAVE=Save
+OUTCOME_ADVANCE=Advance +{val}
+OUTCOME_MAINTAIN=Hold Position
+OUTCOME_SAFE=Safe
+OUTCOME_CONCEDE=Concede Goal
+OUTCOME_RETREAT=Retreat {val}
+OUTCOME_LOSE_POSSESSION=Lose Possession
+
+# --- Config: Actions ---
+ACTION_SHORT_OUT=Short Build-Up
+ACTION_LONG_OUT=Long Ball
+ACTION_BACK_PASS=Back Pass
+ACTION_PASS=Safe Pass
+ACTION_TRIANGLE=Triangle Play
+ACTION_INVERT=Switch Play
+ACTION_DRIBBLE=Quick Dribble
+ACTION_THROUGH=Through Ball
+ACTION_CROSS=Cross
+ACTION_LONG_PASS=Long Pass
+ACTION_PLACE=Placed Shot
+ACTION_POWER=Power Shot
+ACTION_BICYCLE=Bicycle Kick
+ACTION_TRICK=Chip Shot
+ACTION_LOW_LINE=Park the Bus
+ACTION_MARK=Marking
+ACTION_HIGH_PRESS=High Press
+ACTION_INTERCEPT=Intercept
+ACTION_TACKLE=Slide Tackle
+ACTION_TACTICAL_FOUL=Tactical Foul
+ACTION_SAVE_CLOSE=Close Angle
+ACTION_SAVE_DIVE=Diving Save
+ACTION_SAVE_RUSH=Rush Out
+ACTION_SAVE_SAFE=Punch Away
+ACTION_EPIC_PASS=Magic Pass
+ACTION_EPIC_SHOOT=Header
+ACTION_EPIC_SAVE=Miracle Save
+
+# --- Config: Generation ---
+TEAM_BASE_LIONS=Lions
+TEAM_BASE_ROOSTERS=Roosters
+TEAM_BASE_FOXES=Foxes
+TEAM_BASE_HAWKS=Hawks
+TEAM_BASE_TIGERS=Tigers
+TEAM_BASE_PIGS=Boars
+TEAM_BASE_DRAGONS=Dragons
+TEAM_BASE_CANARIES=Canaries
+TEAM_BASE_BULLS=Bulls
+TEAM_BASE_HURRICANES=Hurricanes
+TEAM_BASE_ADMIRALS=Admirals
+TEAM_BASE_WORKERS=Workers
+TEAM_BASE_ACADEMICS=Academics
+TEAM_BASE_PIONEERS=Pioneers
+TEAM_BASE_GIANTS=Giants
+TEAM_BASE_SOVEREIGNS=Sovereigns
+TEAM_BASE_IMMORTALS=Immortals
+TEAM_BASE_NAVIGATORS=Navigators
+TEAM_BASE_WOLVES=Wolves
+
+TEAM_ADJ_CAPITAL=Capital
+TEAM_ADJ_NORTH=North
+TEAM_ADJ_SOUTH=South
+TEAM_ADJ_EAST=East
+TEAM_ADJ_WEST=West
+TEAM_ADJ_HILL=Hill
+TEAM_ADJ_VILLAGE=Village
+TEAM_ADJ_PORT=Port
+TEAM_ADJ_VALLEY=Lowlands
+TEAM_ADJ_BORDER=Border
+TEAM_ADJ_VALLEY2=Valley
+TEAM_ADJ_ISLAND=Island
+TEAM_ADJ_UNITED=United
+TEAM_ADJ_INDEPENDENT=Independent
+TEAM_ADJ_METRO=Metropolitan
+TEAM_ADJ_ATHLETIC=Athletic
+TEAM_ADJ_TRICOLOR=Tricolor
+TEAM_ADJ_CELESTIAL=Celestial
+TEAM_ADJ_EMERALD=Emerald
+TEAM_ADJ_REDWHITE=Red-Whites
+TEAM_ADJ_REGATAS=Rowing Club
+TEAM_ADJ_FC=F.C.
+TEAM_ADJ_SC=S.C.
+TEAM_ADJ_VARZEA=Grassroots
+
+# --- Config: Leagues ---
+LEAGUE_REGIONAL_NAME=Regional League
+LEAGUE_REGIONAL_DESC=Grassroots football. Where it all begins.
+LEAGUE_D_NAME=Division D
+LEAGUE_D_DESC=Things start becoming more physical and organized.
+LEAGUE_C_NAME=Division C
+LEAGUE_C_DESC=Fighting for elite professionalism.
+LEAGUE_B_NAME=Division B
+LEAGUE_B_DESC=Promotion is hard-earned. Every mistake is costly.
+LEAGUE_A_NAME=Division A
+LEAGUE_A_DESC=The elite of football. Only the best survive.
+LEAGUE_BEST_NAME=League of Champions
+LEAGUE_BEST_DESC=The ultimate endless challenge. Opponents scale with your strength.
+
+# --- Config: Meta Upgrades ---
+UPGRADE_START_COINS_NAME=Sponsorship
+UPGRADE_START_COINS_DESC=Start each run with +15 extra 💰 per level.
+UPGRADE_START_TRAITS_NAME=Talent Factory
+UPGRADE_START_TRAITS_DESC=Strengthens your academy! Alternates between granting 1 Skill to a player or upgrading them to 2 Skills.
+UPGRADE_START_LEVEL_NAME=Elite Training Center
+UPGRADE_START_LEVEL_DESC=Increases the starting Level of your ENTIRE team by +1.
+UPGRADE_BTN_BUY=BUY
+UPGRADE_BTN_MAX=MAX
+UPGRADE_BTN_REFUND=REFUND ALL
+
+# --- Config: Missions ---
+MISSION_WIN_MATCHES=Win {target} matches
+MISSION_SCORE_GOALS=Score {target} goals
+MISSION_REACH_STAGE=Reach {target} stages in the league
+MISSION_PLAY_RUNS=Complete {target} league runs
+MISSION_BEAT_ELITE=Win {target} Challenging matches
+MISSION_BEAT_BOSS=Win a league
+MISSION_VISIT_MARKET=Sign {target} player(s) in the Market
+
+# --- Config: Rivals ---
+RIVAL_RETRANQUEIRO=Defensive
+RIVAL_OFENSIVO=Offensive
+RIVAL_EQUILIBRADO=Balanced
+RIVAL_AGRESSIVO=Aggressive
+RIVAL_TIKITAKA=Tiki-Taka
+
+# --- Config: Texts (Suspense & Logs) ---
+SUSPENSE_USER_PREP_1=The crowd holds its breath...
+SUSPENSE_USER_PREP_2=He looks up, calculates...
+SUSPENSE_USER_PREP_3=Now or never...
+SUSPENSE_USER_GOAL_1=GOOOOAL! WHAT A BEAUTY! ⚽
+SUSPENSE_USER_GOAL_2=TOP CORNER! UNSAVABLE! ⚽
+SUSPENSE_USER_GOAL_3=GOOOAL! THE NET IS SHAKING! ⚽
+SUSPENSE_USER_MISS_1=OFF THE POST! 💥
+SUSPENSE_USER_MISS_2=INTO THE STANDS! 🤦
+SUSPENSE_USER_MISS_3=WHAT A SAVE! 🧤
+
+SUSPENSE_RIVAL_PREP_1=The rival finds space...
+SUSPENSE_RIVAL_PREP_2=The defense just watched...
+SUSPENSE_RIVAL_PREP_3=Danger in the box...
+SUSPENSE_RIVAL_GOAL_1=RIVAL GOAL... 😢
+SUSPENSE_RIVAL_GOAL_2=THE DEFENSE SLIPPED. GOAL. 📉
+SUSPENSE_RIVAL_GOAL_3=COULDN'T STOP IT... ⚽
+SUSPENSE_RIVAL_MISS_1=MONSTER SAVE! 🧤
+SUSPENSE_RIVAL_MISS_2=JUST WIDE OF THE POST! 💨
+SUSPENSE_RIVAL_MISS_3=WOW, THAT WAS LUCKY! 💥
+
+LOG_SUCCESS_1=Brilliant execution of {action}!
+LOG_SUCCESS_2={action} executed perfectly.
+LOG_SUCCESS_3=Great {action} play.
+LOG_FAIL_1=Tried {action}, but failed.
+LOG_FAIL_2={action} went wrong.
+LOG_FAIL_3=Poor decision to attempt {action}.
+LOG_GOAL_USER_1=⚽ GOOOOAL! YOUR TEAM SCORES!
+LOG_GOAL_USER_2=⚽ WHAT A GOAL!
+LOG_GOAL_USER_3=⚽ BACK OF THE NET!
+LOG_GOAL_RIVAL_1=⚽ Rival goal.
+LOG_GOAL_RIVAL_2=⚽ They score...
+LOG_GOAL_RIVAL_3=⚽ Defensive mistake. Goal for the opponent.
+LOG_START_1=The match begins!
+LOG_START_2=Kick-off!
+LOG_END_1=FULL TIME!
+LOG_END_2=The referee blows the whistle! It's over!
+
+# --- Config: Tooltips & How to Play ---
+TOOLTIP_POSSESSION_ATK=The ball is ours! Advance through the field zones and choose the best play to finish on goal.
+TOOLTIP_POSSESSION_DEF=Without the ball! Withstand the opponent's pressure and try to win possession for a counterattack.
+TOOLTIP_COMBO=The team is on fire! Consecutive successes multiply your final earnings and unlock special plays (e.g. Bicycle Kick).
+TOOLTIP_TACTICAL=The team talk worked! Your squad enters focused and gains a temporary Strength bonus.
+TOOLTIP_MOMENTUM=The flow of the match. Successful plays boost confidence (Strength bonus), failures create pressure (penalty).
+
+HOW_TO_PLAY_TITLE=HOW TO PLAY
+HOW_TO_PLAY_INTRO=Welcome to TurboFoot! You take charge of a rising football club. Your journey is to guide your team through the map, defeat opponents, collect coins, and sign reinforcements in the transfer market to overcome the season's greatest champions!\n\nOn the pitch, every play matters. Your chances of success depend on your team's strength and chemistry compared to your rival. Choosing the right play at the right moment is the key to scoring goals.
+
+HOW_TO_PLAY_TRAITS_TITLE=THE POWER OF SPECIALISTS
+HOW_TO_PLAY_TRAITS_INTRO=Each Skill pushes your team toward a different playstyle! Stacking the SAME skill repeatedly gives diminishing returns — the secret is building a squad with 2 or 3 complementary specialties, not eleven identical players. Every strength comes with a weakness.
+
+HOW_TO_PLAY_TRAIT_FINISHING_NAME=🎯 Finishing
+HOW_TO_PLAY_TRAIT_FINISHING_DESC=Natural goalscorers! HIGH bonus when shooting. Provides no benefit outside the box.
+
+HOW_TO_PLAY_TRAIT_PASSING_NAME=👟 Passing
+HOW_TO_PLAY_TRAIT_PASSING_DESC=Midfield maestros! Bonus on Low/Medium Risk plays. Doesn't help on High Risk actions.
+
+HOW_TO_PLAY_TRAIT_PACE_NAME=⚡ Pace
+HOW_TO_PLAY_TRAIT_PACE_DESC=Pure counterattacking football! Bonus on ANY High Risk play, attacking or defending. Doesn't help safe actions.
+
+HOW_TO_PLAY_TRAIT_TACKLING_NAME=🪓 Tackling
+HOW_TO_PLAY_TRAIT_TACKLING_DESC=Watchdogs! Bonus on marking and tackles. Doesn't help goalkeepers.
+
+HOW_TO_PLAY_TRAIT_REFLEXES_NAME=🧤 Reflexes
+HOW_TO_PLAY_TRAIT_REFLEXES_DESC=Wall between the posts! Huge bonus on goalkeeper saves. Only works inside your own box.
+
+HOW_TO_PLAY_TRAIT_MARKING_NAME=🛡️ Positioning
+HOW_TO_PLAY_TRAIT_MARKING_DESC=Tactical awareness! Reduces the RIVAL'S strength on all of their plays.
+
+HOW_TO_PLAY_TRAIT_VISION_NAME=🔗 Vision
+HOW_TO_PLAY_TRAIT_VISION_DESC=The team thinks as one! Successful passes and dribbles generate extra Combo, but only works well if the team has at least 2 different skills.
+
+HOW_TO_PLAY_TRAIT_LEADERSHIP_NAME=🗣️ Leadership
+HOW_TO_PLAY_TRAIT_LEADERSHIP_DESC=Born captain! Reduces the damage of failed plays and strengthens the player wearing the armband.
+
+PERK_FINISHING_NAME=Finishing
+PERK_PASSING_NAME=Passing
+PERK_PACE_NAME=Pace
+PERK_TACKLING_NAME=Tackling
+PERK_REFLEXES_NAME=Reflexes
+PERK_MARKING_NAME=Positioning
+PERK_VISION_NAME=Vision
+PERK_LEADERSHIP_NAME=Leadership
+# --- Other Map/Nodes ---
+NODE_RESPIROS=Rest Stops
+NODE_CLASSICOS=Derbies
+NODE_PARTIDA=Match
+NODE_FINAL=Final
+NODE_SCOUT_ICON=🕵️‍♂️
+NODE_SCOUT=Scout
+NODE_TRAINING_ICON=🏋️‍♂️
+NODE_PHYSICAL_TRAINING=Physical Training
+NODE_PEP_TALK=Team Talk
+LABEL_CHAMPION=CHAMPION
+
+# --- Training ---
+TEXT_USE_ALL_POINTS=USE ALL POINTS!
+TEXT_NEW_TRAIT=NEW TRAIT! ✨
+BTN_CONFIRM=CONFIRM
+TITLE_POST_MATCH_TRAINING=📈 POST-MATCH TRAINING
+TEXT_LEVEL_POINTS_INFO=You have <strong id="level-points-text" style="color: var(--accent-green); font-size: 1.1rem;">0</strong> levels to distribute!
+TITLE_CAREER=MY CAREER
+
+TITLE_QUIT_CONFIRM=GIVE UP?
+TEXT_QUIT_WARNING=You will lose your progress, your team will be disbanded, and nothing will be saved.
+TEXT_ARE_YOU_SURE=Are you absolutely sure?
+BTN_CANCEL=CANCEL
+BTN_QUIT_CONFIRM=GIVE UP
+
+TITLE_REPLACE_PLAYER=WHO'S LEAVING?
+TEXT_REPLACE_SUBTITLE=Replace players to free up a spot on the team.
+TITLE_OPPONENT_FOUND=OPPONENT FOUND
+BTN_ENTER_MATCH=ENTER THE PITCH ⚽
+BTN_BACK_MAP=← BACK TO MAP
+TITLE_CAMP=TRAINING CAMP 🏕️
+TEXT_CAMP_SUBTITLE=Take the opportunity to improve your squad.
+BTN_CAMP_INDIVIDUAL=INDIVIDUAL TRAINING<br><small>Choose 1 player to gain a Level</small>
+BTN_CAMP_TACTICAL=TACTICAL FOCUS<br><small>Strength bonus in the next match</small>
+
+TITLE_MY_ROSTER=MY ROSTER
+TITLE_HISTORY=HISTORY
+BTN_BACK_LIST=← BACK TO LIST
+TITLE_SETTINGS=SETTINGS
+
+LABEL_SUSPENSE_TOGGLE=Suspense
+LABEL_CONFIRM_CLICKS_TOGGLE=Click Confirmation
+
+BTN_HARD_RESET=⚠️ ERASE ALL PROGRESS
+BTN_CLOSE=CLOSE
+
+BTN_REPLAY_TUTORIAL=▶️ REPLAY GUIDED TUTORIAL
+BTN_UNDERSTOOD=GOT IT
+
+TITLE_RESET_CAREER=RESET CAREER?
+TEXT_REFUND_INFO=You will recover all <strong id="refund-amount-text" class="text-gold">0</strong> 🏆 spent!
+TEXT_REFUND_CONFIRM_QUESTION=Do you want to undo all upgrades?
+
+TEXT_SUSPENSE_DEFAULT=Get ready...
+
+PM_TITLE_DEFAULT=VICTORY!
+PM_SCORE_DEFAULT=2 x 1
+PM_REWARDS_LABEL=Rewards:
+PM_COINS_DEFAULT=+50 💰
+
+BTN_CONTINUE_JOURNEY=CONTINUE JOURNEY
+
+TITLE_SEASON_END=SEASON OVER!
+TEXT_SEASON_SUMMARY_DEFAULT=Summary...
+SE_COINS_DEFAULT=+0 💰
+
+NAV_LABEL_ACTION=Action
+NAV_LABEL_TEAM=Team
+
+ALERT_TUTORIAL_NEXT_MATCH=The tutorial will automatically appear in your next match!
+ALERT_CHEAT_NEED_MATCH=You must be inside a match to use 'win'.
+ALERT_CHEAT_ALL_UNLOCKED=🔓 All Divisions unlocked successfully!
+ALERT_CHEAT_UNKNOWN=Unknown command.
+ALERT_CHEAT_TROPHIES=+{val} Trophies added!
+ALERT_CHEAT_COINS=+{val} 💰 added!

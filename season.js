@@ -274,7 +274,6 @@ function handleMapNodeClick(node) {
         let threatLabel = threat.label;
         let levelGain = threat.expReward;
 
-        // Formatação das Habilidades (Traits)
         let perkCounts = {};
         node.rival.perks.forEach(perk => {
             if (!perkCounts[perk.id]) perkCounts[perk.id] = { ...perk, count: 1 };
@@ -283,14 +282,14 @@ function handleMapNodeClick(node) {
 
         let perksHtml = Object.values(perkCounts).map(perk => {
             let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold); font-weight:900;">x${perk.count}</span>` : "";
-            return `<span data-tip="${perk.desc}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-light); font-size: 0.8rem; font-weight: 800; white-space: nowrap; color: #e2e8f0; pointer-events: auto;">${perk.emoji} ${perk.name}${countLabel}</span>`;
+            // Usando a função t() nas chaves do perk
+            return `<span data-tip="${t(perk.desc)}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-light); font-size: 0.8rem; font-weight: 800; white-space: nowrap; color: #e2e8f0; pointer-events: auto;">${perk.emoji} ${t(perk.name)}${countLabel}</span>`;
         }).join('');
 
         if (!perksHtml) {
             perksHtml = `<span style="font-size: 0.8rem; color: var(--text-muted); font-style: italic;">O olheiro não detectou especialidades.</span>`;
         }
 
-        // NOVO: Comparativo visual de Níveis
         let teamLvl = getTeamAverageLevel();
         let rivalLvl = node.rival.level;
         let lvlColor = rivalLvl > teamLvl ? "var(--accent-red)" : (rivalLvl < teamLvl ? "var(--accent-green)" : "#fff");
@@ -299,12 +298,12 @@ function handleMapNodeClick(node) {
         details.innerHTML = `
             <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 20px;">
                 <div style="font-size:4.5rem; margin-bottom:5px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); line-height: 1;">${node.rival.emoji}</div>
-                <h3 style="color:#fff; font-size:1.5rem; text-transform:uppercase; letter-spacing: 1px;">${node.rival.name}</h3>
+                <h3 style="color:#fff; font-size:1.5rem; text-transform:uppercase; letter-spacing: 1px;">${tClub(node.rival.name)}</h3>
             </div>
 
             <div style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 800; color: var(--text-muted); justify-content: center; margin-bottom: 16px;">
                 <span>Estilo Tático:</span>
-                <span style="color: #fff; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-light);">${node.rival.style.emoji} ${node.rival.style.name}</span>
+                <span style="color: #fff; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-light);">${node.rival.style.emoji} ${t(node.rival.style.name)}</span>
             </div>
 
             <div style="background:rgba(0,0,0,0.25); border-radius:12px; padding:16px; margin-bottom:16px; border:1px solid var(--border-accent); display:flex; flex-direction:column; align-items:center;">
@@ -317,7 +316,7 @@ function handleMapNodeClick(node) {
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <div style="background:rgba(0,0,0,0.3); padding: 12px; border-radius:8px; border-bottom: 3px solid ${threatColor}; display:flex; flex-direction:column; align-items:center; justify-content:center;">
                     <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">Ameaça</span>
-                    <span style="font-size:0.9rem; font-weight:900; color:${threatColor}; text-transform:uppercase; text-align:center;">${threatLabel}</span>
+                    <span style="font-size:0.9rem; font-weight:900; color:${threatColor}; text-transform:uppercase; text-align:center;">${t(threatLabel)}</span>
                 </div>
                 <div style="background:rgba(0,0,0,0.3); padding: 12px; border-radius:8px; border-bottom: 3px solid var(--accent-blue); display:flex; flex-direction:column; align-items:center; justify-content:center;">
                     <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">Recompensa</span>
