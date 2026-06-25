@@ -76,24 +76,42 @@ function loadClub(idx) {
     returnToHub();
 }
 
+// Variáveis para guardar o sorteio atual do nome do clube
+let currentRandomBaseIdx = 0;
+let currentRandomAdjIdx = 0;
+
+// Função chamada pelo botão 🔀
+window.randomizeClubName = function () {
+    currentRandomBaseIdx = Math.floor(Math.random() * GAME_CONTENT.clubGeneration.bases.length);
+    currentRandomAdjIdx = Math.floor(Math.random() * GAME_CONTENT.clubGeneration.adjectives.length);
+
+    const base = GAME_CONTENT.clubGeneration.bases[currentRandomBaseIdx];
+    const adj = GAME_CONTENT.clubGeneration.adjectives[currentRandomAdjIdx];
+
+    const displayEl = document.getElementById('display-club-name');
+    if (displayEl) {
+        displayEl.innerHTML = `<span style="font-size:2rem; margin-right:8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${base.emoji}</span> ${t(base.name)} ${t(adj)}`;
+    }
+};
+
 function openCreateClub() {
-    const baseSel = document.getElementById('create-club-base');
-    const adjSel = document.getElementById('create-club-adj');
     const natSel = document.getElementById('create-club-nat');
 
-    baseSel.innerHTML = GAME_CONTENT.clubGeneration.bases.map((b, i) => `<option value="${i}">${b.emoji} ${t(b.name)}</option>`).join('');
-    adjSel.innerHTML = GAME_CONTENT.clubGeneration.adjectives.map((a, i) => `<option value="${i}">${t(a)}</option>`).join('');
+    // Popula o select de nacionalidades
     natSel.innerHTML = GAME_CONTENT.names.map((n, i) => `<option value="${i}">${n.country}</option>`).join('');
+
+    // Rola o primeiro nome aleatório
+    randomizeClubName();
 
     showScreen('screen-create-club');
 }
 
 function executeCreateClub() {
-    const base = GAME_CONTENT.clubGeneration.bases[document.getElementById('create-club-base').value];
-    const adj = GAME_CONTENT.clubGeneration.adjectives[document.getElementById('create-club-adj').value];
+    // Agora puxa o nome das variáveis sorteadas e não de <select>
+    const base = GAME_CONTENT.clubGeneration.bases[currentRandomBaseIdx];
+    const adj = GAME_CONTENT.clubGeneration.adjectives[currentRandomAdjIdx];
     const nat = GAME_CONTENT.names[document.getElementById('create-club-nat').value];
 
-    // FEATURE: Escolhe uma formação inicial aleatória
     const formationKeys = Object.keys(FORMATIONS);
     const randomFormation = formationKeys[Math.floor(Math.random() * formationKeys.length)];
 
@@ -103,7 +121,7 @@ function executeCreateClub() {
         leagueLevel: 0,
         club: { name: `${base.name} ${adj}`, emoji: base.emoji, isPlayer: true },
         team: [], reserves: [], captainId: null, marketPool: [],
-        formation: randomFormation, // Formação Aleatória Aplicada
+        formation: randomFormation,
         activeCampBuff: 0, currentNode: null, inMatch: false,
         settings: { showSuspense: true, requireConfirm: !IS_DESKTOP },
         season: { number: 1, map: [], currentStage: 0, history: [], matchHistory: [] },
@@ -168,13 +186,79 @@ window.changeFormation = function (newForm) {
 
 function openSquadManager() {
     squadSelectedPlayer = null;
-
     const formSelect = document.getElementById('formation-select');
     if (formSelect && gameState.formation) formSelect.value = gameState.formation;
-
     renderSquadGrid();
     showScreen('screen-squad');
 }
+
+// LÓGICA DO TOOLTIP DE PC
+window.showPcTooltip = function (p, event) {
+    if (!IS_DESKTOP || squadSelectedPlayer) return; // Se está trocando, não polui a tela
+    const tooltip = document.getElementById('pc-player-tooltip');
+    if (!tooltip) return;
+    tooltip.innerHTML = getPlayerCardHTML(p);
+    tooltip.style.display = 'block';
+    movePcTooltip(event);
+};
+
+window.movePcTooltip = function (event) {
+    if (!IS_DESKTOP) return;
+    const tooltip = document.getElementById('pc-player-tooltip');
+    if (tooltip && tooltip.style.display === 'block') {
+        let x = event.clientX + 15;
+        let y = event.clientY + 15;
+        // Evita sair da tela
+        if (x + 290 > window.innerWidth) x = event.clientX - 290;
+        if (y + 100 > window.innerHeight) y = event.clientY - 100;
+        tooltip.style.left = x + 'px';
+        tooltip.style.top = y + 'px';
+    }
+};
+
+window.hidePcTooltip = function () {
+    const tooltip = document.getElementById('pc-player-tooltip');
+    if (tooltip) tooltip.style.display = 'none';
+};
+
+// LÓGICA DO POPUP MOBILE
+let mobileActionPlayer = null;
+
+window.openMobilePlayerModal = function (player, index, isStarter) {
+    mobileActionPlayer = { player, index, isStarter, id: player.id };
+    document.getElementById('mobile-player-card-container').innerHTML = getPlayerCardHTML(player);
+
+    let btnCaptain = document.getElementById('btn-make-captain');
+    if (isStarter) {
+        btnCaptain.style.display = 'block';
+        if (gameState.captainId === player.id) {
+            btnCaptain.innerText = "JÁ É CAPITÃO";
+            btnCaptain.disabled = true;
+            btnCaptain.style.opacity = "0.5";
+        } else {
+            btnCaptain.innerText = "👑 CAPITÃO";
+            btnCaptain.disabled = false;
+            btnCaptain.style.opacity = "1";
+        }
+    } else {
+        btnCaptain.style.display = 'none';
+    }
+    document.getElementById('mobile-player-action-overlay').style.display = 'flex';
+};
+
+window.startSwapFromMobile = function () {
+    document.getElementById('mobile-player-action-overlay').style.display = 'none';
+    squadSelectedPlayer = mobileActionPlayer; // Inicia a troca!
+    renderSquadGrid(); // Redesenha a tela pra todo mundo tremer
+};
+
+window.makeCaptainFromMobile = function () {
+    document.getElementById('mobile-player-action-overlay').style.display = 'none';
+    gameState.captainId = mobileActionPlayer.id;
+    createJuiceText(t('TEXT_CAPTAIN_SET') || "CAPITÃO!", "var(--accent-gold)", window.innerWidth / 2, window.innerHeight / 2);
+    saveAllClubs();
+    renderSquadGrid();
+};
 
 function renderSquadGrid() {
     const squadCoins = document.getElementById('squad-coins');
@@ -188,7 +272,7 @@ function renderSquadGrid() {
     let resCount = gameState.reserves ? gameState.reserves.length : 0;
     rTitle.innerHTML = t('LABEL_RESERVES', { count: resCount }) || `RESERVAS (${resCount}/12)`;
 
-    // 1. DESENHA O CAMPO TÁTICO
+    // DESENHA O CAMPO TÁTICO
     pGrid.innerHTML = `
         <div class="pitch-lines"></div>
         <div class="pitch-row" id="row-ATA"></div>
@@ -205,43 +289,48 @@ function renderSquadGrid() {
         let isCaptain = (gameState.captainId === p.id);
 
         let badgesHTML = '';
-        // BUG CORRIGIDO: Removido o fundo da exclamação
         if (isOOP) badgesHTML += `<div class="oop-icon" data-tip="FORA DE POSIÇÃO! Nível e Traits reduzidos.">⚠️</div>`;
         if (isCaptain) badgesHTML += `<div class="cap-badge" data-tip="Capitão: Ignora punições e joga o campo todo!">C</div>`;
 
-        let card = document.createElement('div');
-        card.className = `pitch-player ${squadSelectedPlayer?.id === p.id ? 'selected' : ''} ${isOOP ? 'oop' : ''}`;
+        let jiggleClass = squadSelectedPlayer ? 'roster-jiggle' : '';
+        let selClass = squadSelectedPlayer?.id === p.id ? 'selected' : '';
+        let oopClass = isOOP ? 'oop' : '';
 
-        // BUG CORRIGIDO: Adicionado a Sigla da Posição e o prefixo "Nv"
+        let card = document.createElement('div');
+        card.className = `pitch-player ${jiggleClass} ${selClass} ${oopClass}`;
+
+        // NOVO: Layout em formato de Rascunho com o topo dividido (Posição | Nível)
         card.innerHTML = `
-            <div class="pos-field">${p.position}</div>
+            <div class="pitch-card-top">
+                <div class="pos-badge pos-${p.position}">${t('POS_' + p.position) || p.position}</div>
+                <div class="lvl">Nv${p.level}</div>
+            </div>
             <div class="badges">${badgesHTML}</div>
             <div class="emoji">${p.emoji}</div>
-            <div class="name">${p.name}</div>
-            <div class="lvl">Nv ${p.level}</div>
         `;
+
         card.onclick = (e) => handleSquadClick(p, index, true, e);
+        card.onmouseenter = (e) => showPcTooltip(p, e);
+        card.onmousemove = (e) => movePcTooltip(e);
+        card.onmouseleave = () => hidePcTooltip();
+
         return card;
     };
 
-    // Aloca os 11 titulares nas linhas do campo mapeadas pela Formação
     gameState.team.forEach((p, idx) => {
         let expectedPos = formationDef[idx];
         document.getElementById(`row-${expectedPos}`).appendChild(createPitchCard(p, idx));
     });
 
-    // 2. DESENHA A RESERVA (Cartões Originais Horizontais)
+    // DESENHA A RESERVA
     const createBenchCard = (p, index) => {
         let temp = document.createElement('div');
         temp.innerHTML = getPlayerCardHTML(p);
         let card = temp.firstElementChild;
         card.style.cursor = 'pointer';
 
-        if (squadSelectedPlayer && squadSelectedPlayer.id === p.id) {
-            card.style.borderColor = "var(--accent-blue)";
-            card.style.boxShadow = "0 0 15px rgba(56, 189, 248, 0.4)";
-            card.style.transform = "scale(1.02)";
-        }
+        if (squadSelectedPlayer) card.classList.add('roster-jiggle');
+        if (squadSelectedPlayer && squadSelectedPlayer.id === p.id) card.classList.add('selected');
 
         card.onclick = (e) => handleSquadClick(p, index, false, e);
         return card;
@@ -253,15 +342,22 @@ function renderSquadGrid() {
 }
 
 function handleSquadClick(player, index, isStarter, event) {
+
+    // CASO 1: Ninguém selecionado. Abre Modal (Mobile) ou Seleciona (PC)
     if (!squadSelectedPlayer) {
-        squadSelectedPlayer = { player, index, isStarter, id: player.id };
-        renderSquadGrid();
+        if (!IS_DESKTOP) {
+            openMobilePlayerModal(player, index, isStarter);
+        } else {
+            squadSelectedPlayer = { player, index, isStarter, id: player.id };
+            hidePcTooltip(); // Esconde o tooltip ao iniciar a troca
+            renderSquadGrid();
+        }
         return;
     }
 
+    // CASO 2: Clicou no mesmo jogador (Deseleciona ou vira Capitão)
     if (squadSelectedPlayer.id === player.id) {
-        // CLIQUE DUPLO NO MESMO JOGADOR TÍTULAR: VIRA CAPITÃO!
-        if (isStarter) {
+        if (isStarter && IS_DESKTOP) {
             gameState.captainId = player.id;
             const tx = event ? event.clientX : window.innerWidth / 2;
             const ty = event ? event.clientY - 40 : 100;
@@ -273,14 +369,14 @@ function handleSquadClick(player, index, isStarter, event) {
         return;
     }
 
-    // TROCA ENTRE SLOTS
+    // CASO 3: Clicou em outro jogador -> Executa a TROCA
     let arr1 = squadSelectedPlayer.isStarter ? gameState.team : gameState.reserves;
     let arr2 = isStarter ? gameState.team : gameState.reserves;
 
     let p1 = arr1[squadSelectedPlayer.index];
     let p2 = arr2[index];
 
-    // Validação de Goleiro: 1 Goleiro titular OBRIGATÓRIO (Impede mexer no index 0 com não-goleiros)
+    // Validação restrita de Goleiros
     if ((p1.position === 'GOL' && p2.position !== 'GOL') || (p1.position !== 'GOL' && p2.position === 'GOL')) {
         createJuiceText(t('TEXT_GOL_SWAP_ERROR') || "Erro", "var(--accent-red)", window.innerWidth / 2, 100);
         squadSelectedPlayer = null;
@@ -288,15 +384,15 @@ function handleSquadClick(player, index, isStarter, event) {
         return;
     }
 
-    // Executa a Troca
+    // Executa a Troca efetiva
     arr1[squadSelectedPlayer.index] = p2;
     arr2[index] = p1;
 
-    // Se o capitão for pro banco, passa a faixa pro próximo
     if (gameState.captainId === p1.id && !squadSelectedPlayer.isStarter) gameState.captainId = gameState.team[1].id;
     if (gameState.captainId === p2.id && !isStarter) gameState.captainId = gameState.team[1].id;
 
     squadSelectedPlayer = null;
+    hidePcTooltip();
     saveAllClubs();
     renderSquadGrid();
 }

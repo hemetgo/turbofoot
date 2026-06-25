@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <!-- NOVO: Tela de Criação de Clube -->
+            <!-- Tela de Criação de Clube -->
             <div id="screen-create-club" class="screen">
                 <div class="champ-header">
                     <div class="champ-title-block">
@@ -52,16 +52,23 @@
                 </div>
                 <div class="modal-body"
                     style="display:flex; flex-direction:column; gap:20px; max-width: 500px; margin: 0 auto; width: 100%;">
+
+                    <!-- NOVO: NOME DO CLUBE GERADO COM SHUFFLE -->
                     <div class="options-row">
                         <label style="font-weight:700; color:var(--text-muted);" data-i18n="LABEL_CLUB_NAME">NOME DO
                             CLUBE</label>
-                        <div style="display:flex; gap:10px; margin-top:10px;">
-                            <select id="create-club-base" class="btn-secondary"
-                                style="flex:1; background:var(--bg-main); color:#fff; padding:10px;"></select>
-                            <select id="create-club-adj" class="btn-secondary"
-                                style="flex:1; background:var(--bg-main); color:#fff; padding:10px;"></select>
+                        <div style="display:flex; gap:10px; margin-top:10px; align-items:stretch;">
+                            <div id="display-club-name"
+                                style="flex:1; background:rgba(0,0,0,0.3); border:1px solid var(--border-accent); border-radius:8px; padding:12px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:900; text-align:center; text-transform:uppercase;">
+                                <!-- O nome aparecerá aqui -->
+                            </div>
+                            <!-- Botão de Sorteio com Emoji de Shuffle -->
+                            <button class="btn-secondary"
+                                style="width: 60px; font-size:1.6rem; padding:0; display:flex; align-items:center; justify-content:center; flex-shrink:0; border-color:var(--accent-blue);"
+                                onclick="randomizeClubName()">🔀</button>
                         </div>
                     </div>
+
                     <div class="options-row">
                         <label style="font-weight:700; color:var(--text-muted);" data-i18n="LABEL_NATIONALITY">PAÍS DE
                             ORIGEM (Elenco Inicial)</label>
@@ -77,8 +84,7 @@
                 </div>
             </div>
 
-            <!-- NOVO: Tela de Gestão de Elenco -->
-            <!-- NOVO: Tela de Gestão de Elenco com Campo Tático -->
+            <!-- Tela de Gestão de Elenco com Campo Tático -->
             <div id="screen-squad" class="screen">
                 <div class="champ-header" style="flex-wrap: wrap; height: auto;">
                     <div class="champ-title-block">
@@ -494,6 +500,31 @@
                 <div class="modal-footer">
                     <button class="btn-primary" data-i18n="BTN_BACK_MENU" onclick="returnToHub()">VOLTAR AO
                         CLUBE</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Div do Tooltip de Jogador (Exclusivo PC) -->
+        <div id="pc-player-tooltip"
+            style="display:none; position:fixed; z-index:99999; pointer-events:none; width: 280px; box-shadow: 0 15px 30px rgba(0,0,0,0.8); border-radius: 8px;">
+        </div>
+
+        <!-- Modal Ação Mobile (Exclusivo Celular) -->
+        <div id="mobile-player-action-overlay" class="modal-overlay" style="z-index: 10000;">
+            <div class="options-box bottom-sheet">
+                <div class="modal-header flex-between">
+                    <h2 class="options-title">OPÇÕES DO JOGADOR</h2>
+                    <button class="btn-icon"
+                        onclick="document.getElementById('mobile-player-action-overlay').style.display='none'">❌</button>
+                </div>
+                <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
+                    <div id="mobile-player-card-container"></div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-secondary" style="flex:1;" onclick="startSwapFromMobile()">🔁 TROCAR</button>
+                        <button id="btn-make-captain" class="btn-primary"
+                            style="flex:1; background:var(--accent-gold); border-color:var(--accent-gold); color:#000;"
+                            onclick="makeCaptainFromMobile()">👑 CAPITÃO</button>
+                    </div>
                 </div>
             </div>
         </div>
