@@ -507,7 +507,7 @@ button {
 
 @media (min-width: 600px) {
     .roster-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
         gap: var(--space-md);
     }
 }
@@ -2469,16 +2469,19 @@ button {
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
     position: relative;
-    width: 100%;
+    width: 420px;
+    max-width: 420px;
     display: flex;
     padding: 14px 0;
     margin-bottom: 20px;
     box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
     overflow: hidden;
     flex-direction: column;
-    min-height: 240px;
+    height: 550px;
+    min-height: 320px;
     justify-content: center;
     gap: 10px;
+    flex: 0 0 auto;
 }
 
 .pitch-lines {
@@ -2526,22 +2529,34 @@ button {
     flex-wrap: wrap;
 }
 
+.squad-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.reserves-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
 @media (min-width: 900px) {
+    .squad-layout {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
     .football-pitch {
         min-height: 320px;
-        background-image: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255, 255, 255, 0.05) 40px, rgba(255, 255, 255, 0.05) 80px);
+        max-width: calc(100% - 340px);
     }
 
-    .pitch-row {
-        flex-direction: row;
-        width: 100%;
-    }
-
-    .pitch-lines::after {
-        top: 50%;
-        left: 0;
-        width: 100%;
-        height: 2px;
+    .reserves-panel {
+        width: 320px;
+        flex-shrink: 0;
     }
 }
 
