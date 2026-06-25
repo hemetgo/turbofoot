@@ -2543,87 +2543,87 @@ button {
 
 /* --- DESIGN DA CARTA EM CAMPO --- */
 .pitch-player {
-    background: linear-gradient(145deg, #1e293b, #0f172a);
+    background: var(--bg-card);
     border: 1px solid var(--border-accent);
-    border-radius: var(--radius-md);
-    width: 60px;
-    /* Tamanho 1:1 (Quadrado perfeito) */
-    height: 60px;
-    /* Tamanho 1:1 (Quadrado perfeito) */
+    border-radius: 16px;
+    min-width: 92px;
+    max-width: 110px;
+    min-height: 54px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     position: relative;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    transition: all 0.2s;
-    padding: 4px;
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.35);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    padding: 8px;
     box-sizing: border-box;
 }
 
 .pitch-player:active {
-    transform: scale(0.90) !important;
+    transform: scale(0.96) !important;
 }
 
 .pitch-player.oop {
     border-color: var(--accent-red);
-    background: #7f1d1d;
+    background: rgba(190, 18, 60, 0.4);
 }
 
-/* Container do Topo para alinhar Posição e Nível */
-.pitch-card-top {
+.pitch-card-body {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 8px;
     width: 100%;
 }
 
-/* Tag de Posição */
-.pitch-player .pos-badge {
-    position: static;
-    font-size: 0.5rem;
-    /* Ajustado para caber lado a lado no quadrado */
-    font-weight: 900;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid var(--border-light);
-    border-radius: 4px;
-    padding: 1px 4px;
-    color: #e2e8f0;
-    margin: 0;
-    box-shadow: none;
-    z-index: 1;
-}
-
-/* Nível do jogador no topo direito */
-.pitch-player .lvl {
-    position: static;
-    background: #020617;
-    font-size: 0.5rem;
-    /* Ajustado para caber lado a lado no quadrado */
-    padding: 1px 4px;
-    border-radius: 4px;
-    font-weight: 900;
-    border: 1px solid var(--accent-green);
-    color: #fff;
-    box-shadow: none;
-    white-space: nowrap;
-    z-index: 1;
-}
-
-.pitch-player .emoji {
+.pitch-card-avatar {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    flex-shrink: 0;
     font-size: 2rem;
-    /* Ajustado para não vazar do card de 60px */
-    line-height: 1;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
-    margin-top: auto;
-    margin-bottom: auto;
+    padding-bottom: 8px;
+}
+
+.pitch-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.pitch-player .pos-badge {
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 999px;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pitch-player .lvl {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.9);
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 999px;
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .pitch-player .badges {
     position: absolute;
     top: -8px;
-    right: -8px;
+    left: -8px;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -2637,9 +2637,12 @@ button {
     border: 1px solid #f59e0b;
     font-size: 0.65rem;
     padding: 2px 5px;
-    border-radius: 4px;
+    border-radius: 6px;
     font-weight: 900;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    position: absolute;
+    bottom: 8px;
+    right: -80px;
 }
 
 .pitch-player .oop-icon {
@@ -2650,17 +2653,14 @@ button {
 /* --- JUICINESS: ANIMAÇÃO DE PULSO --- */
 @keyframes pulseSwap {
     0% {
-        transform: scale(1);
         box-shadow: 0 0 5px rgba(245, 158, 11, 0.4);
     }
 
     50% {
-        transform: scale(1.05);
         box-shadow: 0 0 15px rgba(245, 158, 11, 0.8);
     }
 
     100% {
-        transform: scale(1);
         box-shadow: 0 0 5px rgba(245, 158, 11, 0.4);
     }
 }
@@ -2674,6 +2674,5 @@ button {
     animation: none !important;
     border-color: var(--accent-blue) !important;
     box-shadow: 0 0 20px var(--accent-blue) !important;
-    transform: scale(1.15) !important;
     z-index: 20;
 }

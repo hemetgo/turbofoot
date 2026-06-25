@@ -299,14 +299,15 @@ function renderSquadGrid() {
         let card = document.createElement('div');
         card.className = `pitch-player ${jiggleClass} ${selClass} ${oopClass}`;
 
-        // NOVO: Layout em formato de Rascunho com o topo dividido (Posição | Nível)
         card.innerHTML = `
-            <div class="pitch-card-top">
-                <div class="pos-badge pos-${p.position}">${t('POS_' + p.position) || p.position}</div>
-                <div class="lvl">Nv${p.level}</div>
+            <div class="pitch-card-body">
+                <div class="pitch-card-avatar"><span>${p.emoji}</span></div>
+                <div class="pitch-card-info">
+                    <div class="pos-badge pos-${p.position}">${t('POS_' + p.position) || p.position}</div>
+                    <div class="lvl">Nv${p.level}</div>
+                </div>
             </div>
             <div class="badges">${badgesHTML}</div>
-            <div class="emoji">${p.emoji}</div>
         `;
 
         card.onclick = (e) => handleSquadClick(p, index, true, e);
