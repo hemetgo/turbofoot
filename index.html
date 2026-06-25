@@ -92,6 +92,10 @@
                             data-i18n="TEXT_SQUAD_TIP">Selecione dois para trocar. Clique DUAS VEZES num titular para
                             torná-lo CAPITÃO.</div>
                     </div>
+                    <!-- Contador de Moedas -->
+                    <div class="mobile-only" style="display:flex; gap:8px; align-items:center;">
+                        <div class="currency-display">💰 <span id="squad-coins">0</span></div>
+                    </div>
                 </div>
                 <div class="map-wrapper" style="padding: 15px; background: var(--bg-base);">
                     <h3 data-i18n="LABEL_STARTERS"
@@ -173,7 +177,8 @@
                     <div class="champ-title-block">
                         <div class="champ-league-label" id="map-league-title" data-i18n="LABEL_MAP_DEFAULT">O MAPA</div>
                     </div>
-                    <div class="mobile-only" style="display:flex; gap:8px;">
+                    <div class="mobile-only" style="display:flex; gap:8px; align-items:center;">
+                        <div class="currency-display">💰 <span id="map-coins">0</span></div>
                         <button class="btn-icon" style="color:var(--accent-red); border-color:var(--accent-red);"
                             onclick="openQuitConfirm()">🚪</button>
                     </div>

@@ -65,14 +65,17 @@ function showMarketScreen() {
         if (!perksHtml) perksHtml = `<span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800;">Sem Habilidades</span>`;
 
         let starLabel = p.isStar ? `<span style="font-size: 1.1rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
-
         let levelBadge = `<span style="display: inline-flex; align-items: center; padding: 2px 6px; font-size: 0.7rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid var(--border-light); border-radius: 6px; margin-left: 8px;">Nv <span style="color: var(--accent-green); margin-left: 4px;">${p.level}</span></span>`;
+        
+        // NOVO: Adicionando o Badge de Posição
+        let posBadge = p.position ? `<span class="pos-badge pos-${p.position}">${t('POS_' + p.position)}</span>` : '';
 
         list.innerHTML += `
             <div class="market-card">
                 <div class="card-emoji" style="font-size: 2.2rem;">${p.emoji}</div>
                 <div class="market-info">
                     <div class="market-name" style="display:flex; align-items:center;">
+                        ${posBadge}
                         <span class="fi fi-${p.flag || 'xx'}" style="font-size: 0.8rem; border-radius: 2px; flex-shrink: 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));"></span>
                         &nbsp;&nbsp;${p.name} ${starLabel} ${levelBadge}
                     </div>
