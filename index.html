@@ -204,7 +204,14 @@
                             <p id="market-sub" data-i18n="MARKET_SUB_DEFAULT">O jogador vai para a Reserva.</p>
                         </div>
                         <div id="market-list" class="market-list"></div>
-                        <button class="btn-secondary" data-i18n="BTN_CONTINUE" onclick="cancelMarket()">VOLTAR</button>
+                        <!-- NOVO: Botoes de Controle da Loja -->
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn-secondary" data-i18n="BTN_BACK" style="flex:1;"
+                                onclick="cancelMarket()">← VOLTAR</button>
+                            <button id="btn-market-reroll" class="btn-primary" data-i18n="BTN_REROLL"
+                                style="flex:1; background:var(--accent-purple); box-shadow: 0 4px 15px rgba(168,85,247,0.3);"
+                                onclick="rerollMarket()">🔄 REROLL</button>
+                        </div>
                     </div>
                 </div>
             </div>

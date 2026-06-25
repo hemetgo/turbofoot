@@ -1,18 +1,38 @@
-let draftedPlayers = [];
-let pendingPurchase = null;
-let pendingDraftIndex = -1;
+const REROLL_COST = 10; // Custo fixo para girar a loja
 
 function openHubMarket() {
-    // Escala os jogadores com base na melhor divisão que o clube já jogou
-    let baseLvl = Math.max(1, (gameState.meta.highestSeriesUnlocked * 3) + 3);
+    // Se o mercado estiver vazio (novo clube ou recém carregado vazio), gera os 5 jogadores
+    if (!gameState.marketPool || gameState.marketPool.length === 0) {
+        generateMarketPool();
+    }
+    showMarketScreen();
+}
 
-    draftedPlayers = [
+function generateMarketPool() {
+    let baseLvl = Math.max(1, ((gameState.meta?.highestSeriesUnlocked || 0) * 3) + 3);
+
+    // Gera 5 opções variadas (do mais fraco/barato até a "estrela" premium da loja)
+    gameState.marketPool = [
+        generatePlayer(Math.max(1, baseLvl - 2), false),
         generatePlayer(Math.max(1, baseLvl - 1), false),
         generatePlayer(baseLvl, false),
+        generatePlayer(baseLvl + 1, false),
         generatePlayer(baseLvl + 2, true)
     ];
+    saveGame();
+}
 
-    showMarketScreen();
+function rerollMarket() {
+    if (gameState.coins < REROLL_COST) {
+        const tx = window.innerWidth / 2;
+        const ty = window.innerHeight / 2;
+        createJuiceText(t('LOG_COMBO_INSUFFICIENT') || "💰 INSUFICIENTE", "var(--accent-red)", tx, ty);
+        return;
+    }
+
+    gameState.coins -= REROLL_COST;
+    generateMarketPool(); // Cria novos 5 jogadores e salva
+    showMarketScreen();   // Atualiza a tela
 }
 
 function showMarketScreen() {
@@ -20,22 +40,27 @@ function showMarketScreen() {
     const list = document.getElementById('market-list');
     list.innerHTML = '';
 
-    // BUG CORRIGIDO: Força a atualização da moeda (💰) no header do Modal
     const coinsDisplay = document.getElementById('market-coins');
     if (coinsDisplay) coinsDisplay.innerText = gameState.coins;
 
-    // Renomeando os títulos da tela via JS
     document.querySelector('#screen-market .champ-league-label').innerText = t('LABEL_MARKET_TITLE') || "OLHEIRO";
-    document.getElementById('market-title').innerText = t('MARKET_SCOUT_TITLE') || "ESCOLHA 1 NOVO JOGADOR";
-    document.getElementById('market-sub').innerText = t('MARKET_SUB_DEFAULT') || "O jogador vai para a Reserva.";
+    document.getElementById('market-title').innerText = t('MARKET_SCOUT_TITLE') || "ESCOLHA SEUS REFORÇOS";
+    document.getElementById('market-sub').innerText = t('MARKET_SUB_DEFAULT') || "Os jogadores vão para a Reserva.";
 
-    // BUG CORRIGIDO: Muda o botão inferior para Voltar
-    const backBtn = document.querySelector('#screen-market .market-panel > button');
-    if (backBtn) {
-        backBtn.innerText = "← VOLTAR";
+    // Gerencia o visual do botão Reroll
+    const rerollBtn = document.getElementById('btn-market-reroll');
+    if (rerollBtn) {
+        if (gameState.coins < REROLL_COST) {
+            rerollBtn.style.opacity = "0.5";
+            rerollBtn.style.filter = "grayscale(100%)";
+        } else {
+            rerollBtn.style.opacity = "1";
+            rerollBtn.style.filter = "none";
+        }
+        rerollBtn.innerHTML = `🔄 ${t('BTN_REROLL')} (${REROLL_COST}💰)`;
     }
 
-    draftedPlayers.forEach((p, idx) => {
+    gameState.marketPool.forEach((p, idx) => {
         if (!p) {
             list.innerHTML += `
             <div class="market-card" style="opacity:0.5; filter:grayscale(1);">
@@ -66,8 +91,6 @@ function showMarketScreen() {
 
         let starLabel = p.isStar ? `<span style="font-size: 1.1rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
         let levelBadge = `<span style="display: inline-flex; align-items: center; padding: 2px 6px; font-size: 0.7rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid var(--border-light); border-radius: 6px; margin-left: 8px;">Nv <span style="color: var(--accent-green); margin-left: 4px;">${p.level}</span></span>`;
-        
-        // NOVO: Adicionando o Badge de Posição
         let posBadge = p.position ? `<span class="pos-badge pos-${p.position}">${t('POS_' + p.position)}</span>` : '';
 
         list.innerHTML += `
@@ -83,20 +106,18 @@ function showMarketScreen() {
                         ${perksHtml}
                     </div>
                 </div>
-                <button class="market-buy-btn" ${disabledAttr} onclick="executePurchase(${idx})">CONTRATAR<br>(${p.price} 💰)</button>
+                <button class="market-buy-btn" ${disabledAttr} onclick="executePurchase(${idx})">CONTRATAR<br>(${p.price}💰)</button>
             </div>
         `;
     });
 }
 
 function cancelMarket() {
-    draftedPlayers = [];
     returnToHub();
 }
 
 function executePurchase(draftIndex) {
-    pendingPurchase = draftedPlayers[draftIndex];
-    pendingDraftIndex = draftIndex;
+    let pendingPurchase = gameState.marketPool[draftIndex];
 
     if (!pendingPurchase) return;
     if (gameState.coins < pendingPurchase.price) return;
@@ -104,19 +125,18 @@ function executePurchase(draftIndex) {
 
     // Limite de elenco: 11 Titulares + 12 Reservas = 23.
     if (gameState.team.length + gameState.reserves.length >= 23) {
-        alert(t('TEXT_ROSTER_FULL') || "ELENCO CHEIO!"); 
+        alert(t('TEXT_ROSTER_FULL') || "ELENCO CHEIO!");
         return;
     }
 
     gameState.coins -= pendingPurchase.price;
-    gameState.reserves.push(pendingPurchase); // Vai pro banco!
+    gameState.reserves.push(pendingPurchase);
 
-    if (pendingDraftIndex !== -1) draftedPlayers[pendingDraftIndex] = null;
-    
-    pendingPurchase = null;
-    pendingDraftIndex = -1;
-    progressDailyMission('visit_market', 1);
+    // Marca como esgotado no array do state persistente
+    gameState.marketPool[draftIndex] = null;
+
+    if (typeof progressDailyMission === 'function') progressDailyMission('visit_market', 1);
 
     saveGame();
-    showMarketScreen(); // Chama a tela de novo para atualizar a moeda ao vivo
+    showMarketScreen();
 }

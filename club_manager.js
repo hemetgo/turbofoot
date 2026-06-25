@@ -44,14 +44,16 @@ function loadClub(idx) {
     gameState = JSON.parse(JSON.stringify(allSaves[idx]));
     if (!gameState.reserves) gameState.reserves = [];
 
-    // RETROCOMPATIBILIDADE: Se for um save antigo, gera posições e designa capitão
+    // RETROCOMPATIBILIDADE: Garante que saves antigos recebam o pool do mercado
+    if (!gameState.marketPool) gameState.marketPool = [];
+
     const posList = ["GOL", "ZAG", "ZAG", "ZAG", "ZAG", "MEI", "MEI", "MEI", "MEI", "ATA", "ATA"];
     if (gameState.team.length > 0 && !gameState.team[0].position) {
         gameState.team.forEach((p, i) => p.position = posList[i] || "MEI");
         gameState.reserves.forEach(p => p.position = "ATA");
     }
     if (!gameState.captainId && gameState.team.length > 0) {
-        gameState.captainId = gameState.team[5].id; // Meio campista padrão
+        gameState.captainId = gameState.team[5].id;
     }
 
     returnToHub();
@@ -79,19 +81,21 @@ function executeCreateClub() {
         coins: GAME_BALANCE.mechanics.initialCoins || 50,
         leagueLevel: 0,
         club: { name: `${base.name} ${adj}`, emoji: base.emoji, isPlayer: true },
-        team: [], reserves: [], captainId: null,
+        team: [],
+        reserves: [],
+        captainId: null,
+        marketPool: [], // NOVO: Pool persistente do mercado
         activeCampBuff: 0, currentNode: null,
         settings: { showSuspense: true, requireConfirm: !IS_DESKTOP },
         season: { number: 1, map: [], currentStage: 0, history: [], matchHistory: [] },
         runHistory: [], tutorialSeen: false
     };
 
-    // FORMACÃO INICIAL FIXA: 4-4-2
     const posList = ["GOL", "ZAG", "ZAG", "ZAG", "ZAG", "MEI", "MEI", "MEI", "MEI", "ATA", "ATA"];
     for (let i = 0; i < 11; i++) {
         gameState.team.push(generateBasePlayer(1, 0, null, 0, nat, posList[i]));
     }
-    gameState.captainId = gameState.team[5].id; // Define 1 meio campista como capitao padrão
+    gameState.captainId = gameState.team[5].id;
 
     allSaves.push(gameState);
     activeSaveIndex = allSaves.length - 1;
