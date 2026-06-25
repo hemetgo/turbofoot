@@ -114,10 +114,15 @@ function confirmQuitRun() {
 function returnToTitle() {
     closeModals();
     document.body.classList.remove('in-run');
-    gameState.team = [];
-    gameState.club = null;
-    showScreen('screen-title');
-    updateMissionsBadge();
+
+    // Se por algum motivo o player voltar ao título sem clube, trava na tela de seleção
+    if (!gameState.club) {
+        renderClubManager();
+    } else {
+        document.getElementById('title-club-name').innerText = `${gameState.club.emoji} ${tClub(gameState.club.name)}`;
+        showScreen('screen-title');
+        updateMissionsBadge();
+    }
 }
 
 function updateRosterUI() {

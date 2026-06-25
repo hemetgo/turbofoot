@@ -4,15 +4,15 @@ function showScreen(id) {
     if (target) {
         target.classList.add("active");
 
-        // REMOVIDO: '.map-wrapper' agora está livre para manter a posição de onde parou!
         const scrollAreas = target.querySelectorAll('.club-options-wrapper, .market-wrapper, .match-log-container');
         scrollAreas.forEach(area => area.scrollTop = 0);
     }
 
-    if (['screen-title', 'screen-series-select', 'screen-club-select'].includes(id)) {
-        document.body.classList.remove('in-run');
-    } else {
+    // No novo design, a sidebar só deve aparecer durante a ação (Mapa e Partida)
+    if (['screen-map', 'screen-match'].includes(id)) {
         document.body.classList.add('in-run');
+    } else {
+        document.body.classList.remove('in-run');
     }
 }
 

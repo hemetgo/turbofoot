@@ -4,7 +4,6 @@ let selectedSeriesIndex = 0;
 // Inicializa o jogo: i18n → carrega dados → renderiza
 async function initGame() {
     try {
-        // Inicializa a preferência de idioma (isso já baixa o txt correto e aplica no HTML)
         await loadLanguagePreference();
 
         const mechanicsData = await fetch('config_mechanics.json').then(r => r.json());
@@ -32,11 +31,14 @@ async function initGame() {
         };
 
         PERK_LIST = textsData.perks;
-        loadSaveData();
+        loadSaveData(); // state.js - Mantido para ler cfg
         ensureDailyMissions();
         populateHowToPlay();
         document.getElementById('loading-screen').style.display = 'none';
-        returnToTitle();
+        
+        // NOVO FLUXO DE PERSISTÊNCIA: Carrega a tela de seleção de saves
+        renderClubSelection();
+
     } catch (e) { console.error(e); }
 }
 
@@ -98,129 +100,13 @@ function startRunFlow() {
 
 function selectSeries(idx) {
     selectedSeriesIndex = idx;
-    pendingClubOptions = [];
-
-    let shuffledBases = shuffle(GAME_CONTENT.clubGeneration.bases);
-    let shuffledAdjs = shuffle(GAME_CONTENT.clubGeneration.adjectives);
-
-    let metaLevel = gameState.meta?.upgrades?.start_level || 0;
-    let metaTraits = gameState.meta?.upgrades?.start_traits || 0;
-    let metaFocusLvl = gameState.meta?.upgrades?.trait_focus || 0;
-    let startLvl = 1 + metaLevel;
-    let focusChance = metaFocusLvl * 0.12;
-
-    let playersWith2Traits = 1 + Math.floor(metaTraits / 2);
-    let playersWith1Trait = metaTraits % 2;
-
-    for (let i = 0; i < 3; i++) {
-        const base = shuffledBases[i];
-        const adj = shuffledAdjs[i];
-
-        let shuffledNames = shuffle(GAME_CONTENT.names);
-        let clubNationalities = [];
-
-        let natDistribution = GAME_BALANCE.leagues[idx].natDistribution || [11];
-
-        natDistribution.forEach((count, natIndex) => {
-            for (let k = 0; k < count; k++) {
-                clubNationalities.push(shuffledNames[natIndex]);
-            }
-        });
-
-        clubNationalities = shuffle(clubNationalities);
-
-        let team = [];
-        let traitDistribution = [];
-
-        for (let j = 0; j < 11; j++) {
-            if (j < playersWith2Traits) traitDistribution.push(2);
-            else if (j < playersWith2Traits + playersWith1Trait) traitDistribution.push(1);
-            else traitDistribution.push(0);
-        }
-        traitDistribution = shuffle(traitDistribution);
-
-        let focusTraitId = metaFocusLvl > 0 ? rnd(PERK_LIST).id : null;
-
-        for (let j = 0; j < 11; j++) {
-            let numTraitsToGive = traitDistribution[j];
-            team.push(generateBasePlayer(startLvl, numTraitsToGive, focusTraitId, focusChance, clubNationalities[j]));
-        }
-
-        let traitCounts = {};
-        team.forEach(p => {
-            if (p.perks) {
-                p.perks.forEach(perk => {
-                    if (!traitCounts[perk.id]) {
-                        traitCounts[perk.id] = { count: 0, name: perk.name, emoji: perk.emoji, desc: perk.desc };
-                    }
-                    traitCounts[perk.id].count++;
-                });
-            }
-        });
-
-        pendingClubOptions.push({
-            club: { name: `${base.name} ${adj}`, emoji: base.emoji, isPlayer: true },
-            team: team,
-            traitCounts: traitCounts
-        });
-    }
-
-    const container = document.getElementById('club-options-container');
-    container.innerHTML = '';
-
-    const headerBlock = document.querySelector('#screen-club-select .champ-title-block');
-    if (headerBlock) {
-        headerBlock.innerHTML = `
-            <div class="champ-league-label">${t('LABEL_CHOOSE_CLUB')}</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 800; margin-top: 4px; text-transform: uppercase;">
-                ${t('LABEL_CHOOSE_CLUB_SUBTITLE')} <span style="color: var(--accent-green); font-weight: 900;">${startLvl}</span>
-            </div>
-        `;
-    }
-
-    pendingClubOptions.forEach((option, idx) => {
-        const c = option.club;
-
-        let traitsHtml = "";
-        let traitsArray = Object.values(option.traitCounts).sort((a, b) => b.count - a.count);
-
-        if (traitsArray.length > 0) {
-            // Alterado de 't' para 'trait' para evitar conflito com a função de tradução t()
-            let tags = traitsArray.map(trait =>
-                `<span data-tip="${t(trait.desc)}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--border-light); white-space: nowrap; color: #e2e8f0; pointer-events: auto;">${trait.emoji} ${t(trait.name)} <span style="color:var(--accent-gold); font-weight:900;">x${trait.count}</span></span>`
-            ).join('');
-            traitsHtml = `<div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 8px;">${tags}</div>`;
-        }
-
-        container.innerHTML += `
-            <div class="club-select-card" onclick="chooseClub(${idx})">
-                <div class="club-select-header">
-                    <div class="club-select-emoji" style="font-size: 3.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">${c.emoji}</div>
-                    <div class="club-select-name">${tClub(c.name)}</div>
-                </div>
-                <div class="captain-box" style="padding: 16px;">
-                    <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">${t('CLUB_ABILITIES')}</div>
-                    ${traitsHtml}
-                </div>
-            </div>`;
-    });
-    showScreen('screen-club-select');
-}
-
-function chooseClub(index) {
     document.body.classList.add('in-run');
-    gameState.club = pendingClubOptions[index].club;
-    gameState.team = pendingClubOptions[index].team;
     gameState.leagueLevel = selectedSeriesIndex;
-
-    let metaCoinsBonus = (gameState.meta?.upgrades?.start_coins || 0) * 15;
-    gameState.coins = GAME_BALANCE.mechanics.initialCoins + metaCoinsBonus;
-
-    startNewSeason();
+    startNewSeason(); // Inicia com o clube do gameState atual!
 }
 
 // ==========================================
-// SISTEMA META: LOJA E REEMBOLSO (VAMPIRE SURVIVORS STYLE)
+// SISTEMA META: LOJA E REEMBOLSO
 // ==========================================
 
 function getUpgradeCost(upg, level) {
@@ -329,6 +215,13 @@ function buyMetaUpgrade(id, cost) {
         saveGame();
         renderMetaShop();
         fireConfetti();
+    }
+}
+
+// Subrescreve o save padrão para usar o save de Clubes do club_manager.js
+function saveGame() {
+    if (typeof saveAllClubs === 'function') {
+        saveAllClubs();
     }
 }
 
