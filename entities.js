@@ -1,12 +1,8 @@
-// Função auxiliar nova que gera o "documento de identidade" do jogador
 function generateIdentity(isBase = false, forcedNationality = null) {
-    // Presets (Jogadores Especiais/Estrelas) ignoram a nacionalidade do time base
     if (!isBase && GAME_CONTENT.presets && GAME_CONTENT.presets.length > 0 && Math.random() < 0.05) {
         let preset = rnd(GAME_CONTENT.presets);
         return { name: preset.name, emoji: preset.face, flag: preset.flag, isPreset: true, presetPerks: preset.perks };
     }
-
-    // Se recebermos uma nacionalidade forçada, usamos ela. Se não, sorteia.
     let nat = forcedNationality ? forcedNationality : rnd(GAME_CONTENT.names);
     let first = rnd(nat.firstNames);
     let last = rnd(nat.lastNames);
@@ -15,8 +11,16 @@ function generateIdentity(isBase = false, forcedNationality = null) {
     return { name: `${first} ${last}`, emoji: face, flag: nat.flag, isPreset: false };
 }
 
+function generatePosition() {
+    let r = Math.random();
+    if (r < 0.10) return "GOL"; // 10% de chance de Goleiro
+    if (r < 0.40) return "ZAG"; // 30%
+    if (r < 0.70) return "MEI"; // 30%
+    return "ATA";               // 30%
+}
+
 function generatePlayer(level, isPremium = false) {
-    let iden = generateIdentity(false); // Mantém aleatório para o Mercado da Bola
+    let iden = generateIdentity(false);
     let perks = [];
     let isStar = false;
 
@@ -26,12 +30,9 @@ function generatePlayer(level, isPremium = false) {
     } else {
         let starChance = isPremium ? 0.30 : 0.08;
         isStar = Math.random() < starChance;
-
         let traitChance = isStar ? 0.80 : (isPremium ? 0.30 : 0.10);
         let numPerks = Math.random() < traitChance ? 2 : 1;
-        for (let i = 0; i < numPerks; i++) {
-            perks.push(rndWeighted(PERK_LIST));
-        }
+        for (let i = 0; i < numPerks; i++) perks.push(rndWeighted(PERK_LIST));
     }
 
     let price = 20 + (level * 5);
@@ -43,11 +44,12 @@ function generatePlayer(level, isPremium = false) {
         name: iden.name,
         emoji: iden.emoji,
         flag: iden.flag,
+        position: generatePosition(),
         level: level, perks: perks, isStar: isStar, price: price
     };
 }
 
-function generateBasePlayer(baseLevel = 1, numTraits = 0, focusTraitId = null, focusChance = 0, forcedNationality = null) {
+function generateBasePlayer(baseLevel = 1, numTraits = 0, focusTraitId = null, focusChance = 0, forcedNationality = null, forcedPosition = null) {
     let iden = generateIdentity(true, forcedNationality);
     let perks = [];
 
@@ -56,10 +58,7 @@ function generateBasePlayer(baseLevel = 1, numTraits = 0, focusTraitId = null, f
             let alreadyHasFocus = perks.some(p => p.id === focusTraitId);
             if (focusTraitId && !alreadyHasFocus && Math.random() < focusChance) {
                 let focusPerk = PERK_LIST.find(p => p.id === focusTraitId);
-                if (focusPerk) {
-                    perks.push(focusPerk);
-                    continue;
-                }
+                if (focusPerk) { perks.push(focusPerk); continue; }
             }
             perks.push(rndWeighted(PERK_LIST));
         }
@@ -70,6 +69,7 @@ function generateBasePlayer(baseLevel = 1, numTraits = 0, focusTraitId = null, f
         name: iden.name,
         emoji: iden.emoji,
         flag: iden.flag,
+        position: forcedPosition || generatePosition(),
         level: baseLevel,
         perks: perks,
         isStar: false,
@@ -81,54 +81,46 @@ function generateBasePlayer(baseLevel = 1, numTraits = 0, focusTraitId = null, f
 function getPlayerCardHTML(p, onClickAttr = "") {
     let hasTraits = p.perks && p.perks.length > 0;
     let perksHTML = "";
-    let dataPerks = "";
+    let dataPerks = p.perks ? p.perks.map(perk => perk.id).join(',') : "";
 
     if (hasTraits) {
-        dataPerks = p.perks.map(perk => perk.id).join(',');
-
         let perksArray = p.perks.map(perk => {
-            return `<div data-tip="${t(perk.desc)}" style="display: flex; align-items: center; gap: 4px; font-size: 0.7rem; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-light); pointer-events: auto; overflow: hidden; max-width: 110px; flex-shrink: 1;">
-                        <span style="flex-shrink: 0;">${perk.emoji}</span>
-                        <span style="font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">${t(perk.name)}</span>
+            return `<div data-tip="${t(perk.desc)}" style="display: flex; align-items: center; gap: 4px; font-size: 0.7rem; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-light); pointer-events: auto; overflow: hidden; max-width: 110px;">
+                        <span style="flex-shrink: 0;">${perk.emoji}</span><span style="font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${t(perk.name)}</span>
                     </div>`;
         });
-
         perksHTML = `<div style="display: flex; gap: 4px; flex-wrap: nowrap; overflow: hidden; width: 100%; height: 20px; align-items: center;">${perksArray.join('')}</div>`;
     } else {
-        perksHTML = `<div style="display: flex; align-items: center; font-size: 0.7rem; color: var(--text-muted); pointer-events: auto; height: 20px;">${t('PERK_NONE_NAME')}</div>`;
+        perksHTML = `<div style="display: flex; align-items: center; font-size: 0.7rem; color: var(--text-muted); height: 20px;">${t('PERK_NONE_NAME')}</div>`;
     }
 
+    let isCaptain = (gameState.captainId && gameState.captainId === p.id);
+    let capBadge = isCaptain ? `<span class="cap-badge" data-tip="Capitão: Participa de TODAS as zonas de campo!">C</span>` : '';
+    let posBadge = `<span class="pos-badge pos-${p.position}">${t('POS_' + p.position)}</span>`;
     let starBadge = p.isStar ? `<span style="font-size: 0.9rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
     let clickStyle = onClickAttr ? 'cursor: pointer;' : '';
 
     return `
-        <div class="player-card" data-perks="${dataPerks}" ${onClickAttr} style="display: flex; flex-direction: row; align-items: center; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px 12px; width: 100%; height: 64px; flex-shrink: 0; overflow: hidden; transition: all 0.2s; ${clickStyle}">
-            
+        <div class="player-card" data-perks="${dataPerks}" ${onClickAttr} style="display: flex; flex-direction: row; align-items: center; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px 12px; width: 100%; height: 64px; overflow: hidden; transition: all 0.2s; ${clickStyle}">
             <div style="display: flex; align-items: center; justify-content: center; width: 36px; flex-shrink: 0;">
                 <span style="font-size: 2rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${p.emoji}</span>
             </div>
-
             <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; margin-left: 12px;">
-                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                    <span class="fi fi-${p.flag || 'xx'}" style="font-size: 0.8rem; border-radius: 2px; flex-shrink: 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));"></span>
+                <div style="display: flex; align-items: center; margin-bottom: 4px; overflow: hidden;">
+                    ${posBadge}
+                    <span class="fi fi-${p.flag || 'xx'}" style="font-size: 0.8rem; border-radius: 2px; flex-shrink: 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); margin-right: 6px;"></span>
                     <span style="font-size: 0.85rem; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;">${p.name}</span>
-                    ${starBadge}
+                    ${starBadge}${capBadge}
                 </div>
-                <div style="color: var(--accent-blue); font-weight: 800; width: 100%;">
-                    ${perksHTML}
-                </div>
+                <div style="color: var(--accent-blue); font-weight: 800; width: 100%;">${perksHTML}</div>
             </div>
-
             <div style="flex-shrink: 0; margin-left: 8px;">
-                <span style="display: flex; justify-content: center; align-items: center; padding: 4px 8px; font-size: 0.8rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid var(--border-accent); border-radius: 6px;">Nv <span style="color: var(--accent-green); margin-left: 4px;">${p.level}</span></span>
+                <span style="display: flex; align-items: center; padding: 4px 8px; font-size: 0.8rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid var(--border-accent); border-radius: 6px;">Nv <span style="color: var(--accent-green); margin-left: 4px;">${p.level}</span></span>
             </div>
         </div>`;
 }
 
-// Mantido por segurança para não quebrar a lógica do ui.js
-function getSidebarPlayerHTML(p) {
-    return getPlayerCardHTML(p);
-}
+function getSidebarPlayerHTML(p) { return getPlayerCardHTML(p); }
 
 // ==========================================
 // FUNÇÕES AUXILIARES DA PARTIDA (MOTOR MATEMÁTICO)
@@ -136,14 +128,22 @@ function getSidebarPlayerHTML(p) {
 
 function getTeamAverageLevel() {
     if (!gameState.team || gameState.team.length === 0) return 1;
-    let sum = gameState.team.reduce((acc, p) => acc + (p.level || 1), 0);
-    return Math.floor(sum / gameState.team.length);
+    // O Level médio agora depende do setor em que a bola está
+    let players = getZonePlayers(matchState.zone);
+    if (players.length === 0) return 1;
+
+    let sum = players.reduce((acc, p) => acc + (p.level || 1), 0);
+    return Math.floor(sum / players.length);
 }
 
 function getTeamTraits() {
     let traits = {};
     if (!gameState.team) return traits;
-    gameState.team.forEach(p => {
+
+    // Apenas os traits dos jogadores da zona atual contam para a jogada
+    let players = getZonePlayers(matchState.zone);
+
+    players.forEach(p => {
         if (p.perks) {
             p.perks.forEach(perk => {
                 traits[perk.id] = (traits[perk.id] || 0) + 1;
@@ -175,8 +175,12 @@ function getVisionComboBonus(node, traits) {
 }
 
 function getLeadershipMitigation(traits) {
-    let leaderStacks = traits['leadership'] || 0;
-    return Math.max(0.4, 1 - (leaderStacks * 0.2));
+    // Agora a Liderança SÓ FUNCIONA se quem tem o trait for o CAPITÃO escolhido.
+    let captain = gameState.team.find(p => p.id === gameState.captainId);
+    if (!captain || !captain.perks) return 1; // Sem mitigação
+
+    let hasLeadership = captain.perks.some(p => p.id === 'leadership');
+    return hasLeadership ? 0.6 : 1; // Se o capitão tem liderança, corta o dano de falha em 40%
 }
 
 /**

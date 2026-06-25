@@ -71,6 +71,18 @@ function renderMinimap(hoverNode = null) {
     mapEl.innerHTML = html;
 }
 
+function getZonePlayers(zone) {
+    return gameState.team.filter(p => {
+        if (p.id === gameState.captainId) return true; // Capitão é um deus onipresente
+        if (zone === 0) return p.position === 'GOL' || p.position === 'ZAG';
+        if (zone === 1) return p.position === 'ZAG';
+        if (zone === 2) return p.position === 'ZAG' || p.position === 'MEI';
+        if (zone === 3) return p.position === 'MEI' || p.position === 'ATA';
+        if (zone === 4) return p.position === 'ATA';
+        return false;
+    });
+}
+
 function highlightSynergyPlayers(synergyIds) {
     if (!synergyIds || synergyIds.length === 0) return;
     document.querySelectorAll('.player-card').forEach(card => {

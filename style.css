@@ -2417,3 +2417,44 @@ button {
     margin: 0;
     /* Remove margens extras */
 }
+
+/* --- POSIÇÕES E CAPITÃO --- */
+.pos-badge {
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 2px 5px;
+    border-radius: 4px;
+    color: #fff;
+    margin-right: 6px;
+    letter-spacing: 0.5px;
+}
+
+.pos-GOL {
+    background: #eab308;
+    color: #000;
+}
+
+.pos-ZAG {
+    background: #3b82f6;
+}
+
+.pos-MEI {
+    background: #22c55e;
+    color: #000;
+}
+
+.pos-ATA {
+    background: #ef4444;
+}
+
+.cap-badge {
+    background: #000;
+    color: #f59e0b;
+    border: 1px solid #f59e0b;
+    font-size: 0.65rem;
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin-left: 4px;
+    font-weight: 900;
+    box-shadow: 0 0 5px rgba(245, 158, 11, 0.5);
+}

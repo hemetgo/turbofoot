@@ -117,11 +117,17 @@ function returnToTitle() {
 
     // Se por algum motivo o player voltar ao título sem clube, trava na tela de seleção
     if (!gameState.club) {
-        renderClubManager();
+        if (typeof renderClubSelection === 'function') {
+            renderClubSelection();
+        }
     } else {
-        document.getElementById('title-club-name').innerText = `${gameState.club.emoji} ${tClub(gameState.club.name)}`;
-        showScreen('screen-title');
-        updateMissionsBadge();
+        // Usa a nova função do sistema persistente (club_manager.js)
+        if (typeof returnToHub === 'function') {
+            returnToHub();
+        } else {
+            showScreen('screen-title');
+            updateMissionsBadge();
+        }
     }
 }
 

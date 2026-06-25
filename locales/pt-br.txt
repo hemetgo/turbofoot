@@ -460,3 +460,12 @@ TEXT_ROSTER_FULL=ELENCO CHEIO!
 BTN_SWAP=TROCAR
 BTN_FIRE=DEMITIR
 TEXT_SELECT_TO_SWAP=Selecione dois jogadores para trocar de posição.
+
+# --- Posições e Capitão ---
+POS_GOL=GOL
+POS_ZAG=ZAG
+POS_MEI=MEI
+POS_ATA=ATA
+TEXT_CAPTAIN_SET=Faixa de capitão entregue!
+TEXT_GOL_SWAP_ERROR=Goleiro só pode ser trocado por outro Goleiro!
+TEXT_SQUAD_TIP=Selecione dois para trocar. Clique DUAS VEZES num titular para torná-lo CAPITÃO.
