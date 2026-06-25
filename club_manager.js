@@ -303,11 +303,13 @@ function renderSquadGrid() {
             <div class="pitch-card-body">
                 <div class="pitch-card-avatar"><span>${p.emoji}</span></div>
                 <div class="pitch-card-info">
-                    <div class="pos-badge pos-${p.position}">${t('POS_' + p.position) || p.position}</div>
-                    <div class="lvl">Nv${p.level}</div>
+                    <div class="pitch-card-row">
+                        <div class="pos-badge pos-${p.position}">${t('POS_' + p.position) || p.position}</div>
+                        <div class="lvl">Nv ${p.level}</div>
+                    </div>
                 </div>
             </div>
-            <div class="badges">${badgesHTML}</div>
+            ${badgesHTML}
         `;
 
         card.onclick = (e) => handleSquadClick(p, index, true, e);
