@@ -467,3 +467,9 @@ POS_ATA=ATA
 TEXT_CAPTAIN_SET=Faixa de capitão entregue!
 TEXT_GOL_SWAP_ERROR=Goleiro só pode ser trocado por outro Goleiro!
 TEXT_SQUAD_TIP=Selecione dois para trocar. Clique DUAS VEZES num titular para torná-lo CAPITÃO.
+
+# --- Features Adicionais ---
+BTN_DELETE_CLUB=EXCLUIR
+TEXT_DELETE_CLUB_CONFIRM=Tem certeza que deseja excluir o clube {club}? O clube deixará de existir!
+TEXT_ABANDON_PENALTY=⚠️ PUNIÇÃO POR ABANDONO!\n\nVocê fechou o jogo durante uma partida. Isso foi considerado abandono de campo (W.O.) e seu time foi eliminado da liga atual.
+TEXT_RESUME_RUN=▶ CONTINUAR LIGA

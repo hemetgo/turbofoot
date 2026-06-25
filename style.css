@@ -2458,3 +2458,181 @@ button {
     font-weight: 900;
     box-shadow: 0 0 5px rgba(245, 158, 11, 0.5);
 }
+
+/* --- CAMPO TÁTICO E FORMAÇÕES --- */
+.football-pitch {
+    background-color: #064e3b;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255, 255, 255, 0.05) 40px, rgba(255, 255, 255, 0.05) 80px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    position: relative;
+    width: 100%;
+    display: flex;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+
+    /* Padrão Mobile: Retrato */
+    flex-direction: column;
+    height: 460px;
+    justify-content: space-evenly;
+}
+
+.pitch-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.pitch-lines::after {
+    /* Linha do meio campo (Mobile) */
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.pitch-lines::before {
+    /* Círculo central */
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 70px;
+    height: 70px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pitch-row {
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    /* Padrão Mobile */
+    justify-content: space-evenly;
+    width: 100%;
+    flex-direction: row;
+}
+
+/* --- Layout Paisagem para PC --- */
+@media (min-width: 900px) {
+    .football-pitch {
+        flex-direction: row-reverse;
+        /* Coloca o GOL na esquerda e ATA na direita */
+        height: 380px;
+        background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255, 255, 255, 0.05) 40px, rgba(255, 255, 255, 0.05) 80px);
+    }
+
+    .pitch-row {
+        flex-direction: column;
+        height: 100%;
+        width: 25%;
+    }
+
+    .pitch-lines::after {
+        /* Linha do meio campo (PC) */
+        top: 0;
+        left: 50%;
+        width: 2px;
+        height: 100%;
+    }
+}
+
+.pitch-player {
+    background: var(--bg-card);
+    border: 2px solid var(--border-accent);
+    border-radius: 8px;
+    width: 60px;
+    height: 75px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+    transition: all 0.2s;
+}
+
+.pitch-player:active {
+    transform: scale(0.90);
+}
+
+.pitch-player.selected {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 15px var(--accent-blue);
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+.pitch-player.oop {
+    border-color: var(--accent-red);
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.pitch-player .emoji {
+    font-size: 1.8rem;
+    line-height: 1;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+    margin-top: 5px;
+}
+
+.pitch-player .name {
+    font-size: 0.55rem;
+    font-weight: 900;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 95%;
+    text-align: center;
+    margin-top: 2px;
+    text-transform: uppercase;
+}
+
+.pitch-player .pos-field {
+    font-size: 0.5rem;
+    font-weight: 900;
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    color: var(--text-muted);
+}
+
+.pitch-player .badges {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    display: flex;
+    gap: 4px;
+    z-index: 5;
+}
+
+.pitch-player .oop-icon {
+    font-size: 1rem;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.8));
+}
+
+.pitch-player .lvl {
+    position: absolute;
+    bottom: -8px;
+    background: rgba(0, 0, 0, 0.9);
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-weight: 900;
+    border: 1px solid var(--accent-green);
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+}

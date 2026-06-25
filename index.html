@@ -20,15 +20,9 @@
         <aside id="desktop-sidebar" class="desktop-only in-run-only">
             <div class="sidebar-header">
                 <div id="sidebar-club-info" style="display:flex; align-items:center; gap:8px;">🛡️ MEU CLUBE</div>
-                <div class="currency-display">💰 <span id="sidebar-coins">0</span></div>
             </div>
             <div class="sidebar-body">
                 <div class="roster-grid" id="sidebar-list"></div>
-            </div>
-            <div class="sidebar-footer desktop-only">
-                <button class="btn-secondary btn-sm" data-i18n="BTN_QUIT_SIDEBAR"
-                    style="color:var(--accent-red); border-color:rgba(248,113,113,0.3); background:rgba(248,113,113,0.1);"
-                    onclick="openQuitConfirm()">🚪 DESISTIR</button>
             </div>
         </aside>
 
@@ -84,27 +78,47 @@
             </div>
 
             <!-- NOVO: Tela de Gestão de Elenco -->
+            <!-- NOVO: Tela de Gestão de Elenco com Campo Tático -->
             <div id="screen-squad" class="screen">
-                <div class="champ-header">
+                <div class="champ-header" style="flex-wrap: wrap; height: auto;">
                     <div class="champ-title-block">
                         <div class="champ-league-label" data-i18n="LABEL_SQUAD_TITLE">GESTÃO DO ELENCO</div>
                         <div style="font-size: 0.75rem; color: var(--accent-gold); margin-top:4px;"
                             data-i18n="TEXT_SQUAD_TIP">Selecione dois para trocar. Clique DUAS VEZES num titular para
                             torná-lo CAPITÃO.</div>
                     </div>
-                    <!-- Contador de Moedas -->
-                    <div class="mobile-only" style="display:flex; gap:8px; align-items:center;">
+                    <!-- BUG CORRIGIDO: Retirado o "mobile-only" -->
+                    <div style="display:flex; gap:8px; align-items:center;">
                         <div class="currency-display">💰 <span id="squad-coins">0</span></div>
                     </div>
                 </div>
                 <div class="map-wrapper" style="padding: 15px; background: var(--bg-base);">
-                    <h3 data-i18n="LABEL_STARTERS"
-                        style="color:var(--accent-green); margin-bottom:10px; font-size:0.9rem; text-transform:uppercase;">
-                        TITULARES (11)</h3>
-                    <div id="squad-starters-grid" class="roster-grid" style="margin-bottom:30px;"></div>
+
+                    <!-- Seletor de Formação -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                        <h3 data-i18n="LABEL_STARTERS"
+                            style="color:var(--accent-green); font-size:0.95rem; text-transform:uppercase; margin:0;">
+                            TITULARES (11)</h3>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span
+                                style="font-size: 0.8rem; font-weight: 900; color: var(--text-muted);">FORMAÇÃO:</span>
+                            <select id="formation-select" class="btn-secondary btn-sm"
+                                style="width: auto; padding: 4px 10px; background:var(--bg-card); color:#fff; font-weight:900;"
+                                onchange="changeFormation(this.value)">
+                                <option value="4-4-2">4-4-2</option>
+                                <option value="4-3-3">4-3-3</option>
+                                <option value="3-5-2">3-5-2</option>
+                                <option value="5-3-2">5-3-2</option>
+                                <option value="3-4-3">3-4-3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- O Campo de Futebol Visual -->
+                    <div id="squad-pitch-container" class="football-pitch"></div>
 
                     <h3 id="reserves-title"
-                        style="color:var(--text-muted); margin-bottom:10px; font-size:0.9rem; text-transform:uppercase;">
+                        style="color:var(--text-muted); margin-bottom:10px; margin-top:10px; font-size:0.9rem; text-transform:uppercase;">
                         RESERVAS (0/12)</h3>
                     <div id="squad-reserves-grid" class="roster-grid"></div>
                 </div>
@@ -173,11 +187,12 @@
             </div>
 
             <div id="screen-map" class="screen">
-                <div class="champ-header">
+                <div class="champ-header" style="flex-wrap: wrap; height: auto;">
                     <div class="champ-title-block">
                         <div class="champ-league-label" id="map-league-title" data-i18n="LABEL_MAP_DEFAULT">O MAPA</div>
                     </div>
-                    <div class="mobile-only" style="display:flex; gap:8px; align-items:center;">
+                    <!-- BUG CORRIGIDO: Retirado o "mobile-only" -->
+                    <div style="display:flex; gap:8px; align-items:center;">
                         <div class="currency-display">💰 <span id="map-coins">0</span></div>
                         <button class="btn-icon" style="color:var(--accent-red); border-color:var(--accent-red);"
                             onclick="openQuitConfirm()">🚪</button>
@@ -189,11 +204,12 @@
             </div>
 
             <div id="screen-market" class="screen">
-                <div class="champ-header">
+                <div class="champ-header" style="flex-wrap: wrap; height: auto;">
                     <div class="champ-title-block">
                         <div class="champ-league-label" data-i18n="LABEL_MARKET_TITLE">MERCADO DA BOLA</div>
                     </div>
-                    <div class="mobile-only" style="display:flex; gap:8px;">
+                    <!-- BUG CORRIGIDO: Retirado o "mobile-only" -->
+                    <div style="display:flex; gap:8px;">
                         <div class="currency-display">💰 <span id="market-coins">0</span></div>
                     </div>
                 </div>

@@ -35,7 +35,7 @@ async function initGame() {
         ensureDailyMissions();
         populateHowToPlay();
         document.getElementById('loading-screen').style.display = 'none';
-        
+
         // NOVO FLUXO DE PERSISTÊNCIA: Carrega a tela de seleção de saves
         renderClubSelection();
 
@@ -43,6 +43,14 @@ async function initGame() {
 }
 
 function startRunFlow() {
+    // FEATURE DA PERSISTÊNCIA DA LIGA: 
+    // Se a liga já tiver um mapa criado e não tiver terminado, volta para o Mapa!
+    if (gameState.season && gameState.season.map && gameState.season.map.length > 0 && gameState.season.currentStage < (GAME_BALANCE.mechanics.runStages || 8)) {
+        document.body.classList.add('in-run');
+        renderMap();
+        return;
+    }
+
     const container = document.getElementById('series-options-container');
     container.innerHTML = '';
 

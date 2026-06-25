@@ -2,6 +2,10 @@ let selectedActionNodeId = null;
 
 function startMapMatch() {
     closeModals();
+
+    gameState.inMatch = true;
+    saveGame();
+
     let rivalTeam = gameState.currentNode.rival;
     const minA = GAME_BALANCE.mechanics.matchActionsMin;
     const maxA = GAME_BALANCE.mechanics.matchActionsMax;
@@ -673,6 +677,10 @@ function finishMatchRewards() {
                 document.getElementById('post-match-overlay').style.display = 'none';
                 finishSeason(false);
             };
+
+            gameState.inMatch = false;
+            saveGame();
+
             document.getElementById("post-match-overlay").style.display = "flex";
             return;
         }
@@ -719,6 +727,9 @@ function finishMatchRewards() {
                 });
             };
         }
+
+        gameState.inMatch = false;
+        saveGame();
 
         document.getElementById("post-match-overlay").style.display = "flex";
     }, 500);
