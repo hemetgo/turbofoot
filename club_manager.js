@@ -28,10 +28,18 @@ function loadAllSaves() {
 
 function saveAllClubs() {
     try {
+        if (!Array.isArray(allSaves)) allSaves = [];
+        if (activeSaveIndex === -1) {
+            loadAllSaves();
+        }
+
         if (activeSaveIndex !== -1 && gameState && gameState.club) {
             allSaves[activeSaveIndex] = JSON.parse(JSON.stringify(gameState));
+            localStorage.setItem("turboFoot_saves_v8", JSON.stringify(allSaves));
+        } else if (allSaves.length > 0) {
+            // Preserve o arquivo de saves quando não há clube ativo.
+            localStorage.setItem("turboFoot_saves_v8", JSON.stringify(allSaves));
         }
-        localStorage.setItem("turboFoot_saves_v8", JSON.stringify(allSaves));
     } catch (e) {
         console.error("Erro Crítico de Armazenamento:", e);
         if (typeof showCustomAlert === 'function') {
