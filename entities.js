@@ -95,7 +95,7 @@ function getPlayerCardHTML(p, onClickAttr = "") {
     }
 
     let isCaptain = (gameState.captainId && gameState.captainId === p.id);
-    let capBadge = isCaptain ? `<span class="cap-badge" data-tip="Capitão: Participa de TODAS as zonas de campo!">C</span>` : '';
+    let capBadge = isCaptain ? `<span class="cap-badge" data-tip="Capitão: Participa de TODAS as zonas de campo!">👑</span>` : '';
     let posBadge = `<span class="pos-badge pos-${p.position}">${t('POS_' + p.position)}</span>`;
     let starBadge = p.isStar ? `<span style="font-size: 0.9rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
     let clickStyle = onClickAttr ? 'cursor: pointer;' : '';
@@ -105,12 +105,13 @@ function getPlayerCardHTML(p, onClickAttr = "") {
             <div style="display: flex; align-items: center; justify-content: center; width: 36px; flex-shrink: 0;">
                 <span style="font-size: 2rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${p.emoji}</span>
             </div>
+            ${capBadge}
             <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; margin-left: 12px;">
                 <div style="display: flex; align-items: center; margin-bottom: 4px; overflow: hidden;">
                     ${posBadge}
                     <span class="fi fi-${p.flag || 'xx'}" style="font-size: 0.8rem; border-radius: 2px; flex-shrink: 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); margin-right: 6px;"></span>
                     <span style="font-size: 0.85rem; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;">${p.name}</span>
-                    ${starBadge}${capBadge}
+                    ${starBadge}
                 </div>
                 <div style="color: var(--accent-blue); font-weight: 800; width: 100%;">${perksHTML}</div>
             </div>

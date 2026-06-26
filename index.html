@@ -30,28 +30,30 @@
 
             <!-- HEADER GLOBAL CENTRALIZADO -->
             <header id="global-header" class="champ-header"
-                style="display: none; justify-content: space-between; align-items: center; padding: 10px 16px; height: auto; gap: 12px;">
-                <button id="global-header-back" class="btn-icon"
-                    style="font-size: 1.2rem; background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 4px 8px; visibility: hidden;">←</button>
+                style="display: none; justify-content: space-between; align-items: center; padding: 10px 16px; min-height: 60px; gap: 12px; background: var(--bg-card); border-bottom: 1px solid var(--border-light);">
 
-                <div class="champ-title-block" style="flex: 1; text-align: center; margin: 0;">
-                    <div class="champ-league-label" id="global-header-title"
-                        style="font-size: 1.1rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <button id="global-header-back" class="btn-icon"
+                    style="font-size: 1.2rem; background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 4px 8px; visibility: hidden; flex-shrink: 0;">←</button>
+
+                <div class="champ-title-block"
+                    style="flex: 1; text-align: center; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden;">
+                    <div id="global-header-club"
+                        style="font-size: 1.1rem; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: none; width: 100%; text-transform: uppercase;">
                     </div>
-                    <div style="font-size: 0.75rem; color: var(--accent-gold); margin-top:2px; display:none;"
-                        id="global-header-subtitle"></div>
+                    <div id="global-header-title"
+                        style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">
+                    </div>
                 </div>
 
                 <div id="global-header-currency" class="currency-display"
-                    style="font-size: 1.05rem; font-weight: 900; white-space: nowrap;">
+                    style="font-size: 1.05rem; font-weight: 900; white-space: nowrap; flex-shrink: 0;">
                     💰 <span id="global-header-coins-val">0</span>
                 </div>
             </header>
 
             <!-- NOVO: Tela de Seleção de Clube -->
             <div id="screen-club-selection" class="screen">
-                <div class="club-options-wrapper" id="saved-clubs-container"
-                    style="flex-direction:row; flex-wrap:wrap; justify-content:center;"></div>
+                <div class="club-options-wrapper" id="saved-clubs-container"></div>
                 <div class="bottom-action-bar">
                     <button class="btn-primary" data-i18n="BTN_NEW_CLUB" onclick="openCreateClub()">➕ FUNDAR NOVO
                         CLUBE</button>
@@ -70,7 +72,7 @@
                                 style="flex:1; background:rgba(0,0,0,0.3); border:1px solid var(--border-accent); border-radius:8px; padding:12px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:900; text-align:center; text-transform:uppercase;">
                             </div>
                             <button class="btn-secondary"
-                                style="width: 60px; font-size:1.6rem; padding:0; display:flex; align-items:center; justify-content:center; flex-shrink:0; border-color:var(--accent-blue);"
+                                style="width: 60px; font-size:1.6rem; padding:0; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
                                 onclick="randomizeClubName()">🔀</button>
                         </div>
                     </div>
@@ -88,7 +90,7 @@
 
             <!-- Tela de Gestão de Elenco -->
             <div id="screen-squad" class="screen">
-                <div class="map-wrapper" style="padding: 15px; background: var(--bg-base);">
+                <div class="map-wrapper" style="padding: 15px; background: var(--bg-base); padding-bottom: 80px;">
                     <div class="formation-row">
                         <div style="display:flex; align-items:center; gap:8px; flex-wrap: wrap;">
                             <span
@@ -104,9 +106,11 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="squad-layout">
-                        <div id="squad-pitch-container" class="football-pitch"></div>
-                        <div class="reserves-panel">
+                        <div id="squad-pitch-container" class="football-pitch squad-tab-content active"></div>
+
+                        <div id="squad-reserves-container" class="reserves-panel squad-tab-content">
                             <h3 id="reserves-title"
                                 style="color:var(--text-muted); margin:0; font-size:0.9rem; text-transform:uppercase;">
                                 RESERVAS (0/12)</h3>
@@ -114,14 +118,28 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="mobile-squad-navbar">
+                    <button id="squad-nav-pitch" class="squad-nav-btn active" onclick="setSquadTab('pitch')">
+                        <span class="nav-icon">⚽</span>
+                        <span class="nav-label">CAMPO</span>
+                    </button>
+                    <button id="squad-nav-reserves" class="squad-nav-btn" onclick="setSquadTab('reserves')">
+                        <span class="nav-icon">🪑</span>
+                        <span class="nav-label">RESERVAS</span>
+                    </button>
+                </div>
             </div>
 
             <!-- HUB PRINCIPAL -->
             <div id="screen-title" class="screen">
                 <div class="title-container">
                     <div class="title-menu" style="align-items: center; width: 100%; max-width: 400px;">
+
                         <div id="hub-club-info"
-                            style="text-align:center; font-weight:900; margin-bottom:20px; width:100%;"></div>
+                            style="text-align:center; font-weight:900; margin-bottom:24px; width:100%; font-size: 1.4rem; color: var(--text-main); text-transform: uppercase;">
+                        </div>
+
                         <button class="btn-primary" data-i18n="BTN_PLAY" onclick="startRunFlow()"
                             style="margin-bottom:10px;">▶ JOGAR LIGA</button>
 

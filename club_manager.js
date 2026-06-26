@@ -16,38 +16,53 @@ const FORMATIONS = {
     "3-4-3": ["GOL", "ZAG", "ZAG", "ZAG", "MEI", "MEI", "MEI", "MEI", "ATA", "ATA", "ATA"]
 };
 
+// --- SISTEMA DE SALVAMENTO BLINDADO ---
 function loadAllSaves() {
-    try { allSaves = JSON.parse(localStorage.getItem("turboFoot_saves_v8")) || []; }
+    try {
+        const savedData = localStorage.getItem("turboFoot_saves_v8");
+        allSaves = savedData ? JSON.parse(savedData) : [];
+        if (!Array.isArray(allSaves)) allSaves = [];
+    }
     catch (e) { allSaves = []; }
 }
 
 function saveAllClubs() {
-    if (activeSaveIndex !== -1 && gameState.club) {
-        allSaves[activeSaveIndex] = JSON.parse(JSON.stringify(gameState));
+    try {
+        if (activeSaveIndex !== -1 && gameState && gameState.club) {
+            allSaves[activeSaveIndex] = JSON.parse(JSON.stringify(gameState));
+        }
+        localStorage.setItem("turboFoot_saves_v8", JSON.stringify(allSaves));
+    } catch (e) {
+        console.error("Erro Crítico de Armazenamento:", e);
+        if (typeof showCustomAlert === 'function') {
+            showCustomAlert("ERRO DE MEMÓRIA", "Seu dispositivo bloqueou o salvamento. Verifique se o navegador está sem espaço ou bloqueando dados de sites.");
+        }
     }
-    localStorage.setItem("turboFoot_saves_v8", JSON.stringify(allSaves));
 }
 
+// --- RENDERIZAR CLUBES (COM CARDS ALINHADOS) ---
 function renderClubSelection() {
     loadAllSaves();
     const container = document.getElementById('saved-clubs-container');
     container.innerHTML = '';
 
     if (allSaves.length === 0) {
-        container.innerHTML = `<p style="color:var(--text-muted); text-align:center; width:100%; font-weight:bold;">Nenhum clube fundado ainda.</p>`;
+        container.innerHTML = `<p style="color:var(--text-muted); text-align:center; width:100%; font-weight:bold; grid-column: 1 / -1; margin-top: 40px;">Nenhum clube fundado ainda.</p>`;
     } else {
         allSaves.forEach((save, idx) => {
             if (!save || !save.club) return;
             container.innerHTML += `
-                <div class="club-select-card" onclick="loadClub(${idx})" style="max-width: 300px; margin: 0 auto; position: relative;">
-                    <button onclick="deleteClub(${idx}, event)" style="position:absolute; top:8px; right:8px; background:rgba(239,68,68,0.2); border:1px solid #ef4444; border-radius:6px; cursor:pointer; font-size:0.8rem; padding:4px 8px; color:#fff;">🗑️</button>
-                    <div class="club-select-header">
-                        <div class="club-select-emoji" style="font-size:3rem;">${save.club.emoji}</div>
-                        <div class="club-select-name" style="font-size:1.1rem;">${tClub(save.club.name)}</div>
+                <div class="club-select-card" onclick="loadClub(${idx})" style="position: relative; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                    <button onclick="deleteClub(${idx}, event)" style="position:absolute; top:12px; right:12px; background:rgba(239,68,68,0.2); border:1px solid #ef4444; border-radius:8px; cursor:pointer; font-size:0.9rem; padding:6px 10px; color:#fff; z-index: 10;">🗑️</button>
+                    
+                    <div class="club-select-header" style="margin-top: 10px;">
+                        <div class="club-select-emoji" style="font-size:3.5rem;">${save.club.emoji}</div>
+                        <div class="club-select-name" style="font-size:1.15rem; margin-top:12px;">${tClub(save.club.name)}</div>
                     </div>
-                    <div class="captain-box" style="padding: 10px;">
-                        <div style="font-weight:900; color:var(--accent-gold); font-size:1.2rem;">💰 ${save.coins}</div>
-                        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:5px;">Divisão Atual: ${save.meta?.highestSeriesUnlocked || 0}</div>
+                    
+                    <div class="captain-box" style="padding: 16px; margin-top: auto;">
+                        <div style="font-weight:900; color:var(--accent-gold); font-size:1.3rem;">💰 ${save.coins}</div>
+                        <div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px; font-weight: 800;">Divisão Atual: ${save.meta?.highestSeriesUnlocked || 0}</div>
                     </div>
                 </div>`;
         });
@@ -118,40 +133,91 @@ function openCreateClub() {
     showScreen('screen-create-club');
 }
 
-function executeCreateClub() {
-    // Agora puxa o nome das variáveis sorteadas e não de <select>
-    const base = GAME_CONTENT.clubGeneration.bases[currentRandomBaseIdx];
-    const adj = GAME_CONTENT.clubGeneration.adjectives[currentRandomAdjIdx];
-    const nat = GAME_CONTENT.names[document.getElementById('create-club-nat').value];
+window.setSquadTab = function (tab) {
+    const pitchCont = document.getElementById('squad-pitch-container');
+    const resCont = document.getElementById('squad-reserves-container');
+    const btnPitch = document.getElementById('squad-nav-pitch');
+    const btnRes = document.getElementById('squad-nav-reserves');
 
-    const formationKeys = Object.keys(FORMATIONS);
-    const randomFormation = formationKeys[Math.floor(Math.random() * formationKeys.length)];
+    if (!pitchCont || !resCont) return;
 
-    gameState = {
-        meta: { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} },
-        coins: GAME_BALANCE.mechanics.initialCoins || 50,
-        leagueLevel: 0,
-        club: { name: `${base.name} ${adj}`, emoji: base.emoji, isPlayer: true },
-        team: [], reserves: [], captainId: null, marketPool: [],
-        formation: randomFormation,
-        activeCampBuff: 0, currentNode: null, inMatch: false,
-        settings: { showSuspense: true, requireConfirm: !IS_DESKTOP },
-        season: { number: 1, map: [], currentStage: 0, history: [], matchHistory: [] },
-        runHistory: [], tutorialSeen: false
-    };
-
-    const posList = FORMATIONS[randomFormation];
-    for (let i = 0; i < 11; i++) {
-        let numTraits = (i === 5) ? 2 : 0;
-        gameState.team.push(generateBasePlayer(1, numTraits, null, 0, nat, posList[i]));
+    if (tab === 'pitch') {
+        pitchCont.classList.add('active');
+        resCont.classList.remove('active');
+        if (btnPitch) btnPitch.classList.add('active');
+        if (btnRes) btnRes.classList.remove('active');
+    } else {
+        resCont.classList.add('active');
+        pitchCont.classList.remove('active');
+        if (btnRes) btnRes.classList.add('active');
+        if (btnPitch) btnPitch.classList.remove('active');
     }
+};
 
-    gameState.captainId = gameState.team[5].id;
+// --- CRIAÇÃO DE CLUBE (COM VALIDAÇÃO DE SUCESSO) ---
+function executeCreateClub() {
+    try {
+        const base = GAME_CONTENT.clubGeneration.bases[currentRandomBaseIdx];
+        const adj = GAME_CONTENT.clubGeneration.adjectives[currentRandomAdjIdx];
 
-    allSaves.push(gameState);
-    activeSaveIndex = allSaves.length - 1;
-    saveAllClubs();
-    returnToHub();
+        const natSelect = document.getElementById('create-club-nat');
+        const natIndex = natSelect ? natSelect.value : 0;
+        const nat = GAME_CONTENT.names[natIndex];
+
+        const formationKeys = Object.keys(FORMATIONS);
+        const randomFormation = formationKeys[Math.floor(Math.random() * formationKeys.length)];
+
+        gameState = {
+            meta: { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} },
+            coins: GAME_BALANCE.mechanics.initialCoins || 50,
+            leagueLevel: 0,
+            club: { name: `${base.name} ${adj}`, emoji: base.emoji, isPlayer: true },
+            team: [], reserves: [], captainId: null, marketPool: [],
+            formation: randomFormation,
+            activeCampBuff: 0, currentNode: null, inMatch: false,
+            settings: { showSuspense: true, requireConfirm: !IS_DESKTOP },
+            season: { number: 1, map: [], currentStage: 0, history: [], matchHistory: [] },
+            runHistory: [], tutorialSeen: false
+        };
+
+        const posList = FORMATIONS[randomFormation];
+        for (let i = 0; i < 11; i++) {
+            let p = generatePlayer(1, false);
+            p.flag = nat.flag;
+            p.name = `${rnd(nat.firstNames)} ${rnd(nat.lastNames)}`;
+            p.emoji = rnd(nat.faces);
+            p.isPreset = false;
+            p.position = posList[i];
+
+            p.perks = [];
+            if (i === 5) {
+                p.perks.push(rnd(PERK_LIST));
+                p.perks.push(rnd(PERK_LIST));
+            }
+            gameState.team.push(p);
+        }
+
+        gameState.captainId = gameState.team[5].id;
+
+        loadAllSaves();
+        allSaves.push(gameState);
+        activeSaveIndex = allSaves.length - 1;
+        saveAllClubs();
+
+        // TESTE REAL: Tenta ler do dispositivo para garantir que salvou de verdade
+        const testSave = localStorage.getItem("turboFoot_saves_v8");
+        if (!testSave || !testSave.includes(base.name)) {
+            showCustomAlert("❌ ERRO NO CELULAR", "O jogo não conseguiu salvar no seu aparelho. Limpe o cache do navegador ou saia do modo anônimo.");
+        } else {
+            returnToHub();
+        }
+
+    } catch (e) {
+        console.error("Erro ao criar clube:", e);
+        if (typeof showCustomAlert === 'function') {
+            showCustomAlert("❌ ERRO", "Ocorreu um erro interno ao fundar o clube.");
+        }
+    }
 }
 
 window.deleteClub = function (idx, event) {
@@ -165,23 +231,26 @@ window.deleteClub = function (idx, event) {
 };
 
 function returnToHub() {
+    // 1. Limpa a UI para evitar sobreposições
+    closeModals();
+    document.body.classList.remove('in-run');
+
+    // 2. Vai para a tela correta
     showScreen('screen-title');
 
-    // VERIFICAÇÃO DE LIGA EM ANDAMENTO PARA MUDAR O BOTÃO
+    // 3. Atualiza o visual do botão JOGAR vs CONTINUAR
     const btnPlay = document.querySelector('#screen-title button[onclick="startRunFlow()"]');
     if (btnPlay) {
         let totalStages = GAME_BALANCE.mechanics?.runStages || 8;
         let hasActiveRun = gameState.season && gameState.season.map && gameState.season.map.length > 0 && gameState.season.currentStage < totalStages;
 
         if (hasActiveRun) {
-            // Muda para CONTINUAR
             btnPlay.innerHTML = '▶ CONTINUAR LIGA';
             btnPlay.style.background = 'var(--accent-blue)';
             btnPlay.style.borderColor = 'var(--accent-blue)';
             btnPlay.style.color = '#fff';
-            btnPlay.removeAttribute('data-i18n'); // Remove i18n para não ser reescrito ao trocar idioma
+            btnPlay.removeAttribute('data-i18n');
         } else {
-            // Volta para o estado normal de JOGAR
             btnPlay.setAttribute('data-i18n', 'BTN_PLAY');
             btnPlay.innerHTML = typeof t === 'function' ? t('BTN_PLAY') : '▶ JOGAR LIGA';
             btnPlay.style.background = '';
@@ -189,6 +258,10 @@ function returnToHub() {
             btnPlay.style.color = '';
         }
     }
+
+    // 4. Força o salvamento e atualizações periféricas
+    saveAllClubs();
+    if (typeof updateMissionsBadge === 'function') updateMissionsBadge();
 }
 
 // === GESTÃO DO ELENCO (CAMPO E RESERVA) ===
@@ -203,6 +276,10 @@ function openSquadManager() {
     squadSelectedPlayer = null;
     const formSelect = document.getElementById('formation-select');
     if (formSelect && gameState.formation) formSelect.value = gameState.formation;
+
+    // Reseta para a aba de CAMPO (Titulares) ao abrir a tela no mobile
+    if (typeof setSquadTab === 'function') setSquadTab('pitch');
+
     renderSquadGrid();
     showScreen('screen-squad');
 }
@@ -264,6 +341,16 @@ window.openMobilePlayerModal = function (player, index, isStarter) {
 window.startSwapFromMobile = function () {
     document.getElementById('mobile-player-action-overlay').style.display = 'none';
     squadSelectedPlayer = mobileActionPlayer; // Inicia a troca!
+
+    // NAVEGAÇÃO AUTOMÁTICA INTELIGENTE 🧠
+    // Se o jogador selecionou um Titular pra trocar, joga ele pra aba de Reservas.
+    // Se escolheu um Reserva, joga ele pra aba do Campo!
+    if (squadSelectedPlayer.isStarter) {
+        setSquadTab('reserves');
+    } else {
+        setSquadTab('pitch');
+    }
+
     renderSquadGrid(); // Redesenha a tela pra todo mundo tremer
 };
 
@@ -305,7 +392,7 @@ function renderSquadGrid() {
 
         let badgesHTML = '';
         if (isOOP) badgesHTML += `<div class="oop-icon" data-tip="FORA DE POSIÇÃO! Nível e Traits reduzidos.">⚠️</div>`;
-        if (isCaptain) badgesHTML += `<div class="cap-badge" data-tip="Capitão: Ignora punições e joga o campo todo!">C</div>`;
+        if (isCaptain) badgesHTML += `<div class="cap-badge" data-tip="Capitão: Ignora punições e joga o campo todo!">👑</div>`;
 
         let jiggleClass = squadSelectedPlayer ? 'roster-jiggle' : '';
         let selClass = squadSelectedPlayer?.id === p.id ? 'selected' : '';
