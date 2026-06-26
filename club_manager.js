@@ -136,6 +136,7 @@ function openCreateClub() {
 window.setSquadTab = function (tab) {
     const pitchCont = document.getElementById('squad-pitch-container');
     const resCont = document.getElementById('squad-reserves-container');
+    const formRow = document.querySelector('#screen-squad .formation-row');
     const btnPitch = document.getElementById('squad-nav-pitch');
     const btnRes = document.getElementById('squad-nav-reserves');
 
@@ -144,11 +145,13 @@ window.setSquadTab = function (tab) {
     if (tab === 'pitch') {
         pitchCont.classList.add('active');
         resCont.classList.remove('active');
+        if (formRow) formRow.style.display = '';
         if (btnPitch) btnPitch.classList.add('active');
         if (btnRes) btnRes.classList.remove('active');
     } else {
         resCont.classList.add('active');
         pitchCont.classList.remove('active');
+        if (formRow) formRow.style.display = 'none';
         if (btnRes) btnRes.classList.add('active');
         if (btnPitch) btnPitch.classList.remove('active');
     }
@@ -343,11 +346,9 @@ window.startSwapFromMobile = function () {
     squadSelectedPlayer = mobileActionPlayer; // Inicia a troca!
 
     // NAVEGAÇÃO AUTOMÁTICA INTELIGENTE 🧠
-    // Se o jogador selecionou um Titular pra trocar, joga ele pra aba de Reservas.
-    // Se escolheu um Reserva, joga ele pra aba do Campo!
-    if (squadSelectedPlayer.isStarter) {
-        setSquadTab('reserves');
-    } else {
+    // Apenas do reserva para o campo a aba deve mudar automaticamente.
+    // Se o jogador escolhido já é titular, não troca a aba no mobile.
+    if (!squadSelectedPlayer.isStarter) {
         setSquadTab('pitch');
     }
 
