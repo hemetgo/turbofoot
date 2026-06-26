@@ -697,7 +697,7 @@ function finishMatchRewards() {
         if (gameState.currentNode.type === 'boss') progressDailyMission('beat_boss', 1);
 
         let mult = threat.coinMult;
-        let coins = Math.floor(base * (1 + Math.min(matchState.combo, 6) * GAME_BALANCE.mechanics.comboCoinMultiplier)) * mult;
+        let coins = Math.floor(base * (1 + Math.min(matchState.combo, 6) * GAME_BALANCE.mechanics.comboCoinMultiplier) * mult);
 
         gameState.coins += coins;
         updateRosterUI();

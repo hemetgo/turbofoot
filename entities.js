@@ -19,8 +19,10 @@ function generatePosition() {
     return "ATA";               // 30%
 }
 
-function generatePlayer(level, isPremium = false) {
-    let iden = generateIdentity(false);
+// Adicionado o parâmetro forcedNationality
+function generatePlayer(level, isPremium = false, forcedNationality = null) {
+    // Repassando a nacionalidade forçada para a identidade
+    let iden = generateIdentity(false, forcedNationality);
     let perks = [];
     let isStar = false;
 
@@ -35,9 +37,17 @@ function generatePlayer(level, isPremium = false) {
         for (let i = 0; i < numPerks; i++) perks.push(rndWeighted(PERK_LIST));
     }
 
-    let price = 20 + (level * 5);
-    if (perks.length === 2) price += 15;
-    if (isStar) price += 40;
+    // --- LÓGICA DE PREÇOS ---
+    let basePrice = 30 + Math.floor(Math.pow(level, 1.4) * 8);
+
+    let perkMod = 1.0;
+    if (perks.length === 1) perkMod = 1.30;
+    else if (perks.length === 2) perkMod = 1.70;
+
+    let starMod = isStar ? 2.0 : 1.0;
+
+    let rawPrice = Math.floor(basePrice * perkMod * starMod);
+    let price = Math.ceil(rawPrice / 5) * 5;
 
     return {
         id: `p_${Date.now()}_${Math.random()}`,

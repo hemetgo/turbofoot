@@ -10,16 +10,34 @@ function openHubMarket() {
 }
 
 function generateMarketPool() {
-    let baseLvl = Math.max(1, ((gameState.meta?.highestSeriesUnlocked || 0) * 3) + 3);
+    let teamLvl = typeof getTeamAverageLevel === 'function' ? getTeamAverageLevel() : 1;
+    let baseLvl = Math.max(1, teamLvl);
 
-    // Gera 5 opções variadas (do mais fraco/barato até a "estrela" premium da loja)
-    gameState.marketPool = [
-        generatePlayer(Math.max(1, baseLvl - 2), false),
-        generatePlayer(Math.max(1, baseLvl - 1), false),
-        generatePlayer(baseLvl, false),
-        generatePlayer(baseLvl + 1, false),
-        generatePlayer(baseLvl + 2, true)
-    ];
+    // 1. Descobre a liga mais alta que você já desbloqueou (0 a 5)
+    let highestLeague = gameState.meta?.highestSeriesUnlocked || 0;
+
+    // 2. Descobre a nacionalidade base do seu clube olhando para o primeiro jogador do time
+    let clubFlag = (gameState.team && gameState.team.length > 0) ? gameState.team[0].flag : 'br';
+    let clubNat = GAME_CONTENT.names.find(n => n.flag === clubFlag) || GAME_CONTENT.names[0];
+
+    // 3. Probabilidade do jogador na loja ser forçado a ter a nacionalidade do clube.
+    // Ligas: Regional (100%), D (100%), C (70%), B (40%), A (15%), Suprema (0% - Totalmente global)
+    const natChances = [1.0, 1.0, 0.70, 0.40, 0.15, 0.0];
+    let forceChance = natChances[highestLeague] !== undefined ? natChances[highestLeague] : 0;
+
+    let pool = [];
+    let levels = [Math.max(1, baseLvl - 1), baseLvl, baseLvl + 1, baseLvl + 2, baseLvl + 3];
+
+    for (let i = 0; i < 5; i++) {
+        let isPremium = (i === 4);
+
+        // Joga os dados: Se cair dentro da chance, força a nacionalidade local. Senão, vai null (geração aleatória livre)
+        let chosenNat = (Math.random() < forceChance) ? clubNat : null;
+
+        pool.push(generatePlayer(levels[i], isPremium, chosenNat));
+    }
+
+    gameState.marketPool = pool;
     saveGame();
 }
 
