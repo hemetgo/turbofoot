@@ -2475,15 +2475,14 @@ button {
     position: relative;
     width: min(420px, 100%);
     max-width: 420px;
-    display: flex;
-    padding: 14px 0;
+    display: grid;
+    grid-template-rows: minmax(70px, auto) minmax(90px, auto) minmax(110px, auto) minmax(70px, auto);
+    padding: 16px 12px;
     margin-bottom: 20px;
     box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
     overflow: hidden;
-    flex-direction: column;
-    min-height: 550;
-    justify-content: center;
-    gap: 10px;
+    min-height: 550px;
+    gap: 12px;
     flex: 0 0 auto;
     margin-left: auto;
     margin-right: auto;
@@ -2527,11 +2526,29 @@ button {
     display: flex;
     align-items: center;
     z-index: 2;
-    justify-content: center;
+    justify-content: space-evenly;
     width: 100%;
     flex-direction: row;
     gap: 10px;
     flex-wrap: wrap;
+    min-height: 72px;
+    padding: 4px 6px;
+}
+
+.pitch-row#row-ATA {
+    justify-content: space-evenly;
+}
+
+.pitch-row#row-MEI {
+    justify-content: space-around;
+}
+
+.pitch-row#row-ZAG {
+    justify-content: space-between;
+}
+
+.pitch-row#row-GOL {
+    justify-content: center;
 }
 
 .squad-layout {
