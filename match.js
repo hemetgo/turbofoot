@@ -678,8 +678,11 @@ function finishMatchRewards() {
                 finishSeason(false);
             };
 
+            // --- CORREÇÃO AQUI ---
             gameState.inMatch = false;
-            saveGame();
+            gameState.season.map = []; // Destrói o mapa para matar a run
+            saveGame(); // Salva a derrota na hora para evitar exploit de fechar o jogo
+            // ---------------------
 
             document.getElementById("post-match-overlay").style.display = "flex";
             return;

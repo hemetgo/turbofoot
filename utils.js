@@ -87,7 +87,7 @@ function updateGlobalHeader(id) {
             if (hubClubInfo && gameState.club) {
                 hubClubInfo.innerHTML = `
                     <div style="font-size: 7rem; margin-bottom: 8px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4)); line-height: 1;">${gameState.club.emoji}</div>
-                    <div style="letter-spacing: 1px;">${getClubName(gameState.club.name)}</div>
+                    <div style="letter-spacing: 1px; padding-top: 16px">${getClubName(gameState.club.name)}</div>
                 `;
             }
             break;

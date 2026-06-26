@@ -142,7 +142,7 @@ function renderDailyMissionsModal() {
                     </div>
                 </div>
                 <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0;">
-                    <div style="font-size:0.75rem; font-weight:900; color:var(--accent-gold);">+${m.reward} 🏆</div>
+                    <div style="font-size:0.75rem; font-weight:900; color:var(--accent-gold);">+${m.reward} 💰</div>
                     ${btnHtml}
                 </div>
             </div>`;

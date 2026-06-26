@@ -108,6 +108,12 @@ function openQuitConfirm() {
 function confirmQuitRun() {
     // Grava como derrota na memória se quiser rastrear, ou apenas reseta
     recordRun(false);
+
+    // --- CORREÇÃO AQUI ---
+    gameState.season.map = []; // Destrói o mapa para encerrar a run de verdade
+    saveGame();
+    // ---------------------
+
     returnToTitle();
 }
 

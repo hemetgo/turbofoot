@@ -411,7 +411,9 @@ function finishSeason(wonSeason) {
     recordRun(wonSeason);
     progressDailyMission('play_runs', 1);
 
-    // Atualiza o ícone do Modal de Fim de Temporada com o Emoji da Liga
+    gameState.season.map = []; // Garante o fim da run após o resumo
+    saveGame();
+
     let currentLeague = GAME_BALANCE.leagues[gameState.leagueLevel];
     let leagueEmoji = currentLeague.emoji || '🏆';
     const endIcon = document.querySelector('.champ-end-icon');

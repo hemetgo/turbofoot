@@ -797,7 +797,7 @@ button {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 40px 15px;
+    padding: 40px 15px 120px 15px;
     background: linear-gradient(to top, var(--bg-base), #0f172a);
     position: relative;
 }
@@ -891,12 +891,31 @@ button {
 /* --- CHEFÃO --- */
 .map-node.boss {
     width: 76px;
-    /* Aumentado proporcionalmente */
     height: 76px;
     border-radius: 18px;
-    /* Arredondamento proporcional ao tamanho novo */
     border-color: var(--accent-red);
     background: rgba(239, 68, 68, 0.1);
+}
+
+.map-node.boss.active {
+    background: linear-gradient(145deg, #ef4444, #991b1b);
+    /* Vermelho intenso e sólido */
+    border-color: #fff;
+    /* Borda branca destacando que é o alvo atual */
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.8);
+    /* Brilho amedrontador */
+    transform: scale(1.15);
+    /* Aumenta um pouco para chamar atenção */
+}
+
+.map-node.boss.active .node-label {
+    color: #ffffff;
+    /* Texto brilhante */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.map-node.boss.active .node-icon {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 .map-node.boss .node-icon {
