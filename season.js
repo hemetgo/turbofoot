@@ -6,7 +6,9 @@ function startNewSeason() {
     gameState.activeCampBuff = 0;
 
     gameState.season.map = generateMapNodes();
-    updateRosterUI();
+
+    // Atualiza a interface
+    if (typeof updateRosterUI === "function") updateRosterUI();
     saveGame();
 
     const mapWrap = document.getElementById('map-wrapper');
@@ -20,7 +22,6 @@ function generateMapNodes() {
     const totalStages = GAME_BALANCE.mechanics.runStages || 8;
     let map = [];
 
-    // O formato perfeito do mapa (largura de cada estágio) para formar uma teia bonita
     const stageWidths = [3, 2, 2, 3, 2, 2, 2, 1];
 
     for (let i = 0; i < totalStages; i++) {
@@ -31,23 +32,20 @@ function generateMapNodes() {
             let type = 'match';
 
             if (i === totalStages - 1) {
-                type = 'boss'; // Último estágio é sempre o Chefão
+                type = 'boss';
             }
             else if (i === 2 || i === 5) {
-                // RITMO PERFEITO: Estágios 2 e 5 são os "Respiros" (As 2 opções que não são partida)
-                // O nó da esquerda (j=0) sempre será Loja. O da direita (j=1) sempre será Treino.
+                // RITMO PERFEITO: Substituímos o 'shop' pelo 'camp_physical'
                 if (j === 0) {
-                    type = 'shop';
+                    type = 'camp_physical';
                 } else {
-                    type = Math.random() > 0.5 ? 'camp_physical' : 'camp_tactical';
+                    type = 'camp_tactical';
                 }
             }
             else {
-                // ESTÁGIOS DE PARTIDA
                 if (i === 0) {
-                    type = 'match'; // O primeiro estágio nunca tem "Clássicos" (Elite) para ser um aquecimento
+                    type = 'match';
                 } else {
-                    // Nos outros estágios, há chance de aparecer um Clássico (Elite) para maior risco/recompensa
                     let eliteChance = (i >= 3) ? 0.35 : 0.15;
                     type = Math.random() <= eliteChance ? 'elite' : 'match';
                 }
@@ -64,24 +62,19 @@ function generateMapNodes() {
         map.push(stage);
     }
 
-    // CONECTAR OS NÓS (Teia / Branching Paths)
     for (let i = 0; i < totalStages - 1; i++) {
         let curr = map[i];
         let next = map[i + 1];
 
         curr.forEach((node, cIdx) => {
             let validNext = next.map((n, nIdx) => ({ nIdx, dist: Math.abs(node.x - n.x) })).sort((a, b) => a.dist - b.dist);
-
-            // Liga com o nó mais alinhado verticalmente
             node.next.push(validNext[0].nIdx);
 
-            // 40% de chance de abrir um caminho diagonal (cruzar a teia)
             if (validNext.length > 1 && Math.random() < 0.4 && validNext[1].dist <= 0.6) {
                 node.next.push(validNext[1].nIdx);
             }
         });
 
-        // Garantir que nenhum nó da próxima linha fique "órfão" (sem pai)
         next.forEach((nextNode, nIdx) => {
             let hasIncoming = curr.some(n => n.next.includes(nIdx));
             if (!hasIncoming) {
@@ -90,7 +83,6 @@ function generateMapNodes() {
             }
         });
 
-        // Remove conexões duplicadas acidentais
         curr.forEach(node => node.next = [...new Set(node.next)]);
     }
     return map;
@@ -135,14 +127,19 @@ function createMapRivalNode(type, baseDiff, stageIndex = 0) {
 
 function renderMap() {
     showScreen('screen-map');
-    document.getElementById('map-coins').innerText = gameState.coins;
-    updateRosterUI();
+
+    // CORREÇÃO DO BUG: Verifica se o elemento de moedas existe antes de atualizar
+    const mapCoins = document.getElementById('map-coins');
+    if (mapCoins) {
+        mapCoins.innerText = gameState.coins;
+    }
+
+    if (typeof updateRosterUI === "function") updateRosterUI();
 
     const container = document.getElementById('map-nodes-container');
     container.innerHTML = `<svg id="map-lines" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;"></svg>`;
 
     let currentLeagueName = GAME_BALANCE.leagues[gameState.leagueLevel].name;
-    document.getElementById('map-league-title').innerText = `${GAME_BALANCE.leagues[gameState.leagueLevel].emoji}${t(currentLeagueName)}`;
 
     const totalStages = GAME_BALANCE.mechanics.runStages || 8;
 
@@ -333,9 +330,12 @@ function showCampModal(type) {
 
     if (type === 'camp_physical') {
         box.innerHTML = `
-            <div class="modal-header">
-                <h2 class="options-title text-success">TREINO FÍSICO 🏋️‍♂️</h2>
-                <p class="modal-subtitle">Aprimore as capacidades de um atleta.</p>
+            <div class="modal-header flex-between" style="align-items: flex-start;">
+                <div>
+                    <h2 class="options-title text-success">TREINO FÍSICO 🏋️‍♂️</h2>
+                    <p class="modal-subtitle">Aprimore as capacidades de um atleta.</p>
+                </div>
+                <button class="btn-icon" onclick="closeModals()">❌</button>
             </div>
             <div class="modal-body" style="display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding-top: 30px;">
                 <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));">🏃‍♂️</div>
@@ -347,9 +347,12 @@ function showCampModal(type) {
         `;
     } else {
         box.innerHTML = `
-            <div class="modal-header">
-                <h2 class="options-title" style="color:var(--accent-blue);">PRELEÇÃO TÁTICA 🧠</h2>
-                <p class="modal-subtitle">Estudos e ajustes para o próximo confronto.</p>
+            <div class="modal-header flex-between" style="align-items: flex-start;">
+                <div>
+                    <h2 class="options-title" style="color:var(--accent-blue);">PRELEÇÃO TÁTICA 🧠</h2>
+                    <p class="modal-subtitle">Estudos e ajustes para o próximo confronto.</p>
+                </div>
+                <button class="btn-icon" onclick="closeModals()">❌</button>
             </div>
             <div class="modal-body" style="display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding-top: 30px;">
                 <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));">📋</div>
@@ -408,7 +411,9 @@ function finishSeason(wonSeason) {
     recordRun(wonSeason);
     progressDailyMission('play_runs', 1);
 
-    // Atualiza o ícone do Modal de Fim de Temporada com o Emoji da Liga
+    gameState.season.map = []; // Garante o fim da run após o resumo
+    saveGame();
+
     let currentLeague = GAME_BALANCE.leagues[gameState.leagueLevel];
     let leagueEmoji = currentLeague.emoji || '🏆';
     const endIcon = document.querySelector('.champ-end-icon');
@@ -439,12 +444,12 @@ function finishSeason(wonSeason) {
     gameState.meta.metaCoins += earnedTrophies;
     saveGame();
 
-    subText += `\n\nVitórias na liga: ${matchesWon} (+${matchesWon * metaPerWin} 🏆)`;
-    if (wonSeason) subText += `\nBônus de Campeão: +${metaWinBonus} 🏆`;
+    subText += `\n\nVitórias na liga: ${matchesWon} (+${matchesWon * metaPerWin} 💰)`;
+    if (wonSeason) subText += `\nBônus de Campeão: +${metaWinBonus} 💰`;
     subText += `\n\n🏆 Você ganhou +${earnedTrophies} Troféus para usar na Sede do Clube!`;
 
     document.getElementById('se-sub').innerText = subText;
-    document.getElementById('se-coins').innerText = `+${earnedTrophies} 🏆`;
+    document.getElementById('se-coins').innerText = `+${earnedTrophies} 💰`;
     document.getElementById('se-coins').style.color = "var(--accent-gold)";
 
     document.getElementById('season-end-overlay').style.display = 'flex';

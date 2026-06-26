@@ -192,7 +192,8 @@ body {
     display: none;
     flex-direction: column;
     width: 100%;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
 }
 
 .screen.active {
@@ -505,9 +506,9 @@ button {
     align-content: start;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 900px) {
     .roster-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: var(--space-md);
     }
 }
@@ -651,12 +652,14 @@ button {
     letter-spacing: 1.5px;
 }
 
-/* === GRID DE SÉRIES (VERTICAL E TOTALMENTE RESPONSIVO) === */
-#series-options-container {
+/* === GRID DE SÉRIES E CLUBES (VERTICAL E TOTALMENTE RESPONSIVO) === */
+#series-options-container,
+#saved-clubs-container {
     display: grid !important;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
     gap: var(--space-lg) !important;
-    padding: var(--space-lg) !important;
+    /* CORREÇÃO: Adicionamos 60px de padding no final para a última liga não colar no rodapé */
+    padding: var(--space-lg) var(--space-lg) 60px var(--space-lg) !important;
     width: 100% !important;
     max-width: 1200px !important;
     margin: 0 auto !important;
@@ -667,10 +670,11 @@ button {
     flex-direction: initial !important;
 }
 
-#series-options-container .club-select-card {
+#series-options-container .club-select-card,
+#saved-clubs-container .club-select-card {
     width: 100% !important;
     max-width: none !important;
-    height: auto !important;
+    height: 100% !important;
     flex: none !important;
     margin: 0 !important;
 }
@@ -794,7 +798,7 @@ button {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 40px 15px;
+    padding: 40px 15px 120px 15px;
     background: linear-gradient(to top, var(--bg-base), #0f172a);
     position: relative;
 }
@@ -888,12 +892,31 @@ button {
 /* --- CHEFÃO --- */
 .map-node.boss {
     width: 76px;
-    /* Aumentado proporcionalmente */
     height: 76px;
     border-radius: 18px;
-    /* Arredondamento proporcional ao tamanho novo */
     border-color: var(--accent-red);
     background: rgba(239, 68, 68, 0.1);
+}
+
+.map-node.boss.active {
+    background: linear-gradient(145deg, #ef4444, #991b1b);
+    /* Vermelho intenso e sólido */
+    border-color: #fff;
+    /* Borda branca destacando que é o alvo atual */
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.8);
+    /* Brilho amedrontador */
+    transform: scale(1.15);
+    /* Aumenta um pouco para chamar atenção */
+}
+
+.map-node.boss.active .node-label {
+    color: #ffffff;
+    /* Texto brilhante */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.map-node.boss.active .node-icon {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 .map-node.boss .node-icon {
@@ -969,16 +992,21 @@ button {
 .market-wrapper {
     flex: 1;
     overflow-y: auto;
-    padding: var(--space-lg);
+    /* Ajustado: padding-bottom de 90px garante que o botão de Reroll limpe totalmente a navbar mobile (65px) */
+    padding: var(--space-lg) var(--space-lg) 90px var(--space-lg);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* CORREÇÃO CRUCIAL: Mudado de 'center' para 'flex-start' para o conteúdo começar 
+       exatamente abaixo do header e respeitar o scroll natural quando transbordar */
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .market-panel {
     width: 100%;
     max-width: 440px;
-    margin: auto;
+    /* Ajustado: margin-top sutil para dar um respiro elegante logo após o Header Global */
+    margin: var(--space-sm) auto 0 auto;
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
@@ -987,6 +1015,13 @@ button {
 @media (min-width: 900px) {
     .market-panel {
         max-width: 560px;
+        /* No PC removemos o recuo extra da navbar mobile se necessário, mantendo limpo */
+        margin: var(--space-md) auto 0 auto;
+    }
+
+    .market-wrapper {
+        /* No PC não há navbar mobile inferior, então voltamos ao padding padrão */
+        padding-bottom: var(--space-lg);
     }
 }
 
@@ -1016,62 +1051,160 @@ button {
 }
 
 .market-card {
-    background: var(--bg-card);
-    border: 2px solid var(--border-accent);
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    border: 1px solid var(--border-accent);
     border-radius: var(--radius-md);
-    padding: 12px;
+    padding: 14px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    cursor: pointer;
+    gap: 14px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.market-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.market-card-disabled {
+    opacity: 0.45;
+    filter: grayscale(1);
+    cursor: not-allowed;
 }
 
 .market-card .card-emoji {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 2.2rem;
-    margin: 0;
+    flex-shrink: 0;
 }
 
 .market-info {
     flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.market-name {
+.market-title-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.market-player-name {
     font-size: 1rem;
     font-weight: 900;
     color: #fff;
-    margin-bottom: 4px;
+    text-transform: uppercase;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
-.market-stats {
-    font-size: 0.85rem;
-    font-weight: 800;
+.market-subtitle-row {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    color: var(--accent-blue);
+    align-items: center;
+}
+
+.market-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    min-width: 110px;
+}
+
+.level-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+}
+
+.star-badge {
+    font-size: 1rem;
+    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.8));
 }
 
 .market-buy-btn {
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid rgba(245, 158, 11, 0.4);
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.45);
     color: var(--accent-gold);
-    padding: 8px 12px;
-    border-radius: 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
     font-weight: 900;
     cursor: pointer;
-    transition: all 0.1s;
+    transition: all 0.15s;
     font-size: 0.8rem;
+    min-width: 100px;
 }
 
 .market-buy-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
 }
 
 .market-buy-btn:disabled {
-    opacity: 0.3;
+    opacity: 0.35;
     filter: grayscale(1);
     cursor: default;
     transform: none;
+}
+
+.market-swap-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.market-swap-card {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.market-swap-card .player-card {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 10px 12px;
+    border-radius: 12px;
+}
+
+.market-swap-btn {
+    width: auto !important;
+    align-self: flex-start;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    min-width: 140px;
+}
+
+.market-swap-card .player-card+.market-swap-btn {
+    margin-top: 0;
+}
+
+.market-swap-header {
+    text-align: left;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
 }
 
 .history-list {
@@ -2416,4 +2549,487 @@ button {
     justify-content: center;
     margin: 0;
     /* Remove margens extras */
+}
+
+/* --- POSIÇÕES E CAPITÃO --- */
+.pos-badge {
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 2px 5px;
+    border-radius: 4px;
+    color: #fff;
+    margin-right: 6px;
+    letter-spacing: 0.5px;
+}
+
+.pos-GOL {
+    background: #eab308;
+    color: #000;
+}
+
+.pos-ZAG {
+    background: #3b82f6;
+}
+
+.pos-MEI {
+    background: #22c55e;
+    color: #000;
+}
+
+.pos-ATA {
+    background: #ef4444;
+}
+
+/* Badge de Capitão na Lista (Sidebar/Modais) */
+.cap-badge {
+    font-size: 1.4rem;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+    line-height: 1;
+    flex-shrink: 0;
+    position: absolute;
+    left: 13px;
+    top: 3px;
+}
+
+/* --- CAMPO TÁTICO E FORMAÇÕES --- */
+.football-pitch {
+    background-color: #064e3b;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255, 255, 255, 0.05) 40px, rgba(255, 255, 255, 0.05) 80px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    position: relative;
+    padding: 16px 12px;
+    margin-bottom: 20px;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+}
+
+.pitch-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.pitch-lines::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.pitch-lines::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 70px;
+    height: 70px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pitch-row {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-height: 115px;
+    /* Ajustado de 72px para 115px */
+    padding: 4px 6px;
+    z-index: 2;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (min-width: 900px) {
+    .football-pitch {
+        grid-template-rows: auto auto auto auto;
+        /* Garante que o grid de PC se expanda */
+    }
+}
+
+.squad-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+}
+
+.reserves-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.formation-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+@media (min-width: 900px) {
+    .squad-layout {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .football-pitch {
+        display: grid;
+        width: 420px;
+        max-width: 420px;
+        margin-left: 0;
+        margin-right: 0;
+        align-content: center;
+        grid-template-rows: 2fr 3fr 3fr 2fr;
+        /* Garante que o campo não seja espremido se a tela diminuir */
+    }
+
+    .reserves-panel {
+        flex: 1;
+        /* Ocupa automaticamente 100% do espaço que sobrou */
+        width: auto;
+        /* Remove os 50% para liberar o flexbox */
+    }
+}
+
+/* --- DESIGN DA CARTA EM CAMPO --- */
+.pitch-player {
+    background: linear-gradient(180deg, var(--bg-card) 0%, rgba(2, 6, 23, 0.9) 100%);
+    border: 1px solid var(--border-accent);
+    border-radius: 8px;
+    width: 76px;
+    /* Tamanho fixo de carta retrato */
+    height: 105px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    padding: 4px;
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.pitch-player:active {
+    transform: scale(0.94) !important;
+}
+
+.pitch-player.oop {
+    border-color: var(--accent-red);
+    background: linear-gradient(180deg, rgba(190, 18, 60, 0.4) 0%, rgba(2, 6, 23, 0.9) 100%);
+}
+
+.pitch-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2px;
+}
+
+.pitch-player .pos-badge {
+    font-size: 0.5rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    margin: 0;
+    width: auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.pitch-player .lvl-badge {
+    font-size: 0.55rem;
+    padding: 2px 4px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    color: var(--accent-green);
+    font-weight: 900;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.pitch-card-avatar-lg {
+    font-size: 2.2rem;
+    line-height: 1.1;
+    margin: auto 0;
+    position: relative;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+}
+
+.pitch-player .star-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -8px;
+    font-size: 0.8rem;
+    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 1));
+}
+
+.pitch-card-name {
+    font-size: 0.55rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff;
+    margin-bottom: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    padding: 2px 0;
+}
+
+.pitch-card-traits {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    width: 100%;
+    min-height: 16px;
+    align-items: center;
+}
+
+.pitch-trait-icon {
+    font-size: 0.75rem;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.8));
+}
+
+/* Badge de Capitão Ajustado para a Cartinha */
+.pitch-player .cap-badge {
+    width: 22px;
+    height: 22px;
+    font-size: 1.2rem;
+    margin: 0;
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    z-index: 5;
+    background: transparent;
+    /* Remove quadrados não intencionais */
+}
+
+/* OOP Ajustado para a Cartinha */
+.pitch-player .oop-icon {
+    font-size: 1.1rem;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    z-index: 5;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+}
+
+/* Limpando resquícios do CSS antigo caso tenha sobrado */
+.pitch-card-body,
+.pitch-card-info,
+.pitch-card-row,
+.pitch-card-avatar {
+    display: none;
+}
+
+/* --- JUICINESS: ANIMAÇÃO DE PULSO --- */
+@keyframes pulseSwap {
+    0% {
+        box-shadow: 0 0 5px rgba(245, 158, 11, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.8);
+    }
+
+    100% {
+        box-shadow: 0 0 5px rgba(245, 158, 11, 0.4);
+    }
+}
+
+.roster-jiggle {
+    animation: pulseSwap 1s infinite ease-in-out !important;
+    border-color: var(--accent-gold) !important;
+}
+
+.roster-jiggle.selected {
+    animation: none !important;
+    border-color: var(--accent-blue) !important;
+    box-shadow: 0 0 20px var(--accent-blue) !important;
+    z-index: 20;
+}
+
+/* =========================================
+   NAVBAR MOBILE: GESTÃO DE ELENCO
+   ========================================= */
+@media (max-width: 768px) {
+    .squad-layout {
+        display: block;
+        /* Remove o grid lado a lado do PC */
+    }
+
+    .squad-tab-content {
+        display: none;
+        /* Esconde todas as abas por padrão */
+        animation: fadeIn 0.3s ease;
+    }
+
+    .squad-tab-content.active {
+        display: block;
+        /* Mostra apenas a ativa */
+    }
+
+    .mobile-squad-navbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 65px;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-light);
+        display: flex;
+        z-index: 1000;
+    }
+
+    #screen-squad .map-wrapper {
+        padding-bottom: 120px !important;
+    }
+
+    #screen-squad .squad-layout {
+        margin-bottom: 16px;
+    }
+
+    .squad-nav-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        gap: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .squad-nav-btn.active {
+        color: var(--accent-gold);
+        border-top: 3px solid var(--accent-gold);
+        background: rgba(245, 158, 11, 0.05);
+    }
+
+    .squad-nav-btn .nav-icon {
+        font-size: 1.4rem;
+        line-height: 1;
+    }
+
+    .squad-nav-btn .nav-label {
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+}
+
+/* No PC, força as abas a aparecerem juntas e esconde a navbar mobile */
+@media (min-width: 769px) {
+    .mobile-squad-navbar {
+        display: none !important;
+    }
+
+    .squad-tab-content {
+        display: block !important;
+    }
+}
+
+/* =========================================
+   ANIMAÇÕES E UI DA LOJA / SWAP
+   ========================================= */
+
+.market-card {
+    animation: slideInUpCard 0.4s ease-out backwards;
+    position: relative;
+    /* Para o stamp de vendido */
+}
+
+/* Destaque para jogadores Premium (Estrela) */
+.market-card.premium-card {
+    border-color: var(--accent-gold);
+    background: linear-gradient(145deg, rgba(245, 158, 11, 0.15), var(--bg-card));
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+}
+
+.market-card.premium-card:hover {
+    box-shadow: 0 12px 30px rgba(245, 158, 11, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Selo de Esgotado mais bonito */
+.sold-stamp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--accent-red);
+    border: 4px solid var(--accent-red);
+    padding: 4px 16px;
+    border-radius: 12px;
+    background: rgba(2, 6, 23, 0.85);
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+    z-index: 10;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Caixa de destaque do novo reforço na modal de Swap */
+.swap-incoming-section {
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px dashed var(--accent-blue);
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.1);
+}
+
+/* Linha da reserva com botão lateral perfeitamente alinhado */
+.market-swap-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.market-swap-row:hover {
+    border-color: var(--accent-red);
+    background: rgba(248, 113, 113, 0.05);
+}
+
+/* Ocultar o card em si para parecer que o "sold out" tomou conta */
+.market-card-disabled .market-info,
+.market-card-disabled .market-actions,
+.market-card-disabled .card-emoji {
+    opacity: 0.2;
+    filter: blur(2px);
 }

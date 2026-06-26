@@ -108,16 +108,33 @@ function openQuitConfirm() {
 function confirmQuitRun() {
     // Grava como derrota na memória se quiser rastrear, ou apenas reseta
     recordRun(false);
+
+    // --- CORREÇÃO AQUI ---
+    gameState.season.map = []; // Destrói o mapa para encerrar a run de verdade
+    saveGame();
+    // ---------------------
+
     returnToTitle();
 }
 
 function returnToTitle() {
     closeModals();
     document.body.classList.remove('in-run');
-    gameState.team = [];
-    gameState.club = null;
-    showScreen('screen-title');
-    updateMissionsBadge();
+
+    // Se por algum motivo o player voltar ao título sem clube, trava na tela de seleção
+    if (!gameState.club) {
+        if (typeof renderClubSelection === 'function') {
+            renderClubSelection();
+        }
+    } else {
+        // Usa a nova função do sistema persistente (club_manager.js)
+        if (typeof returnToHub === 'function') {
+            returnToHub();
+        } else {
+            showScreen('screen-title');
+            updateMissionsBadge();
+        }
+    }
 }
 
 function updateRosterUI() {

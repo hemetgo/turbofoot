@@ -2,6 +2,10 @@ let selectedActionNodeId = null;
 
 function startMapMatch() {
     closeModals();
+
+    gameState.inMatch = true;
+    saveGame();
+
     let rivalTeam = gameState.currentNode.rival;
     const minA = GAME_BALANCE.mechanics.matchActionsMin;
     const maxA = GAME_BALANCE.mechanics.matchActionsMax;
@@ -44,7 +48,7 @@ function startMapMatch() {
 function updateTimerDisplay() {
     let el = document.getElementById("action-counter");
     if (matchState.isExtraTime) {
-        el.innerHTML = `<span style="color:var(--accent-gold); font-weight:900; letter-spacing:0.5px; text-shadow: 0 0 8px rgba(245,158,11,0.8);">${matchState.currentAction}/${matchState.baseTotalActions} 🏆 ${t('MATCH_EXTRA_TIME')}</span>`;
+        el.innerHTML = `<span style="color:var(--accent-gold); font-weight:900; letter-spacing:0.5px; text-shadow: 0 0 8px rgba(245,158,11,0.8);">${matchState.currentAction}/${matchState.baseTotalActions} 💰 ${t('MATCH_EXTRA_TIME')}</span>`;
     } else {
         el.innerText = `⏱️ ${matchState.currentAction}/${matchState.baseTotalActions}`;
     }
@@ -69,6 +73,18 @@ function renderMinimap(hoverNode = null) {
     }
     html += `</div>`;
     mapEl.innerHTML = html;
+}
+
+function getZonePlayers(zone) {
+    return gameState.team.filter(p => {
+        if (p.id === gameState.captainId) return true; // Capitão é um deus onipresente
+        if (zone === 0) return p.position === 'GOL' || p.position === 'ZAG';
+        if (zone === 1) return p.position === 'ZAG';
+        if (zone === 2) return p.position === 'ZAG' || p.position === 'MEI';
+        if (zone === 3) return p.position === 'MEI' || p.position === 'ATA';
+        if (zone === 4) return p.position === 'ATA';
+        return false;
+    });
 }
 
 function highlightSynergyPlayers(synergyIds) {
@@ -661,6 +677,13 @@ function finishMatchRewards() {
                 document.getElementById('post-match-overlay').style.display = 'none';
                 finishSeason(false);
             };
+
+            // --- CORREÇÃO AQUI ---
+            gameState.inMatch = false;
+            gameState.season.map = []; // Destrói o mapa para matar a run
+            saveGame(); // Salva a derrota na hora para evitar exploit de fechar o jogo
+            // ---------------------
+
             document.getElementById("post-match-overlay").style.display = "flex";
             return;
         }
@@ -674,7 +697,7 @@ function finishMatchRewards() {
         if (gameState.currentNode.type === 'boss') progressDailyMission('beat_boss', 1);
 
         let mult = threat.coinMult;
-        let coins = Math.floor(base * (1 + Math.min(matchState.combo, 6) * GAME_BALANCE.mechanics.comboCoinMultiplier)) * mult;
+        let coins = Math.floor(base * (1 + Math.min(matchState.combo, 6) * GAME_BALANCE.mechanics.comboCoinMultiplier) * mult);
 
         gameState.coins += coins;
         updateRosterUI();
@@ -707,6 +730,9 @@ function finishMatchRewards() {
                 });
             };
         }
+
+        gameState.inMatch = false;
+        saveGame();
 
         document.getElementById("post-match-overlay").style.display = "flex";
     }, 500);

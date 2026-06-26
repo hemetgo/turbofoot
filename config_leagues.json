@@ -3,12 +3,12 @@
         "emoji": "📍",
         "name": "LEAGUE_REGIONAL_NAME",
         "desc": "LEAGUE_REGIONAL_DESC",
-        "rewardBase": 35,
+        "rewardBase": 45,
         "color": "#94a3b8",
-        "enemyBaseLevel": 0,
-        "enemyBaseTraits": 1,
-        "levelScaling": 1,
-        "traitScaling": 0.5,
+        "enemyBaseLevel": 1,
+        "enemyBaseTraits": 0,
+        "levelScaling": 0.5,
+        "traitScaling": 0.2,
         "natDistribution": [
             11
         ]

@@ -1,0 +1,34 @@
+BUGS
+- Mapa só deve voltar pra cima quando partida começar
+- Texto dos times no histórico tá estourando a caixa 
+- Mobile nao esta começando com "Confirmar a ação" ativada
+
+FEATURES e ATUALIZAÇÕES
+- Missoes diarias OK
+- Conquistas
+- Monetização
+- Localização
+- Copa do mundo com draft de jogadores
+- Tutorial OK
+- Posição dos jogadores
+
+NÃO É PRIORIDADE
+- Padronizar tamanho dos textos no CSS
+- Mudar cores para "mais futebolistica"
+- Add mais frases de gol e log
+- Diminuir quantidade de nós
+- Partidas iniciais controladas e mais faceis
+- Quando apertar pra confirmar o subir nível e ainda tiver nível sobrando, pedir confirmação para avançar, ou só impedir, mas notificar
+- Ranked
+- SFX e Musica
+- Salvar estatisticas da partida no historico, como gols usados, turnos, etc
+- Sala de trofeus
+- Add função de desistir do jogo
+- Botao jogar novamente
+
+SERÁ?
+- Comidas
+- Escanteio
+- Lateral
+- Falta
+- Skins de campo/estádio

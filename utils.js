@@ -3,16 +3,129 @@ function showScreen(id) {
     const target = document.getElementById(id);
     if (target) {
         target.classList.add("active");
-
-        // REMOVIDO: '.map-wrapper' agora está livre para manter a posição de onde parou!
         const scrollAreas = target.querySelectorAll('.club-options-wrapper, .market-wrapper, .match-log-container');
         scrollAreas.forEach(area => area.scrollTop = 0);
     }
 
-    if (['screen-title', 'screen-series-select', 'screen-club-select'].includes(id)) {
-        document.body.classList.remove('in-run');
-    } else {
+    if (['screen-map', 'screen-match'].includes(id)) {
         document.body.classList.add('in-run');
+    } else {
+        document.body.classList.remove('in-run');
+    }
+
+    // Chama o gerenciador do novo header
+    updateGlobalHeader(id);
+}
+
+function updateGlobalHeader(id) {
+    const header = document.getElementById('global-header');
+    if (!header) return;
+
+    const backBtn = document.getElementById('global-header-back');
+    const title = document.getElementById('global-header-title');
+    const clubInfo = document.getElementById('global-header-club');
+    const currencyContainer = document.getElementById('global-header-currency');
+    const coinsVal = document.getElementById('global-header-coins-val');
+
+    header.style.display = 'flex';
+    backBtn.style.visibility = 'hidden';
+    backBtn.onclick = null;
+    clubInfo.style.display = 'none';
+
+    // Helper para buscar o nome traduzido do clube com segurança
+    function getClubName(name) {
+        if (typeof tClub === 'function') return tClub(name);
+        if (typeof t === 'function' && t(name) !== name) return t(name);
+        return name;
+    }
+
+    // Controle de Título: Clube ou Nome do Jogo
+    if (gameState.club && activeSaveIndex !== -1 && id !== 'screen-club-selection' && id !== 'screen-create-club') {
+        clubInfo.style.display = 'block';
+        title.style.color = 'var(--accent-gold)';
+        title.style.fontSize = '0.75rem';
+
+        if (id === 'screen-title') {
+            // NO HUB: O Header exibe TURBOFOOT
+            clubInfo.innerText = typeof t === 'function' ? ('🏆 ' + t('TITLE_GAME_NAME') || "⚽ TURBOFOOT") : "⚽ TURBOFOOT";
+        } else {
+            // NAS OUTRAS TELAS: O Header exibe o Time
+            clubInfo.innerText = `${gameState.club.emoji} ${getClubName(gameState.club.name)}`;
+        }
+    } else {
+        title.style.color = 'var(--text-main)';
+        title.style.fontSize = '1.1rem';
+    }
+
+    // Atualiza saldo financeiro visualmente
+    if (coinsVal) {
+        coinsVal.innerText = gameState.coins || 0;
+    }
+
+    switch (id) {
+        case 'screen-club-selection':
+            title.setAttribute('data-i18n', 'SCREEN_SELECT_CLUB');
+            title.innerText = typeof t === 'function' ? t('SCREEN_SELECT_CLUB') : "SELECIONE SEU CLUBE";
+            currencyContainer.style.display = 'none';
+            break;
+        case 'screen-create-club':
+            title.setAttribute('data-i18n', 'SCREEN_CREATE_CLUB');
+            title.innerText = typeof t === 'function' ? t('SCREEN_CREATE_CLUB') : "CRIAR CLUBE";
+            currencyContainer.style.display = 'none';
+            backBtn.style.visibility = 'visible';
+            backBtn.onclick = () => showScreen('screen-club-selection');
+            break;
+        case 'screen-title':
+            // HEADER DO HUB
+            title.removeAttribute('data-i18n');
+            title.innerText = typeof t === 'function' ? (t('TITLE_SUBTITLE') || "MANAGER ROGUELITE") : "MANAGER ROGUELITE";
+            currencyContainer.style.display = 'block';
+            backBtn.style.visibility = 'hidden';
+
+            // INJETA O CLUBE EM DESTAQUE NO MEIO DA TELA
+            const hubClubInfo = document.getElementById('hub-club-info');
+            if (hubClubInfo && gameState.club) {
+                hubClubInfo.innerHTML = `
+                    <div style="font-size: 7rem; margin-bottom: 8px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4)); line-height: 1;">${gameState.club.emoji}</div>
+                    <div style="letter-spacing: 1px; padding-top: 16px">${getClubName(gameState.club.name)}</div>
+                `;
+            }
+            break;
+        case 'screen-squad':
+            title.setAttribute('data-i18n', 'LABEL_SQUAD_TITLE');
+            title.innerText = typeof t === 'function' ? t('LABEL_SQUAD_TITLE') : "GESTÃO DO ELENCO";
+            currencyContainer.style.display = 'block';
+            backBtn.style.visibility = 'visible';
+            backBtn.onclick = () => returnToHub();
+            break;
+        case 'screen-series-select':
+            title.setAttribute('data-i18n', 'LABEL_CHOOSE_DIVISION');
+            title.innerText = typeof t === 'function' ? t('LABEL_CHOOSE_DIVISION') : "ESCOLHA A DIVISÃO";
+            currencyContainer.style.display = 'block';
+            backBtn.style.visibility = 'visible';
+            backBtn.onclick = () => returnToHub();
+            break;
+        case 'screen-map':
+            title.removeAttribute('data-i18n');
+            let currentLeagueName = GAME_BALANCE.leagues && GAME_BALANCE.leagues[gameState.leagueLevel] ? GAME_BALANCE.leagues[gameState.leagueLevel].name : "LIGA";
+            let leagueEmoji = GAME_BALANCE.leagues && GAME_BALANCE.leagues[gameState.leagueLevel] ? GAME_BALANCE.leagues[gameState.leagueLevel].emoji : "🏆";
+            title.innerText = `${leagueEmoji} ${typeof t === 'function' ? t(currentLeagueName) : currentLeagueName}`;
+            currencyContainer.style.display = 'block';
+            backBtn.style.visibility = 'visible';
+            backBtn.onclick = () => openQuitConfirm();
+            break;
+        case 'screen-market':
+            title.setAttribute('data-i18n', 'LABEL_MARKET_TITLE');
+            title.innerText = typeof t === 'function' ? t('LABEL_MARKET_TITLE') : "MERCADO DA BOLA";
+            currencyContainer.style.display = 'block';
+            backBtn.style.visibility = 'visible';
+            backBtn.onclick = () => cancelMarket();
+            break;
+        case 'screen-match':
+            header.style.display = 'none';
+            break;
+        default:
+            header.style.display = 'none';
     }
 }
 
@@ -197,3 +310,24 @@ document.addEventListener("DOMContentLoaded", () => {
         else globalTooltip.classList.remove('visible');
     }, { passive: true });
 });
+
+let alertCallback = null;
+
+function showCustomAlert(title, message, callback = null) {
+    document.getElementById('alert-title').innerText = title;
+
+    // Suporte para i18n ou texto direto
+    let finalMessage = typeof t === 'function' ? (t(message) !== message ? t(message) : message) : message;
+    document.getElementById('alert-message').innerText = finalMessage;
+
+    alertCallback = callback;
+    document.getElementById('alert-overlay').style.display = 'flex';
+}
+
+function closeAlertModal() {
+    document.getElementById('alert-overlay').style.display = 'none';
+    if (alertCallback) {
+        alertCallback();
+        alertCallback = null;
+    }
+}

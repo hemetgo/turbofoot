@@ -33,6 +33,7 @@ BTN_BACK_MENU=← VOLTAR AO MENU
 BTN_BACK_DIVISIONS=← VOLTAR PARA DIVISÕES
 
 # --- Como Jogar ---
+TITLE_TUTORIAL=TUTORIAL
 HOW_TO_PLAY_TITLE=COMO JOGAR
 BTN_REPLAY_TUTORIAL=▶️ REVER TUTORIAL GUIADO
 BTN_UNDERSTOOD=ENTENDI
@@ -75,14 +76,16 @@ MAP_NODE_TRAINING=Treino
 MAP_NODE_LECTURE=Preleção
 
 # --- Mercado ---
-LABEL_MARKET_TITLE=MERCADO DA BOLA
+LABEL_MARKET_TITLE=OLHEIRO
 MARKET_TITLE_DEFAULT=ESCOLHA 1 NOVO JOGADOR
-MARKET_SUB_DEFAULT=Os 💰 já foram pagos.
+MARKET_SUB_DEFAULT=
 MARKET_SCOUT_TITLE=RELATÓRIO DO OLHEIRO
 MARKET_SCOUT_SUB=O olheiro encontrou estes talentos.
 MARKET_SOLD_OUT=Esgotada
 MARKET_BTN_BUY=CONTRATAR
 BTN_CONTINUE=CONTINUAR
+BTN_BACK=VOLTAR
+BTN_REROLL=SORTEAR
 
 # --- Partida (UI e Eventos) ---
 LABEL_LEVEL=NÍVEL
@@ -375,7 +378,7 @@ BTN_HARD_RESET=⚠️ APAGAR TODO O PROGRESSO
 BTN_CLOSE=FECHAR
 
 TITLE_RESET_CAREER=RESETAR CARREIRA?
-TEXT_REFUND_INFO=Você vai recuperar todos os <strong id="refund-amount-text" class="text-gold">0</strong> 🏆 gastos!
+TEXT_REFUND_INFO=Você vai recuperar todos os <strong id="refund-amount-text" class="text-gold">0</strong> 💰 gastos!
 TEXT_REFUND_CONFIRM_QUESTION=Deseja desfazer todos os aprimoramentos?
 
 TEXT_SUSPENSE_DEFAULT=Se prepara...
@@ -443,3 +446,35 @@ TUTORIAL_BTN_DONE=VAMOS JOGAR!
 
 TUTORIAL_PROGRESS={current} de {total}
 TUTORIAL_NEXT_MATCH_ALERT=O tutorial vai aparecer automaticamente na sua próxima partida!
+
+# --- Novo Sistema de Clube Persistente ---
+SCREEN_SELECT_CLUB=SELECIONE SEU CLUBE
+BTN_NEW_CLUB=➕ FUNDAR NOVO CLUBE
+SCREEN_CREATE_CLUB=CRIAR CLUBE
+LABEL_CLUB_NAME=NOME DO CLUBE
+LABEL_NATIONALITY=PAÍS DE ORIGEM (Elenco Inicial)
+BTN_CREATE_CLUB=FUNDAR CLUBE
+BTN_SQUAD=👥 ELENCO
+BTN_HUB_MARKET=🔍 OLHEIRO
+LABEL_SQUAD_TITLE=GESTÃO DO ELENCO
+LABEL_STARTERS=TITULARES (11)
+LABEL_RESERVES=RESERVAS ({count}/12)
+TEXT_ROSTER_FULL=ELENCO CHEIO!
+BTN_SWAP=TROCAR
+BTN_FIRE=DEMITIR
+TEXT_SELECT_TO_SWAP=Selecione dois jogadores para trocar de posição.
+
+# --- Posições e Capitão ---
+POS_GOL=GOL
+POS_ZAG=ZAG
+POS_MEI=MEI
+POS_ATA=ATA
+TEXT_CAPTAIN_SET=Faixa de capitão entregue!
+TEXT_GOL_SWAP_ERROR=Goleiro só pode ser trocado por outro Goleiro!
+TEXT_SQUAD_TIP=Selecione dois para trocar. Clique DUAS VEZES num titular para torná-lo CAPITÃO.
+
+# --- Features Adicionais ---
+BTN_DELETE_CLUB=EXCLUIR
+TEXT_DELETE_CLUB_CONFIRM=Tem certeza que deseja excluir o clube {club}? O clube deixará de existir!
+TEXT_ABANDON_PENALTY=⚠️ PUNIÇÃO POR ABANDONO!\n\nVocê fechou o jogo durante uma partida. Isso foi considerado abandono de campo (W.O.) e seu time foi eliminado da liga atual.
+TEXT_RESUME_RUN=▶ CONTINUAR LIGA
