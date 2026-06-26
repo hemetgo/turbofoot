@@ -84,10 +84,6 @@
                     <button class="btn-primary btn-epic" data-i18n="BTN_CREATE_CLUB"
                         onclick="executeCreateClub()">FUNDAR CLUBE</button>
                 </div>
-                <div class="bottom-action-bar">
-                    <button class="btn-secondary" data-i18n="BTN_BACK_MENU"
-                        onclick="showScreen('screen-club-selection')">← VOLTAR</button>
-                </div>
             </div>
 
             <!-- Tela de Gestão de Elenco -->
@@ -117,10 +113,6 @@
                             <div id="squad-reserves-grid" class="roster-grid"></div>
                         </div>
                     </div>
-                </div>
-                <div class="bottom-action-bar">
-                    <button class="btn-secondary" data-i18n="BTN_BACK_MENU" onclick="returnToHub()">← VOLTAR AO
-                        CLUBE</button>
                 </div>
             </div>
 
@@ -164,10 +156,6 @@
             <!-- Seleção de Ligas -->
             <div id="screen-series-select" class="screen">
                 <div class="club-options-wrapper" id="series-options-container"></div>
-                <div class="bottom-action-bar">
-                    <button class="btn-secondary" data-i18n="BTN_BACK_MENU" onclick="returnToHub()">← VOLTAR AO
-                        MENU</button>
-                </div>
             </div>
 
             <div id="screen-map" class="screen">
@@ -184,11 +172,9 @@
                             <p id="market-sub" data-i18n="MARKET_SUB_DEFAULT">O jogador vai para a Reserva.</p>
                         </div>
                         <div id="market-list" class="market-list"></div>
-                        <div style="display:flex; gap:10px;">
-                            <button class="btn-secondary" data-i18n="BTN_BACK" style="flex:1;"
-                                onclick="cancelMarket()">← VOLTAR</button>
+                        <div style="width: 100%;">
                             <button id="btn-market-reroll" class="btn-primary" data-i18n="BTN_REROLL"
-                                style="flex:1; background:var(--accent-purple); box-shadow: 0 4px 15px rgba(168,85,247,0.3);"
+                                style="width:100%; background:var(--accent-purple); box-shadow: 0 4px 15px rgba(168,85,247,0.3);"
                                 onclick="rerollMarket()">🔄 REROLL</button>
                         </div>
                     </div>
@@ -438,10 +424,6 @@
                 </div>
                 <div class="modal-body" id="meta-shop-list"
                     style="display:flex; flex-direction:column; gap:8px; padding-top: 24px;"></div>
-                <div class="modal-footer">
-                    <button class="btn-secondary" data-i18n="BTN_BACK_MENU" onclick="closeModals()">← VOLTAR AO
-                        MENU</button>
-                </div>
             </div>
         </div>
 
@@ -619,10 +601,6 @@
                         style="white-space: pre-line; margin: 16px 0;">Resumo...</p>
                     <div class="pm-rewards"><span id="se-coins" class="pm-val-coins" data-i18n="SE_COINS_DEFAULT">+0
                             🏆</span></div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-primary" data-i18n="BTN_BACK_MENU" onclick="returnToHub()">VOLTAR AO
-                        CLUBE</button>
                 </div>
             </div>
         </div>
