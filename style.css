@@ -2818,17 +2818,14 @@ button {
 }
 
 /* Badge de Capitão Ajustado para a Cartinha */
-.pitch-player .cap-badge {
-    width: 22px;
-    height: 22px;
-    font-size: 1.2rem;
-    margin: 0;
+.pitch-player .cap-badge-avatar {
     position: absolute;
-    top: -8px;
-    left: -8px;
+    bottom: -2px;
+    left: -12px;
+    /* Joga a coroa para a esquerda */
+    font-size: 0.85rem;
     z-index: 5;
-    background: transparent;
-    /* Remove quadrados não intencionais */
+    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.8));
 }
 
 /* OOP Ajustado para a Cartinha */

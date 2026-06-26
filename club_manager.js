@@ -401,13 +401,12 @@ function renderSquadGrid() {
 
         let badgesHTML = '';
         if (isOOP) badgesHTML += `<div class="oop-icon" data-tip="FORA DE POSIÇÃO! Nível e Traits reduzidos.">⚠️</div>`;
-        if (isCaptain) badgesHTML += `<div class="cap-badge" data-tip="Capitão: Ignora punições e joga o campo todo!">👑</div>`;
+        // A coroa saiu daqui!
 
         let jiggleClass = squadSelectedPlayer ? 'roster-jiggle' : '';
         let selClass = squadSelectedPlayer?.id === p.id ? 'selected' : '';
         let oopClass = isOOP ? 'oop' : '';
 
-        // Monta as habilidades (traits) do jogador como mini emojis na carta
         let traitsHTML = '';
         if (p.perks && p.perks.length > 0) {
             p.perks.forEach(perk => {
@@ -419,20 +418,23 @@ function renderSquadGrid() {
 
         let starBadge = p.isStar ? `<span class="star-badge">⭐</span>` : '';
 
-        // Formata o nome para caber na carta (Ex: "Lucas Silva" vira "L. Silva")
+        // NOVO: Criamos a badge do capitão para ficar no avatar
+        let capBadge = isCaptain ? `<span class="cap-badge-avatar" data-tip="Capitão: Ignora punições e joga o campo todo!">👑</span>` : '';
+
         let nameParts = p.name.split(' ');
         let shortName = nameParts.length > 1 ? nameParts[0].charAt(0) + ". " + nameParts[nameParts.length - 1] : p.name;
 
         let card = document.createElement('div');
         card.className = `pitch-player ${jiggleClass} ${selClass} ${oopClass}`;
 
-        // Estrutura HTML da nova Cartinha Portrait
+        // NOVO: capBadge inserido dentro do pitch-card-avatar-lg
         card.innerHTML = `
             <div class="pitch-card-header">
                 <span class="pos-badge pos-${p.position}">${t('POS_' + p.position) || p.position}</span>
                 <span class="lvl-badge">Nv ${p.level}</span>
             </div>
             <div class="pitch-card-avatar-lg">
+                ${capBadge}
                 ${p.emoji}
                 ${starBadge}
             </div>
