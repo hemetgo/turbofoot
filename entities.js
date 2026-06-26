@@ -111,7 +111,7 @@ function getPlayerCardHTML(p, onClickAttr = "") {
     let clickStyle = onClickAttr ? 'cursor: pointer;' : '';
 
     return `
-        <div class="player-card" data-perks="${dataPerks}" ${onClickAttr} style="display: flex; flex-direction: row; align-items: center; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px 12px; width: 100%; height: 64px; overflow: hidden; transition: all 0.2s; ${clickStyle}">
+        <div class="player-card" data-id="${p.id}" data-perks="${dataPerks}" ${onClickAttr} style="display: flex; flex-direction: row; align-items: center; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px 12px; width: 100%; height: 64px; overflow: hidden; transition: all 0.2s; ${clickStyle}">
             <div style="display: flex; align-items: center; justify-content: center; width: 36px; flex-shrink: 0;">
                 <span style="font-size: 2rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${p.emoji}</span>
             </div>

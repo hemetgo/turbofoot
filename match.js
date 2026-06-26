@@ -89,10 +89,17 @@ function getZonePlayers(zone) {
 
 function highlightSynergyPlayers(synergyIds) {
     if (!synergyIds || synergyIds.length === 0) return;
+
+    // Pega apenas os IDs dos jogadores válidos para a zona atual!
+    let validIds = getZonePlayers(matchState.zone).map(p => p.id);
+
     document.querySelectorAll('.player-card').forEach(card => {
+        let cardId = card.getAttribute('data-id');
         let cardPerks = card.getAttribute('data-perks') || "";
         let hasSyn = synergyIds.some(id => cardPerks.includes(id));
-        if (hasSyn) {
+
+        // Só brilha se o jogador tiver a habilidade E estiver na zona correta da jogada
+        if (hasSyn && validIds.includes(cardId)) {
             card.classList.add('highlight-synergy');
         }
     });
@@ -464,6 +471,10 @@ async function resolveProceduralNode(node, event) {
 
     let goalScored = false, isUserGoal = false;
 
+    // NOVO: Sorteia um jogador da zona atual para ser o protagonista do lance!
+    let activePlayers = getZonePlayers(matchState.zone);
+    let actor = activePlayers.length > 0 ? rnd(activePlayers).name : "Jogador";
+
     if (isSuccess) {
         matchState.momentum = clamp(matchState.momentum + 1, -3, 3);
 
@@ -492,18 +503,18 @@ async function resolveProceduralNode(node, event) {
         else if (node.type !== 'shoot' && node.type !== 'save') {
             if (wasPityUsed || usedSecondChance) {
                 createJuiceText(t('JUICE_SYNERGY'), "#a855f7", x, y - 50);
-                addMatchLog(t('LOG_PITY_SAVE'), "success");
+                addMatchLog(`✨ ${actor} usou sua habilidade para salvar a jogada!`, "success");
             } else if (hasAdvantage) {
                 createJuiceText(t('JUICE_BONUS'), "#a855f7", x, y - 50);
-                addMatchLog(t('LOG_BONUS_APPLIED'), "success");
+                addMatchLog(`🔥 Bela jogada de ${actor}!`, "success");
             } else {
                 createJuiceText(matchState.nextBuff > 0 ? t('LOG_NICE') : t(node.name), "#34d399", x, y);
-                addMatchLog(t(getRandomLog('success'), { action: t(node.name) }), 'success');
+                addMatchLog(`✅ ${actor} executou com sucesso: ${t(node.name)}`, 'success');
             }
         }
         else if (node.type === 'save') {
             createJuiceText(t('LOG_GREAT_DEFENSE_TITLE'), "#38bdf8", x, y);
-            addMatchLog(t('LOG_GREAT_DEFENSE_TEXT'), 'success');
+            addMatchLog(`🧤 MILAGRE DE ${actor.toUpperCase()}! Defesaça!`, 'success');
         }
     } else {
         let mitigation = getLeadershipMitigation(traits);
@@ -519,7 +530,7 @@ async function resolveProceduralNode(node, event) {
         if (wasAttacking && !matchState.hasBall) {
             matchState.zone = Math.max(0, matchState.zone + mitigatedFailMove - 1);
             createJuiceText(t('LOG_COUNTER_ATTACK_TITLE'), "#ef4444", x, y - 80);
-            addMatchLog(t('LOG_COUNTER_ATTACK_TEXT'), "fail");
+            addMatchLog(`🚨 Contra-ataque! ${actor} perdeu a bola!`, "fail");
         } else {
             matchState.zone = Math.max(0, matchState.zone + mitigatedFailMove);
         }
@@ -527,11 +538,11 @@ async function resolveProceduralNode(node, event) {
         if (node.type === 'save') { goalScored = true; isUserGoal = false; }
         else if (!wasAttacking || node.type !== 'shoot') {
             createJuiceText(t('LOG_FAILED'), "#f87171", x, y);
-            addMatchLog(t(getRandomLog('fail'), { action: t(node.name) }), 'fail');
+            addMatchLog(`⚠️ ${actor} falhou na tentativa de ${t(node.name)}...`, 'fail');
         }
         else if (node.type === 'shoot') {
             createJuiceText(t('LOG_MISSED'), "#94a3b8", x, y);
-            addMatchLog(t('LOG_BAD_SHOT'), 'fail');
+            addMatchLog(`🤦‍♂️ Inacreditável! ${actor} mandou pra fora!`, 'fail');
         }
     }
 
@@ -543,20 +554,39 @@ async function resolveProceduralNode(node, event) {
 function handleGoal(isUserGoal) {
     document.getElementById("dynamic-nodes-wrapper").innerHTML = "";
     if (isUserGoal) {
-        matchState.userScore++; document.getElementById("score-user").innerText = matchState.userScore;
+        matchState.userScore++;
+        document.getElementById("score-user").innerText = matchState.userScore;
         createJuiceText(t('JUICE_GOAL_USER'), "#f59e0b", window.innerWidth / 2, window.innerHeight / 2 - 100);
-        addMatchLog(t(getRandomLog('goalUser')), "goal-user");
+
+        // Puxa o atacante que fez o gol!
+        let strikers = getZonePlayers(4);
+        let scorer = strikers.length > 0 ? rnd(strikers).name : "Ataque";
+
+        // Mantemos apenas o log focado no jogador
+        addMatchLog(`⚽ GOLAÇO DE ${scorer.toUpperCase()}!!!`, "goal-user");
+
         addMatchLog(t('LOG_RIVAL_RESTART'), "fail");
         fireConfetti();
     } else {
-        matchState.rivalScore++; document.getElementById("score-rival").innerText = matchState.rivalScore;
+        matchState.rivalScore++;
+        document.getElementById("score-rival").innerText = matchState.rivalScore;
         createJuiceText(t('LOG_GOAL_AGAINST'), "#ef4444", window.innerWidth / 2, window.innerHeight / 2);
-        addMatchLog(t(getRandomLog('goalRival')), "goal-rival");
+
+        // Puxa o goleiro que sofreu o gol
+        let defenders = getZonePlayers(0);
+        let keeper = defenders.length > 0 ? rnd(defenders).name : "Defesa";
+
+        // Mantemos apenas o log focado no goleiro
+        addMatchLog(`❌ GOL DO RIVAL... ${keeper} não conseguiu evitar.`, "goal-rival");
+
         addMatchLog(t('LOG_TEAM_FURIOUS'), "success");
         fireDespairEffect();
     }
-    matchState.zone = 2; matchState.hasBall = !isUserGoal; matchState.nextBuff = 0; matchState.combo = 0;
 
+    matchState.zone = 2;
+    matchState.hasBall = !isUserGoal;
+    matchState.nextBuff = 0;
+    matchState.combo = 0;
     matchState.momentum = isUserGoal ? -3 : 3;
 
     if (matchState.isExtraTime) {
@@ -564,7 +594,10 @@ function handleGoal(isUserGoal) {
         return;
     }
 
-    if (matchState.currentAction >= matchState.totalActions) { setTimeout(() => endMatchByTime(), 700); return; }
+    if (matchState.currentAction >= matchState.totalActions) {
+        setTimeout(() => endMatchByTime(), 700);
+        return;
+    }
     setTimeout(() => updateFieldState(), 700);
 }
 
