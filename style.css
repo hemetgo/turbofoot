@@ -972,16 +972,21 @@ button {
 .market-wrapper {
     flex: 1;
     overflow-y: auto;
-    padding: var(--space-lg);
+    /* Ajustado: padding-bottom de 90px garante que o botão de Reroll limpe totalmente a navbar mobile (65px) */
+    padding: var(--space-lg) var(--space-lg) 90px var(--space-lg);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* CORREÇÃO CRUCIAL: Mudado de 'center' para 'flex-start' para o conteúdo começar 
+       exatamente abaixo do header e respeitar o scroll natural quando transbordar */
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .market-panel {
     width: 100%;
     max-width: 440px;
-    margin: auto;
+    /* Ajustado: margin-top sutil para dar um respiro elegante logo após o Header Global */
+    margin: var(--space-sm) auto 0 auto;
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
@@ -990,6 +995,13 @@ button {
 @media (min-width: 900px) {
     .market-panel {
         max-width: 560px;
+        /* No PC removemos o recuo extra da navbar mobile se necessário, mantendo limpo */
+        margin: var(--space-md) auto 0 auto;
+    }
+
+    .market-wrapper {
+        /* No PC não há navbar mobile inferior, então voltamos ao padding padrão */
+        padding-bottom: var(--space-lg);
     }
 }
 
@@ -1019,62 +1031,160 @@ button {
 }
 
 .market-card {
-    background: var(--bg-card);
-    border: 2px solid var(--border-accent);
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    border: 1px solid var(--border-accent);
     border-radius: var(--radius-md);
-    padding: 12px;
+    padding: 14px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    cursor: pointer;
+    gap: 14px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.market-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.market-card-disabled {
+    opacity: 0.45;
+    filter: grayscale(1);
+    cursor: not-allowed;
 }
 
 .market-card .card-emoji {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 2.2rem;
-    margin: 0;
+    flex-shrink: 0;
 }
 
 .market-info {
     flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.market-name {
+.market-title-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.market-player-name {
     font-size: 1rem;
     font-weight: 900;
     color: #fff;
-    margin-bottom: 4px;
+    text-transform: uppercase;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
-.market-stats {
-    font-size: 0.85rem;
-    font-weight: 800;
+.market-subtitle-row {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    color: var(--accent-blue);
+    align-items: center;
+}
+
+.market-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    min-width: 110px;
+}
+
+.level-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+}
+
+.star-badge {
+    font-size: 1rem;
+    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.8));
 }
 
 .market-buy-btn {
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid rgba(245, 158, 11, 0.4);
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.45);
     color: var(--accent-gold);
-    padding: 8px 12px;
-    border-radius: 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
     font-weight: 900;
     cursor: pointer;
-    transition: all 0.1s;
+    transition: all 0.15s;
     font-size: 0.8rem;
+    min-width: 100px;
 }
 
 .market-buy-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
 }
 
 .market-buy-btn:disabled {
-    opacity: 0.3;
+    opacity: 0.35;
     filter: grayscale(1);
     cursor: default;
     transform: none;
+}
+
+.market-swap-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.market-swap-card {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.market-swap-card .player-card {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 10px 12px;
+    border-radius: 12px;
+}
+
+.market-swap-btn {
+    width: auto !important;
+    align-self: flex-start;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    min-width: 140px;
+}
+
+.market-swap-card .player-card+.market-swap-btn {
+    margin-top: 0;
+}
+
+.market-swap-header {
+    text-align: left;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
 }
 
 .history-list {
@@ -2803,4 +2913,79 @@ button {
     .squad-tab-content {
         display: block !important;
     }
+}
+
+/* =========================================
+   ANIMAÇÕES E UI DA LOJA / SWAP
+   ========================================= */
+
+.market-card {
+    animation: slideInUpCard 0.4s ease-out backwards;
+    position: relative;
+    /* Para o stamp de vendido */
+}
+
+/* Destaque para jogadores Premium (Estrela) */
+.market-card.premium-card {
+    border-color: var(--accent-gold);
+    background: linear-gradient(145deg, rgba(245, 158, 11, 0.15), var(--bg-card));
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+}
+
+.market-card.premium-card:hover {
+    box-shadow: 0 12px 30px rgba(245, 158, 11, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Selo de Esgotado mais bonito */
+.sold-stamp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--accent-red);
+    border: 4px solid var(--accent-red);
+    padding: 4px 16px;
+    border-radius: 12px;
+    background: rgba(2, 6, 23, 0.85);
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+    z-index: 10;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Caixa de destaque do novo reforço na modal de Swap */
+.swap-incoming-section {
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px dashed var(--accent-blue);
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.1);
+}
+
+/* Linha da reserva com botão lateral perfeitamente alinhado */
+.market-swap-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.market-swap-row:hover {
+    border-color: var(--accent-red);
+    background: rgba(248, 113, 113, 0.05);
+}
+
+/* Ocultar o card em si para parecer que o "sold out" tomou conta */
+.market-card-disabled .market-info,
+.market-card-disabled .market-actions,
+.market-card-disabled .card-emoji {
+    opacity: 0.2;
+    filter: blur(2px);
 }
