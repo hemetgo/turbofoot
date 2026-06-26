@@ -122,9 +122,8 @@ function executePurchase(draftIndex) {
     if (gameState.coins < pendingPurchase.price) return;
     if (!gameState.reserves) gameState.reserves = [];
 
-    // Limite de elenco: 11 Titulares + 12 Reservas = 23.
     if (gameState.team.length + gameState.reserves.length >= 23) {
-        alert(t('TEXT_ROSTER_FULL') || "ELENCO CHEIO!");
+        showCustomAlert("❌ ERRO", "TEXT_ROSTER_FULL");
         return;
     }
 

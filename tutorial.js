@@ -192,6 +192,6 @@ function replayFirstMatchTutorial() {
         startFirstMatchTutorial();
     } else {
         closeModals();
-        alert(t('TUTORIAL_NEXT_MATCH_ALERT'));
+        showCustomAlert(t('TITLE_TUTORIAL'), t('TUTORIAL_NEXT_MATCH_ALERT'));
     }
 }

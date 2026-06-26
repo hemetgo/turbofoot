@@ -274,3 +274,24 @@ document.addEventListener("DOMContentLoaded", () => {
         else globalTooltip.classList.remove('visible');
     }, { passive: true });
 });
+
+let alertCallback = null;
+
+function showCustomAlert(title, message, callback = null) {
+    document.getElementById('alert-title').innerText = title;
+
+    // Suporte para i18n ou texto direto
+    let finalMessage = typeof t === 'function' ? (t(message) !== message ? t(message) : message) : message;
+    document.getElementById('alert-message').innerText = finalMessage;
+
+    alertCallback = callback;
+    document.getElementById('alert-overlay').style.display = 'flex';
+}
+
+function closeAlertModal() {
+    document.getElementById('alert-overlay').style.display = 'none';
+    if (alertCallback) {
+        alertCallback();
+        alertCallback = null;
+    }
+}

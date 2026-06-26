@@ -43,14 +43,17 @@ async function initGame() {
 }
 
 function startRunFlow() {
+    let totalStages = GAME_BALANCE.mechanics?.runStages || 8;
+
     // FEATURE DA PERSISTÊNCIA DA LIGA: 
     // Se a liga já tiver um mapa criado e não tiver terminado, volta para o Mapa!
-    if (gameState.season && gameState.season.map && gameState.season.map.length > 0 && gameState.season.currentStage < (GAME_BALANCE.mechanics.runStages || 8)) {
-        document.body.classList.add('in-run');
+    if (gameState.season && gameState.season.map && gameState.season.map.length > 0 && gameState.season.currentStage < totalStages) {
+        showScreen('screen-map'); // <-- ESTA ERA A LINHA QUE FALTAVA!
         renderMap();
         return;
     }
 
+    // Caso não haja liga em andamento, mostra o ecrã para escolher a divisão
     const container = document.getElementById('series-options-container');
     container.innerHTML = '';
 

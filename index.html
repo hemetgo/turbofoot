@@ -605,6 +605,23 @@
             </div>
         </div>
 
+        <div id="alert-overlay" class="modal-overlay" style="z-index: 10000;">
+            <div class="options-box text-center">
+                <div class="modal-header flex-between" style="align-items: flex-start;">
+                    <h2 class="options-title text-danger" id="alert-title">AVISO</h2>
+                    <button class="btn-icon" onclick="closeAlertModal()">❌</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-subtitle" id="alert-message"
+                        style="margin-top:0; white-space: pre-wrap; color: var(--text-main); font-weight: 600;"></p>
+                </div>
+                <div class="modal-footer" style="flex-direction:row; gap:10px;">
+                    <button class="btn-primary" id="alert-btn" style="flex:1;"
+                        onclick="closeAlertModal()">ENTENDIDO</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Div do Tooltip de Jogador (Exclusivo PC) -->
         <div id="pc-player-tooltip"
             style="display:none; position:fixed; z-index:99999; pointer-events:none; width: 280px; box-shadow: 0 15px 30px rgba(0,0,0,0.8); border-radius: 8px;">

@@ -65,15 +65,27 @@ function loadClub(idx) {
     // ANTI-EXPLOIT: Se ele fechou o navegador durante a partida
     if (gameState.inMatch) {
         gameState.inMatch = false;
-        alert(t('TEXT_ABANDON_PENALTY') || "⚠️ PUNIÇÃO POR ABANDONO!\n\nVocê fechou o jogo durante uma partida. Isso foi considerado abandono de campo (W.O.) e seu time foi eliminado.");
 
         // Simula a derrota e destrói o mapa da temporada atual
         if (typeof recordRun === "function") recordRun(false);
         gameState.season.map = [];
         saveAllClubs();
+
+        // CHAMA A MODAL EM VEZ DO ALERT
+        showCustomAlert(
+            "⚠️ PUNIÇÃO POR ABANDONO",
+            "TEXT_ABANDON_PENALTY" // Ou passa o texto direto se preferir
+        );
     }
 
-    returnToHub();
+    let totalStages = GAME_BALANCE.mechanics?.runStages || 8;
+    let hasActiveRun = gameState.season && gameState.season.map && gameState.season.map.length > 0 && gameState.season.currentStage < totalStages;
+
+    if (hasActiveRun) {
+        startRunFlow();
+    } else {
+        returnToHub();
+    }
 }
 
 // Variáveis para guardar o sorteio atual do nome do clube
@@ -153,27 +165,30 @@ window.deleteClub = function (idx, event) {
 };
 
 function returnToHub() {
-    closeModals();
+    showScreen('screen-title');
 
-    const btnPlay = document.querySelector('button[onclick="startRunFlow()"]');
+    // VERIFICAÇÃO DE LIGA EM ANDAMENTO PARA MUDAR O BOTÃO
+    const btnPlay = document.querySelector('#screen-title button[onclick="startRunFlow()"]');
     if (btnPlay) {
-        if (gameState.season && gameState.season.map && gameState.season.map.length > 0) {
-            btnPlay.innerText = t('TEXT_RESUME_RUN') || "▶ CONTINUAR LIGA";
+        let totalStages = GAME_BALANCE.mechanics?.runStages || 8;
+        let hasActiveRun = gameState.season && gameState.season.map && gameState.season.map.length > 0 && gameState.season.currentStage < totalStages;
+
+        if (hasActiveRun) {
+            // Muda para CONTINUAR
+            btnPlay.innerHTML = '▶ CONTINUAR LIGA';
+            btnPlay.style.background = 'var(--accent-blue)';
+            btnPlay.style.borderColor = 'var(--accent-blue)';
+            btnPlay.style.color = '#fff';
+            btnPlay.removeAttribute('data-i18n'); // Remove i18n para não ser reescrito ao trocar idioma
         } else {
-            btnPlay.innerText = t('BTN_PLAY') || "▶ JOGAR LIGA";
+            // Volta para o estado normal de JOGAR
+            btnPlay.setAttribute('data-i18n', 'BTN_PLAY');
+            btnPlay.innerHTML = typeof t === 'function' ? t('BTN_PLAY') : '▶ JOGAR LIGA';
+            btnPlay.style.background = '';
+            btnPlay.style.borderColor = '';
+            btnPlay.style.color = '';
         }
     }
-
-    document.body.classList.remove('in-run');
-    const hubInfo = document.getElementById('hub-club-info');
-    if (hubInfo && gameState.club) {
-        hubInfo.innerHTML = `<div style="font-size:3rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">${gameState.club.emoji}</div>
-                             <div style="font-size:1.5rem; text-transform:uppercase;">${tClub(gameState.club.name)}</div>
-                             <div style="font-size:1rem; color:var(--accent-gold); margin-top:5px; background:rgba(245,158,11,0.1); padding:4px 10px; border-radius:8px; display:inline-block; border:1px solid rgba(245,158,11,0.3);">💰 ${gameState.coins}</div>`;
-    }
-    showScreen('screen-title');
-    saveAllClubs();
-    updateMissionsBadge();
 }
 
 // === GESTÃO DO ELENCO (CAMPO E RESERVA) ===
