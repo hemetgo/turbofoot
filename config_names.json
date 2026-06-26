@@ -2262,5 +2262,51 @@
             "🧔🏽",
             "🧔🏾"
         ]
+    },
+    {
+        "country": "Rússia",
+        "flag": "ru",
+        "firstNames": [
+            "Aleksandr",
+            "Dmitri",
+            "Ivan",
+            "Sergei",
+            "Andrei",
+            "Nikolai",
+            "Mikhail",
+            "Pavel",
+            "Artyom",
+            "Kirill",
+            "Denis",
+            "Roman",
+            "Maxim",
+            "Viktor",
+            "Yuri",
+            "Egor"
+        ],
+        "lastNames": [
+            "Ivanov",
+            "Petrov",
+            "Smirnov",
+            "Sokolov",
+            "Volkov",
+            "Kuznetsov",
+            "Popov",
+            "Morozov",
+            "Lebedev",
+            "Kozlov",
+            "Fedorov",
+            "Nikitin",
+            "Orlov",
+            "Tarasov",
+            "Makarov",
+            "Pavlov"
+        ],
+        "faces": [
+            "👨🏻",
+            "👨🏼",
+            "🧔🏻",
+            "🧔🏼"
+        ]
     }
 ]
