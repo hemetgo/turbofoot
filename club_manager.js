@@ -407,18 +407,38 @@ function renderSquadGrid() {
         let selClass = squadSelectedPlayer?.id === p.id ? 'selected' : '';
         let oopClass = isOOP ? 'oop' : '';
 
+        // Monta as habilidades (traits) do jogador como mini emojis na carta
+        let traitsHTML = '';
+        if (p.perks && p.perks.length > 0) {
+            p.perks.forEach(perk => {
+                traitsHTML += `<span class="pitch-trait-icon" data-tip="${t(perk.name)}">${perk.emoji}</span>`;
+            });
+        } else {
+            traitsHTML = `<span style="font-size:0.45rem; color:var(--text-muted); opacity:0.7;">Sem Habilidades</span>`;
+        }
+
+        let starBadge = p.isStar ? `<span class="star-badge">⭐</span>` : '';
+
+        // Formata o nome para caber na carta (Ex: "Lucas Silva" vira "L. Silva")
+        let nameParts = p.name.split(' ');
+        let shortName = nameParts.length > 1 ? nameParts[0].charAt(0) + ". " + nameParts[nameParts.length - 1] : p.name;
+
         let card = document.createElement('div');
         card.className = `pitch-player ${jiggleClass} ${selClass} ${oopClass}`;
 
+        // Estrutura HTML da nova Cartinha Portrait
         card.innerHTML = `
-            <div class="pitch-card-body">
-                <div class="pitch-card-avatar"><span>${p.emoji}</span></div>
-                <div class="pitch-card-info">
-                    <div class="pitch-card-row">
-                        <div class="pos-badge pos-${p.position}">${t('POS_' + p.position) || p.position}</div>
-                        <div class="lvl">Nv ${p.level}</div>
-                    </div>
-                </div>
+            <div class="pitch-card-header">
+                <span class="pos-badge pos-${p.position}">${t('POS_' + p.position) || p.position}</span>
+                <span class="lvl-badge">Nv ${p.level}</span>
+            </div>
+            <div class="pitch-card-avatar-lg">
+                ${p.emoji}
+                ${starBadge}
+            </div>
+            <div class="pitch-card-name">${shortName}</div>
+            <div class="pitch-card-traits">
+                ${traitsHTML}
             </div>
             ${badgesHTML}
         `;

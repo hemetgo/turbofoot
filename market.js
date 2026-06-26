@@ -175,7 +175,7 @@ function openMarketSwapModal(draftIndex) {
 
             swapList.innerHTML += `
                 <div class="market-swap-row">
-                    <div style="flex:1; pointer-events: none;">
+                    <div style="flex:1; min-width: 0; pointer-events: none;">
                         ${playerCard}
                     </div>
                     <button class="btn-icon" style="cursor: pointer; background: rgba(248, 113, 113, 0.1); border-color: var(--accent-red); color: var(--accent-red); padding: 0 16px; height: 64px; border-radius: 8px; font-size: 1.5rem; flex-shrink: 0;" onclick="replaceReserve(${idx})" data-tip="Substituir e demitir este jogador">
