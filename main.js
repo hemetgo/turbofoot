@@ -77,11 +77,11 @@ function startRunFlow() {
                     <div style="font-size: 0.7rem; color: var(--accent-gold); font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 6px;">${t('LEAGUE_REWARDS_TITLE')}</div>
                     <div style="font-size: 0.8rem; color: #fff; font-weight: 700; display: flex; justify-content: space-between; margin-bottom: 4px;">
                         <span>🎉 ${t('LEAGUE_REWARDS_PER_VICTORY')}:</span> 
-                        <span style="color: var(--accent-green);">x${metaPerWin}🏆</span>
+                        <span style="color: var(--accent-green);">x${metaPerWin}💰</span>
                     </div>
                     <div style="font-size: 0.8rem; color: #fff; font-weight: 700; display: flex; justify-content: space-between;">
                         <span>👑 ${t('LEAGUE_REWARDS_CHAMPION')}:</span> 
-                        <span style="color: var(--accent-gold);">+${metaWinBonus}🏆</span>
+                        <span style="color: var(--accent-gold);">+${metaWinBonus}💰</span>
                     </div>
                 </div>
             `;
@@ -132,71 +132,36 @@ function getTotalSpent() {
     return total;
 }
 
-let pendingRefundAmount = 0;
-
-function refundMetaUpgrades() {
-    pendingRefundAmount = getTotalSpent();
-    if (pendingRefundAmount <= 0) return;
-
-    document.getElementById('refund-amount-text').innerText = pendingRefundAmount;
-    document.getElementById('refund-confirm-overlay').style.display = 'flex';
-}
-
-function closeRefundConfirm() {
-    document.getElementById('refund-confirm-overlay').style.display = 'none';
-    pendingRefundAmount = 0;
-}
-
-function executeRefund() {
-    if (pendingRefundAmount > 0) {
-        gameState.meta.metaCoins += pendingRefundAmount;
-        gameState.meta.upgrades = {};
-        saveGame();
-        renderMetaShop();
-
-        createJuiceText(`+${pendingRefundAmount} 🏆`, "var(--accent-gold)", window.innerWidth / 2, window.innerHeight / 2);
-    }
-    closeRefundConfirm();
-}
-
 function openMetaShop() {
-    renderMetaShop();
-    document.getElementById('meta-shop-overlay').style.display = 'flex';
+    closeModals();
+    const modal = document.getElementById('meta-shop-overlay');
+    if (!modal) return;
+
+    // Vincula o painel ao dinheiro unificado
+    document.getElementById('meta-coins-display').innerText = gameState.coins || 0;
+    renderMetaShopList();
+    modal.style.display = 'flex';
 }
 
-function renderMetaShop() {
+function renderMetaShopList() {
     const list = document.getElementById('meta-shop-list');
+    if (!list) return;
     list.innerHTML = '';
-    document.getElementById('meta-coins-display').innerText = gameState.meta.metaCoins || 0;
 
-    GAME_BALANCE.meta.upgrades.forEach(upg => {
+    const upgradesPool = GAME_BALANCE.meta?.upgrades || [];
+    upgradesPool.forEach(upg => {
         let currentLvl = gameState.meta.upgrades[upg.id] || 0;
+        let cost = Math.floor(upg.baseCost * Math.pow(upg.costMult, currentLvl));
         let isMax = currentLvl >= upg.maxLevel;
-        let cost = getUpgradeCost(upg, currentLvl);
-        let canAfford = (gameState.meta.metaCoins >= cost) && !isMax;
 
-        let btnHtml = "";
-
-        if (isMax) {
-            btnHtml = `<button class="btn-secondary btn-sm" disabled style="width: 120px; opacity: 0.4; cursor: not-allowed; border-color: rgba(255,255,255,0.1);">${t('UPGRADE_BTN_MAX')}</button>`;
-        } else if (!canAfford) {
-            btnHtml = `
-                <button class="btn-secondary btn-sm" disabled style="width: 120px; opacity: 0.3; filter: grayscale(100%); cursor: not-allowed; display:flex; flex-direction:column; align-items:center; gap:4px;">
-                    <span style="font-weight:900;">${t('UPGRADE_BTN_BUY')}</span>
-                    <span style="font-size:0.9rem;">${cost}🏆</span>
-                </button>`;
-        } else {
-            btnHtml = `
-                <button class="btn-primary btn-sm" onclick="buyMetaUpgrade('${upg.id}', ${cost})" style="width: 120px; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--accent-gold); box-shadow: 0 4px 15px rgba(245,158,11,0.15); display:flex; flex-direction:column; align-items:center; gap:4px;">
-                    <span style="color:var(--accent-gold); font-weight:900;">${t('UPGRADE_BTN_BUY')}</span>
-                    <span style="color:#fff; font-size:0.9rem;">${cost}🏆</span>
-                </button>`;
-        }
+        let btnHtml = isMax
+            ? `<button class="btn-secondary btn-sm" disabled style="border-color:transparent; color:var(--text-muted);">MAX</button>`
+            : `<button class="btn-primary btn-sm" style="background:var(--accent-gold); color:#000;" onclick="buyMetaUpgrade('${upg.id}', ${cost})">MELHORAR<br>(${cost}💰)</button>`;
 
         list.innerHTML += `
-            <div class="options-row" style="display:flex; justify-content:space-between; align-items:center; gap: 16px; border-left: 4px solid var(--accent-gold);">
-                <div style="flex:1;">
-                    <div style="font-weight:900; color:var(--accent-gold); font-size:1.1rem; text-transform:uppercase;">${t(upg.name)} <span style="color:#fff; font-size:0.8rem; background:rgba(0,0,0,0.4); padding:2px 6px; border-radius:6px; vertical-align: middle;">Nv. ${currentLvl}/${upg.maxLevel}</span></div>
+            <div class="meta-upgrade-card" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-card); padding:12px; border-radius:8px; border:1px solid var(--border-light);">
+                <div style="flex:1; padding-right:12px;">
+                    <div style="font-weight:800; text-transform:uppercase;">${t(upg.name)} <span style="color:#fff; font-size:0.8rem; background:rgba(0,0,0,0.4); padding:2px 6px; border-radius:6px; vertical-align: middle;">Nv. ${currentLvl}/${upg.maxLevel}</span></div>
                     <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">${t(upg.desc)}</div>
                 </div>
                 <div>${btnHtml}</div>
@@ -208,7 +173,7 @@ function renderMetaShop() {
         list.innerHTML += `
             <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light); text-align: center;">
                 <button class="btn-secondary" style="border-color: var(--accent-red); color: var(--accent-red); width: 100%;" onclick="refundMetaUpgrades()">
-                    🔄 ${t('UPGRADE_BTN_REFUND')} (${totalSpent}🏆)
+                    🔄 RESTAURAR UPGRADES (${totalSpent}💰)
                 </button>
             </div>
         `;
@@ -216,14 +181,36 @@ function renderMetaShop() {
 }
 
 function buyMetaUpgrade(id, cost) {
-    if (gameState.meta.metaCoins >= cost) {
-        gameState.meta.metaCoins -= cost;
+    if (gameState.coins >= cost) {
+        gameState.coins -= cost; // Desconta do dinheiro comum
         if (!gameState.meta.upgrades[id]) gameState.meta.upgrades[id] = 0;
         gameState.meta.upgrades[id]++;
+
+        // Sincroniza todas as frentes visuais de dinheiro
+        document.getElementById('meta-coins-display').innerText = gameState.coins;
+        const coinsVal = document.getElementById('global-header-coins-val');
+        if (coinsVal) coinsVal.innerText = gameState.coins;
+
         saveGame();
-        renderMetaShop();
-        fireConfetti();
+        renderMetaShopList();
+        createJuiceText("✨ UPGRADE!", "var(--accent-gold)", window.innerWidth / 2, window.innerHeight / 2);
+    } else {
+        createJuiceText("💰 DINHEIRO INSUFICIENTE", "var(--accent-red)", window.innerWidth / 2, window.innerHeight / 2);
     }
+}
+
+function refundMetaUpgrades() {
+    let totalRefund = getTotalSpent();
+    gameState.coins += totalRefund; // Devolve para o dinheiro comum
+    gameState.meta.upgrades = {};
+
+    document.getElementById('meta-coins-display').innerText = gameState.coins;
+    const coinsVal = document.getElementById('global-header-coins-val');
+    if (coinsVal) coinsVal.innerText = gameState.coins;
+
+    saveGame();
+    renderMetaShopList();
+    createJuiceText("🔄 RESTAURADO!", "var(--accent-blue)", window.innerWidth / 2, window.innerHeight / 2);
 }
 
 // Subrescreve o save padrão para usar o save de Clubes do club_manager.js

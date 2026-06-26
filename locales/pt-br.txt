@@ -377,7 +377,7 @@ BTN_HARD_RESET=⚠️ APAGAR TODO O PROGRESSO
 BTN_CLOSE=FECHAR
 
 TITLE_RESET_CAREER=RESETAR CARREIRA?
-TEXT_REFUND_INFO=Você vai recuperar todos os <strong id="refund-amount-text" class="text-gold">0</strong> 🏆 gastos!
+TEXT_REFUND_INFO=Você vai recuperar todos os <strong id="refund-amount-text" class="text-gold">0</strong> 💰 gastos!
 TEXT_REFUND_CONFIRM_QUESTION=Deseja desfazer todos os aprimoramentos?
 
 TEXT_SUSPENSE_DEFAULT=Se prepara...

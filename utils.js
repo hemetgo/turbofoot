@@ -3,16 +3,93 @@ function showScreen(id) {
     const target = document.getElementById(id);
     if (target) {
         target.classList.add("active");
-
         const scrollAreas = target.querySelectorAll('.club-options-wrapper, .market-wrapper, .match-log-container');
         scrollAreas.forEach(area => area.scrollTop = 0);
     }
 
-    // No novo design, a sidebar só deve aparecer durante a ação (Mapa e Partida)
     if (['screen-map', 'screen-match'].includes(id)) {
         document.body.classList.add('in-run');
     } else {
         document.body.classList.remove('in-run');
+    }
+
+    // Chama o gerenciador do novo header
+    updateGlobalHeader(id);
+}
+
+function updateGlobalHeader(id) {
+    const header = document.getElementById('global-header');
+    if (!header) return;
+
+    const backBtn = document.getElementById('global-header-back');
+    const title = document.getElementById('global-header-title');
+    const subtitle = document.getElementById('global-header-subtitle');
+    const currencyContainer = document.getElementById('global-header-currency');
+    const coinsVal = document.getElementById('global-header-coins-val');
+
+    header.style.display = 'flex';
+    subtitle.style.display = 'none';
+    subtitle.innerHTML = '';
+    backBtn.style.visibility = 'hidden';
+    backBtn.onclick = null;
+
+    // Atualiza o saldo monetário global unificado no topo
+    if (coinsVal) {
+        coinsVal.innerText = gameState.coins || 0;
+    }
+
+    switch (id) {
+        case 'screen-club-selection':
+            title.setAttribute('data-i18n', 'SCREEN_SELECT_CLUB');
+            title.innerText = typeof t === 'function' ? t('SCREEN_SELECT_CLUB') : "SELECIONE SEU CLUBE";
+            currencyContainer.style.display = 'none';
+            break;
+        case 'screen-create-club':
+            title.setAttribute('data-i18n', 'SCREEN_CREATE_CLUB');
+            title.innerText = typeof t === 'function' ? t('SCREEN_CREATE_CLUB') : "CRIAR CLUBE";
+            currencyContainer.style.display = 'none';
+            backBtn.style.visibility = 'visible';
+            backBtn.onclick = () => showScreen('screen-club-selection');
+            break;
+        case 'screen-squad':
+            title.setAttribute('data-i18n', 'LABEL_SQUAD_TITLE');
+            title.innerText = typeof t === 'function' ? t('LABEL_SQUAD_TITLE') : "GESTÃO DO ELENCO";
+            subtitle.style.display = 'block';
+            subtitle.setAttribute('data-i18n', 'TEXT_SQUAD_TIP');
+            subtitle.innerText = typeof t === 'function' ? t('TEXT_SQUAD_TIP') : "Selecione dois para trocar.";
+            currencyContainer.style.display = 'block';
+            backBtn.style.visibility = 'visible';
+            backBtn.onclick = () => returnToHub();
+            break;
+        case 'screen-series-select':
+            title.setAttribute('data-i18n', 'LABEL_CHOOSE_DIVISION');
+            title.innerText = typeof t === 'function' ? t('LABEL_CHOOSE_DIVISION') : "ESCOLHA A DIVISÃO";
+            currencyContainer.style.display = 'block';
+            backBtn.style.visibility = 'visible';
+            backBtn.onclick = () => returnToHub();
+            break;
+        case 'screen-map':
+            title.removeAttribute('data-i18n');
+            let currentLeagueName = GAME_BALANCE.leagues[gameState.leagueLevel].name;
+            title.innerText = `${GAME_BALANCE.leagues[gameState.leagueLevel].emoji} ${typeof t === 'function' ? t(currentLeagueName) : currentLeagueName}`;
+            currencyContainer.style.display = 'block';
+            backBtn.style.visibility = 'visible';
+            backBtn.onclick = () => openQuitConfirm(); // Desistir vira a ação de voltar do mapa
+            break;
+        case 'screen-market':
+            title.setAttribute('data-i18n', 'LABEL_MARKET_TITLE');
+            title.innerText = typeof t === 'function' ? t('LABEL_MARKET_TITLE') : "MERCADO DA BOLA";
+            currencyContainer.style.display = 'block';
+            backBtn.style.visibility = 'visible';
+            backBtn.onclick = () => cancelMarket();
+            break;
+        case 'screen-title':
+        case 'screen-match':
+            // O Menu Principal e a Partida possuem interfaces dedicadas e escondem o header global
+            header.style.display = 'none';
+            break;
+        default:
+            header.style.display = 'none';
     }
 }
 

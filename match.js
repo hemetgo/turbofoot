@@ -48,7 +48,7 @@ function startMapMatch() {
 function updateTimerDisplay() {
     let el = document.getElementById("action-counter");
     if (matchState.isExtraTime) {
-        el.innerHTML = `<span style="color:var(--accent-gold); font-weight:900; letter-spacing:0.5px; text-shadow: 0 0 8px rgba(245,158,11,0.8);">${matchState.currentAction}/${matchState.baseTotalActions} 🏆 ${t('MATCH_EXTRA_TIME')}</span>`;
+        el.innerHTML = `<span style="color:var(--accent-gold); font-weight:900; letter-spacing:0.5px; text-shadow: 0 0 8px rgba(245,158,11,0.8);">${matchState.currentAction}/${matchState.baseTotalActions} 💰 ${t('MATCH_EXTRA_TIME')}</span>`;
     } else {
         el.innerText = `⏱️ ${matchState.currentAction}/${matchState.baseTotalActions}`;
     }

@@ -140,7 +140,6 @@ function renderMap() {
     container.innerHTML = `<svg id="map-lines" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;"></svg>`;
 
     let currentLeagueName = GAME_BALANCE.leagues[gameState.leagueLevel].name;
-    document.getElementById('map-league-title').innerText = `${GAME_BALANCE.leagues[gameState.leagueLevel].emoji}${t(currentLeagueName)}`;
 
     const totalStages = GAME_BALANCE.mechanics.runStages || 8;
 
@@ -331,9 +330,12 @@ function showCampModal(type) {
 
     if (type === 'camp_physical') {
         box.innerHTML = `
-            <div class="modal-header">
-                <h2 class="options-title text-success">TREINO FÍSICO 🏋️‍♂️</h2>
-                <p class="modal-subtitle">Aprimore as capacidades de um atleta.</p>
+            <div class="modal-header flex-between" style="align-items: flex-start;">
+                <div>
+                    <h2 class="options-title text-success">TREINO FÍSICO 🏋️‍♂️</h2>
+                    <p class="modal-subtitle">Aprimore as capacidades de um atleta.</p>
+                </div>
+                <button class="btn-icon" onclick="closeModals()">❌</button>
             </div>
             <div class="modal-body" style="display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding-top: 30px;">
                 <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));">🏃‍♂️</div>
@@ -345,9 +347,12 @@ function showCampModal(type) {
         `;
     } else {
         box.innerHTML = `
-            <div class="modal-header">
-                <h2 class="options-title" style="color:var(--accent-blue);">PRELEÇÃO TÁTICA 🧠</h2>
-                <p class="modal-subtitle">Estudos e ajustes para o próximo confronto.</p>
+            <div class="modal-header flex-between" style="align-items: flex-start;">
+                <div>
+                    <h2 class="options-title" style="color:var(--accent-blue);">PRELEÇÃO TÁTICA 🧠</h2>
+                    <p class="modal-subtitle">Estudos e ajustes para o próximo confronto.</p>
+                </div>
+                <button class="btn-icon" onclick="closeModals()">❌</button>
             </div>
             <div class="modal-body" style="display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding-top: 30px;">
                 <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));">📋</div>
@@ -437,12 +442,12 @@ function finishSeason(wonSeason) {
     gameState.meta.metaCoins += earnedTrophies;
     saveGame();
 
-    subText += `\n\nVitórias na liga: ${matchesWon} (+${matchesWon * metaPerWin} 🏆)`;
-    if (wonSeason) subText += `\nBônus de Campeão: +${metaWinBonus} 🏆`;
+    subText += `\n\nVitórias na liga: ${matchesWon} (+${matchesWon * metaPerWin} 💰)`;
+    if (wonSeason) subText += `\nBônus de Campeão: +${metaWinBonus} 💰`;
     subText += `\n\n🏆 Você ganhou +${earnedTrophies} Troféus para usar na Sede do Clube!`;
 
     document.getElementById('se-sub').innerText = subText;
-    document.getElementById('se-coins').innerText = `+${earnedTrophies} 🏆`;
+    document.getElementById('se-coins').innerText = `+${earnedTrophies} 💰`;
     document.getElementById('se-coins').style.color = "var(--accent-gold)";
 
     document.getElementById('season-end-overlay').style.display = 'flex';

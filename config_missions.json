@@ -1,12 +1,85 @@
 {
     "missionsPerDay": 3,
     "pool": [
-        { "id": "win_matches", "type": "win_matches", "label": "MISSION_WIN_MATCHES", "emoji": "🏆", "targets": [ 1, 2, 3 ], "reward": 40 },
-        { "id": "score_goals", "type": "score_goals", "label": "MISSION_SCORE_GOALS", "emoji": "⚽", "targets": [ 2, 4, 6 ], "reward": 35 },
-        { "id": "reach_stage", "type": "reach_stage", "label": "MISSION_REACH_STAGE", "emoji": "🗺️", "targets": [ 3, 5, 8 ], "reward": 35 },
-        { "id": "play_runs", "type": "play_runs", "label": "MISSION_PLAY_RUNS", "emoji": "🎮", "targets": [ 1, 2, 3 ], "reward": 30 },
-        { "id": "beat_elite", "type": "beat_elite", "label": "MISSION_BEAT_ELITE", "emoji": "🔥", "targets": [ 1, 2 ], "reward": 45 },
-        { "id": "beat_boss", "type": "beat_boss", "label": "MISSION_BEAT_BOSS", "emoji": "👑", "targets": [ 1 ], "reward": 60 },
-        { "id": "visit_market", "type": "visit_market", "label": "MISSION_VISIT_MARKET", "emoji": "🛒", "targets": [ 1, 2 ], "reward": 25 }
+        {
+            "id": "win_matches",
+            "type": "win_matches",
+            "label": "MISSION_WIN_MATCHES",
+            "emoji": "🏆",
+            "targets": [
+                1,
+                2,
+                3
+            ],
+            "reward": 40
+        },
+        {
+            "id": "score_goals",
+            "type": "score_goals",
+            "label": "MISSION_SCORE_GOALS",
+            "emoji": "⚽",
+            "targets": [
+                2,
+                4,
+                6
+            ],
+            "reward": 35
+        },
+        {
+            "id": "reach_stage",
+            "type": "reach_stage",
+            "label": "MISSION_REACH_STAGE",
+            "emoji": "🗺️",
+            "targets": [
+                3,
+                5,
+                8
+            ],
+            "reward": 35
+        },
+        {
+            "id": "play_runs",
+            "type": "play_runs",
+            "label": "MISSION_PLAY_RUNS",
+            "emoji": "🎮",
+            "targets": [
+                1,
+                2,
+                3
+            ],
+            "reward": 30
+        },
+        {
+            "id": "beat_elite",
+            "type": "beat_elite",
+            "label": "MISSION_BEAT_ELITE",
+            "emoji": "🔥",
+            "targets": [
+                1,
+                2
+            ],
+            "reward": 45
+        },
+        {
+            "id": "beat_boss",
+            "type": "beat_boss",
+            "label": "MISSION_BEAT_BOSS",
+            "emoji": "👑",
+            "targets": [
+                1
+            ],
+            "reward": 60
+        },
+        {
+            "id": "visit_market",
+            "type": "visit_market",
+            "label": "MISSION_VISIT_MARKET",
+            "emoji": "🛒",
+            "targets": [
+                1,
+                2
+            ],
+            "reward": 25
+        }
     ]
 }

@@ -43,7 +43,6 @@ function showMarketScreen() {
     const coinsDisplay = document.getElementById('market-coins');
     if (coinsDisplay) coinsDisplay.innerText = gameState.coins;
 
-    document.querySelector('#screen-market .champ-league-label').innerText = t('LABEL_MARKET_TITLE') || "OLHEIRO";
     document.getElementById('market-title').innerText = t('MARKET_SCOUT_TITLE') || "ESCOLHA SEUS REFORÇOS";
     document.getElementById('market-sub').innerText = t('MARKET_SUB_DEFAULT') || "Os jogadores vão para a Reserva.";
 

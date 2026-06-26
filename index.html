@@ -28,13 +28,28 @@
 
         <main id="main-content">
 
+            <!-- HEADER GLOBAL CENTRALIZADO -->
+            <header id="global-header" class="champ-header"
+                style="display: none; justify-content: space-between; align-items: center; padding: 10px 16px; height: auto; gap: 12px;">
+                <button id="global-header-back" class="btn-icon"
+                    style="font-size: 1.2rem; background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 4px 8px; visibility: hidden;">←</button>
+
+                <div class="champ-title-block" style="flex: 1; text-align: center; margin: 0;">
+                    <div class="champ-league-label" id="global-header-title"
+                        style="font-size: 1.1rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--accent-gold); margin-top:2px; display:none;"
+                        id="global-header-subtitle"></div>
+                </div>
+
+                <div id="global-header-currency" class="currency-display"
+                    style="font-size: 1.05rem; font-weight: 900; white-space: nowrap;">
+                    💰 <span id="global-header-coins-val">0</span>
+                </div>
+            </header>
+
             <!-- NOVO: Tela de Seleção de Clube -->
             <div id="screen-club-selection" class="screen">
-                <div class="champ-header">
-                    <div class="champ-title-block">
-                        <div class="champ-league-label" data-i18n="SCREEN_SELECT_CLUB">SELECIONE SEU CLUBE</div>
-                    </div>
-                </div>
                 <div class="club-options-wrapper" id="saved-clubs-container"
                     style="flex-direction:row; flex-wrap:wrap; justify-content:center;"></div>
                 <div class="bottom-action-bar">
@@ -45,24 +60,15 @@
 
             <!-- Tela de Criação de Clube -->
             <div id="screen-create-club" class="screen">
-                <div class="champ-header">
-                    <div class="champ-title-block">
-                        <div class="champ-league-label" data-i18n="SCREEN_CREATE_CLUB">CRIAR CLUBE</div>
-                    </div>
-                </div>
                 <div class="modal-body"
                     style="display:flex; flex-direction:column; gap:20px; max-width: 500px; margin: 0 auto; width: 100%;">
-
-                    <!-- NOVO: NOME DO CLUBE GERADO COM SHUFFLE -->
                     <div class="options-row">
                         <label style="font-weight:700; color:var(--text-muted);" data-i18n="LABEL_CLUB_NAME">NOME DO
                             CLUBE</label>
                         <div style="display:flex; gap:10px; margin-top:10px; align-items:stretch;">
                             <div id="display-club-name"
                                 style="flex:1; background:rgba(0,0,0,0.3); border:1px solid var(--border-accent); border-radius:8px; padding:12px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:900; text-align:center; text-transform:uppercase;">
-                                <!-- O nome aparecerá aqui -->
                             </div>
-                            <!-- Botão de Sorteio com Emoji de Shuffle -->
                             <button class="btn-secondary"
                                 style="width: 60px; font-size:1.6rem; padding:0; display:flex; align-items:center; justify-content:center; flex-shrink:0; border-color:var(--accent-blue);"
                                 onclick="randomizeClubName()">🔀</button>
@@ -84,23 +90,9 @@
                 </div>
             </div>
 
-            <!-- Tela de Gestão de Elenco com Campo Tático -->
+            <!-- Tela de Gestão de Elenco -->
             <div id="screen-squad" class="screen">
-                <div class="champ-header" style="flex-wrap: wrap; height: auto;">
-                    <div class="champ-title-block">
-                        <div class="champ-league-label" data-i18n="LABEL_SQUAD_TITLE">GESTÃO DO ELENCO</div>
-                        <div style="font-size: 0.75rem; color: var(--accent-gold); margin-top:4px;"
-                            data-i18n="TEXT_SQUAD_TIP">Selecione dois para trocar. Clique DUAS VEZES num titular para
-                            torná-lo CAPITÃO.</div>
-                    </div>
-                    <!-- BUG CORRIGIDO: Retirado o "mobile-only" -->
-                    <div style="display:flex; gap:8px; align-items:center;">
-                        <div class="currency-display">💰 <span id="squad-coins">0</span></div>
-                    </div>
-                </div>
                 <div class="map-wrapper" style="padding: 15px; background: var(--bg-base);">
-
-                    <!-- Seletor de Formação -->
                     <div class="formation-row">
                         <div style="display:flex; align-items:center; gap:8px; flex-wrap: wrap;">
                             <span
@@ -116,8 +108,6 @@
                             </select>
                         </div>
                     </div>
-
-                    <!-- O Campo de Futebol Visual -->
                     <div class="squad-layout">
                         <div id="squad-pitch-container" class="football-pitch"></div>
                         <div class="reserves-panel">
@@ -138,11 +128,8 @@
             <div id="screen-title" class="screen">
                 <div class="title-container">
                     <div class="title-menu" style="align-items: center; width: 100%; max-width: 400px;">
-
-                        <!-- Info do Clube -->
                         <div id="hub-club-info"
                             style="text-align:center; font-weight:900; margin-bottom:20px; width:100%;"></div>
-
                         <button class="btn-primary" data-i18n="BTN_PLAY" onclick="startRunFlow()"
                             style="margin-bottom:10px;">▶ JOGAR LIGA</button>
 
@@ -152,25 +139,21 @@
                             <button class="btn-secondary" style="flex:1; color:#fff;" data-i18n="BTN_HUB_MARKET"
                                 onclick="openHubMarket()">🛒 MERCADO</button>
                         </div>
-
                         <button class="btn-primary" data-i18n="BTN_CAREER"
                             style="background: var(--accent-gold); color: #020617; box-shadow: 0 4px 15px rgba(245,158,11,0.3); margin-bottom:10px; width:100%;"
                             onclick="openMetaShop()">💼 INFRAESTRUTURA</button>
-
                         <button class="btn-secondary" style="position:relative; margin-bottom:10px; width:100%;"
                             onclick="openDailyMissionsModal()">
                             <span data-i18n="BTN_DAILY_MISSIONS">📅 MISSÕES DIÁRIAS</span>
                             <span id="missions-badge"
                                 style="display:none; position:absolute; top:-8px; right:-8px; background:var(--accent-red); color:#fff; font-size:0.7rem; font-weight:900; border-radius:50%; width:20px; height:20px; align-items:center; justify-content:center;"></span>
                         </button>
-
                         <div style="display:flex; gap:10px; width: 100%;">
                             <button class="btn-secondary" data-i18n="BTN_HISTORY" onclick="openHistoryModal()"
                                 style="flex:1;">📖 HISTÓRICO</button>
                             <button class="btn-secondary" data-i18n="BTN_OPTIONS" onclick="openOptions()"
                                 style="flex:1;">⚙️ OPÇÕES</button>
                         </div>
-
                         <button class="btn-secondary btn-sm"
                             style="margin-top:20px; color:var(--text-muted); border-color:transparent;"
                             onclick="renderClubSelection()">🔄 TROCAR DE CLUBE</button>
@@ -180,11 +163,6 @@
 
             <!-- Seleção de Ligas -->
             <div id="screen-series-select" class="screen">
-                <div class="champ-header">
-                    <div class="champ-title-block">
-                        <div class="champ-league-label" data-i18n="LABEL_CHOOSE_DIVISION">ESCOLHA A DIVISÃO</div>
-                    </div>
-                </div>
                 <div class="club-options-wrapper" id="series-options-container"></div>
                 <div class="bottom-action-bar">
                     <button class="btn-secondary" data-i18n="BTN_BACK_MENU" onclick="returnToHub()">← VOLTAR AO
@@ -193,32 +171,12 @@
             </div>
 
             <div id="screen-map" class="screen">
-                <div class="champ-header" style="flex-wrap: wrap; height: auto;">
-                    <div class="champ-title-block">
-                        <div class="champ-league-label" id="map-league-title" data-i18n="LABEL_MAP_DEFAULT">O MAPA</div>
-                    </div>
-                    <!-- BUG CORRIGIDO: Retirado o "mobile-only" -->
-                    <div style="display:flex; gap:8px; align-items:center;">
-                        <div class="currency-display">💰 <span id="map-coins">0</span></div>
-                        <button class="btn-icon" style="color:var(--accent-red); border-color:var(--accent-red);"
-                            onclick="openQuitConfirm()">🚪</button>
-                    </div>
-                </div>
                 <div class="map-wrapper" id="map-wrapper">
                     <div id="map-nodes-container" class="map-nodes-container"></div>
                 </div>
             </div>
 
             <div id="screen-market" class="screen">
-                <div class="champ-header" style="flex-wrap: wrap; height: auto;">
-                    <div class="champ-title-block">
-                        <div class="champ-league-label" data-i18n="LABEL_MARKET_TITLE">MERCADO DA BOLA</div>
-                    </div>
-                    <!-- BUG CORRIGIDO: Retirado o "mobile-only" -->
-                    <div style="display:flex; gap:8px;">
-                        <div class="currency-display">💰 <span id="market-coins">0</span></div>
-                    </div>
-                </div>
                 <div class="market-wrapper">
                     <div class="market-panel">
                         <div class="market-header">
@@ -226,7 +184,6 @@
                             <p id="market-sub" data-i18n="MARKET_SUB_DEFAULT">O jogador vai para a Reserva.</p>
                         </div>
                         <div id="market-list" class="market-list"></div>
-                        <!-- NOVO: Botoes de Controle da Loja -->
                         <div style="display:flex; gap:10px;">
                             <button class="btn-secondary" data-i18n="BTN_BACK" style="flex:1;"
                                 onclick="cancelMarket()">← VOLTAR</button>
@@ -284,6 +241,172 @@
             </div>
 
         </main>
+
+        <!-- Modais PADRONIZADOS COM ❌ NO HEADER -->
+        <div id="level-modal-overlay" class="modal-overlay" style="z-index: 9999;">
+            <div class="options-box">
+                <div class="modal-header flex-between" style="align-items: flex-start;">
+                    <div>
+                        <h2 class="options-title text-success" data-i18n="TITLE_POST_MATCH_TRAINING">📈 TREINAMENTO
+                            PÓS-JOGO</h2>
+                        <p class="modal-subtitle" data-i18n-html="TEXT_LEVEL_POINTS_INFO">Você tem <strong
+                                id="level-points-text" style="color: var(--accent-green); font-size: 1.1rem;">0</strong>
+                            níveis!</p>
+                    </div>
+                    <button class="btn-icon" onclick="closeModals()">❌</button>
+                </div>
+                <div class="modal-body">
+                    <div id="level-team-grid" class="roster-grid"></div>
+                </div>
+                <div class="modal-footer" style="flex-direction: row; gap: 10px;">
+                    <button id="btn-level-confirm" class="btn-primary" data-i18n="BTN_CONFIRM" style="flex: 2;"
+                        disabled>CONFIRMAR</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="meta-shop-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header flex-between">
+                    <h2 class="options-title text-gold" data-i18n="TITLE_CAREER">MINHA CARREIRA</h2>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div class="currency-display" style="font-size: 1.2rem;">💰 <span
+                                id="meta-coins-display">0</span></div>
+                        <button class="btn-icon" onclick="closeModals()">❌</button>
+                    </div>
+                </div>
+                <div class="modal-body" id="meta-shop-list"
+                    style="display:flex; flex-direction:column; gap:8px; padding-top: 24px;"></div>
+            </div>
+        </div>
+
+        <div id="quit-confirm-overlay" class="modal-overlay" style="z-index: 999;">
+            <div class="options-box text-center">
+                <div class="modal-header flex-between" style="align-items: flex-start;">
+                    <h2 class="options-title text-danger" data-i18n="TITLE_QUIT_CONFIRM">DESISTIR?</h2>
+                    <button class="btn-icon" onclick="closeModals()">❌</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-subtitle" data-i18n="TEXT_QUIT_WARNING" style="margin-top:0;">Você abandonará esta
+                        Liga e voltará ao Hub do clube.</p>
+                </div>
+                <div class="modal-footer" style="flex-direction:row; gap:10px;">
+                    <button class="btn-primary" data-i18n="BTN_QUIT_CONFIRM"
+                        style="flex:1; background:var(--accent-red); box-shadow:none;"
+                        onclick="confirmQuitRun()">DESISTIR</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="pre-match-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header flex-between">
+                    <h2 class="options-title text-danger" data-i18n="TITLE_OPPONENT_FOUND">ADVERSÁRIO ENCONTRADO</h2>
+                    <button class="btn-icon" onclick="closeModals()">❌</button>
+                </div>
+                <div class="modal-body" style="padding: 16px;">
+                    <div id="pre-match-details"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary" data-i18n="BTN_ENTER_MATCH" onclick="startMapMatch()">ENTRAR EM CAMPO
+                        ⚽</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="camp-overlay" class="modal-overlay">
+            <div class="options-box">
+                <!-- Injetado dinamicamente no JS com ❌ -->
+            </div>
+        </div>
+
+        <div id="roster-overlay" class="modal-overlay">
+            <div class="options-box bottom-sheet">
+                <div class="modal-header flex-between">
+                    <h2 class="options-title" id="mobile-roster-title" data-i18n="TITLE_MY_ROSTER"
+                        style="display:flex; align-items:center; gap:8px;">MEU ELENCO</h2>
+                    <button class="btn-icon" onclick="closeModals()">❌</button>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-roster-list" class="roster-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="run-history-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header flex-between">
+                    <h2 class="options-title" data-i18n="TITLE_HISTORY">HISTÓRICO</h2>
+                    <button class="btn-icon" onclick="closeModals()">❌</button>
+                </div>
+                <div class="modal-body" style="padding: 0;">
+                    <div id="history-list" class="history-list"></div>
+                    <div id="history-details" class="history-details" style="display:none;">
+                        <div id="history-details-content" style="padding: 16px;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer" id="history-footer" style="display:none;">
+                    <button class="btn-secondary" data-i18n="BTN_BACK_LIST" onclick="closeHistoryDetails()">← VOLTAR PRA
+                        LISTA</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="daily-missions-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header flex-between">
+                    <h2 class="options-title" data-i18n="BTN_DAILY_MISSIONS">📅 MISSÕES DIÁRIAS</h2>
+                    <button class="btn-icon" onclick="closeModals()">❌</button>
+                </div>
+                <div class="modal-body">
+                    <div id="daily-missions-reset-info"
+                        style="text-align:center; font-size:0.75rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:14px;">
+                    </div>
+                    <div id="daily-missions-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="options-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header flex-between">
+                    <h2 class="options-title" data-i18n="TITLE_SETTINGS">CONFIGURAÇÕES</h2>
+                    <button class="btn-icon" onclick="closeOptions()">❌</button>
+                </div>
+                <div class="modal-body">
+                    <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-suspense"
+                                onchange="toggleSuspense()"><span class="checkmark"></span><span class="toggle-text"
+                                data-i18n="LABEL_SUSPENSE_TOGGLE">Suspense</span></label></div>
+                    <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-confirm"
+                                onchange="toggleConfirm()"><span class="checkmark"></span><span class="toggle-text"
+                                data-i18n="LABEL_CONFIRM_CLICKS_TOGGLE">Confirmação Cliques</span></label></div>
+                    <div class="options-row">
+                        <label style="font-weight:700;" data-i18n="LABEL_LANGUAGE">Idioma</label>
+                        <select id="language-select" onchange="changeLanguage(this.value)"
+                            style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; min-width: 140px; margin-left: 8px;">
+                            <option value="pt-br">🇧🇷 Português</option>
+                            <option value="en">🇺🇸 English</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="how-to-play-overlay" class="modal-overlay">
+            <div class="options-box">
+                <div class="modal-header flex-between">
+                    <h2 class="options-title" id="htp-title" data-i18n="HOW_TO_PLAY_TITLE">COMO JOGAR</h2>
+                    <button class="btn-icon" onclick="closeModals()">❌</button>
+                </div>
+                <div class="modal-body" id="htp-body"></div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" data-i18n="BTN_REPLAY_TUTORIAL"
+                        onclick="replayFirstMatchTutorial()">▶️ REVER TUTORIAL GUIADO</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Os overlays de suspense, vitória/derrota e mobile action continuam inalterados abaixo... -->
 
         <!-- Modais Mantidos -->
         <div id="level-modal-overlay" class="modal-overlay" style="z-index: 9999;">

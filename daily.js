@@ -105,7 +105,7 @@ function claimDailyMission(missionId) {
 
     m.claimed = true;
     if (!gameState.meta.metaCoins) gameState.meta.metaCoins = 0;
-    gameState.meta.metaCoins += m.reward;
+    gameState.coins += m.reward;
     saveGame();
     renderDailyMissionsModal();
     updateMissionsBadge();
