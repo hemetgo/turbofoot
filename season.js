@@ -317,57 +317,16 @@ function handleMapNodeClick(node) {
             </div>
         `;
         modal.style.display = 'flex';
-    } else if (node.type === 'camp_physical' || node.type === 'camp_tactical') {
-        showCampModal(node.type);
+    } else if (node.type === 'camp_physical') {
+        executePhysicalCamp();
+    } else if (node.type === 'camp_tactical') {
+        executeTacticalCamp();
     } else if (node.type === 'shop') {
         openShopNode();
     }
 }
 
-function showCampModal(type) {
-    const modal = document.getElementById('camp-overlay');
-    const box = modal.querySelector('.options-box');
-
-    if (type === 'camp_physical') {
-        box.innerHTML = `
-            <div class="modal-header flex-between" style="align-items: flex-start;">
-                <div>
-                    <h2 class="options-title text-success">TREINO FÍSICO 🏋️‍♂️</h2>
-                    <p class="modal-subtitle">Aprimore as capacidades de um atleta.</p>
-                </div>
-                <button class="btn-icon" onclick="closeModals()">❌</button>
-            </div>
-            <div class="modal-body" style="display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding-top: 30px;">
-                <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));">🏃‍♂️</div>
-                <p style="color:var(--text-muted); font-size:0.95rem; line-height: 1.5;">O preparador físico garantiu <strong style="color:var(--accent-green);">1 Ponto de Nível</strong> para você focar no desenvolvimento de um jogador à sua escolha.</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-primary" onclick="executePhysicalCamp()">DISTRIBUIR NÍVEL</button>
-            </div>
-        `;
-    } else {
-        box.innerHTML = `
-            <div class="modal-header flex-between" style="align-items: flex-start;">
-                <div>
-                    <h2 class="options-title" style="color:var(--accent-blue);">PRELEÇÃO TÁTICA 🧠</h2>
-                    <p class="modal-subtitle">Estudos e ajustes para o próximo confronto.</p>
-                </div>
-                <button class="btn-icon" onclick="closeModals()">❌</button>
-            </div>
-            <div class="modal-body" style="display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding-top: 30px;">
-                <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));">📋</div>
-                <p style="color:var(--text-muted); font-size:0.95rem; line-height: 1.5;">A equipe está perfeitamente alinhada! Vocês terão <strong style="color:var(--accent-blue);">+15 de Bônus Tático</strong> em todas as jogadas do primeiro turno da próxima partida!</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-primary" onclick="executeTacticalCamp()">ENTENDIDO</button>
-            </div>
-        `;
-    }
-    modal.style.display = 'flex';
-}
-
 window.executePhysicalCamp = function () {
-    document.getElementById('camp-overlay').style.display = 'none';
     showLevelDistribution(1, () => {
         advanceMapNode();
     }, true);
@@ -375,7 +334,11 @@ window.executePhysicalCamp = function () {
 
 window.executeTacticalCamp = function () {
     gameState.activeCampBuff = 15;
-    document.getElementById('camp-overlay').style.display = 'none';
+
+    if (typeof createJuiceText === 'function') {
+        createJuiceText("🧠 +15 TÁTICA!", "var(--accent-blue)", window.innerWidth / 2, window.innerHeight / 2);
+    }
+
     advanceMapNode();
 };
 
