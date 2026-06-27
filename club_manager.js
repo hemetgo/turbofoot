@@ -368,12 +368,64 @@ window.assignCaptain = function (playerId) {
     renderSquadGrid();
 };
 
-window.fireReserve = function (idx) {
-    if (confirm(t('TEXT_DELETE_CLUB_CONFIRM') || "Demitir este jogador da reserva?")) {
-        gameState.reserves.splice(idx, 1);
-        saveAllClubs();
-        renderSquadGrid();
+// Função genérica e dinâmica para criar alertas de confirmação bonitos
+window.showCustomConfirm = function (title, message, onConfirm) {
+    let overlay = document.getElementById('custom-confirm-overlay');
+
+    // Se o modal não existir no HTML, o JS cria ele dinamicamente na primeira vez
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'custom-confirm-overlay';
+        overlay.className = 'modal-overlay';
+        overlay.style.zIndex = '10005';
+        overlay.innerHTML = `
+            <div class="options-box text-center">
+                <div class="modal-header flex-between" style="align-items: flex-start;">
+                    <h2 class="options-title text-danger" id="confirm-title"></h2>
+                    <button class="btn-icon" onclick="document.getElementById('custom-confirm-overlay').style.display='none'">❌</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-subtitle" id="confirm-message" style="margin-top:0; white-space: pre-wrap; color: var(--text-main); font-weight: 600;"></p>
+                </div>
+                <div class="modal-footer" style="flex-direction:row; gap:10px;">
+                    <button class="btn-secondary" style="flex:1;" onclick="document.getElementById('custom-confirm-overlay').style.display='none'">${typeof t === 'function' ? t('BTN_CANCEL') : 'CANCELAR'}</button>
+                    <button class="btn-primary" id="confirm-action-btn" style="flex:1; background:var(--accent-red); box-shadow:none;">${typeof t === 'function' ? t('BTN_CONFIRM') : 'CONFIRMAR'}</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
     }
+
+    document.getElementById('confirm-title').innerText = title;
+    document.getElementById('confirm-message').innerText = message;
+
+    const btnConfirm = document.getElementById('confirm-action-btn');
+    btnConfirm.onclick = () => {
+        overlay.style.display = 'none';
+        if (onConfirm) onConfirm();
+    };
+
+    overlay.style.display = 'flex';
+};
+
+// Nova lógica de dispensa usando o alerta customizado
+window.fireReserve = function (idx) {
+    let p = gameState.reserves[idx];
+    let pName = p.name.toUpperCase();
+
+    showCustomConfirm(
+        t('TITLE_FIRE_PLAYER') || "DISPENSAR JOGADOR",
+        t('TEXT_FIRE_PLAYER_CONFIRM', { name: pName }) || `Tem certeza que deseja dispensar o jogador ${pName}? Esta ação não pode ser desfeita.`,
+        () => {
+            gameState.reserves.splice(idx, 1);
+            saveAllClubs();
+            renderSquadGrid();
+            // Um pequeno feedback visual (juice) na tela para confirmar que deu certo
+            if (typeof createJuiceText === 'function') {
+                createJuiceText(t('LOG_FIRED') || "DISPENSADO", "var(--accent-red)", window.innerWidth / 2, window.innerHeight / 2);
+            }
+        }
+    );
 };
 
 function renderSquadGrid() {
@@ -391,11 +443,12 @@ function renderSquadGrid() {
 
     let formationDef = FORMATIONS[gameState.formation || "4-4-2"];
 
+    // SUBSTITUA ESTE BLOCO:
     const sectors = [
-        { pos: "GOL", label: "GOLEIRO", players: [] },
-        { pos: "ZAG", label: "DEFESA", players: [] },
-        { pos: "MEI", label: "MEIO-CAMPO", players: [] },
-        { pos: "ATA", label: "ATAQUE", players: [] }
+        { pos: "GOL", label: t('SECTOR_GOL') || "GOLEIRO", players: [] },
+        { pos: "ZAG", label: t('SECTOR_ZAG') || "DEFESA", players: [] },
+        { pos: "MEI", label: t('SECTOR_MEI') || "MEIO-CAMPO", players: [] },
+        { pos: "ATA", label: t('SECTOR_ATA') || "ATAQUE", players: [] }
     ];
 
     gameState.team.forEach((p, idx) => {

@@ -490,10 +490,14 @@ BTN_FIRE=DEMITIR
 TEXT_SELECT_TO_SWAP=Selecione dois jogadores para trocar de posição.
 
 # --- Posições e Capitão ---
-POS_GOL=GOL
-POS_ZAG=ZAG
-POS_MEI=MEI
-POS_ATA=ATA
+POS_GOL=GK
+POS_ZAG=DEF
+POS_MEI=MID
+POS_ATA=ATT
+SECTOR_GOL=GOALKEEPER
+SECTOR_ZAG=DEFENSE
+SECTOR_MEI=MIDFIELD
+SECTOR_ATA=ATTACK
 TEXT_CAPTAIN_SET=Faixa de capitão entregue!
 TEXT_GOL_SWAP_ERROR=Goleiro só pode ser trocado por outro Goleiro!
 TEXT_SQUAD_TIP=Selecione dois para trocar. Clique DUAS VEZES num titular para torná-lo CAPITÃO.
@@ -526,3 +530,9 @@ LABEL_CLAIMED=Claimed
 TITLE_SCOUT_SUB=REPLACE PLAYER
 SUBTITLE_TEAM_LIMIT=Your squad has reached its limit (23/23). Choose a reserve player to release and make room for the new signing.
 LABEL_NEW_PLAYER=NEW SIGNING
+
+NAV_LABEL_PITCH=PITCH
+NAV_LABEL_RESERVES=RESERVES
+TITLE_FIRE_PLAYER=RELEASE PLAYER
+TEXT_FIRE_PLAYER_CONFIRM=Are you sure you want to release {name}? This action cannot be undone and they will permanently leave the club.
+LOG_FIRED=RELEASED
