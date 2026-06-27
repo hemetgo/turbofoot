@@ -5,34 +5,52 @@
 
 let CURRENT_LANG = "en";
 let I18N_STRINGS = {};
+let I18N_FALLBACK_STRINGS = {};
+
+function parseLocaleText(raw) {
+    const strings = {};
+
+    raw.split("\n").forEach(line => {
+        line = line.trim();
+
+        if (!line || line.startsWith("#")) return;
+
+        const sepIndex = line.indexOf("=");
+
+        if (sepIndex === -1) return;
+
+        const key = line.slice(0, sepIndex).trim();
+        const value = line
+            .slice(sepIndex + 1)
+            .replace(/\\n/g, "\n");
+
+        strings[key] = value;
+    });
+
+    return strings;
+}
 
 async function loadLocale(lang = CURRENT_LANG) {
     CURRENT_LANG = lang;
     I18N_STRINGS = {};
+    I18N_FALLBACK_STRINGS = {};
 
     try {
         const res = await fetch(`locales/${lang}.txt`);
         const raw = await res.text();
-
-        raw.split("\n").forEach(line => {
-            line = line.trim();
-
-            if (!line || line.startsWith("#")) return;
-
-            const sepIndex = line.indexOf("=");
-
-            if (sepIndex === -1) return;
-
-            const key = line.slice(0, sepIndex).trim();
-            const value = line
-                .slice(sepIndex + 1)
-                .replace(/\\n/g, "\n");
-
-            I18N_STRINGS[key] = value;
-        });
-
+        I18N_STRINGS = parseLocaleText(raw);
     } catch (e) {
         console.error(`[i18n] Failed loading locales/${lang}.txt`, e);
+    }
+
+    if (lang !== "en") {
+        try {
+            const res = await fetch("locales/en.txt");
+            const raw = await res.text();
+            I18N_FALLBACK_STRINGS = parseLocaleText(raw);
+        } catch (e) {
+            console.error("[i18n] Failed loading fallback locale", e);
+        }
     }
 
     return I18N_STRINGS;
@@ -40,6 +58,10 @@ async function loadLocale(lang = CURRENT_LANG) {
 
 function t(key, vars = null) {
     let str = I18N_STRINGS[key];
+
+    if (str === undefined && CURRENT_LANG !== "en") {
+        str = I18N_FALLBACK_STRINGS[key];
+    }
 
     if (str === undefined) {
         console.warn(`[i18n] Missing key: ${key}`);

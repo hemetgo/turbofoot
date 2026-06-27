@@ -19,72 +19,54 @@ function generatePosition() {
     return "ATA";               // 30%
 }
 
-// Adicionado o parâmetro forcedNationality
-function generatePlayer(level, isPremium = false, forcedNationality = null) {
-    // Repassando a nacionalidade forçada para a identidade
+// Filtro de habilidades por Posição
+function getValidPerksForPosition(pos) {
+    let pools = {
+        "GOL": ["reflexes", "positioning", "leadership", "catimba"],
+        "ZAG": ["tackling", "marking", "positioning", "heading", "leadership", "catimba"],
+        "MEI": ["passing", "vision", "dribbling", "pace", "stamina", "leadership", "catimba"],
+        "ATA": ["finishing", "heading", "acrobatics", "pace", "dribbling", "vision", "catimba"]
+    };
+    let validIds = pools[pos] || pools["MEI"];
+    return PERK_LIST.filter(p => validIds.includes(p.id));
+}
+
+function generatePlayer(level, isPremium = false, forcedNationality = null, forcedPosition = null) {
     let iden = generateIdentity(false, forcedNationality);
+    let position = forcedPosition || generatePosition();
     let perks = [];
-    let isStar = false;
+    let isStar = isPremium || Math.random() < 0.08;
+
+    // Premium ganha +2 níveis de bônus direto para valer a pena
+    let finalLevel = isStar ? level + 2 : level;
 
     if (iden.isPreset) {
         perks = iden.presetPerks.map(pId => PERK_LIST.find(p => p.id === pId)).filter(Boolean);
         isStar = true;
     } else {
-        let starChance = isPremium ? 0.30 : 0.08;
-        isStar = Math.random() < starChance;
-        let traitChance = isStar ? 0.80 : (isPremium ? 0.30 : 0.10);
-        let numPerks = Math.random() < traitChance ? 2 : 1;
-        for (let i = 0; i < numPerks; i++) perks.push(rndWeighted(PERK_LIST));
+        // Força EXATAMENTE 2 habilidades compatíveis com a posição
+        let validPool = getValidPerksForPosition(position);
+        let p1 = rndWeighted(validPool);
+        perks.push(p1);
+        let remainingPool = validPool.filter(p => p.id !== p1.id);
+        if (remainingPool.length > 0) perks.push(rndWeighted(remainingPool));
     }
 
-    // --- LÓGICA DE PREÇOS ---
-    let basePrice = 30 + Math.floor(Math.pow(level, 1.4) * 8);
-
-    let perkMod = 1.0;
-    if (perks.length === 1) perkMod = 1.30;
-    else if (perks.length === 2) perkMod = 1.70;
-
-    let starMod = isStar ? 2.0 : 1.0;
-
-    let rawPrice = Math.floor(basePrice * perkMod * starMod);
+    let basePrice = 30 + Math.floor(Math.pow(finalLevel, 1.4) * 8);
+    let starMod = isStar ? 2.2 : 1.0;
+    let rawPrice = Math.floor(basePrice * starMod);
     let price = Math.ceil(rawPrice / 5) * 5;
 
     return {
         id: `p_${Date.now()}_${Math.random()}`,
-        name: iden.name,
-        emoji: iden.emoji,
-        flag: iden.flag,
-        position: generatePosition(),
-        level: level, perks: perks, isStar: isStar, price: price
+        name: iden.name, emoji: iden.emoji, flag: iden.flag,
+        position: position,
+        level: finalLevel, perks: perks, isStar: isStar, price: price
     };
 }
 
-function generateBasePlayer(baseLevel = 1, numTraits = 0, focusTraitId = null, focusChance = 0, forcedNationality = null, forcedPosition = null) {
-    let iden = generateIdentity(true, forcedNationality);
-    let perks = [];
-
-    if (numTraits > 0) {
-        for (let i = 0; i < numTraits; i++) {
-            let alreadyHasFocus = perks.some(p => p.id === focusTraitId);
-            if (focusTraitId && !alreadyHasFocus && Math.random() < focusChance) {
-                let focusPerk = PERK_LIST.find(p => p.id === focusTraitId);
-                if (focusPerk) { perks.push(focusPerk); continue; }
-            }
-            perks.push(rndWeighted(PERK_LIST));
-        }
-    }
-
-    return {
-        id: `p_${Date.now()}_${Math.random()}`,
-        name: iden.name,
-        emoji: iden.emoji,
-        flag: iden.flag,
-        position: forcedPosition || generatePosition(),
-        level: baseLevel,
-        perks: perks,
-        isStar: false,
-        isBase: (numTraits === 0)
-    };
+function generateBasePlayer(baseLevel = 1, numTraits = 2, focusTraitId = null, focusChance = 0, forcedNationality = null, forcedPosition = null) {
+    return generatePlayer(baseLevel, false, forcedNationality, forcedPosition);
 }
 
 // ÚNICO GERADOR DE CARD - Padrão Horizontal de Alta Qualidade (ATUALIZADO PARA FLAG ICONS)

@@ -193,10 +193,7 @@ function _renderPlayerButtons() {
     let riskyNodes = pool.filter(n => n.riskLevel !== "safe");
 
     let totalNodesNeeded = 3;
-    if (!matchState.hasBall) {
-        totalNodesNeeded = 2;
-        safeNodes = [];
-    }
+    if (!matchState.hasBall) { totalNodesNeeded = 2; safeNodes = []; }
     if (isCritical) totalNodesNeeded = 2;
 
     if (Math.random() < (GAME_BALANCE.mechanics.safeActionChance ?? 0.15) && safeNodes.length > 0) {
@@ -204,8 +201,7 @@ function _renderPlayerButtons() {
     }
 
     let neededRisky = totalNodesNeeded - selected.length;
-    let chosenRisky = pickWeightedNodes(riskyNodes, neededRisky);
-    selected.push(...chosenRisky);
+    selected.push(...pickWeightedNodes(riskyNodes, neededRisky));
 
     if (!selected.some(n => n.comboReq === "ALL" ? matchState.combo > 0 : (!n.comboReq || matchState.combo >= n.comboReq))) {
         let affordable = pool.filter(n => n.comboReq === "ALL" ? matchState.combo > 0 : (!n.comboReq || matchState.combo >= n.comboReq));
@@ -216,30 +212,28 @@ function _renderPlayerButtons() {
     wrapper.className = `field-container ${matchState.hasBall ? 'atk-theme' : 'def-theme'} pop-in`;
 
     const scale = GAME_BALANCE.mechanics.scaling || {};
-    const BASE_CHANCE = scale.baseChance || 45;
-    const LEVEL_PCT = scale.levelModPct || 2.5;
-    const TRAIT_PCT = scale.traitFlatPct || 15;
-    const MARKING_PCT = scale.markingGlobalPct || 4;
-    const MOMENTUM_PCT = scale.momentumPct || 5;
-    const BUFF_PCT = scale.buffPct || 2;
-    const LUCK_PENALTY = scale.luckPenaltyPct || 15;
-
-    const avgPlayerLevel = getTeamAverageLevel();
     const rivalLevel = (matchState.rivalProfile.level !== undefined && matchState.rivalProfile.level !== null)
         ? matchState.rivalProfile.level
         : ((gameState.leagueLevel * 4) + gameState.season.currentStage);
 
-    const traits = getTeamTraits();
     let rivalTraits = {};
     if (matchState.rivalProfile.perks) {
-        matchState.rivalProfile.perks.forEach(p => {
-            rivalTraits[p.id] = (rivalTraits[p.id] || 0) + 1;
-        });
+        matchState.rivalProfile.perks.forEach(p => rivalTraits[p.id] = (rivalTraits[p.id] || 0) + 1);
     }
+
+    // NOVO: Coleta a marcação global do time
+    const teamTraits = getTeamTraits();
+
+    let activePlayers = getZonePlayers(matchState.zone);
+    if (activePlayers.length === 0) activePlayers = gameState.team;
 
     let chanceSet = [];
 
     selected.forEach((node) => {
+        // NOVO: Sorteia o Protagonista da Ação!
+        node.actor = rnd(activePlayers);
+        let actorTraits = getActorTraits(node.actor);
+
         const btn = document.createElement("button");
         let canAfford = true;
         let comboBadge = "";
@@ -256,55 +250,50 @@ function _renderPlayerButtons() {
             comboBadge = `<span class="combo-badge">+${node.comboGen} 🔥</span>`;
         }
 
+        // CÁLCULO INDIVIDUAL FOCADO NA CARTA
         let finalMod = node.id === "bicycle" ? node.mod + (Math.min(matchState.combo, 6) * 0.1) : node.mod;
+        let chance = (scale.baseChance || 45) * finalMod;
 
-        let chance = BASE_CHANCE * finalMod;
+        if (matchState.hasBall) chance += 15; else chance -= 15;
 
-        if (matchState.hasBall) {
-            chance += 15;
-        } else {
-            chance -= 15;
-        }
+        // Punição de Fora de Posição (OOP)
+        let pIndex = gameState.team.findIndex(p => p.id === node.actor.id);
+        let expectedPos = FORMATIONS[gameState.formation || "4-4-2"][pIndex];
+        let actorLvl = node.actor.level;
+        let isOOP = expectedPos !== node.actor.position;
+        if (isOOP && node.actor.id !== gameState.captainId) actorLvl = Math.max(1, actorLvl - 2);
 
-        let levelDiff = avgPlayerLevel - rivalLevel;
-        chance += (levelDiff * LEVEL_PCT);
+        let levelDiff = actorLvl - rivalLevel;
+        chance += (levelDiff * (scale.levelModPct || 6.0));
 
+        // Checa vantagem apenas na carta sorteada
         if (node.synergy && node.synergy !== "pace") {
-            let pStacks = applyDiminishingReturns(traits[node.synergy] || 0);
-            let rStacks = applyDiminishingReturns(rivalTraits[node.synergy] || 0);
-            chance += (pStacks * TRAIT_PCT);
-            chance -= (rStacks * TRAIT_PCT);
+            chance += ((actorTraits[node.synergy] ? 1 : 0) * (scale.traitFlatPct || 15));
+            chance -= (applyDiminishingReturns(rivalTraits[node.synergy] || 0) * (scale.traitFlatPct || 15));
         }
 
         if (node.riskLevel === "high") {
-            let pPace = applyDiminishingReturns(traits.pace || 0);
-            let rPace = applyDiminishingReturns(rivalTraits.pace || 0);
-            chance += (pPace * TRAIT_PCT);
-            chance -= (rPace * TRAIT_PCT);
+            chance += ((actorTraits["pace"] ? 1 : 0) * (scale.traitFlatPct || 15));
+            chance -= (applyDiminishingReturns(rivalTraits["pace"] || 0) * (scale.traitFlatPct || 15));
         }
 
         if (node.type === 'def' || node.type === 'save') {
-            let pMark = applyDiminishingReturns(traits.marking || 0);
-            chance += (pMark * MARKING_PCT);
+            chance += (applyDiminishingReturns(teamTraits.marking || 0) * (scale.markingGlobalPct || 4));
         } else if (node.type === 'atk' || node.type === 'shoot') {
-            let rMark = applyDiminishingReturns(rivalTraits.marking || 0);
-            chance -= (rMark * MARKING_PCT);
+            chance -= (applyDiminishingReturns(rivalTraits.marking || 0) * (scale.markingGlobalPct || 4));
         }
 
-        chance += (matchState.nextBuff * BUFF_PCT);
-        chance += (matchState.momentum * MOMENTUM_PCT);
-        if (matchState.badLuckCounter > 0) chance -= LUCK_PENALTY;
+        chance += (matchState.nextBuff * (scale.buffPct || 2));
+        chance += (matchState.momentum * (scale.momentumPct || 5));
+        if (matchState.badLuckCounter > 0) chance -= (scale.luckPenaltyPct || 15);
 
         if (node.riskLevel === "safe") {
             chance = 100;
         } else {
-            chance = Math.round(chance);
-            chance = Math.max(5, Math.min(95, chance));
-
+            chance = Math.max(5, Math.min(95, Math.round(chance)));
             let tweakStep = Math.max(1, Math.floor((gameState.leagueLevel + 1) * 0.5));
             let attempts = 0;
             let currentChance = chance;
-
             while (chanceSet.includes(currentChance) && attempts < 10) {
                 let offset = Math.ceil((attempts + 1) / 2) * tweakStep;
                 currentChance = chance + (attempts % 2 === 0 ? offset : -offset);
@@ -320,7 +309,6 @@ function _renderPlayerButtons() {
         let isLegendary = (node.weight && node.weight <= 20);
         let colorClass = chance >= 50 ? "risk-safe" : chance >= 25 ? "risk-med" : "risk-high";
         if (isLegendary) colorClass += " legendary-node";
-
         let chanceColor = chance >= 50 ? "var(--accent-green)" : chance >= 25 ? "var(--accent-gold)" : "var(--accent-red)";
 
         btn.className = `node-btn ${colorClass} ${gameState.settings.requireConfirm ? 'confirm-enabled' : ''}`;
@@ -338,14 +326,10 @@ function _renderPlayerButtons() {
         else if (node.type === 'save') succLabel = t('OUTCOME_SAVE');
         else if (node.successMove < 0) succLabel = t('OUTCOME_RETREAT', { val: Math.abs(node.successMove) });
         else succLabel = node.successMove > 0 ? t('OUTCOME_ADVANCE', { val: node.successMove }) : t('OUTCOME_MAINTAIN');
-
         if (node.nextBuff && node.nextBuff > 0) succLabel += ` <span class="buff-text">(+✨)</span>`;
 
-        let failLabel = "";
-        let failClass = "fail";
-        if (node.riskLevel === "safe") { failLabel = t('OUTCOME_SAFE'); failClass += " safe"; }
-        else if (node.type === 'save') failLabel = t('OUTCOME_CONCEDE');
-        else failLabel = node.failMove < 0 ? t('OUTCOME_RETREAT', { val: Math.abs(node.failMove) }) : t('OUTCOME_LOSE_POSSESSION');
+        let failLabel = node.riskLevel === "safe" ? t('OUTCOME_SAFE') : (node.type === 'save' ? t('OUTCOME_CONCEDE') : (node.failMove < 0 ? t('OUTCOME_RETREAT', { val: Math.abs(node.failMove) }) : t('OUTCOME_LOSE_POSSESSION')));
+        let failClass = "fail" + (node.riskLevel === "safe" ? " safe" : "");
 
         let synergies = [];
         if (node.synergy) {
@@ -354,9 +338,8 @@ function _renderPlayerButtons() {
         }
 
         let synHtml = synergies.map(s => `<span data-tip="${t(s.name)}" style="font-size:0.8rem;">${s.emoji}</span>`).join('');
+        let advantage = actorTraits[node.synergy] > 0;
         let synBadge = '';
-        let synergyIds = synergies.map(s => s.id);
-        let advantage = hasTraitAdvantage(node, traits);
 
         if (synergies.length > 0) {
             if (advantage) {
@@ -367,7 +350,20 @@ function _renderPlayerButtons() {
             }
         }
 
+        let actorName = node.actor.name.split(' ')[0];
+        let actorStar = node.actor.isStar ? '<span style="color:var(--accent-gold); font-size:0.6rem;">⭐</span>' : '';
+
+        // O CABEÇALHO DO BOTÃO AGORA É UMA MINI-CARTA!
         btn.innerHTML = `
+            <div style="background: rgba(0,0,0,0.3); border-radius: 6px 6px 0 0; margin: -8px -8px 8px -8px; padding: 4px 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-light);">
+                <div style="display:flex; align-items:center; gap:4px;">
+                    <span style="font-size: 1rem;">${node.actor.emoji}</span>
+                    <span style="font-size: 0.65rem; font-weight: 800; color: #fff;">${actorName.toUpperCase()} ${actorStar}</span>
+                </div>
+                <div style="font-size: 0.6rem; font-weight: 900; background: var(--bg-main); padding: 2px 4px; border-radius: 4px; color: var(--accent-blue);">
+                    Nv ${actorLvl}
+                </div>
+            </div>
             <div class="node-header">
                 <span class="node-chance" style="color:${chanceColor};">🎯 ${chance}%</span>
                 ${comboBadge}
@@ -390,34 +386,18 @@ function _renderPlayerButtons() {
 
         btn.onclick = async (e) => {
             if (!canAfford) {
-                const tx = e.clientX || window.innerWidth / 2;
-                const ty = e.clientY || window.innerHeight / 2;
-                createJuiceText(t('LOG_COMBO_INSUFFICIENT'), "#f87171", tx, ty - 30);
-
-                btn.classList.add("shake");
-                setTimeout(() => btn.classList.remove("shake"), 300);
-                return;
+                createJuiceText(t('LOG_COMBO_INSUFFICIENT'), "#f87171", e.clientX || window.innerWidth / 2, (e.clientY || window.innerHeight / 2) - 30);
+                btn.classList.add("shake"); setTimeout(() => btn.classList.remove("shake"), 300); return;
             }
-
             if (!gameState.settings.requireConfirm || selectedActionNodeId === node.id) {
-                removeHighlightPlayers();
-                await resolveProceduralNode(node, e);
-            }
-            else {
+                removeHighlightPlayers(); await resolveProceduralNode(node, e);
+            } else {
                 document.querySelectorAll(".node-btn").forEach(b => b.classList.remove("selected-action"));
-                btn.classList.add("selected-action");
-                selectedActionNodeId = node.id;
-                renderMinimap(node);
+                btn.classList.add("selected-action"); selectedActionNodeId = node.id; renderMinimap(node);
             }
         };
-        btn.onpointerenter = () => {
-            renderMinimap(node);
-            if (advantage && canAfford) highlightSynergyPlayers(synergyIds);
-        };
-        btn.onpointerleave = () => {
-            renderMinimap();
-            removeHighlightPlayers();
-        };
+        btn.onpointerenter = () => { renderMinimap(node); if (advantage && canAfford) highlightSynergyPlayers([node.synergy]); };
+        btn.onpointerleave = () => { renderMinimap(); removeHighlightPlayers(); };
         wrapper.appendChild(btn);
     });
 }
@@ -425,8 +405,8 @@ function _renderPlayerButtons() {
 async function resolveProceduralNode(node, event) {
     document.querySelectorAll(".node-btn").forEach(b => { b.style.pointerEvents = "none"; });
 
-    const traits = getTeamTraits();
-    const hasAdvantage = hasTraitAdvantage(node, traits);
+    let actorTraits = getActorTraits(node.actor);
+    const hasAdvantage = actorTraits[node.synergy] > 0;
     const pityThreshold = GAME_BALANCE.mechanics.pityThreshold;
 
     let isSuccess = false;
@@ -438,28 +418,14 @@ async function resolveProceduralNode(node, event) {
         isSuccess = true;
     } else {
         if (hasAdvantage && matchState.advantageFailCounter >= pityThreshold) {
-            isSuccess = true;
-            wasPityUsed = true;
-            matchState.advantageFailCounter = 0;
+            isSuccess = true; wasPityUsed = true; matchState.advantageFailCounter = 0;
         } else {
             let roll = Math.random() * 100;
             isSuccess = roll <= node.computedChance;
-
             if (!isSuccess && hasAdvantage) {
-                let roll2 = Math.random() * 100;
-                if (roll2 <= node.computedChance) {
-                    isSuccess = true;
-                    usedSecondChance = true;
-                }
+                if ((Math.random() * 100) <= node.computedChance) { isSuccess = true; usedSecondChance = true; }
             }
-
-            if (hasAdvantage) {
-                if (isSuccess) {
-                    matchState.advantageFailCounter = 0;
-                } else {
-                    matchState.advantageFailCounter++;
-                }
-            }
+            if (hasAdvantage) { matchState.advantageFailCounter = isSuccess ? 0 : matchState.advantageFailCounter + 1; }
         }
     }
 
@@ -470,21 +436,16 @@ async function resolveProceduralNode(node, event) {
     if (node.type === 'shoot' || node.type === 'save') await playSuspenseSequence((node.type === 'shoot'), isSuccess);
 
     let goalScored = false, isUserGoal = false;
-
-    // NOVO: Sorteia um jogador da zona atual para ser o protagonista do lance!
-    let activePlayers = getZonePlayers(matchState.zone);
-    let actor = activePlayers.length > 0 ? rnd(activePlayers).name : "Jogador";
+    let actor = node.actor.name.split(' ')[0];
 
     if (isSuccess) {
         matchState.momentum = clamp(matchState.momentum + 1, -3, 3);
-
         if (node.comboReq === "ALL") matchState.combo = 0; else if (node.comboReq) matchState.combo = Math.max(0, matchState.combo - node.comboReq);
         if (node.comboGen) matchState.combo += node.comboGen;
 
-        let visionBonus = getVisionComboBonus(node, traits);
-        if (visionBonus > 0) {
-            matchState.combo += visionBonus;
-            addMatchLog(t('LOG_VISION_PLAY'), "success");
+        let teamTraits = getTeamTraits();
+        if (teamTraits['vision'] > 0 && Math.random() < (teamTraits['vision'] * 0.15)) {
+            matchState.combo += 1; addMatchLog(t('LOG_VISION_PLAY'), "success");
         }
 
         document.getElementById("game-container").classList.add("flash-success");
@@ -494,10 +455,7 @@ async function resolveProceduralNode(node, event) {
         matchState.zone = Math.min(4, matchState.zone + node.successMove);
         matchState.nextBuff = node.nextBuff || 0;
 
-        if (node.forcePossessionLoss) {
-            matchState.hasBall = false;
-            addMatchLog(t('LOG_FOUL'), "fail");
-        }
+        if (node.forcePossessionLoss) { matchState.hasBall = false; addMatchLog(t('LOG_FOUL'), "fail"); }
 
         if (node.type === 'shoot' && matchState.zone >= 4) { goalScored = true; isUserGoal = true; }
         else if (node.type !== 'shoot' && node.type !== 'save') {
@@ -517,8 +475,7 @@ async function resolveProceduralNode(node, event) {
             addMatchLog(`🧤 MILAGRE DE ${actor.toUpperCase()}! Defesaça!`, 'success');
         }
     } else {
-        let mitigation = getLeadershipMitigation(traits);
-
+        let mitigation = getLeadershipMitigation(getTeamTraits());
         matchState.momentum = clamp(matchState.momentum - Math.max(1, Math.round(1 * mitigation)), -3, 3);
         matchState.combo = 0; matchState.nextBuff = 0;
         document.getElementById("game-container").classList.add("shake");
@@ -599,6 +556,14 @@ function handleGoal(isUserGoal) {
         return;
     }
     setTimeout(() => updateFieldState(), 700);
+}
+
+function getActorTraits(actor) {
+    let traits = {};
+    if (actor && actor.perks) {
+        actor.perks.forEach(p => traits[p.id] = (traits[p.id] || 0) + 1);
+    }
+    return traits;
 }
 
 function fireDespairEffect() {

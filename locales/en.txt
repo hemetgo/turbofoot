@@ -344,6 +344,35 @@ TEXT_USE_ALL_POINTS=USE ALL POINTS!
 TEXT_NEW_TRAIT=NEW TRAIT! ✨
 BTN_CONFIRM=CONFIRM
 TITLE_POST_MATCH_TRAINING=📈 POST-MATCH TRAINING
+
+# --- Translation / extra UI ---
+TEXT_NO_CLUBS_YET=No clubs created yet.
+TEXT_CURRENT_DIVISION=Current Division: {value}
+TEXT_NO_PERKS=No Skills
+TEXT_NO_RESERVES_FOR_SWAP=No reserve player available to replace.
+TIP_REPLACE_RESERVE=Replace and release this player
+BTN_CONTINUE_RUN=▶ CONTINUE RUN
+BTN_ALREADY_CAPTAIN=ALREADY CAPTAIN
+BTN_CAPTAIN=👑 CAPTAIN
+BTN_MAX=MAX
+BTN_IMPROVE=IMPROVE
+BTN_RESTORE_UPGRADES=🔄 RESTORE UPGRADES
+JUICE_UPGRADE=✨ UPGRADE!
+JUICE_INSUFFICIENT_COINS=💰 NOT ENOUGH COINS
+JUICE_REFUNDED=🔄 RESTORED!
+TEXT_HARD_RESET_CONFIRM=WARNING: You will lose ALL your progress, trophies and unlocked divisions.\n\nAre you absolutely sure?
+DEBUG_PROMPT=🔧 DEBUG MODE\nCommands: addmeta X, addcoins X, win, unlockall
+DEBUG_TROPHIES_ADDED=+{val} trophies added!
+DEBUG_COINS_ADDED=+{val} coins added!
+DEBUG_MATCH_REQUIRED=You need to be inside a match to use 'win'.
+DEBUG_UNLOCK_ALL=🔓 All divisions unlocked successfully!
+DEBUG_UNKNOWN_COMMAND=Command not recognized.
+ALERT_ABANDON_PENALTY_TITLE=⚠️ ABANDON PENALTY
+ALERT_ABANDON_PENALTY_TEXT=You lost the ongoing match and this league run was reset.
+ALERT_SAVE_ERROR_MOBILE_TITLE=❌ MOBILE ERROR
+ALERT_SAVE_ERROR_MOBILE_TEXT=The game could not save on your device. Clear the browser cache or switch off private mode.
+ALERT_CREATE_CLUB_ERROR_TITLE=❌ ERROR
+ALERT_CREATE_CLUB_ERROR_TEXT=An internal error occurred while founding the club.
 TEXT_LEVEL_POINTS_INFO=You have <strong id="level-points-text" style="color: var(--accent-green); font-size: 1.1rem;">0</strong> levels to distribute!
 TEXT_TRAIN_TIP=💡 Evolving a player with fewer than 2 skills grants them a <strong style="color:var(--accent-purple);">New Random Skill!</strong>
 TITLE_CAREER=MY CAREER
@@ -474,3 +503,20 @@ BTN_DELETE_CLUB=EXCLUIR
 TEXT_DELETE_CLUB_CONFIRM=Tem certeza que deseja excluir o clube {club}? O clube deixará de existir!
 TEXT_ABANDON_PENALTY=⚠️ PUNIÇÃO POR ABANDONO!\n\nVocê fechou o jogo durante uma partida. Isso foi considerado abandono de campo (W.O.) e seu time foi eliminado da liga atual.
 TEXT_RESUME_RUN=▶ CONTINUAR LIGA
+
+TEAM_FORMATION=FORMATION
+LABEL_RESERVES=RESERVES
+
+# --- Novas Habilidades (Traits) ---
+PERK_HEADING_NAME=CABECEIO
+HOW_TO_PLAY_TRAIT_HEADING_DESC=Ganha bônus enorme em cruzamentos e bolas aéreas.
+PERK_ACROBATICS_NAME=ACROBATA
+HOW_TO_PLAY_TRAIT_ACROBATICS_DESC=Mestre em voleios, bicicletas e finalizações difíceis.
+PERK_DRIBBLING_NAME=DRIBLADOR
+HOW_TO_PLAY_TRAIT_DRIBBLING_DESC=Facilidade em limpar jogadas individuais e quebrar linhas.
+PERK_STAMINA_NAME=FÔLEGO
+HOW_TO_PLAY_TRAIT_STAMINA_DESC=Não cansa em arrancadas e transições longas.
+PERK_POSITIONING_NAME=POSICIONAMENTO
+HOW_TO_PLAY_TRAIT_POSITIONING_DESC=Sempre no lugar certo. Ajuda a cortar passes e antecipar jogadas.
+PERK_CATIMBA_NAME=CATIMBA
+HOW_TO_PLAY_TRAIT_CATIMBA_DESC=Especialista em cavar faltas, esfriar o jogo e irritar o rival.

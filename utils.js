@@ -218,7 +218,7 @@ function closeModals() {
 }
 
 function hardResetSave() {
-    if (confirm("ATENÇÃO: Você vai perder TODO o seu progresso, troféus e divisões liberadas.\n\nTem certeza absoluta?")) {
+    if (confirm(t('TEXT_HARD_RESET_CONFIRM'))) {
         localStorage.removeItem("turboFoot_mgr_v7");
         location.reload();
     }
@@ -226,7 +226,7 @@ function hardResetSave() {
 
 document.addEventListener('keydown', (e) => {
     if (e.key === '\\') {
-        let cmd = prompt("🔧 MODO DEBUG\nComandos: addmeta X, addcoins X, win, unlockall");
+        let cmd = prompt(t('DEBUG_PROMPT'));
         if (!cmd) return;
 
         let args = cmd.toLowerCase().trim().split(" ");
@@ -238,21 +238,21 @@ document.addEventListener('keydown', (e) => {
                 if (!gameState.meta) gameState.meta = { metaCoins: 0, upgrades: {} };
                 gameState.meta.metaCoins += val;
                 saveGame();
-                alert(`+${val} Troféus adicionados!`);
+                alert(t('DEBUG_TROPHIES_ADDED', { val }));
                 if (document.getElementById('meta-shop-overlay').style.display === 'flex') renderMetaShop();
                 break;
             case "addcoins":
                 gameState.coins += val;
                 updateRosterUI();
                 if (document.getElementById('screen-market').classList.contains('active')) showMarketScreen();
-                alert(`+${val} 💰 adicionadas!`);
+                alert(t('DEBUG_COINS_ADDED', { val }));
                 break;
             case "win":
                 if (document.getElementById('screen-match').classList.contains('active')) {
                     matchState.userScore += 10;
                     endMatchByTime();
                 } else {
-                    alert("Você precisa estar dentro de uma partida para usar o 'win'.");
+                    alert(t('DEBUG_MATCH_REQUIRED'));
                 }
                 break;
             case "unlockall":
@@ -260,11 +260,11 @@ document.addEventListener('keydown', (e) => {
                 if (GAME_BALANCE && GAME_BALANCE.leagues) {
                     gameState.meta.highestSeriesUnlocked = GAME_BALANCE.leagues.length - 1;
                     saveGame();
-                    alert("🔓 Todas as Divisões desbloqueadas com sucesso!");
+                    alert(t('DEBUG_UNLOCK_ALL'));
                 }
                 break;
             default:
-                alert("Comando não reconhecido.");
+                alert(t('DEBUG_UNKNOWN_COMMAND'));
                 break;
         }
     }

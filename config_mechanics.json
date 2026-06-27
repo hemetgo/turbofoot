@@ -1,5 +1,5 @@
 {
-  "initialCoins": 50,
+  "initialCoins": 10,
   "matchActionsMin": 8,
   "matchActionsMax": 12,
   "safeActionChance": 0.15,
@@ -21,7 +21,7 @@
   },
   "scaling": {
     "baseChance": 45,
-    "levelModPct": 3.0,
+    "levelModPct": 6.5,
     "traitFlatPct": 12,
     "markingGlobalPct": 3.5,
     "momentumPct": 5,
@@ -29,7 +29,7 @@
     "luckPenaltyPct": 15,
     "leagueLevelStep": 2,
     "eliteLevelBonus": 4,
-    "bossLevelBonus": 8,
+    "bossLevelBonus": 5,
     "leadershipCaptainMult": 1.35,
     "traitDiminishingFactor": 0.60,
     "traitMaxStacks": 5,

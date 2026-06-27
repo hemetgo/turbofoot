@@ -158,8 +158,8 @@ function renderMetaShopList() {
         let isMax = currentLvl >= upg.maxLevel;
 
         let btnHtml = isMax
-            ? `<button class="btn-secondary btn-sm" disabled style="border-color:transparent; color:var(--text-muted);">MAX</button>`
-            : `<button class="btn-primary btn-sm" style="background:var(--accent-gold); color:#000;" onclick="buyMetaUpgrade('${upg.id}', ${cost})">MELHORAR<br>(${cost}💰)</button>`;
+            ? `<button class="btn-secondary btn-sm" disabled style="border-color:transparent; color:var(--text-muted);">${t('BTN_MAX')}</button>`
+            : `<button class="btn-primary btn-sm" style="background:var(--accent-gold); color:#000;" onclick="buyMetaUpgrade('${upg.id}', ${cost})">${t('BTN_IMPROVE')}<br>(${cost}💰)</button>`;
 
         list.innerHTML += `
             <div class="meta-upgrade-card" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-card); padding:12px; border-radius:8px; border:1px solid var(--border-light);">
@@ -176,7 +176,7 @@ function renderMetaShopList() {
         list.innerHTML += `
             <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light); text-align: center;">
                 <button class="btn-secondary" style="border-color: var(--accent-red); color: var(--accent-red); width: 100%;" onclick="refundMetaUpgrades()">
-                    🔄 RESTAURAR UPGRADES (${totalSpent}💰)
+                    ${t('BTN_RESTORE_UPGRADES')} (${totalSpent}💰)
                 </button>
             </div>
         `;
@@ -196,9 +196,9 @@ function buyMetaUpgrade(id, cost) {
 
         saveGame();
         renderMetaShopList();
-        createJuiceText("✨ UPGRADE!", "var(--accent-gold)", window.innerWidth / 2, window.innerHeight / 2);
+        createJuiceText(t('JUICE_UPGRADE'), "var(--accent-gold)", window.innerWidth / 2, window.innerHeight / 2);
     } else {
-        createJuiceText("💰 DINHEIRO INSUFICIENTE", "var(--accent-red)", window.innerWidth / 2, window.innerHeight / 2);
+        createJuiceText(t('JUICE_INSUFFICIENT_COINS'), "var(--accent-red)", window.innerWidth / 2, window.innerHeight / 2);
     }
 }
 
@@ -213,7 +213,7 @@ function refundMetaUpgrades() {
 
     saveGame();
     renderMetaShopList();
-    createJuiceText("🔄 RESTAURADO!", "var(--accent-blue)", window.innerWidth / 2, window.innerHeight / 2);
+    createJuiceText(t('JUICE_REFUNDED'), "var(--accent-blue)", window.innerWidth / 2, window.innerHeight / 2);
 }
 
 // Subrescreve o save padrão para usar o save de Clubes do club_manager.js

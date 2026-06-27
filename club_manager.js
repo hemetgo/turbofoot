@@ -55,7 +55,7 @@ function renderClubSelection() {
     container.innerHTML = '';
 
     if (allSaves.length === 0) {
-        container.innerHTML = `<p style="color:var(--text-muted); text-align:center; width:100%; font-weight:bold; grid-column: 1 / -1; margin-top: 40px;">Nenhum clube fundado ainda.</p>`;
+        container.innerHTML = `<p style="color:var(--text-muted); text-align:center; width:100%; font-weight:bold; grid-column: 1 / -1; margin-top: 40px;">${t('TEXT_NO_CLUBS_YET')}</p>`;
     } else {
         allSaves.forEach((save, idx) => {
             if (!save || !save.club) return;
@@ -70,7 +70,7 @@ function renderClubSelection() {
                     
                     <div class="captain-box" style="padding: 16px; margin-top: auto;">
                         <div style="font-weight:900; color:var(--accent-gold); font-size:1.3rem;">💰 ${save.coins}</div>
-                        <div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px; font-weight: 800;">Divisão Atual: ${save.meta?.highestSeriesUnlocked || 0}</div>
+                        <div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px; font-weight: 800;">${t('TEXT_CURRENT_DIVISION', { value: save.meta?.highestSeriesUnlocked || 0 })}</div>
                     </div>
                 </div>`;
         });
@@ -96,8 +96,8 @@ function loadClub(idx) {
 
         // CHAMA A MODAL EM VEZ DO ALERT
         showCustomAlert(
-            "⚠️ PUNIÇÃO POR ABANDONO",
-            "TEXT_ABANDON_PENALTY" // Ou passa o texto direto se preferir
+            t('ALERT_ABANDON_PENALTY_TITLE'),
+            t('ALERT_ABANDON_PENALTY_TEXT')
         );
     }
 
@@ -193,18 +193,9 @@ function executeCreateClub() {
 
         const posList = FORMATIONS[randomFormation];
         for (let i = 0; i < 11; i++) {
-            let p = generatePlayer(1, false);
-            p.flag = nat.flag;
-            p.name = `${rnd(nat.firstNames)} ${rnd(nat.lastNames)}`;
-            p.emoji = rnd(nat.faces);
-            p.isPreset = false;
-            p.position = posList[i];
-
-            p.perks = [];
-            if (i === 5) {
-                p.perks.push(rnd(PERK_LIST));
-                p.perks.push(rnd(PERK_LIST));
-            }
+            // CORREÇÃO AQUI: Deixamos o nosso novo `generatePlayer` fazer todo o trabalho pesado.
+            // Ele recebe: (nível, isPremium, nacionalidade, posiçãoDaFormação)
+            let p = generatePlayer(1, false, nat, posList[i]);
             gameState.team.push(p);
         }
 
@@ -335,11 +326,11 @@ window.openMobilePlayerModal = function (player, index, isStarter) {
     if (isStarter) {
         btnCaptain.style.display = 'block';
         if (gameState.captainId === player.id) {
-            btnCaptain.innerText = "JÁ É CAPITÃO";
+            btnCaptain.innerText = t('BTN_ALREADY_CAPTAIN');
             btnCaptain.disabled = true;
             btnCaptain.style.opacity = "0.5";
         } else {
-            btnCaptain.innerText = "👑 CAPITÃO";
+            btnCaptain.innerText = t('BTN_CAPTAIN');
             btnCaptain.disabled = false;
             btnCaptain.style.opacity = "1";
         }

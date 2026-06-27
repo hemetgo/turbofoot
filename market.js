@@ -109,7 +109,7 @@ function showMarketScreen() {
             return `<span data-tip="${t(perk.desc)}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 6px; border: 1px solid var(--border-light); font-size: 0.75rem; font-weight: 800; white-space: nowrap; color: #e2e8f0; pointer-events: auto;">${perk.emoji} ${t(perk.name)}${countLabel}</span>`;
         }).join('');
 
-        if (!perksHtml) perksHtml = `<span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800;">Sem Habilidades</span>`;
+        if (!perksHtml) perksHtml = `<span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800;">${t('TEXT_NO_PERKS')}</span>`;
 
         let starLabel = p.isStar ? `<span class="star-badge">⭐</span>` : '';
         let levelBadge = `<span class="level-badge">Nv ${p.level}</span>`;
@@ -186,7 +186,7 @@ function openMarketSwapModal(draftIndex) {
 
     swapList.innerHTML = '';
     if (!gameState.reserves || gameState.reserves.length === 0) {
-        swapList.innerHTML = `<p style="color: var(--text-muted); text-align:center;">Nenhum reserva disponível para substituir.</p>`;
+        swapList.innerHTML = `<p style="color: var(--text-muted); text-align:center;">${t('TEXT_NO_RESERVES_FOR_SWAP')}</p>`;
     } else {
         gameState.reserves.forEach((player, idx) => {
             let playerCard = getPlayerCardHTML(player);
@@ -196,7 +196,7 @@ function openMarketSwapModal(draftIndex) {
                     <div style="flex:1; min-width: 0; pointer-events: none;">
                         ${playerCard}
                     </div>
-                    <button class="btn-icon" style="cursor: pointer; background: rgba(248, 113, 113, 0.1); border-color: var(--accent-red); color: var(--accent-red); padding: 0 16px; height: 64px; border-radius: 8px; font-size: 1.5rem; flex-shrink: 0;" onclick="replaceReserve(${idx})" data-tip="Substituir e demitir este jogador">
+                    <button class="btn-icon" style="cursor: pointer; background: rgba(248, 113, 113, 0.1); border-color: var(--accent-red); color: var(--accent-red); padding: 0 16px; height: 64px; border-radius: 8px; font-size: 1.5rem; flex-shrink: 0;" onclick="replaceReserve(${idx})" data-tip="${t('TIP_REPLACE_RESERVE')}">
                         🔁
                     </button>
                 </div>
@@ -213,7 +213,7 @@ function replaceReserve(reserveIndex) {
     if (!pendingPurchase || !gameState.reserves || !gameState.reserves[reserveIndex]) return;
 
     if (gameState.coins < pendingPurchase.price) {
-        showCustomAlert("❌ ERRO", t('LOG_COMBO_INSUFICIENT') || '💰 INSUFICIENTE');
+        showCustomAlert("❌ ERRO", t('LOG_COMBO_INSUFFICIENT') || '💰 INSUFICIENTE');
         return;
     }
 

@@ -194,6 +194,8 @@ body {
     width: 100%;
     flex: 1;
     min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .screen.active {
@@ -434,6 +436,9 @@ button {
     justify-content: center;
     align-items: center;
     background: radial-gradient(circle at 50% 30%, #1e293b, #020617);
+    padding: clamp(20px, 3.5vh, 40px) 16px clamp(28px, 4vh, 40px);
+    min-height: 100%;
+    overflow-y: auto;
 }
 
 .title-logo {
@@ -463,18 +468,19 @@ button {
 }
 
 .title-menu {
-    margin-top: 40px;
+    margin-top: clamp(20px, 3vh, 40px);
     width: 100%;
     max-width: 320px;
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
-    padding: 0 var(--space-lg);
+    gap: clamp(8px, 1.2vh, 14px);
+    padding: 0 var(--space-lg) 8px;
 }
 
 @media (min-width: 900px) {
     .title-menu {
         max-width: 380px;
+        gap: 12px;
     }
 
     .title-logo {
@@ -483,6 +489,33 @@ button {
 
     .game-title {
         font-size: 3.6rem;
+    }
+}
+
+@media (max-height: 760px) {
+    .title-logo {
+        font-size: 3.6rem;
+        margin-bottom: 6px;
+    }
+
+    .game-title {
+        font-size: 2.1rem;
+    }
+
+    .game-subtitle {
+        font-size: 0.82rem;
+        letter-spacing: 3px;
+    }
+
+    .title-menu {
+        margin-top: 14px;
+        gap: 8px;
+    }
+
+    .title-menu .btn-primary,
+    .title-menu .btn-secondary {
+        padding: 10px 14px;
+        font-size: 0.92rem;
     }
 }
 

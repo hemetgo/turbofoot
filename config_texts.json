@@ -172,6 +172,54 @@
             "desc": "HOW_TO_PLAY_TRAIT_LEADERSHIP_DESC",
             "category": "utility",
             "weight": 70
+        },
+        {
+            "id": "heading",
+            "name": "PERK_HEADING_NAME",
+            "emoji": "🤕",
+            "desc": "HOW_TO_PLAY_TRAIT_HEADING_DESC",
+            "category": "attack",
+            "weight": 100
+        },
+        {
+            "id": "acrobatics",
+            "name": "PERK_ACROBATICS_NAME",
+            "emoji": "🤸",
+            "desc": "HOW_TO_PLAY_TRAIT_ACROBATICS_DESC",
+            "category": "attack",
+            "weight": 80
+        },
+        {
+            "id": "dribbling",
+            "name": "PERK_DRIBBLING_NAME",
+            "emoji": "🪄",
+            "desc": "HOW_TO_PLAY_TRAIT_DRIBBLING_DESC",
+            "category": "hybrid",
+            "weight": 100
+        },
+        {
+            "id": "stamina",
+            "name": "PERK_STAMINA_NAME",
+            "emoji": "🫁",
+            "desc": "HOW_TO_PLAY_TRAIT_STAMINA_DESC",
+            "category": "hybrid",
+            "weight": 100
+        },
+        {
+            "id": "positioning",
+            "name": "PERK_POSITIONING_NAME",
+            "emoji": "📍",
+            "desc": "HOW_TO_PLAY_TRAIT_POSITIONING_DESC",
+            "category": "defense",
+            "weight": 100
+        },
+        {
+            "id": "catimba",
+            "name": "PERK_CATIMBA_NAME",
+            "emoji": "🟨",
+            "desc": "HOW_TO_PLAY_TRAIT_CATIMBA_DESC",
+            "category": "utility",
+            "weight": 70
         }
     ]
 }
