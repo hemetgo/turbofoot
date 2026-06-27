@@ -77,7 +77,7 @@ function renderMinimap(hoverNode = null) {
 
 function getZonePlayers(zone) {
     return gameState.team.filter(p => {
-        if (p.id === gameState.captainId) return true; // Capitão é um deus onipresente
+        if (p.id === gameState.captainId) return true;
         if (zone === 0) return p.position === 'GOL' || p.position === 'ZAG';
         if (zone === 1) return p.position === 'ZAG';
         if (zone === 2) return p.position === 'ZAG' || p.position === 'MEI';
@@ -87,10 +87,18 @@ function getZonePlayers(zone) {
     });
 }
 
+function highlightActor(actorId) {
+    if (!actorId) return;
+    document.querySelectorAll('.player-card').forEach(card => {
+        if (card.getAttribute('data-id') === actorId) {
+            card.classList.add('highlight-actor');
+        }
+    });
+}
+
 function highlightSynergyPlayers(synergyIds) {
     if (!synergyIds || synergyIds.length === 0) return;
 
-    // Pega apenas os IDs dos jogadores válidos para a zona atual!
     let validIds = getZonePlayers(matchState.zone).map(p => p.id);
 
     document.querySelectorAll('.player-card').forEach(card => {
@@ -98,7 +106,6 @@ function highlightSynergyPlayers(synergyIds) {
         let cardPerks = card.getAttribute('data-perks') || "";
         let hasSyn = synergyIds.some(id => cardPerks.includes(id));
 
-        // Só brilha se o jogador tiver a habilidade E estiver na zona correta da jogada
         if (hasSyn && validIds.includes(cardId)) {
             card.classList.add('highlight-synergy');
         }
@@ -108,6 +115,7 @@ function highlightSynergyPlayers(synergyIds) {
 function removeHighlightPlayers() {
     document.querySelectorAll('.player-card').forEach(card => {
         card.classList.remove('highlight-synergy');
+        card.classList.remove('highlight-actor');
     });
 }
 
@@ -221,7 +229,6 @@ function _renderPlayerButtons() {
         matchState.rivalProfile.perks.forEach(p => rivalTraits[p.id] = (rivalTraits[p.id] || 0) + 1);
     }
 
-    // NOVO: Coleta a marcação global do time
     const teamTraits = getTeamTraits();
 
     let activePlayers = getZonePlayers(matchState.zone);
@@ -230,7 +237,6 @@ function _renderPlayerButtons() {
     let chanceSet = [];
 
     selected.forEach((node) => {
-        // NOVO: Sorteia o Protagonista da Ação!
         node.actor = rnd(activePlayers);
         let actorTraits = getActorTraits(node.actor);
 
@@ -250,13 +256,11 @@ function _renderPlayerButtons() {
             comboBadge = `<span class="combo-badge">+${node.comboGen} 🔥</span>`;
         }
 
-        // CÁLCULO INDIVIDUAL FOCADO NA CARTA
         let finalMod = node.id === "bicycle" ? node.mod + (Math.min(matchState.combo, 6) * 0.1) : node.mod;
         let chance = (scale.baseChance || 45) * finalMod;
 
         if (matchState.hasBall) chance += 15; else chance -= 15;
 
-        // Punição de Fora de Posição (OOP)
         let pIndex = gameState.team.findIndex(p => p.id === node.actor.id);
         let expectedPos = FORMATIONS[gameState.formation || "4-4-2"][pIndex];
         let actorLvl = node.actor.level;
@@ -266,7 +270,6 @@ function _renderPlayerButtons() {
         let levelDiff = actorLvl - rivalLevel;
         chance += (levelDiff * (scale.levelModPct || 6.0));
 
-        // Checa vantagem apenas na carta sorteada
         if (node.synergy && node.synergy !== "pace") {
             chance += ((actorTraits[node.synergy] ? 1 : 0) * (scale.traitFlatPct || 15));
             chance -= (applyDiminishingReturns(rivalTraits[node.synergy] || 0) * (scale.traitFlatPct || 15));
@@ -353,7 +356,6 @@ function _renderPlayerButtons() {
         let actorName = node.actor.name.split(' ')[0];
         let actorStar = node.actor.isStar ? '<span style="color:var(--accent-gold); font-size:0.6rem;">⭐</span>' : '';
 
-        // O CABEÇALHO DO BOTÃO AGORA É UMA MINI-CARTA!
         btn.innerHTML = `
             <div style="background: rgba(0,0,0,0.3); border-radius: 6px 6px 0 0; margin: -8px -8px 8px -8px; padding: 4px 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-light);">
                 <div style="display:flex; align-items:center; gap:4px;">
@@ -398,52 +400,30 @@ function _renderPlayerButtons() {
 
                 removeHighlightPlayers();
                 renderMinimap(node);
-                highlightActor(node.actor.id);
-                if (advantage && canAfford) highlightSynergyPlayers([node.synergy]);
+                highlightActor(node.actor.id); // Destaca APENAS o protagonista
             }
         };
 
         btn.onpointerenter = () => {
             renderMinimap(node);
-            highlightActor(node.actor.id);
-            if (advantage && canAfford) highlightSynergyPlayers([node.synergy]);
+            highlightActor(node.actor.id); // Destaca APENAS o protagonista
         };
 
         btn.onpointerleave = () => {
-            // Se o mouse sair do botão QUE ESTÁ selecionado, não apaga o brilho
             if (selectedActionNodeId === node.id) return;
-
             removeHighlightPlayers();
             renderMinimap();
 
-            // Restaura o brilho da ação selecionada (caso o jogador tenha passado o mouse por outra e tirado)
             if (selectedActionNodeId) {
                 let sNode = selected.find(n => n.id === selectedActionNodeId);
                 if (sNode) {
                     renderMinimap(sNode);
-                    highlightActor(sNode.actor.id);
-                    if (getActorTraits(sNode.actor)[sNode.synergy] > 0) highlightSynergyPlayers([sNode.synergy]);
+                    highlightActor(sNode.actor.id); // Destaca APENAS o protagonista
                 }
             }
         };
 
         wrapper.appendChild(btn);
-    }); // Fim do foreach
-}
-
-function highlightActor(actorId) {
-    if (!actorId) return;
-    document.querySelectorAll('.player-card').forEach(card => {
-        if (card.getAttribute('data-id') === actorId) {
-            card.classList.add('highlight-actor');
-        }
-    });
-}
-
-function removeHighlightPlayers() {
-    document.querySelectorAll('.player-card').forEach(card => {
-        card.classList.remove('highlight-synergy');
-        card.classList.remove('highlight-actor');
     });
 }
 
@@ -560,11 +540,8 @@ function handleGoal(isUserGoal) {
         document.getElementById("score-user").innerText = matchState.userScore;
         createJuiceText(t('JUICE_GOAL_USER'), "#f59e0b", window.innerWidth / 2, window.innerHeight / 2 - 100);
 
-        // Puxa o atacante que fez o gol!
         let strikers = getZonePlayers(4);
         let scorer = strikers.length > 0 ? rnd(strikers).name : "Ataque";
-
-        // Mantemos apenas o log focado no jogador
         addMatchLog(`⚽ GOLAÇO DE ${scorer.toUpperCase()}!!!`, "goal-user");
 
         addMatchLog(t('LOG_RIVAL_RESTART'), "fail");
@@ -574,11 +551,8 @@ function handleGoal(isUserGoal) {
         document.getElementById("score-rival").innerText = matchState.rivalScore;
         createJuiceText(t('LOG_GOAL_AGAINST'), "#ef4444", window.innerWidth / 2, window.innerHeight / 2);
 
-        // Puxa o goleiro que sofreu o gol
         let defenders = getZonePlayers(0);
         let keeper = defenders.length > 0 ? rnd(defenders).name : "Defesa";
-
-        // Mantemos apenas o log focado no goleiro
         addMatchLog(`❌ GOL DO RIVAL... ${keeper} não conseguiu evitar.`, "goal-rival");
 
         addMatchLog(t('LOG_TEAM_FURIOUS'), "success");
@@ -601,14 +575,6 @@ function handleGoal(isUserGoal) {
         return;
     }
     setTimeout(() => updateFieldState(), 700);
-}
-
-function getActorTraits(actor) {
-    let traits = {};
-    if (actor && actor.perks) {
-        actor.perks.forEach(p => traits[p.id] = (traits[p.id] || 0) + 1);
-    }
-    return traits;
 }
 
 function fireDespairEffect() {
@@ -721,11 +687,9 @@ function finishMatchRewards() {
                 finishSeason(false);
             };
 
-            // --- CORREÇÃO AQUI ---
             gameState.inMatch = false;
-            gameState.season.map = []; // Destrói o mapa para matar a run
-            saveGame(); // Salva a derrota na hora para evitar exploit de fechar o jogo
-            // ---------------------
+            gameState.season.map = [];
+            saveGame();
 
             document.getElementById("post-match-overlay").style.display = "flex";
             return;
@@ -784,4 +748,49 @@ function finishMatchRewards() {
 function advanceMapAfterMatch() {
     document.getElementById('post-match-overlay').style.display = 'none';
     advanceMapNode();
+}
+
+// ==========================================
+// FUNÇÕES AUXILIARES DA PARTIDA (MOTOR MATEMÁTICO)
+// ==========================================
+
+function getTeamTraits() {
+    let traits = {};
+    if (!gameState.team) return traits;
+
+    // Apenas os traits dos jogadores da zona atual contam para a "Aura" global do time
+    let players = getZonePlayers(matchState.zone);
+
+    players.forEach(p => {
+        if (p.perks) {
+            p.perks.forEach(perk => {
+                traits[perk.id] = (traits[perk.id] || 0) + 1;
+            });
+        }
+    });
+    return traits;
+}
+
+function getActorTraits(actor) {
+    let traits = {};
+    if (actor && actor.perks) {
+        actor.perks.forEach(p => traits[p.id] = (traits[p.id] || 0) + 1);
+    }
+    return traits;
+}
+
+function applyDiminishingReturns(count) {
+    if (count <= 0) return 0;
+    if (count === 1) return 1;
+    if (count === 2) return 1.5;
+    return 1.8 + (count - 3) * 0.1; // Limita o impacto de times com várias habilidades repetidas
+}
+
+function getLeadershipMitigation(traits) {
+    // A Liderança SÓ FUNCIONA se quem tem o trait for o CAPITÃO escolhido.
+    let captain = gameState.team.find(p => p.id === gameState.captainId);
+    if (!captain || !captain.perks) return 1; // Sem mitigação
+
+    let hasLeadership = captain.perks.some(p => p.id === 'leadership');
+    return hasLeadership ? 0.6 : 1; // Se o capitão tem liderança, corta o recuo/dano de falha em 40%
 }

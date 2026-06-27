@@ -72,9 +72,10 @@ function generateBasePlayer(baseLevel = 1, numTraits = 2, focusTraitId = null, f
 }
 
 // ÚNICO GERADOR DE CARD UNIVERSAL
-// ÚNICO GERADOR DE CARD UNIVERSAL
 function getPlayerCardHTML(p, actionHTML = "", customStyles = "", indexInfo = null) {
     let perksHTML = "";
+    // RECUPERADO: Lista de IDs das habilidades para o brilho de sinergia
+    let dataPerks = p.perks ? p.perks.map(perk => perk.id).join(',') : "";
     let hasTraits = p.perks && p.perks.length > 0;
 
     if (hasTraits) {
@@ -90,9 +91,9 @@ function getPlayerCardHTML(p, actionHTML = "", customStyles = "", indexInfo = nu
 
     let isCaptain = (gameState.captainId === p.id);
 
-    // CORREÇÃO: Emblemas separados do texto, com line-height cravado e um leve empurrão pra cima (translateY)
-    let capBadge = isCaptain ? `<span style="font-size:0.8rem; line-height:1; flex-shrink:0; transform:translateY(-3px);">👑</span>` : '';
-    let starBadge = p.isStar ? `<span style="font-size:0.8rem; line-height:1; flex-shrink:0; transform:translateY(-3px); filter:drop-shadow(0 0 4px rgba(245,158,11,0.8));">⭐</span>` : '';
+    let displayName = p.name;
+    if (isCaptain) displayName += ' 👑';
+    if (p.isStar) displayName += ' ⭐';
 
     let posLabel = t('POS_' + p.position) || p.position;
     let oopHTML = "";
@@ -101,8 +102,9 @@ function getPlayerCardHTML(p, actionHTML = "", customStyles = "", indexInfo = nu
         oopHTML = `<div style="font-size:0.55rem; color:var(--accent-red); font-weight:800; text-transform:uppercase; margin-top:2px; display:flex; align-items:center; gap:4px;">⚠️ Fora (Ideal: ${indexInfo.expectedPos})</div>`;
     }
 
+    // ADICIONADO data-id="${p.id}" e data-perks="${dataPerks}" AQUI NESTA DIV!
     return `
-        <div class="player-card universal-card" style="position:relative; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-light); border-radius:10px; padding:8px 10px; width:100%; transition:all 0.2s; ${customStyles}">
+        <div class="player-card universal-card" data-id="${p.id}" data-perks="${dataPerks}" style="position:relative; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-light); border-radius:10px; padding:8px 10px; width:100%; transition:all 0.2s; ${customStyles}">
             
             <!-- Coluna 1: Avatar + Level -->
             <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; flex-shrink:0; min-width:40px;">
@@ -113,13 +115,11 @@ function getPlayerCardHTML(p, actionHTML = "", customStyles = "", indexInfo = nu
             <!-- Coluna 2: Informações -->
             <div style="flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center;">
                 
-                <!-- Linha do Nome com Flexbox Centralizado Verticalmente -->
+                <!-- Linha do Nome -->
                 <div style="display:flex; align-items:center; gap:4px; flex-wrap:nowrap; overflow:hidden;">
                     <span class="pos-badge pos-${p.position}" style="font-size:0.5rem; padding:1px 4px; margin:0; flex-shrink:0; border:1px solid rgba(255,255,255,0.1);">${posLabel}</span>
                     <span class="fi fi-${p.flag || 'xx'}" style="border-radius:2px; font-size:0.75rem; flex-shrink:0;"></span>
-                    <span style="font-size:0.85rem; font-weight:900; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-transform:uppercase; letter-spacing:-0.5px;">${p.name}</span>
-                    ${capBadge}
-                    ${starBadge}
+                    <span style="font-size:0.85rem; font-weight:900; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-transform:uppercase; letter-spacing:-0.5px;">${displayName}</span>
                 </div>
                 
                 ${perksHTML}
