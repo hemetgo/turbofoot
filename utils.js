@@ -314,6 +314,7 @@ document.addEventListener("DOMContentLoaded", () => {
 let alertCallback = null;
 
 function showCustomAlert(title, message, callback = null) {
+    if (typeof playSFX === 'function') playSFX('error');
     document.getElementById('alert-title').innerText = title;
 
     // Suporte para i18n ou texto direto

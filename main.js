@@ -253,4 +253,13 @@ window.notifyHappyTime = function () {
     }
 };
 
+document.addEventListener('click', (e) => {
+    // Se o elemento clicado for um botão ou um card clicável
+    if (e.target.closest('button') || e.target.closest('.club-select-card') || e.target.closest('.node-btn')) {
+        if (typeof playSFX === 'function') {
+            playSFX('click');
+        }
+    }
+});
+
 document.addEventListener("DOMContentLoaded", initGame);

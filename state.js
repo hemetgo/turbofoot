@@ -29,6 +29,10 @@ function loadSaveData() {
                 gameState.settings.requireConfirm = !IS_DESKTOP;
             }
 
+            // --- NOVO: Preferências de Áudio ---
+            if (typeof gameState.settings.musicOn === "undefined") gameState.settings.musicOn = true;
+            if (typeof gameState.settings.sfxOn === "undefined") gameState.settings.sfxOn = true;
+
             if (!gameState.meta) gameState.meta = { highestSeriesUnlocked: 0, metaCoins: 0, upgrades: {} };
             if (!gameState.meta.metaCoins) gameState.meta.metaCoins = 0;
             if (!gameState.meta.upgrades) gameState.meta.upgrades = {};
@@ -36,7 +40,7 @@ function loadSaveData() {
     } else {
         gameState.coins = GAME_BALANCE.mechanics?.initialCoins || 0;
         // BEM AQUI ESTAVA O BUG: Estávamos sobrescrevendo a configuração padrão!
-        gameState.settings = { showSuspense: true, requireConfirm: !IS_DESKTOP };
+        gameState.settings = { showSuspense: true, requireConfirm: !IS_DESKTOP, musicOn: true, sfxOn: true };
     }
 
     if (!gameState.season.history) gameState.season.history = [];

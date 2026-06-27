@@ -709,6 +709,7 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
     btnConfirm.onclick = (e) => {
         // AVISO VISUAL: O jogador esqueceu de usar os pontos
         if (available > 0) {
+            if (typeof playSFX === 'function') playSFX('error');
             btnConfirm.classList.add("shake");
             pointsText.parentElement.classList.add("shake");
 

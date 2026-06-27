@@ -6,6 +6,8 @@ function startMapMatch() {
     gameState.inMatch = true;
     saveGame();
 
+    if (typeof playSFX === 'function') playSFX('whistle');
+
     // --- CRAZY GAMES SDK: Início do Gameplay ---
     if (typeof notifyGameplayStart === 'function') notifyGameplayStart();
 
@@ -503,6 +505,10 @@ async function resolveProceduralNode(node, event) {
     let actor = node.actor.name.split(' ')[0];
 
     if (isSuccess) {
+        // --- NOVO: SONS DA JOGADA ---
+        if (node.type === 'shoot' || node.type === 'atk') playSFX('kick');
+        if (node.type === 'save') playSFX('save');
+
         if (!matchState.stats.players[node.actor.id]) {
             matchState.stats.players[node.actor.id] = { passes: 0, tackles: 0, saves: 0 };
         }
@@ -587,6 +593,7 @@ function handleGoal(isUserGoal, actorObj = null) {
 
     if (isUserGoal) {
         matchState.userScore++;
+        if (typeof playSFX === 'function') playSFX('goal');
         document.getElementById("score-user").innerText = matchState.userScore;
         createJuiceText(t('JUICE_GOAL_USER'), "#f59e0b", window.innerWidth / 2, window.innerHeight / 2 - 100);
 
@@ -730,6 +737,8 @@ function endMatchByTime() {
 }
 
 function finishMatchRewards() {
+    if (typeof playSFX === 'function') playSFX('whistle');
+
     const isVictory = matchState.userScore > matchState.rivalScore;
     addMatchLog(t(getRandomLog('matchEnd')), "system");
 
