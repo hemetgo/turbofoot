@@ -2697,6 +2697,25 @@ button {
     }
 }
 
+/* --- CABEÇALHOS DA NOVA TELA DE ELENCO --- */
+.squad-sector-title {
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #fff;
+    padding: 12px 0 8px 0;
+    margin-top: 10px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.squad-sector-title:first-child {
+    margin-top: 0;
+}
+
 .squad-layout {
     display: flex;
     flex-direction: column;

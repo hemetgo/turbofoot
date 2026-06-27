@@ -193,9 +193,8 @@ function executeCreateClub() {
 
         const posList = FORMATIONS[randomFormation];
         for (let i = 0; i < 11; i++) {
-            // CORREÇÃO AQUI: Deixamos o nosso novo `generatePlayer` fazer todo o trabalho pesado.
-            // Ele recebe: (nível, isPremium, nacionalidade, posiçãoDaFormação)
             let p = generatePlayer(1, false, nat, posList[i]);
+            p.isStar = false; // GARANTE que o time nasça humilde e sem estrelas
             gameState.team.push(p);
         }
 
@@ -362,6 +361,21 @@ window.makeCaptainFromMobile = function () {
     renderSquadGrid();
 };
 
+window.assignCaptain = function (playerId) {
+    gameState.captainId = playerId;
+    createJuiceText(t('TEXT_CAPTAIN_SET') || "CAPITÃO!", "var(--accent-gold)", window.innerWidth / 2, window.innerHeight / 2);
+    saveAllClubs();
+    renderSquadGrid();
+};
+
+window.fireReserve = function (idx) {
+    if (confirm(t('TEXT_DELETE_CLUB_CONFIRM') || "Demitir este jogador da reserva?")) {
+        gameState.reserves.splice(idx, 1);
+        saveAllClubs();
+        renderSquadGrid();
+    }
+};
+
 function renderSquadGrid() {
     const squadCoins = document.getElementById('squad-coins');
     if (squadCoins) squadCoins.innerText = gameState.coins;
@@ -373,137 +387,97 @@ function renderSquadGrid() {
     rGrid.innerHTML = '';
     let resCount = gameState.reserves ? gameState.reserves.length : 0;
     rTitle.innerHTML = t('LABEL_RESERVES', { count: resCount }) || `RESERVAS (${resCount}/12)`;
-
-    // DESENHA O CAMPO TÁTICO
-    pGrid.innerHTML = `
-        <div class="pitch-lines"></div>
-        <div class="pitch-row" id="row-ATA"></div>
-        <div class="pitch-row" id="row-MEI"></div>
-        <div class="pitch-row" id="row-ZAG"></div>
-        <div class="pitch-row" id="row-GOL"></div>
-    `;
+    pGrid.innerHTML = ''; // Limpa o container principal
 
     let formationDef = FORMATIONS[gameState.formation || "4-4-2"];
 
-    const createPitchCard = (p, index) => {
-        let expectedPos = formationDef[index];
-        let isOOP = p.position !== expectedPos;
-        let isCaptain = (gameState.captainId === p.id);
-
-        let badgesHTML = '';
-        if (isOOP) badgesHTML += `<div class="oop-icon" data-tip="FORA DE POSIÇÃO! Nível e Traits reduzidos.">⚠️</div>`;
-        // A coroa saiu daqui!
-
-        let jiggleClass = squadSelectedPlayer ? 'roster-jiggle' : '';
-        let selClass = squadSelectedPlayer?.id === p.id ? 'selected' : '';
-        let oopClass = isOOP ? 'oop' : '';
-
-        let traitsHTML = '';
-        if (p.perks && p.perks.length > 0) {
-            p.perks.forEach(perk => {
-                traitsHTML += `<span class="pitch-trait-icon" data-tip="${t(perk.name)}">${perk.emoji}</span>`;
-            });
-        } else {
-            traitsHTML = `<span style="font-size:0.45rem; color:var(--text-muted); opacity:0.7;">Sem Habilidades</span>`;
-        }
-
-        let starBadge = p.isStar ? `<span class="star-badge">⭐</span>` : '';
-
-        // NOVO: Criamos a badge do capitão para ficar no avatar
-        let capBadge = isCaptain ? `<span class="cap-badge-avatar" data-tip="Capitão: Ignora punições e joga o campo todo!">👑</span>` : '';
-
-        let nameParts = p.name.split(' ');
-        let shortName = nameParts.length > 1 ? nameParts[0].charAt(0) + ". " + nameParts[nameParts.length - 1] : p.name;
-
-        let card = document.createElement('div');
-        card.className = `pitch-player ${jiggleClass} ${selClass} ${oopClass}`;
-
-        // NOVO: capBadge inserido dentro do pitch-card-avatar-lg
-        card.innerHTML = `
-            <div class="pitch-card-header">
-                <span class="pos-badge pos-${p.position}">${t('POS_' + p.position) || p.position}</span>
-                <span class="lvl-badge">Nv ${p.level}</span>
-            </div>
-            <div class="pitch-card-avatar-lg">
-                ${capBadge}
-                ${p.emoji}
-                ${starBadge}
-            </div>
-            <div class="pitch-card-name">${shortName}</div>
-            <div class="pitch-card-traits">
-                ${traitsHTML}
-            </div>
-            ${badgesHTML}
-        `;
-
-        card.onclick = (e) => handleSquadClick(p, index, true, e);
-        card.onmouseenter = (e) => showPcTooltip(p, e);
-        card.onmousemove = (e) => movePcTooltip(e);
-        card.onmouseleave = () => hidePcTooltip();
-
-        return card;
-    };
+    // 1. Agrupar os jogadores titulares pelas posições relativas à formação
+    const sectors = [
+        { pos: "GOL", label: "GOLEIRO", players: [] },
+        { pos: "ZAG", label: "DEFESA", players: [] },
+        { pos: "MEI", label: "MEIO-CAMPO", players: [] },
+        { pos: "ATA", label: "ATAQUE", players: [] }
+    ];
 
     gameState.team.forEach((p, idx) => {
         let expectedPos = formationDef[idx];
-        document.getElementById(`row-${expectedPos}`).appendChild(createPitchCard(p, idx));
+        let sector = sectors.find(s => s.pos === expectedPos);
+        if (sector) sector.players.push({ player: p, index: idx, expectedPos });
     });
 
-    // DESENHA A RESERVA
-    const createBenchCard = (p, index) => {
-        let temp = document.createElement('div');
-        temp.innerHTML = getPlayerCardHTML(p);
-        let card = temp.firstElementChild;
-        card.style.cursor = 'pointer';
+    // 2. Renderizar a Lista Tática
+    sectors.forEach(sec => {
+        if (sec.players.length === 0) return;
 
-        if (squadSelectedPlayer) card.classList.add('roster-jiggle');
-        if (squadSelectedPlayer && squadSelectedPlayer.id === p.id) card.classList.add('selected');
+        // Cabeçalho do Setor
+        let sectorTitle = document.createElement('div');
+        sectorTitle.className = 'squad-sector-title';
+        sectorTitle.innerHTML = `${sec.label} <span style="color:var(--text-muted); font-size:0.8rem;">(${sec.players.length})</span>`;
+        pGrid.appendChild(sectorTitle);
 
-        card.onclick = (e) => handleSquadClick(p, index, false, e);
-        return card;
-    };
+        let sectorList = document.createElement('div');
+        sectorList.style.display = 'flex';
+        sectorList.style.flexDirection = 'column';
+        sectorList.style.gap = '10px';
+        sectorList.style.marginBottom = '24px';
 
+        sec.players.forEach(item => {
+            let p = item.player;
+            let isSelected = squadSelectedPlayer && squadSelectedPlayer.id === p.id;
+            let customStyle = isSelected ? "border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); transform: scale(1.02);" : "cursor: pointer;";
+
+            // Botão super sutil ("Fantasma"), some completamente se já for o capitão
+            let btnCap = (gameState.captainId !== p.id) ?
+                `<button style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:var(--text-muted); font-size:1rem; padding:8px 12px; border-radius:8px; cursor:pointer; transition:all 0.2s;" onclick="event.stopPropagation(); assignCaptain('${p.id}')">👑</button>` :
+                ``;
+
+            let temp = document.createElement('div');
+            temp.innerHTML = getPlayerCardHTML(p, btnCap, customStyle, { expectedPos: item.expectedPos });
+            let card = temp.firstElementChild;
+
+            card.onclick = (e) => handleSquadClick(p, item.index, true, e);
+            sectorList.appendChild(card);
+        });
+        pGrid.appendChild(sectorList);
+    });
+
+    // 3. Renderizar Reservas
     if (gameState.reserves) {
-        gameState.reserves.forEach((p, i) => rGrid.appendChild(createBenchCard(p, i)));
+        gameState.reserves.forEach((p, i) => {
+            let isSelected = squadSelectedPlayer && squadSelectedPlayer.id === p.id;
+            let customStyle = isSelected ? "border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); transform: scale(1.02);" : "cursor: pointer;";
+
+            // Botão de Demissão Injetado
+            let btnFire = `<button class="btn-icon" style="padding:12px; border-color:var(--accent-red); color:var(--accent-red); font-size:1.1rem; background:rgba(248,113,113,0.1);" onclick="event.stopPropagation(); fireReserve(${i})">🗑️</button>`;
+
+            let temp = document.createElement('div');
+            temp.innerHTML = getPlayerCardHTML(p, btnFire, customStyle);
+            let card = temp.firstElementChild;
+
+            card.onclick = (e) => handleSquadClick(p, i, false, e);
+            rGrid.appendChild(card);
+        });
     }
 }
 
 function handleSquadClick(player, index, isStarter, event) {
-
-    // CASO 1: Ninguém selecionado. Abre Modal (Mobile) ou Seleciona (PC)
     if (!squadSelectedPlayer) {
-        if (!IS_DESKTOP) {
-            openMobilePlayerModal(player, index, isStarter);
-        } else {
-            squadSelectedPlayer = { player, index, isStarter, id: player.id };
-            hidePcTooltip(); // Esconde o tooltip ao iniciar a troca
-            renderSquadGrid();
-        }
+        squadSelectedPlayer = { player, index, isStarter, id: player.id };
+        renderSquadGrid();
         return;
     }
 
-    // CASO 2: Clicou no mesmo jogador (Deseleciona ou vira Capitão)
     if (squadSelectedPlayer.id === player.id) {
-        if (isStarter && IS_DESKTOP) {
-            gameState.captainId = player.id;
-            const tx = event ? event.clientX : window.innerWidth / 2;
-            const ty = event ? event.clientY - 40 : 100;
-            createJuiceText(t('TEXT_CAPTAIN_SET') || "CAPITÃO!", "var(--accent-gold)", tx, ty);
-            saveAllClubs();
-        }
         squadSelectedPlayer = null;
         renderSquadGrid();
         return;
     }
 
-    // CASO 3: Clicou em outro jogador -> Executa a TROCA
     let arr1 = squadSelectedPlayer.isStarter ? gameState.team : gameState.reserves;
     let arr2 = isStarter ? gameState.team : gameState.reserves;
-
     let p1 = arr1[squadSelectedPlayer.index];
     let p2 = arr2[index];
 
-    // Validação restrita de Goleiros
     if ((p1.position === 'GOL' && p2.position !== 'GOL') || (p1.position !== 'GOL' && p2.position === 'GOL')) {
         createJuiceText(t('TEXT_GOL_SWAP_ERROR') || "Erro", "var(--accent-red)", window.innerWidth / 2, 100);
         squadSelectedPlayer = null;
@@ -511,15 +485,17 @@ function handleSquadClick(player, index, isStarter, event) {
         return;
     }
 
-    // Executa a Troca efetiva
+    // (Perto do final da função handleSquadClick...)
     arr1[squadSelectedPlayer.index] = p2;
     arr2[index] = p1;
 
-    if (gameState.captainId === p1.id && !squadSelectedPlayer.isStarter) gameState.captainId = gameState.team[1].id;
-    if (gameState.captainId === p2.id && !isStarter) gameState.captainId = gameState.team[1].id;
+    // REGRA NOVA: O campo NUNCA pode ficar sem capitão.
+    // Se o capitão for mandado para a reserva, o primeiro jogador titular herda a braçadeira.
+    if (gameState.reserves.find(r => r.id === gameState.captainId)) {
+        gameState.captainId = gameState.team[0].id;
+    }
 
     squadSelectedPlayer = null;
-    hidePcTooltip();
     saveAllClubs();
     renderSquadGrid();
 }

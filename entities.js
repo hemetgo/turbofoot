@@ -71,48 +71,66 @@ function generateBasePlayer(baseLevel = 1, numTraits = 2, focusTraitId = null, f
     return generatePlayer(baseLevel, false, forcedNationality, forcedPosition);
 }
 
-// ÚNICO GERADOR DE CARD - Padrão Horizontal de Alta Qualidade (ATUALIZADO PARA FLAG ICONS)
-function getPlayerCardHTML(p, onClickAttr = "") {
-    let hasTraits = p.perks && p.perks.length > 0;
+// ÚNICO GERADOR DE CARD UNIVERSAL
+// ÚNICO GERADOR DE CARD UNIVERSAL
+function getPlayerCardHTML(p, actionHTML = "", customStyles = "", indexInfo = null) {
     let perksHTML = "";
-    let dataPerks = p.perks ? p.perks.map(perk => perk.id).join(',') : "";
+    let hasTraits = p.perks && p.perks.length > 0;
 
     if (hasTraits) {
         let perksArray = p.perks.map(perk => {
-            return `<div data-tip="${t(perk.desc)}" style="display: flex; align-items: center; gap: 4px; font-size: 0.7rem; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-light); pointer-events: auto; overflow: hidden; max-width: 110px;">
-                        <span style="flex-shrink: 0;">${perk.emoji}</span><span style="font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${t(perk.name)}</span>
-                    </div>`;
+            return `<span style="display:inline-flex; align-items:center; gap:3px; font-size:0.55rem; font-weight:800; color:var(--text-muted); background:rgba(0,0,0,0.25); padding:2px 5px; border-radius:4px; border:1px solid rgba(255,255,255,0.05);">
+                        <span>${perk.emoji}</span> <span>${t(perk.name).toUpperCase()}</span>
+                    </span>`;
         });
-        perksHTML = `<div style="display: flex; gap: 4px; flex-wrap: nowrap; overflow: hidden; width: 100%; height: 20px; align-items: center;">${perksArray.join('')}</div>`;
+        perksHTML = `<div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:4px;">${perksArray.join('')}</div>`;
     } else {
-        perksHTML = `<div style="display: flex; align-items: center; font-size: 0.7rem; color: var(--text-muted); height: 20px;">${t('PERK_NONE_NAME')}</div>`;
+        perksHTML = `<div style="font-size:0.6rem; color:var(--text-muted); font-weight:700; margin-top:2px;">${t('TEXT_NO_PERKS')}</div>`;
     }
 
-    let isCaptain = (gameState.captainId && gameState.captainId === p.id);
-    let capBadge = isCaptain ? `<span class="cap-badge" data-tip="Capitão: Participa de TODAS as zonas de campo!">👑</span>` : '';
-    let posBadge = `<span class="pos-badge pos-${p.position}">${t('POS_' + p.position)}</span>`;
-    let starBadge = p.isStar ? `<span style="font-size: 0.9rem; filter: drop-shadow(0 0 5px rgba(245,158,11,0.8)); margin-left: 4px;">⭐</span>` : '';
-    let clickStyle = onClickAttr ? 'cursor: pointer;' : '';
+    let isCaptain = (gameState.captainId === p.id);
+
+    // CORREÇÃO: Emblemas separados do texto, com line-height cravado e um leve empurrão pra cima (translateY)
+    let capBadge = isCaptain ? `<span style="font-size:0.8rem; line-height:1; flex-shrink:0; transform:translateY(-3px);">👑</span>` : '';
+    let starBadge = p.isStar ? `<span style="font-size:0.8rem; line-height:1; flex-shrink:0; transform:translateY(-3px); filter:drop-shadow(0 0 4px rgba(245,158,11,0.8));">⭐</span>` : '';
+
+    let posLabel = t('POS_' + p.position) || p.position;
+    let oopHTML = "";
+
+    if (indexInfo && indexInfo.expectedPos && indexInfo.expectedPos !== p.position) {
+        oopHTML = `<div style="font-size:0.55rem; color:var(--accent-red); font-weight:800; text-transform:uppercase; margin-top:2px; display:flex; align-items:center; gap:4px;">⚠️ Fora (Ideal: ${indexInfo.expectedPos})</div>`;
+    }
 
     return `
-        <div class="player-card" data-id="${p.id}" data-perks="${dataPerks}" ${onClickAttr} style="display: flex; flex-direction: row; align-items: center; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px 12px; width: 100%; height: 64px; overflow: hidden; transition: all 0.2s; ${clickStyle}">
-            <div style="display: flex; align-items: center; justify-content: center; width: 36px; flex-shrink: 0;">
-                <span style="font-size: 2rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${p.emoji}</span>
+        <div class="player-card universal-card" style="position:relative; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-light); border-radius:10px; padding:8px 10px; width:100%; transition:all 0.2s; ${customStyles}">
+            
+            <!-- Coluna 1: Avatar + Level -->
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; flex-shrink:0; min-width:40px;">
+                <span style="font-size:1.8rem; line-height:1; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));">${p.emoji}</span>
+                <div style="background:rgba(0,0,0,0.4); border-radius:4px; padding:1px 5px; font-size:0.6rem; font-weight:900; color:var(--accent-green); border:1px solid rgba(255,255,255,0.1);">Nv ${p.level}</div>
             </div>
-            ${capBadge}
-            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; margin-left: 12px;">
-                <div style="display: flex; align-items: center; margin-bottom: 4px; overflow: hidden;">
-                    ${posBadge}
-                    <span class="fi fi-${p.flag || 'xx'}" style="font-size: 0.8rem; border-radius: 2px; flex-shrink: 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); margin-right: 6px;"></span>
-                    <span style="font-size: 0.85rem; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;">${p.name}</span>
+            
+            <!-- Coluna 2: Informações -->
+            <div style="flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center;">
+                
+                <!-- Linha do Nome com Flexbox Centralizado Verticalmente -->
+                <div style="display:flex; align-items:center; gap:4px; flex-wrap:nowrap; overflow:hidden;">
+                    <span class="pos-badge pos-${p.position}" style="font-size:0.5rem; padding:1px 4px; margin:0; flex-shrink:0; border:1px solid rgba(255,255,255,0.1);">${posLabel}</span>
+                    <span class="fi fi-${p.flag || 'xx'}" style="border-radius:2px; font-size:0.75rem; flex-shrink:0;"></span>
+                    <span style="font-size:0.85rem; font-weight:900; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-transform:uppercase; letter-spacing:-0.5px;">${p.name}</span>
+                    ${capBadge}
                     ${starBadge}
                 </div>
-                <div style="color: var(--accent-blue); font-weight: 800; width: 100%;">${perksHTML}</div>
+                
+                ${perksHTML}
+                ${oopHTML}
             </div>
-            <div style="flex-shrink: 0; margin-left: 8px;">
-                <span style="display: flex; align-items: center; padding: 4px 8px; font-size: 0.8rem; font-weight: 900; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid var(--border-accent); border-radius: 6px;">Nv <span style="color: var(--accent-green); margin-left: 4px;">${p.level}</span></span>
-            </div>
-        </div>`;
+            
+            <!-- Coluna 3: Botões Injetados -->
+            ${actionHTML ? `<div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end; margin-left:auto; flex-shrink:0;">${actionHTML}</div>` : ''}
+            
+        </div>
+    `;
 }
 
 function getSidebarPlayerHTML(p) { return getPlayerCardHTML(p); }

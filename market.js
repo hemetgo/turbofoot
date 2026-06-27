@@ -78,63 +78,30 @@ function showMarketScreen() {
     }
 
     gameState.marketPool.forEach((p, idx) => {
-        // Delay de animação para efeito cascata
         let animDelay = `${idx * 0.1}s`;
 
         if (!p) {
-            // Estilo VENDIDO/ESGOTADO - SEM O CARIMBO DE TEXTO (Apenas apagado)
+            // Card Esgotado
             list.innerHTML += `
-            <div class="market-card market-card-disabled" style="animation-delay: ${animDelay};">
-                <div class="card-emoji">❌</div>
-                <div class="market-info">
-                    <div class="market-name">---</div>
-                </div>
+            <div class="universal-card" style="animation-delay: ${animDelay}; opacity: 0.3; filter: grayscale(1); display:flex; align-items:center; gap:14px; background:var(--bg-card); border:1px solid var(--border-accent); border-radius:14px; padding:14px; width:100%;">
+                <div style="font-size:2.5rem;">❌</div>
+                <div style="font-weight:900; font-size:1.1rem;">VENDIDO</div>
             </div>`;
             return;
         }
 
-        let disabledAttr = (gameState.coins < p.price) ? "disabled" : "";
-        let premiumClass = p.isStar ? "premium-card" : "";
+        let isAffordable = gameState.coins >= p.price;
+        let btnAttr = isAffordable ? "" : "disabled";
 
-        let perkCounts = {};
-        if (p.perks) {
-            p.perks.forEach(perk => {
-                if (!perkCounts[perk.id]) perkCounts[perk.id] = { ...perk, count: 1 };
-                else perkCounts[perk.id].count++;
-            });
-        }
-
-        let perksHtml = Object.values(perkCounts).map(perk => {
-            let countLabel = perk.count > 1 ? ` <span style="color:var(--accent-gold); font-weight:900;">x${perk.count}</span>` : "";
-            return `<span data-tip="${t(perk.desc)}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 6px; border: 1px solid var(--border-light); font-size: 0.75rem; font-weight: 800; white-space: nowrap; color: #e2e8f0; pointer-events: auto;">${perk.emoji} ${t(perk.name)}${countLabel}</span>`;
-        }).join('');
-
-        if (!perksHtml) perksHtml = `<span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800;">${t('TEXT_NO_PERKS')}</span>`;
-
-        let starLabel = p.isStar ? `<span class="star-badge">⭐</span>` : '';
-        let levelBadge = `<span class="level-badge">Nv ${p.level}</span>`;
-        let posBadge = p.position ? `<span class="pos-badge pos-${p.position}">${t('POS_' + p.position)}</span>` : '';
-
-        list.innerHTML += `
-            <div class="market-card ${premiumClass}" style="animation-delay: ${animDelay};">
-                <div class="card-emoji">${p.emoji}</div>
-                <div class="market-info">
-                    <div class="market-title-row">
-                        ${posBadge}
-                        <span class="fi fi-${p.flag || 'xx'}"></span>
-                        <span class="market-player-name">${p.name}</span>
-                        ${starLabel}
-                    </div>
-                    <div class="market-subtitle-row">
-                        ${perksHtml}
-                    </div>
-                </div>
-                <div class="market-actions">
-                    ${levelBadge}
-                    <button class="market-buy-btn" ${disabledAttr} onclick="executePurchase(${idx})">${p.price}💰</button>
-                </div>
-            </div>
+        // Botão de compra gigante e claro injetado na carta
+        let actionHTML = `
+            <div style="font-size:1.3rem; font-weight:900; color:var(--accent-gold); text-align:center;">${p.price}💰</div>
+            <button class="btn-primary" style="padding:12px 20px; font-size:0.95rem; margin-top:4px;" ${btnAttr} onclick="executePurchase(${idx})">${t('MARKET_BTN_BUY') || 'CONTRATAR'}</button>
         `;
+
+        let customStyle = `animation-delay: ${animDelay}; ` + (!isAffordable ? "opacity:0.6; filter:grayscale(30%);" : "");
+
+        list.innerHTML += getPlayerCardHTML(p, actionHTML, customStyle);
     });
 }
 
@@ -182,6 +149,7 @@ function openMarketSwapModal(draftIndex) {
         return;
     }
 
+    // Carta do novo reforço não tem botões
     incomingContainer.innerHTML = getPlayerCardHTML(pendingPurchase);
 
     swapList.innerHTML = '';
@@ -189,18 +157,14 @@ function openMarketSwapModal(draftIndex) {
         swapList.innerHTML = `<p style="color: var(--text-muted); text-align:center;">${t('TEXT_NO_RESERVES_FOR_SWAP')}</p>`;
     } else {
         gameState.reserves.forEach((player, idx) => {
-            let playerCard = getPlayerCardHTML(player);
-
-            swapList.innerHTML += `
-                <div class="market-swap-row">
-                    <div style="flex:1; min-width: 0; pointer-events: none;">
-                        ${playerCard}
-                    </div>
-                    <button class="btn-icon" style="cursor: pointer; background: rgba(248, 113, 113, 0.1); border-color: var(--accent-red); color: var(--accent-red); padding: 0 16px; height: 64px; border-radius: 8px; font-size: 1.5rem; flex-shrink: 0;" onclick="replaceReserve(${idx})" data-tip="${t('TIP_REPLACE_RESERVE')}">
-                        🔁
-                    </button>
-                </div>
+            // Botão de substituir injetado na carta da reserva
+            let actionHTML = `
+                <button class="btn-primary" style="background:rgba(248,113,113,0.1); border:1px solid var(--accent-red); color:var(--accent-red); padding:16px 20px; font-size:1rem; box-shadow:none;" onclick="replaceReserve(${idx})">
+                    🔁 TROCAR
+                </button>
             `;
+
+            swapList.innerHTML += getPlayerCardHTML(player, actionHTML);
         });
     }
 
