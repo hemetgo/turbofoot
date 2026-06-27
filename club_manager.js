@@ -387,11 +387,10 @@ function renderSquadGrid() {
     rGrid.innerHTML = '';
     let resCount = gameState.reserves ? gameState.reserves.length : 0;
     rTitle.innerHTML = t('LABEL_RESERVES', { count: resCount }) || `RESERVAS (${resCount}/12)`;
-    pGrid.innerHTML = ''; // Limpa o container principal
+    pGrid.innerHTML = '';
 
     let formationDef = FORMATIONS[gameState.formation || "4-4-2"];
 
-    // 1. Agrupar os jogadores titulares pelas posições relativas à formação
     const sectors = [
         { pos: "GOL", label: "GOLEIRO", players: [] },
         { pos: "ZAG", label: "DEFESA", players: [] },
@@ -405,11 +404,10 @@ function renderSquadGrid() {
         if (sector) sector.players.push({ player: p, index: idx, expectedPos });
     });
 
-    // 2. Renderizar a Lista Tática
+    // 1. Renderiza os Titulares
     sectors.forEach(sec => {
         if (sec.players.length === 0) return;
 
-        // Cabeçalho do Setor
         let sectorTitle = document.createElement('div');
         sectorTitle.className = 'squad-sector-title';
         sectorTitle.innerHTML = `${sec.label} <span style="color:var(--text-muted); font-size:0.8rem;">(${sec.players.length})</span>`;
@@ -423,17 +421,23 @@ function renderSquadGrid() {
 
         sec.players.forEach(item => {
             let p = item.player;
-            let isSelected = squadSelectedPlayer && squadSelectedPlayer.id === p.id;
-            let customStyle = isSelected ? "border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); transform: scale(1.02);" : "cursor: pointer;";
 
-            // Botão super sutil ("Fantasma"), some completamente se já for o capitão
+            // Lógica de Destaque
+            let isSelected = squadSelectedPlayer && squadSelectedPlayer.id === p.id;
+            let isSwapTarget = squadSelectedPlayer && !isSelected;
+
             let btnCap = (gameState.captainId !== p.id) ?
                 `<button style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:var(--text-muted); font-size:1rem; padding:8px 12px; border-radius:8px; cursor:pointer; transition:all 0.2s;" onclick="event.stopPropagation(); assignCaptain('${p.id}')">👑</button>` :
                 ``;
 
             let temp = document.createElement('div');
-            temp.innerHTML = getPlayerCardHTML(p, btnCap, customStyle, { expectedPos: item.expectedPos });
+            // Removemos os estilos inline de seleção daqui, o CSS puro fará isso
+            temp.innerHTML = getPlayerCardHTML(p, btnCap, "cursor: pointer;", { expectedPos: item.expectedPos });
             let card = temp.firstElementChild;
+
+            // Aplica as classes dinamicamente
+            if (isSelected) card.classList.add('swap-selected');
+            else if (isSwapTarget) card.classList.add('swap-target');
 
             card.onclick = (e) => handleSquadClick(p, item.index, true, e);
             sectorList.appendChild(card);
@@ -441,18 +445,23 @@ function renderSquadGrid() {
         pGrid.appendChild(sectorList);
     });
 
-    // 3. Renderizar Reservas
+    // 2. Renderiza os Reservas
     if (gameState.reserves) {
         gameState.reserves.forEach((p, i) => {
-            let isSelected = squadSelectedPlayer && squadSelectedPlayer.id === p.id;
-            let customStyle = isSelected ? "border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); transform: scale(1.02);" : "cursor: pointer;";
 
-            // Botão de Demissão Injetado
+            // Lógica de Destaque para as Reservas
+            let isSelected = squadSelectedPlayer && squadSelectedPlayer.id === p.id;
+            let isSwapTarget = squadSelectedPlayer && !isSelected;
+
             let btnFire = `<button class="btn-icon" style="padding:12px; border-color:var(--accent-red); color:var(--accent-red); font-size:1.1rem; background:rgba(248,113,113,0.1);" onclick="event.stopPropagation(); fireReserve(${i})">🗑️</button>`;
 
             let temp = document.createElement('div');
-            temp.innerHTML = getPlayerCardHTML(p, btnFire, customStyle);
+            temp.innerHTML = getPlayerCardHTML(p, btnFire, "cursor: pointer;");
             let card = temp.firstElementChild;
+
+            // Aplica as classes dinamicamente
+            if (isSelected) card.classList.add('swap-selected');
+            else if (isSwapTarget) card.classList.add('swap-target');
 
             card.onclick = (e) => handleSquadClick(p, i, false, e);
             rGrid.appendChild(card);
@@ -475,22 +484,18 @@ function handleSquadClick(player, index, isStarter, event) {
 
     let arr1 = squadSelectedPlayer.isStarter ? gameState.team : gameState.reserves;
     let arr2 = isStarter ? gameState.team : gameState.reserves;
+
     let p1 = arr1[squadSelectedPlayer.index];
     let p2 = arr2[index];
 
-    if ((p1.position === 'GOL' && p2.position !== 'GOL') || (p1.position !== 'GOL' && p2.position === 'GOL')) {
-        createJuiceText(t('TEXT_GOL_SWAP_ERROR') || "Erro", "var(--accent-red)", window.innerWidth / 2, 100);
-        squadSelectedPlayer = null;
-        renderSquadGrid();
-        return;
-    }
-
-    // (Perto do final da função handleSquadClick...)
+    // Executa a Troca efetiva (Sem a trava de GOL!)
     arr1[squadSelectedPlayer.index] = p2;
     arr2[index] = p1;
 
+    if (gameState.captainId === p1.id && !squadSelectedPlayer.isStarter) gameState.captainId = gameState.team[1].id;
+    if (gameState.captainId === p2.id && !isStarter) gameState.captainId = gameState.team[1].id;
+
     // REGRA NOVA: O campo NUNCA pode ficar sem capitão.
-    // Se o capitão for mandado para a reserva, o primeiro jogador titular herda a braçadeira.
     if (gameState.reserves.find(r => r.id === gameState.captainId)) {
         gameState.captainId = gameState.team[0].id;
     }

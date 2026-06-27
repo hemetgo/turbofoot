@@ -393,12 +393,57 @@ function _renderPlayerButtons() {
                 removeHighlightPlayers(); await resolveProceduralNode(node, e);
             } else {
                 document.querySelectorAll(".node-btn").forEach(b => b.classList.remove("selected-action"));
-                btn.classList.add("selected-action"); selectedActionNodeId = node.id; renderMinimap(node);
+                btn.classList.add("selected-action");
+                selectedActionNodeId = node.id;
+
+                removeHighlightPlayers();
+                renderMinimap(node);
+                highlightActor(node.actor.id);
+                if (advantage && canAfford) highlightSynergyPlayers([node.synergy]);
             }
         };
-        btn.onpointerenter = () => { renderMinimap(node); if (advantage && canAfford) highlightSynergyPlayers([node.synergy]); };
-        btn.onpointerleave = () => { renderMinimap(); removeHighlightPlayers(); };
+
+        btn.onpointerenter = () => {
+            renderMinimap(node);
+            highlightActor(node.actor.id);
+            if (advantage && canAfford) highlightSynergyPlayers([node.synergy]);
+        };
+
+        btn.onpointerleave = () => {
+            // Se o mouse sair do botão QUE ESTÁ selecionado, não apaga o brilho
+            if (selectedActionNodeId === node.id) return;
+
+            removeHighlightPlayers();
+            renderMinimap();
+
+            // Restaura o brilho da ação selecionada (caso o jogador tenha passado o mouse por outra e tirado)
+            if (selectedActionNodeId) {
+                let sNode = selected.find(n => n.id === selectedActionNodeId);
+                if (sNode) {
+                    renderMinimap(sNode);
+                    highlightActor(sNode.actor.id);
+                    if (getActorTraits(sNode.actor)[sNode.synergy] > 0) highlightSynergyPlayers([sNode.synergy]);
+                }
+            }
+        };
+
         wrapper.appendChild(btn);
+    }); // Fim do foreach
+}
+
+function highlightActor(actorId) {
+    if (!actorId) return;
+    document.querySelectorAll('.player-card').forEach(card => {
+        if (card.getAttribute('data-id') === actorId) {
+            card.classList.add('highlight-actor');
+        }
+    });
+}
+
+function removeHighlightPlayers() {
+    document.querySelectorAll('.player-card').forEach(card => {
+        card.classList.remove('highlight-synergy');
+        card.classList.remove('highlight-actor');
     });
 }
 

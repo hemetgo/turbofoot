@@ -3082,3 +3082,42 @@ button {
     opacity: 0.2;
     filter: blur(2px);
 }
+
+/* --- EFEITOS DE TROCA DE JOGADORES NA LISTA --- */
+.swap-selected {
+    border-color: var(--accent-blue) !important;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4) !important;
+    transform: scale(1.02);
+    z-index: 10;
+    /* Adiciona um gradiente azul suave atrás do jogador selecionado */
+    background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, var(--bg-card) 100%) !important;
+}
+
+.swap-target {
+    animation: pulseSwapTarget 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseSwapTarget {
+    0% {
+        border-color: rgba(245, 158, 11, 0.2);
+        box-shadow: 0 0 5px rgba(245, 158, 11, 0.05);
+    }
+
+    50% {
+        border-color: rgba(245, 158, 11, 0.8);
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+    }
+
+    100% {
+        border-color: rgba(245, 158, 11, 0.2);
+        box-shadow: 0 0 5px rgba(245, 158, 11, 0.05);
+    }
+}
+
+/* --- DESTAQUE DO JOGADOR ATUANDO NA PARTIDA --- */
+.player-card.highlight-actor {
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.6), inset 0 0 10px rgba(56, 189, 248, 0.2) !important;
+    border-color: var(--accent-blue) !important;
+    transform: scale(1.02);
+    z-index: 10;
+}
