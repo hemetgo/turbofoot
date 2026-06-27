@@ -296,7 +296,7 @@ function _renderPlayerButtons() {
         let finalMod = node.id === "bicycle" ? node.mod + (Math.min(matchState.combo, 6) * 0.1) : node.mod;
         let chance = (scale.baseChance || 45) * finalMod;
 
-        if (matchState.hasBall) chance += 5; else chance -= 5;
+        if (matchState.hasBall) chance += 5; else chance -= 10;
 
         let pIndex = gameState.team.findIndex(p => p.id === node.actor.id);
         let expectedPos = FORMATIONS[gameState.formation || "4-4-2"][pIndex];

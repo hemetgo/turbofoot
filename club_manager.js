@@ -124,18 +124,26 @@ let currentRandomBaseIdx = 0;
 let currentRandomAdjIdx = 0;
 
 // Função chamada pelo botão 🔀
-window.randomizeClubName = function () {
-    currentRandomBaseIdx = Math.floor(Math.random() * GAME_CONTENT.clubGeneration.bases.length);
-    currentRandomAdjIdx = Math.floor(Math.random() * GAME_CONTENT.clubGeneration.adjectives.length);
+function randomizeClubName() {
+    // 1. Sorteia o nome e o emoji (mantém a lógica que você já tinha)
+    const base = rnd(GAME_CONTENT.clubGeneration.bases);
+    const adj = rnd(GAME_CONTENT.clubGeneration.adjectives);
 
-    const base = GAME_CONTENT.clubGeneration.bases[currentRandomBaseIdx];
-    const adj = GAME_CONTENT.clubGeneration.adjectives[currentRandomAdjIdx];
+    let newName = `${base.emoji} ${t(base.name)} ${t(adj)}`;
+    document.getElementById('display-club-name').innerText = newName;
 
-    const displayEl = document.getElementById('display-club-name');
-    if (displayEl) {
-        displayEl.innerHTML = `<span style="font-size:2rem; margin-right:8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${base.emoji}</span> ${t(base.name)} ${t(adj)}`;
+    // --- NOVO: Sorteia o país (Nacionalidade) ---
+    const natSelect = document.getElementById('create-club-nat');
+    if (natSelect && natSelect.options.length > 0) {
+        // Escolhe um índice aleatório baseado na quantidade de países na lista
+        const randomIndex = Math.floor(Math.random() * natSelect.options.length);
+        natSelect.selectedIndex = randomIndex;
     }
-};
+    // ---------------------------------------------
+
+    // Toca o som de clique, se o sistema de áudio estiver ativo
+    if (typeof playSFX === 'function') playSFX('click');
+}
 
 function openCreateClub() {
     const natSel = document.getElementById('create-club-nat');
