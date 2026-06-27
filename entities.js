@@ -1,16 +1,36 @@
+let recentGeneratedNames = [];
+
 function generateIdentity(isBase = false, forcedNationality = null) {
-    // CORREÇÃO: Só permite sortear um Preset (Craque global) se NÃO houver nacionalidade forçada!
+    // Sorteio de Presets (Craques globais)
     if (!forcedNationality && !isBase && GAME_CONTENT.presets && GAME_CONTENT.presets.length > 0 && Math.random() < 0.05) {
         let preset = rnd(GAME_CONTENT.presets);
-        return { name: preset.name, emoji: preset.face, flag: preset.flag, isPreset: true, presetPerks: preset.perks };
+
+        // Verifica se o preset já foi sorteado recentemente
+        if (!recentGeneratedNames.includes(preset.name)) {
+            recentGeneratedNames.push(preset.name);
+            if (recentGeneratedNames.length > 50) recentGeneratedNames.shift(); // Mantém apenas os últimos 50
+            return { name: preset.name, emoji: preset.face, flag: preset.flag, isPreset: true, presetPerks: preset.perks };
+        }
     }
 
     let nat = forcedNationality ? forcedNationality : rnd(GAME_CONTENT.names);
-    let first = rnd(nat.firstNames);
-    let last = rnd(nat.lastNames);
-    let face = rnd(nat.faces);
+    let first, last, face, fullName;
+    let attempts = 0;
 
-    return { name: `${first} ${last}`, emoji: face, flag: nat.flag, isPreset: false };
+    // --- NOVO: Tenta gerar um nome único até 20 vezes ---
+    do {
+        first = rnd(nat.firstNames);
+        last = rnd(nat.lastNames);
+        face = rnd(nat.faces);
+        fullName = `${first} ${last}`;
+        attempts++;
+    } while (recentGeneratedNames.includes(fullName) && attempts < 20);
+
+    // Guarda o nome gerado na memória para não o repetir tão cedo
+    recentGeneratedNames.push(fullName);
+    if (recentGeneratedNames.length > 50) recentGeneratedNames.shift();
+
+    return { name: fullName, emoji: face, flag: nat.flag, isPreset: false };
 }
 
 function generatePosition() {

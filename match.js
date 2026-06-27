@@ -94,7 +94,7 @@ function renderMinimap(hoverNode = null) {
 
 function getZonePlayers(zone) {
     return gameState.team.filter(p => {
-        if (p.id === gameState.captainId) return true;
+        // O capitão não se teletransporta mais. Cada um na sua zona!
         if (zone === 0) return p.position === 'GOL' || p.position === 'ZAG';
         if (zone === 1) return p.position === 'ZAG';
         if (zone === 2) return p.position === 'ZAG' || p.position === 'MEI';
@@ -274,7 +274,30 @@ function _renderPlayerButtons() {
     let chanceSet = [];
 
     selected.forEach((node) => {
-        node.actor = rnd(activePlayers);
+
+        // --- NOVA LÓGICA DE PRIORIDADE POR POSIÇÃO ---
+        let validActors = activePlayers;
+
+        if (node.type === 'save') {
+            // Defesas difíceis dão prioridade máxima ao Goleiro
+            validActors = activePlayers.filter(p => p.position === 'GOL');
+        } else if (node.type === 'def') {
+            // Desarmes dão prioridade a Zagueiros e Meias
+            validActors = activePlayers.filter(p => p.position === 'ZAG' || p.position === 'MEI');
+        } else if (node.type === 'shoot') {
+            // Chutes dão prioridade a Atacantes e Meias
+            validActors = activePlayers.filter(p => p.position === 'ATA' || p.position === 'MEI');
+        } else if (node.type === 'atk') {
+            // Passes e Dribles priorizam Meias, Atacantes e Zagueiros (saída de bola)
+            validActors = activePlayers.filter(p => p.position === 'MEI' || p.position === 'ATA' || p.position === 'ZAG');
+        }
+
+        // Se o time estiver sem a posição ideal na zona (ex: sem goleiro), sorteia qualquer um que estiver lá
+        if (validActors.length === 0) validActors = activePlayers;
+
+        node.actor = rnd(validActors);
+        // ----------------------------------------------
+
         let actorTraits = getActorTraits(node.actor);
 
         const btn = document.createElement("button");
