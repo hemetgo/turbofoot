@@ -626,6 +626,10 @@ function handleGoal(isUserGoal, actorObj = null) {
         }
         matchState.stats.userGoalsBy[scorer.id].count++;
 
+        // --- NOVO: Atualiza a Sidebar instantaneamente na hora do gol! ---
+        if (typeof updateRosterUI === 'function') updateRosterUI();
+        // -----------------------------------------------------------------
+
         addMatchLog((t('LOG_GOAL_USER') || `⚽ GOLAÇO DE {name}!!!`).replace('{name}', scorerName.toUpperCase()), "goal-user");
         addMatchLog(t('LOG_RIVAL_RESTART'), "fail");
         fireConfetti();

@@ -104,7 +104,15 @@ function getPlayerCardHTML(p, actionHTML = "", customStyles = "", indexInfo = nu
     }
 
     // Badge de Gols na Temporada
+    // Badge de Gols na Temporada
     let runGoals = (gameState.season && gameState.season.playerStats && gameState.season.playerStats[p.id]?.goals) || 0;
+
+    // --- NOVO: Soma os gols da partida em andamento em tempo real! ---
+    if (typeof matchState !== 'undefined' && matchState && matchState.stats && matchState.stats.userGoalsBy && matchState.stats.userGoalsBy[p.id]) {
+        runGoals += matchState.stats.userGoalsBy[p.id].count;
+    }
+    // -----------------------------------------------------------------
+
     let runGoalsBadge = runGoals > 0 ? `<span style="font-size:0.6rem; background:rgba(245,158,11,0.2); border:1px solid var(--accent-gold); color:var(--accent-gold); padding:2px 6px; border-radius:10px; margin-left:6px; white-space:nowrap;">⚽ ${runGoals}</span>` : "";
 
     // --- ATUALIZAÇÃO: Verifica se indexInfo.hideInfo é true para esconder a lupa ---
