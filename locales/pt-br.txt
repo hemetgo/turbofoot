@@ -542,3 +542,19 @@ TEXT_FIRE_PLAYER_CONFIRM=Tem certeza que deseja dispensar o jogador {name}? Esta
 LOG_FIRED=DISPENSADO
 
 SKILLS_NOT_FOUND=Nenhuma habilidade encontrada.
+
+LOG_GOAL_USER=⚽ GOLAÇO DE {name}!!!
+LOG_GOAL_RIVAL=❌ GOL DO RIVAL... {name} não conseguiu evitar.
+LOG_SYNERGY_SAVE=✨ {name} usou sua habilidade para salvar a jogada!
+LOG_BONUS_PLAY=🔥 Bela jogada de {name}!
+LOG_ACTION_SUCCESS=✅ {name} executou com sucesso: {action}
+LOG_MIRACLE_SAVE=🧤 MILAGRE DE {name}! Defesaça!
+LOG_COUNTER_ATTACK=🚨 Contra-ataque! {name} perdeu a bola!
+LOG_ACTION_FAIL=⚠️ {name} falhou na tentativa de {action}...
+LOG_SHOOT_MISS=🤦‍♂️ Inacreditável! {name} mandou pra fora!
+LABEL_ATTACK=ATAQUE
+LABEL_DEFENSE=DEFESA
+
+TITLE_DELETE_CLUB=EXCLUIR CLUBE
+TEXT_DELETE_CLUB_CONFIRM=Tem certeza que deseja excluir o clube {club}? Toda a sua carreira e histórico serão perdidos para sempre.
+LOG_CLUB_DELETED=CLUBE APAGADO

@@ -222,13 +222,30 @@ function executeCreateClub() {
 }
 
 window.deleteClub = function (idx, event) {
-    event.stopPropagation(); // Evita que o clique abra o clube
-    let clubName = tClub(allSaves[idx].club.name);
-    if (confirm(t('TEXT_DELETE_CLUB_CONFIRM', { club: clubName }) || `Excluir o clube ${clubName}? Isso não pode ser desfeito.`)) {
-        allSaves.splice(idx, 1);
-        localStorage.setItem("turboFoot_saves_v8", JSON.stringify(allSaves));
-        renderClubSelection();
-    }
+    event.stopPropagation(); // Evita que o clique no botão da lixeira abra o clube sem querer
+
+    let clubName = typeof tClub === 'function' ? tClub(allSaves[idx].club.name) : allSaves[idx].club.name;
+
+    // Pega o texto traduzido e injeta o nome do clube
+    let confirmText = t('TEXT_DELETE_CLUB_CONFIRM') || `Tem certeza que deseja excluir o clube {club}? Isso não pode ser desfeito.`;
+    confirmText = confirmText.replace('{club}', clubName.toUpperCase());
+
+    // Chama o Modal Customizado que já tínhamos criado
+    showCustomConfirm(
+        t('TITLE_DELETE_CLUB') || "EXCLUIR CLUBE",
+        confirmText,
+        () => {
+            // Ação executada se o usuário clicar em "CONFIRMAR"
+            allSaves.splice(idx, 1);
+            localStorage.setItem("turboFoot_saves_v8", JSON.stringify(allSaves));
+            renderClubSelection();
+
+            // Feedback visual flutuante
+            if (typeof createJuiceText === 'function') {
+                createJuiceText(t('LOG_CLUB_DELETED') || "CLUBE EXCLUÍDO", "var(--accent-red)", window.innerWidth / 2, window.innerHeight / 2);
+            }
+        }
+    );
 };
 
 function returnToHub() {

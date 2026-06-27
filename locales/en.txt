@@ -538,3 +538,19 @@ TEXT_FIRE_PLAYER_CONFIRM=Are you sure you want to release {name}? This action ca
 LOG_FIRED=RELEASED
 
 SKILLS_NOT_FOUND=No skill found.
+
+LOG_GOAL_USER=⚽ WHAT A GOAL BY {name}!!!
+LOG_GOAL_RIVAL=❌ RIVAL GOAL... {name} couldn't save it.
+LOG_SYNERGY_SAVE=✨ {name} used their skill to save the play!
+LOG_BONUS_PLAY=🔥 Great play by {name}!
+LOG_ACTION_SUCCESS=✅ {name} successfully executed: {action}
+LOG_MIRACLE_SAVE=🧤 MIRACLE BY {name}! What a save!
+LOG_COUNTER_ATTACK=🚨 Counter-attack! {name} lost the ball!
+LOG_ACTION_FAIL=⚠️ {name} failed the attempt to {action}...
+LOG_SHOOT_MISS=🤦‍♂️ Unbelievable! {name} missed the target!
+LABEL_ATTACK=ATTACK
+LABEL_DEFENSE=DEFENSE
+
+TITLE_DELETE_CLUB=DELETE CLUB
+TEXT_DELETE_CLUB_CONFIRM=Are you sure you want to delete {club}? Your entire career and history will be lost forever.
+LOG_CLUB_DELETED=CLUB DELETED

@@ -398,7 +398,7 @@ function _renderPlayerButtons() {
                 </div>
             </div>
             <div class="node-header">
-                <span class="node-chance" style="color:${chanceColor};">🎯 ${chance}%</span>
+                <span class="node-chance" style="color:${chanceColor};">${chance}%</span>
                 ${comboBadge}
             </div>
             <div class="node-center">
@@ -529,18 +529,18 @@ async function resolveProceduralNode(node, event) {
         else if (node.type !== 'shoot' && node.type !== 'save') {
             if (wasPityUsed || usedSecondChance) {
                 createJuiceText(t('JUICE_SYNERGY'), "#a855f7", x, y - 50);
-                addMatchLog(`✨ ${actor} usou sua habilidade para salvar a jogada!`, "success");
+                addMatchLog((t('LOG_SYNERGY_SAVE') || `✨ {name} usou sua habilidade para salvar a jogada!`).replace('{name}', actor), "success");
             } else if (hasAdvantage) {
                 createJuiceText(t('JUICE_BONUS'), "#a855f7", x, y - 50);
-                addMatchLog(`🔥 Bela jogada de ${actor}!`, "success");
+                addMatchLog((t('LOG_BONUS_PLAY') || `🔥 Bela jogada de {name}!`).replace('{name}', actor), "success");
             } else {
                 createJuiceText(matchState.nextBuff > 0 ? t('LOG_NICE') : t(node.name), "#34d399", x, y);
-                addMatchLog(`✅ ${actor} executou com sucesso: ${t(node.name)}`, 'success');
+                addMatchLog((t('LOG_ACTION_SUCCESS') || `✅ {name} executou com sucesso: {action}`).replace('{name}', actor).replace('{action}', t(node.name)), 'success');
             }
         }
         else if (node.type === 'save') {
             createJuiceText(t('LOG_GREAT_DEFENSE_TITLE'), "#38bdf8", x, y);
-            addMatchLog(`🧤 MILAGRE DE ${actor.toUpperCase()}! Defesaça!`, 'success');
+            addMatchLog((t('LOG_MIRACLE_SAVE') || `🧤 MILAGRE DE {name}! Defesaça!`).replace('{name}', actor.toUpperCase()), 'success');
         }
     } else {
         let mitigation = getLeadershipMitigation(getTeamTraits());
@@ -555,7 +555,7 @@ async function resolveProceduralNode(node, event) {
         if (wasAttacking && !matchState.hasBall) {
             matchState.zone = Math.max(0, matchState.zone + mitigatedFailMove - 1);
             createJuiceText(t('LOG_COUNTER_ATTACK_TITLE'), "#ef4444", x, y - 80);
-            addMatchLog(`🚨 Contra-ataque! ${actor} perdeu a bola!`, "fail");
+            addMatchLog((t('LOG_COUNTER_ATTACK') || `🚨 Contra-ataque! {name} perdeu a bola!`).replace('{name}', actor), "fail");
         } else {
             matchState.zone = Math.max(0, matchState.zone + mitigatedFailMove);
         }
@@ -563,11 +563,11 @@ async function resolveProceduralNode(node, event) {
         if (node.type === 'save') { goalScored = true; isUserGoal = false; }
         else if (!wasAttacking || node.type !== 'shoot') {
             createJuiceText(t('LOG_FAILED'), "#f87171", x, y);
-            addMatchLog(`⚠️ ${actor} falhou na tentativa de ${t(node.name)}...`, 'fail');
+            addMatchLog((t('LOG_ACTION_FAIL') || `⚠️ {name} falhou na tentativa de {action}...`).replace('{name}', actor).replace('{action}', t(node.name)), 'fail');
         }
         else if (node.type === 'shoot') {
             createJuiceText(t('LOG_MISSED'), "#94a3b8", x, y);
-            addMatchLog(`🤦‍♂️ Inacreditável! ${actor} mandou pra fora!`, 'fail');
+            addMatchLog((t('LOG_SHOOT_MISS') || `🤦‍♂️ Inacreditável! {name} mandou pra fora!`).replace('{name}', actor), 'fail');
         }
     }
 
@@ -596,7 +596,7 @@ function handleGoal(isUserGoal, actorObj = null) {
         }
         matchState.stats.userGoalsBy[scorer.id].count++;
 
-        addMatchLog(`⚽ GOLAÇO DE ${scorerName.toUpperCase()}!!!`, "goal-user");
+        addMatchLog((t('LOG_GOAL_USER') || `⚽ GOLAÇO DE {name}!!!`).replace('{name}', scorerName.toUpperCase()), "goal-user");
         addMatchLog(t('LOG_RIVAL_RESTART'), "fail");
         fireConfetti();
 
@@ -607,14 +607,18 @@ function handleGoal(isUserGoal, actorObj = null) {
 
         // --- SALVA O GOL PARA O RIVAL ---
         let rivalId = "rival_striker";
+        let attackLabel = t('LABEL_ATTACK') || "ATAQUE";
+
         if (!matchState.stats.rivalGoalsBy[rivalId]) {
-            matchState.stats.rivalGoalsBy[rivalId] = { name: "ATAQUE", emoji: matchState.rivalProfile.emoji, count: 0 };
+            matchState.stats.rivalGoalsBy[rivalId] = { name: attackLabel, emoji: matchState.rivalProfile.emoji, count: 0 };
         }
         matchState.stats.rivalGoalsBy[rivalId].count++;
 
         let defenders = getZonePlayers(0);
-        let keeper = defenders.length > 0 ? rnd(defenders).name : "Defesa";
-        addMatchLog(`❌ GOL DO RIVAL... ${keeper} não conseguiu evitar.`, "goal-rival");
+        let defenseLabel = t('LABEL_DEFENSE') || "Defesa";
+        let keeper = defenders.length > 0 ? rnd(defenders).name : defenseLabel;
+
+        addMatchLog((t('LOG_GOAL_RIVAL') || `❌ GOL DO RIVAL... {name} não conseguiu evitar.`).replace('{name}', keeper), "goal-rival");
 
         addMatchLog(t('LOG_TEAM_FURIOUS'), "success");
         fireDespairEffect();
