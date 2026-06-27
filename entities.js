@@ -1,8 +1,10 @@
 function generateIdentity(isBase = false, forcedNationality = null) {
-    if (!isBase && GAME_CONTENT.presets && GAME_CONTENT.presets.length > 0 && Math.random() < 0.05) {
+    // CORREÇÃO: Só permite sortear um Preset (Craque global) se NÃO houver nacionalidade forçada!
+    if (!forcedNationality && !isBase && GAME_CONTENT.presets && GAME_CONTENT.presets.length > 0 && Math.random() < 0.05) {
         let preset = rnd(GAME_CONTENT.presets);
         return { name: preset.name, emoji: preset.face, flag: preset.flag, isPreset: true, presetPerks: preset.perks };
     }
+
     let nat = forcedNationality ? forcedNationality : rnd(GAME_CONTENT.names);
     let first = rnd(nat.firstNames);
     let last = rnd(nat.lastNames);
