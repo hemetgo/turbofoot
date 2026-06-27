@@ -42,6 +42,10 @@ async function initGame() {
         populateHowToPlay();
         document.getElementById('loading-screen').style.display = 'none';
 
+        if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.game) {
+            window.CrazyGames.SDK.game.gameplayStart();
+        }
+
         // NOVO FLUXO DE PERSISTÊNCIA: Carrega a tela de seleção de saves
         renderClubSelection();
 
@@ -228,5 +232,25 @@ function saveGame() {
         saveAllClubs();
     }
 }
+
+// --- EVENTOS DO SDK DA CRAZY GAMES ---
+
+window.notifyGameplayStart = function () {
+    if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.game) {
+        window.CrazyGames.SDK.game.gameplayStart();
+    }
+};
+
+window.notifyGameplayStop = function () {
+    if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.game) {
+        window.CrazyGames.SDK.game.gameplayStop();
+    }
+};
+
+window.notifyHappyTime = function () {
+    if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.game) {
+        window.CrazyGames.SDK.game.happytime();
+    }
+};
 
 document.addEventListener("DOMContentLoaded", initGame);

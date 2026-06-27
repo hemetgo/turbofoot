@@ -6,6 +6,9 @@ function startMapMatch() {
     gameState.inMatch = true;
     saveGame();
 
+    // --- CRAZY GAMES SDK: Início do Gameplay ---
+    if (typeof notifyGameplayStart === 'function') notifyGameplayStart();
+
     let rivalTeam = gameState.currentNode.rival;
     const minA = GAME_BALANCE.mechanics.matchActionsMin;
     const maxA = GAME_BALANCE.mechanics.matchActionsMax;
@@ -821,6 +824,8 @@ function finishMatchRewards() {
             gameState.season.map = [];
             saveGame();
 
+            if (typeof notifyGameplayStop === 'function') notifyGameplayStop();
+
             document.getElementById("post-match-overlay").style.display = "flex";
             return;
         }
@@ -859,6 +864,8 @@ function finishMatchRewards() {
         document.getElementById("pm-info").innerText = gameState.currentNode.type === 'boss' ? t('TEXT_BOSS_DEFEATED') : t('TEXT_PATH_CLEAR');
 
         if (gameState.currentNode.type === 'boss') {
+            if (typeof notifyHappyTime === 'function') notifyHappyTime();
+
             document.querySelector(".pm-rewards").style.display = "none";
             document.querySelector("#post-match-overlay .btn-primary").innerText = t('BTN_VIEW_SEASON_SUMMARY');
             document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
@@ -884,6 +891,8 @@ function finishMatchRewards() {
 
         gameState.inMatch = false;
         saveGame();
+
+        if (typeof notifyGameplayStop === 'function') notifyGameplayStop();
 
         document.getElementById("post-match-overlay").style.display = "flex";
     }, 500);
