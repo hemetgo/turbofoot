@@ -20,7 +20,17 @@ function startMapMatch() {
         baseTotalActions: Math.floor(Math.random() * (maxA - minA + 1)) + minA,
         currentAction: 0, badLuckCounter: 0,
         advantageFailCounter: 0,
-        isExtraTime: false
+        isExtraTime: false,
+        // --- ESTATÍSTICAS AMPLIADAS ---
+        stats: {
+            userActions: 0,
+            totalActions: 0,
+            userSuccess: 0,
+            userGoalsBy: {},
+            maxCombo: 0,
+            saves: 0,     // Defesas do Goleiro
+            tackles: 0    // Desarmes/Ações Defensivas
+        }
     };
     matchState.totalActions = matchState.baseTotalActions;
 
@@ -87,6 +97,22 @@ function getZonePlayers(zone) {
     });
 }
 
+function renderMatchPlayers() {
+    const container = document.getElementById('match-players-container'); 
+    if (!container) return; 
+
+    container.innerHTML = '';
+    const activePlayers = getZonePlayers(matchState.zone);
+
+    activePlayers.forEach(p => {
+        let temp = document.createElement('div');
+        temp.innerHTML = getPlayerCardHTML(p, "", "cursor: default;");
+        let card = temp.firstElementChild;
+        card.setAttribute('data-id', p.id); 
+        container.appendChild(card);
+    });
+}
+
 function highlightActor(actorId) {
     if (!actorId) return;
     document.querySelectorAll('.player-card').forEach(card => {
@@ -98,13 +124,16 @@ function highlightActor(actorId) {
 
 function highlightSynergyPlayers(synergyIds) {
     if (!synergyIds || synergyIds.length === 0) return;
-
     let validIds = getZonePlayers(matchState.zone).map(p => p.id);
 
     document.querySelectorAll('.player-card').forEach(card => {
         let cardId = card.getAttribute('data-id');
-        let cardPerks = card.getAttribute('data-perks') || "";
-        let hasSyn = synergyIds.some(id => cardPerks.includes(id));
+        let playerObj = gameState.team.find(p => p.id === cardId);
+        let hasSyn = false;
+        
+        if (playerObj && playerObj.perks) {
+             hasSyn = playerObj.perks.some(perk => synergyIds.includes(perk.id));
+        }
 
         if (hasSyn && validIds.includes(cardId)) {
             card.classList.add('highlight-synergy');
@@ -128,6 +157,7 @@ function updateFieldState() {
 
     updateTimerDisplay();
     renderMinimap();
+    renderMatchPlayers(); 
 
     const possBadge = document.getElementById("possession-badge");
     if (matchState.hasBall) {
@@ -400,13 +430,13 @@ function _renderPlayerButtons() {
 
                 removeHighlightPlayers();
                 renderMinimap(node);
-                highlightActor(node.actor.id); // Destaca APENAS o protagonista
+                highlightActor(node.actor.id);
             }
         };
 
         btn.onpointerenter = () => {
             renderMinimap(node);
-            highlightActor(node.actor.id); // Destaca APENAS o protagonista
+            highlightActor(node.actor.id);
         };
 
         btn.onpointerleave = () => {
@@ -418,13 +448,13 @@ function _renderPlayerButtons() {
                 let sNode = selected.find(n => n.id === selectedActionNodeId);
                 if (sNode) {
                     renderMinimap(sNode);
-                    highlightActor(sNode.actor.id); // Destaca APENAS o protagonista
+                    highlightActor(sNode.actor.id);
                 }
             }
         };
 
         wrapper.appendChild(btn);
-    });
+    }); 
 }
 
 async function resolveProceduralNode(node, event) {
@@ -438,6 +468,10 @@ async function resolveProceduralNode(node, event) {
     let wasPityUsed = false;
     let usedSecondChance = false;
     let wasAttacking = matchState.hasBall;
+
+    // CONTAGEM DE AÇÕES TOTAIS E POSSE
+    matchState.stats.totalActions++;
+    if (wasAttacking) matchState.stats.userActions++;
 
     if (node.riskLevel === "safe") {
         isSuccess = true;
@@ -464,6 +498,11 @@ async function resolveProceduralNode(node, event) {
     let actor = node.actor.name.split(' ')[0];
 
     if (isSuccess) {
+        // --- GRAVAÇÃO DE SUCESSO, DEFESAS E DESARMES ---
+        if (wasAttacking) matchState.stats.userSuccess++;
+        if (!wasAttacking && node.type === 'save') matchState.stats.saves++;
+        if (!wasAttacking && node.type === 'def') matchState.stats.tackles++;
+
         matchState.momentum = clamp(matchState.momentum + 1, -3, 3);
         if (node.comboReq === "ALL") matchState.combo = 0; else if (node.comboReq) matchState.combo = Math.max(0, matchState.combo - node.comboReq);
         if (node.comboGen) matchState.combo += node.comboGen;
@@ -472,6 +511,9 @@ async function resolveProceduralNode(node, event) {
         if (teamTraits['vision'] > 0 && Math.random() < (teamTraits['vision'] * 0.15)) {
             matchState.combo += 1; addMatchLog(t('LOG_VISION_PLAY'), "success");
         }
+
+        // SALVA O MAIOR COMBO ALCANÇADO APÓS QUALQUER SOMA
+        matchState.stats.maxCombo = Math.max(matchState.stats.maxCombo, matchState.combo);
 
         document.getElementById("game-container").classList.add("flash-success");
         setTimeout(() => document.getElementById("game-container").classList.remove("flash-success"), 400);
@@ -528,21 +570,32 @@ async function resolveProceduralNode(node, event) {
         }
     }
 
-    if (goalScored) return handleGoal(isUserGoal);
+    if (goalScored) return handleGoal(isUserGoal, node.actor);
     if (matchState.currentAction >= matchState.totalActions) return endMatchByTime();
     updateFieldState();
 }
 
-function handleGoal(isUserGoal) {
+function handleGoal(isUserGoal, actorObj = null) {
     document.getElementById("dynamic-nodes-wrapper").innerHTML = "";
     if (isUserGoal) {
         matchState.userScore++;
         document.getElementById("score-user").innerText = matchState.userScore;
         createJuiceText(t('JUICE_GOAL_USER'), "#f59e0b", window.innerWidth / 2, window.innerHeight / 2 - 100);
 
-        let strikers = getZonePlayers(4);
-        let scorer = strikers.length > 0 ? rnd(strikers).name : "Ataque";
-        addMatchLog(`⚽ GOLAÇO DE ${scorer.toUpperCase()}!!!`, "goal-user");
+        // --- SALVA O ARTILHEIRO EXATO DA JOGADA ---
+        let scorer = actorObj;
+        if (!scorer) {
+            let strikers = getZonePlayers(4);
+            scorer = strikers.length > 0 ? rnd(strikers) : gameState.team[0];
+        }
+        let scorerName = scorer.name.split(' ')[0];
+        
+        if (!matchState.stats.userGoalsBy[scorer.id]) {
+            matchState.stats.userGoalsBy[scorer.id] = { name: scorerName, emoji: scorer.emoji, count: 0 };
+        }
+        matchState.stats.userGoalsBy[scorer.id].count++;
+
+        addMatchLog(`⚽ GOLAÇO DE ${scorerName.toUpperCase()}!!!`, "goal-user");
 
         addMatchLog(t('LOG_RIVAL_RESTART'), "fail");
         fireConfetti();
@@ -662,13 +715,25 @@ function finishMatchRewards() {
     const isVictory = matchState.userScore > matchState.rivalScore;
     addMatchLog(t(getRandomLog('matchEnd')), "system");
 
+    // ENVIAR AS ESTATÍSTICAS PARA O HISTÓRICO
+    let posPct = matchState.stats.totalActions > 0 ? Math.round((matchState.stats.userActions / matchState.stats.totalActions) * 100) : 50;
+    let accPct = matchState.stats.userActions > 0 ? Math.round((matchState.stats.userSuccess / matchState.stats.userActions) * 100) : 0;
+
     if (!gameState.season.matchHistory) gameState.season.matchHistory = [];
     gameState.season.matchHistory.push({
         rivalName: matchState.rivalProfile.name,
         rivalEmoji: matchState.rivalProfile.emoji,
         type: gameState.currentNode.type,
         userScore: matchState.userScore,
-        rivalScore: matchState.rivalScore
+        rivalScore: matchState.rivalScore,
+        stats: {
+            possession: posPct,
+            accuracy: accPct,
+            maxCombo: matchState.stats.maxCombo,
+            saves: matchState.stats.saves,
+            tackles: matchState.stats.tackles,
+            scorers: matchState.stats.userGoalsBy
+        }
     });
 
     setTimeout(() => {
@@ -688,8 +753,8 @@ function finishMatchRewards() {
             };
 
             gameState.inMatch = false;
-            gameState.season.map = [];
-            saveGame();
+            gameState.season.map = []; 
+            saveGame(); 
 
             document.getElementById("post-match-overlay").style.display = "flex";
             return;
@@ -757,8 +822,6 @@ function advanceMapAfterMatch() {
 function getTeamTraits() {
     let traits = {};
     if (!gameState.team) return traits;
-
-    // Apenas os traits dos jogadores da zona atual contam para a "Aura" global do time
     let players = getZonePlayers(matchState.zone);
 
     players.forEach(p => {
@@ -783,14 +846,13 @@ function applyDiminishingReturns(count) {
     if (count <= 0) return 0;
     if (count === 1) return 1;
     if (count === 2) return 1.5;
-    return 1.8 + (count - 3) * 0.1; // Limita o impacto de times com várias habilidades repetidas
+    return 1.8 + (count - 3) * 0.1;
 }
 
 function getLeadershipMitigation(traits) {
-    // A Liderança SÓ FUNCIONA se quem tem o trait for o CAPITÃO escolhido.
     let captain = gameState.team.find(p => p.id === gameState.captainId);
-    if (!captain || !captain.perks) return 1; // Sem mitigação
+    if (!captain || !captain.perks) return 1; 
 
     let hasLeadership = captain.perks.some(p => p.id === 'leadership');
-    return hasLeadership ? 0.6 : 1; // Se o capitão tem liderança, corta o recuo/dano de falha em 40%
+    return hasLeadership ? 0.6 : 1; 
 }

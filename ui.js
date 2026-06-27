@@ -223,111 +223,245 @@ function openRosterModal() {
 }
 
 // --- HISTÓRICO ---
-function openHistoryModal() {
+// ==========================================
+// SISTEMA DE HISTÓRICO EM DUAS ETAPAS
+// ==========================================
+
+// Função auxiliar para coletar e formatar as ligas jogadas
+function getSeasonsHistory() {
+    let allSeasons = [];
+
+    // 1. Temporadas Passadas (Histórico de Runs encerradas)
+    if (gameState.runHistory && Array.isArray(gameState.runHistory)) {
+        gameState.runHistory.forEach((run, idx) => {
+            if (run && run.matchHistory && Array.isArray(run.matchHistory) && run.matchHistory.length > 0) {
+                allSeasons.push({
+                    isCurrent: false,
+                    title: `Temporada ${idx + 1}`,
+                    leagueLevel: run.leagueLevel !== undefined ? run.leagueLevel : 0,
+                    matches: run.matchHistory,
+                    result: run.result || "ELIMINADO",
+                    club: run.club || gameState.club,
+                    date: run.date || ""
+                });
+            }
+        });
+    }
+
+    // 2. Temporada Atual (Em andamento)
+    if (gameState.season && gameState.season.matchHistory && Array.isArray(gameState.season.matchHistory) && gameState.season.matchHistory.length > 0) {
+        allSeasons.push({
+            isCurrent: true,
+            title: `Temporada Atual`,
+            leagueLevel: gameState.leagueLevel !== undefined ? gameState.leagueLevel : 0,
+            matches: gameState.season.matchHistory,
+            result: "EM ANDAMENTO",
+            club: gameState.club,
+            date: ""
+        });
+    }
+
+    // Inverte para colocar as mais recentes no topo
+    return allSeasons.reverse();
+}
+
+// ETAPA 1: LISTAR AS LIGAS JOGADAS
+window.openHistoryModal = function () {
     const list = document.getElementById("history-list");
     const detailsPanel = document.getElementById("history-details");
     const footer = document.getElementById("history-footer");
 
     list.style.display = "flex";
+    list.style.flexDirection = "column";
+    list.style.padding = "16px";
+    list.style.gap = "8px";
     detailsPanel.style.display = "none";
     footer.style.display = "none";
     list.innerHTML = "";
 
-    if (!gameState.runHistory || gameState.runHistory.length === 0) {
-        list.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding: 20px;">${t("TEXT_NO_RUNS_YET")}</p>`;
+    let seasons = getSeasonsHistory();
+    window.cachedSeasonsHistory = seasons; // Guarda os dados para a Etapa 2
+
+    if (seasons.length === 0) {
+        list.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding: 20px;">${t("TEXT_NO_RUNS_YET") || "Nenhum histórico registrado."}</p>`;
     } else {
-        gameState.runHistory.forEach((run, idx) => {
-            let cls = run.result === "CAMPEÃO" ? "victory" : "loss";
-            let resultLabel = run.result === "CAMPEÃO" ? t("LABEL_CHAMPION") : t("LABEL_ELIMINATED");
+        seasons.forEach((season, idx) => {
+            let leagueConfig = GAME_BALANCE.leagues[season.leagueLevel] || GAME_BALANCE.leagues[0];
+            let isWin = season.result === "CAMPEÃO";
+            let isCurrent = season.isCurrent;
+
+            let cls = isCurrent ? "" : (isWin ? "victory" : "loss");
+            let resultLabel = isCurrent ? "EM ANDAMENTO" : (isWin ? "CAMPEÃO" : "ELIMINADO");
+            let colorClass = isCurrent ? "var(--accent-blue)" : (isWin ? "var(--accent-gold)" : "var(--accent-red)");
+
+            let wins = season.matches.filter(m => m.userScore > m.rivalScore).length;
+            let losses = season.matches.filter(m => m.userScore < m.rivalScore).length;
+            let draws = season.matches.filter(m => m.userScore === m.rivalScore).length;
+
+            let clubName = typeof tClub === 'function' ? tClub(season.club.name) : season.club.name;
+
+            // Usa a classe "history-item" nativa do seu CSS
             list.innerHTML += `
-                <div class="history-item ${cls}" onclick="viewHistoryDetails(${idx})">
+                <div class="history-item ${cls}" style="border-left: 4px solid ${colorClass};" onclick="viewHistoryDetails(${idx})">
                     <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
-                        <span style="font-size:1.8rem; flex-shrink:0;">${run.club.emoji}</span>
+                        <span style="font-size:2rem; flex-shrink:0;">${leagueConfig.emoji}</span>
                         <div style="min-width:0; flex:1;">
-                            <div style="width:100%; position:relative; height:1.2rem; overflow:hidden;">
-                                <div id="hist-run-name-${idx}" style="font-weight:900; color:#fff; font-size:0.9rem; white-space:nowrap; position:absolute; left:0;"></div>
+                            <div style="font-weight:900; color:#fff; font-size:1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-transform:uppercase;">
+                                ${t(leagueConfig.name)}
                             </div>
-                            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${run.date}</div>
+                            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">
+                                ${season.title} • <span style="color:var(--accent-green)">${wins}V</span> <span style="color:#cbd5e1">${draws}E</span> <span style="color:var(--accent-red)">${losses}D</span>
+                            </div>
                         </div>
                     </div>
                     <div style="font-weight:900; font-size:0.8rem; text-align:right; flex-shrink:0; margin-left:8px;">
-                        <span style="color: ${run.result === 'CAMPEÃO' ? 'var(--accent-gold)' : 'var(--accent-red)'}">${resultLabel}</span><br>
-                        <span style="color:var(--text-muted);">${t("LABEL_STAGE_REACHED", { stage: run.stageReached })}</span>
+                        <span style="color: ${colorClass}; text-transform:uppercase;">${resultLabel}</span><br>
+                        <span style="color:var(--text-muted); font-size:0.65rem; display:flex; justify-content:flex-end; align-items:center; gap:4px; margin-top:2px;">
+                            ${season.club.emoji} <span style="max-width:80px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${clubName.toUpperCase()}</span>
+                        </span>
                     </div>
                 </div>
             `;
         });
-
-        setTimeout(() => {
-            gameState.runHistory.forEach((run, idx) => {
-                // Utilização do tClub para traduzir o nome composto no histórico
-                setupMarquee(`hist-run-name-${idx}`, tClub(run.club.name));
-            });
-        }, 100);
     }
     document.getElementById("run-history-overlay").style.display = "flex";
-}
+};
 
-function viewHistoryDetails(idx) {
-    const run = gameState.runHistory[idx];
+// ETAPA 2: LISTAR PARTIDAS DA LIGA ESCOLHIDA
+window.viewHistoryDetails = function (idx) {
+    let season = window.cachedSeasonsHistory[idx];
+    if (!season) return;
+
     document.getElementById("history-list").style.display = "none";
+    let content = document.getElementById("history-details-content");
+    content.innerHTML = "";
 
-    let html = `<h3 style="color:var(--text-muted); text-align:center; margin-bottom:15px; font-size:0.8rem; text-transform:uppercase;">${t('HISTORY_MATCHES')}</h3>`;
+    let leagueConfig = GAME_BALANCE.leagues[season.leagueLevel] || GAME_BALANCE.leagues[0];
+    let clubName = typeof tClub === 'function' && season.club ? tClub(season.club.name) : (season.club ? season.club.name : 'Meu Clube');
+    let myEmoji = season.club ? season.club.emoji : '🛡️';
 
-    if (run.matches && run.matches.length > 0) {
-        run.matches.forEach((m, mIdx) => {
+    // Cabeçalho da Liga detalhada
+    let html = `
+        <div style="text-align:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.05);">
+            <div style="font-size:3rem; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5)); line-height:1;">${leagueConfig.emoji}</div>
+            <h3 style="color:#fff; font-size:1.4rem; text-transform:uppercase; margin-top:8px; margin-bottom:4px; letter-spacing:1px;">${t(leagueConfig.name)}</h3>
+            <div style="font-size:0.85rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">${season.title}</div>
+        </div>
+    `;
+
+    let matches = season.matches.slice().reverse();
+
+    if (matches.length > 0) {
+        matches.forEach(m => {
             let isWin = m.userScore > m.rivalScore;
-            let mColor = isWin ? "var(--accent-green)" : "var(--accent-red)";
+            let isDraw = m.userScore === m.rivalScore;
+
+            let resultColor = isWin ? 'var(--accent-green)' : (isDraw ? 'var(--text-muted)' : 'var(--accent-red)');
+            let resultLetter = isWin ? 'V' : (isDraw ? 'E' : 'D');
+            let resultLabel = isWin ? 'VITÓRIA' : (isDraw ? 'EMPATE' : 'DERROTA');
+
+            let posUser = m.stats && m.stats.possession !== undefined ? m.stats.possession : 50;
+            let posRival = 100 - posUser;
+            let accUser = m.stats && m.stats.accuracy !== undefined ? m.stats.accuracy : 0;
+            let maxCombo = m.stats && m.stats.maxCombo !== undefined ? m.stats.maxCombo : 0;
+            let saves = m.stats && m.stats.saves !== undefined ? m.stats.saves : 0;
+            let tackles = m.stats && m.stats.tackles !== undefined ? m.stats.tackles : 0;
+
+            let scorersHtml = '';
+            if (m.stats && m.stats.scorers) {
+                let scorers = Object.values(m.stats.scorers);
+                if (scorers.length > 0) {
+                    scorersHtml = `<div style="margin-top:10px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.05); display:flex; gap:6px; flex-wrap:wrap; justify-content:center;">`;
+                    scorers.forEach(s => {
+                        let balls = '⚽'.repeat(s.count);
+                        scorersHtml += `
+                            <div style="display:inline-flex; align-items:center; gap:4px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.2); border-radius:6px; padding:4px 10px;">
+                                <span style="font-size:1rem;">${s.emoji}</span>
+                                <span style="font-size:0.65rem; font-weight:800; color:var(--text-main);">${s.name.toUpperCase()}</span>
+                                <span style="font-size:0.7rem; margin-left:4px;">${balls}</span>
+                            </div>
+                        `;
+                    });
+                    scorersHtml += `</div>`;
+                }
+            }
+
+            let rivalName = typeof tClub === 'function' ? tClub(m.rivalName) : m.rivalName;
 
             html += `
-                <div class="history-match-card" style="border-left: 3px solid ${mColor};">
-                    <div class="history-match-teams">
+                <div style="background:var(--bg-card); border-left:4px solid ${resultColor}; border-radius:8px; padding:14px; margin-bottom:12px; box-shadow:0 4px 6px rgba(0,0,0,0.3); position:relative; overflow:hidden;">
+                    
+                    <div style="position:absolute; right:-15px; top:-5px; font-size:6rem; font-weight:900; color:${resultColor}; opacity:0.04; line-height:1; pointer-events:none;">${resultLetter}</div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; position:relative; z-index:2;">
+                        <div style="display:flex; flex-direction:column; align-items:center; width:33%; gap:4px;">
+                            <span style="font-size:2rem; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${myEmoji}</span>
+                            <span style="font-size:0.7rem; font-weight:900; color:var(--accent-blue); text-align:center; line-height:1.2; word-wrap:break-word; width:100%;">${clubName.toUpperCase()}</span>
+                        </div>
                         
-                        <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px; min-width:0; width:100%;">
-                            <div style="min-width:0; flex:1; position:relative; height:1.2rem; overflow:hidden;">
-                                <div id="hist-user-name-${mIdx}" class="history-team-name" style="position:absolute; right:0; white-space:nowrap;"></div>
+                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                            <div style="background:rgba(0,0,0,0.5); border:1px solid var(--border-accent); padding:6px 18px; border-radius:8px; font-size:1.6rem; font-weight:900; color:#fff; letter-spacing:2px; box-shadow:inset 0 0 10px rgba(0,0,0,0.5);">
+                                ${m.userScore} - ${m.rivalScore}
                             </div>
-                            <span class="history-team-emoji" style="flex-shrink:0;">${run.club.emoji}</span>
+                            <div style="font-size:0.55rem; font-weight:900; color:${resultColor}; margin-top:6px; text-transform:uppercase;">${resultLabel}</div>
                         </div>
                         
-                        <div class="history-match-score" style="color: ${mColor};">
-                            ${m.userScore} <span style="color:var(--text-muted); font-size:0.8rem;">x</span> ${m.rivalScore}
+                        <div style="display:flex; flex-direction:column; align-items:center; width:33%; gap:4px;">
+                            <span style="font-size:2rem; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${m.rivalEmoji}</span>
+                            <span style="font-size:0.7rem; font-weight:900; color:var(--accent-red); text-align:center; line-height:1.2; word-wrap:break-word; width:100%;">${rivalName.toUpperCase()}</span>
                         </div>
-                        
-                        <div style="display:flex; align-items:center; justify-content:flex-start; gap:8px; min-width:0; width:100%;">
-                            <span class="history-team-emoji" style="flex-shrink:0;">${m.rivalEmoji}</span>
-                            <div style="min-width:0; flex:1; position:relative; height:1.2rem; overflow:hidden;">
-                                <div id="hist-rival-name-${mIdx}" class="history-team-name" style="position:absolute; left:0; white-space:nowrap;"></div>
-                            </div>
-                        </div>
-                        
                     </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; background:rgba(0,0,0,0.2); padding:12px; border-radius:8px; position:relative; z-index:2; border: 1px solid rgba(255,255,255,0.02);">
+                        
+                        <div style="display:flex; flex-direction:column; gap:10px; justify-content:center; border-right:1px solid rgba(255,255,255,0.05); padding-right:12px;">
+                            <div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.55rem; font-weight:900; margin-bottom:4px; text-transform:uppercase;">
+                                    <span style="color:var(--accent-blue);">POSSE ${posUser}%</span>
+                                    <span style="color:var(--accent-red);">${posRival}% RIVAL</span>
+                                </div>
+                                <div style="width:100%; height:5px; background:var(--accent-red); border-radius:3px; overflow:hidden; display:flex;">
+                                    <div style="width:${posUser}%; height:100%; background:var(--accent-blue);"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.55rem; font-weight:900; margin-bottom:4px; text-transform:uppercase;">
+                                    <span style="color:var(--text-muted);">ACERTO DE AÇÕES</span>
+                                    <span style="color:var(--accent-green);">${accUser}%</span>
+                                </div>
+                                <div style="width:100%; height:5px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+                                    <div style="width:${accUser}%; height:100%; background:var(--accent-green);"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; gap:4px; justify-content:center; padding-left:4px;">
+                            <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.02); padding:4px 8px; border-radius:4px;">
+                                <span style="font-size:0.6rem; font-weight:800; color:var(--text-muted);">🔥 MÁX COMBO</span>
+                                <span style="font-size:0.75rem; font-weight:900; color:var(--accent-gold);">x${maxCombo}</span>
+                            </div>
+                            <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.02); padding:4px 8px; border-radius:4px;">
+                                <span style="font-size:0.6rem; font-weight:800; color:var(--text-muted);">🛡️ DESARMES</span>
+                                <span style="font-size:0.75rem; font-weight:900; color:var(--accent-blue);">${tackles}</span>
+                            </div>
+                            <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.02); padding:4px 8px; border-radius:4px;">
+                                <span style="font-size:0.6rem; font-weight:800; color:var(--text-muted);">🧤 DEFESAS</span>
+                                <span style="font-size:0.75rem; font-weight:900; color:var(--accent-green);">${saves}</span>
+                            </div>
+                        </div>
+                    </div>
+                    ${scorersHtml}
                 </div>
             `;
         });
     } else {
-        html += `<p style="text-align:center; font-size:0.8rem; color:var(--text-muted);">${t('HISTORY_NO_RECORDS_YET')}</p>`;
+        html += `<p style="text-align:center; font-size:0.8rem; color:var(--text-muted);">${t('HISTORY_NO_RECORDS_YET') || "Nenhuma partida registrada."}</p>`;
     }
 
-    html += `<h3 style="color:var(--text-muted); text-align:center; margin:24px 0 16px 0; font-size:0.8rem; text-transform:uppercase;">${t('HISTORY_FINAL_TEAM')}</h3>`;
-    html += `<div class="roster-grid">`;
-    if (run.finalTeam) { run.finalTeam.forEach(p => { html += getPlayerCardHTML(p); }); }
-    html += `</div>`;
-
-    document.getElementById("history-details-content").innerHTML = html;
+    content.innerHTML = html;
     document.getElementById("history-details").style.display = "flex";
     document.getElementById("history-footer").style.display = "flex";
-
-    setTimeout(() => {
-        if (run.matches) {
-            run.matches.forEach((m, mIdx) => {
-                // Utilização do tClub para traduzir o detalhe das partidas
-                setupMarquee(`hist-user-name-${mIdx}`, tClub(run.club.name), true);
-                setupMarquee(`hist-rival-name-${mIdx}`, tClub(m.rivalName), false);
-            });
-        }
-    }, 100);
-}
+};
 
 function showLevelDistribution(points, onComplete, givesTrait = false) {
     const modal = document.getElementById('level-modal-overlay');
@@ -488,11 +622,13 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
     render();
 }
 
-function closeHistoryDetails() {
+
+
+window.closeHistoryDetails = function () {
     document.getElementById("history-list").style.display = "flex";
     document.getElementById("history-details").style.display = "none";
     document.getElementById("history-footer").style.display = "none";
-}
+};
 
 function setMobileTab(tab) {
     const btnMap = document.getElementById('nav-btn-map');
