@@ -163,15 +163,37 @@ function updateRosterUI() {
     if (sbBody) {
         sbBody.style.display = 'flex';
         sbBody.style.flexDirection = 'column';
-        // Reduz o espaço interno no topo e embaixo para as cartas caberem
         sbBody.style.padding = '8px 16px';
     }
 
+    let clubName = typeof tClub === 'function' ? tClub(gameState.club.name) : gameState.club.name;
+
     const sbClubInfo = document.getElementById("sidebar-club-info");
-    if (sbClubInfo && gameState.club) sbClubInfo.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${tClub(gameState.club.name)}`;
+    if (sbClubInfo && gameState.club) sbClubInfo.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${clubName}`;
 
     const mobTitle = document.getElementById("mobile-roster-title");
-    if (mobTitle && gameState.club) mobTitle.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${tClub(gameState.club.name)}`;
+    if (mobTitle && gameState.club) mobTitle.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${clubName}`;
+
+    // --- NOVA LÓGICA DO HUB PRINCIPAL (Com Liga Atual) ---
+    const hubInfo = document.getElementById("hub-club-info");
+    if (hubInfo && gameState.club) {
+        let highestIdx = gameState.meta?.highestSeriesUnlocked || 0;
+        let leagueConfig = GAME_BALANCE.leagues && GAME_BALANCE.leagues[highestIdx] ? GAME_BALANCE.leagues[highestIdx] : { name: 'Liga Regional', emoji: '🏆' };
+
+        hubInfo.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+                <div>
+                    <span style="font-size:1.6rem; filter:drop-shadow(0 2px 2px rgba(0,0,0,0.5));">${gameState.club.emoji}</span> 
+                    ${clubName.toUpperCase()}
+                </div>
+                
+                <div style="font-size:0.75rem; font-weight:900; color:var(--accent-blue); text-transform:uppercase; background:rgba(0,0,0,0.3); padding:6px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); margin-top:4px; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 4px rgba(0,0,0,0.3);">
+                    <span style="font-size:1rem; filter:drop-shadow(0 1px 2px rgba(0,0,0,0.5));">${leagueConfig.emoji}</span> 
+                    <span>${t('LABEL_CURRENT_LEAGUE') || "LIGA ATUAL"}: ${t(leagueConfig.name)}</span>
+                </div>
+            </div>
+        `;
+    }
 
     const sbList = document.getElementById("sidebar-list");
     const sbCoins = document.getElementById("sidebar-coins");
@@ -180,7 +202,7 @@ function updateRosterUI() {
         sbList.className = "";
         sbList.style.display = "flex";
         sbList.style.flexDirection = "column";
-        sbList.style.gap = "2px"; // Encolhe a fenda entre os cards
+        sbList.style.gap = "2px";
         sbList.style.flex = "1";
         sbList.innerHTML = sidebarHTML;
     }
@@ -192,6 +214,7 @@ function updateRosterUI() {
     const mCoins = document.getElementById("market-coins");
     if (mCoins) mCoins.innerText = gameState.coins;
 }
+
 function openHowToPlay() {
     document.getElementById('how-to-play-overlay').style.display = 'flex';
 }
@@ -501,23 +524,6 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
     let available = points;
     let originalPoints = points;
     let allocations = {};
-
-    // 1. TEXTO EXPLICATIVO: Dica sobre ganhar Habilidades (Traits)
-    let infoBox = document.getElementById('level-info-box');
-    if (!infoBox) {
-        infoBox = document.createElement('div');
-        infoBox.id = 'level-info-box';
-        infoBox.style.fontSize = '0.75rem';
-        infoBox.style.color = 'var(--text-muted)';
-        infoBox.style.textAlign = 'center';
-        infoBox.style.marginBottom = '16px';
-        infoBox.style.padding = '8px';
-        infoBox.style.background = 'rgba(0,0,0,0.3)';
-        infoBox.style.borderRadius = '8px';
-        infoBox.style.borderLeft = '3px solid var(--accent-purple)';
-        infoBox.innerHTML = `${t('TEXT_TRAIN_TIP')}`;
-        grid.parentNode.insertBefore(infoBox, grid);
-    }
 
     // Inicia todo mundo com 0 níveis extras
     gameState.team.forEach(p => allocations[p.id] = 0);

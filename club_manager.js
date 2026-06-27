@@ -55,22 +55,30 @@ function renderClubSelection() {
     container.innerHTML = '';
 
     if (allSaves.length === 0) {
-        container.innerHTML = `<p style="color:var(--text-muted); text-align:center; width:100%; font-weight:bold; grid-column: 1 / -1; margin-top: 40px;">${t('TEXT_NO_CLUBS_YET')}</p>`;
+        container.innerHTML = `<p style="color:var(--text-muted); text-align:center; width:100%; font-weight:bold; grid-column: 1 / -1; margin-top: 40px;">${t('TEXT_NO_CLUBS_YET') || "Nenhum clube fundado ainda."}</p>`;
     } else {
         allSaves.forEach((save, idx) => {
             if (!save || !save.club) return;
+
+            // Puxa a liga atual do save (se não existir, cai na Liga Regional [0])
+            let highestIdx = save.meta?.highestSeriesUnlocked || 0;
+            let leagueConfig = GAME_BALANCE.leagues && GAME_BALANCE.leagues[highestIdx] ? GAME_BALANCE.leagues[highestIdx] : { name: 'Liga Regional', emoji: '🏆' };
+
+            let clubName = typeof tClub === 'function' ? tClub(save.club.name) : save.club.name;
+
             container.innerHTML += `
                 <div class="club-select-card" onclick="loadClub(${idx})" style="position: relative; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
                     <button onclick="deleteClub(${idx}, event)" style="position:absolute; top:12px; right:12px; background:rgba(239,68,68,0.2); border:1px solid #ef4444; border-radius:8px; cursor:pointer; font-size:0.9rem; padding:6px 10px; color:#fff; z-index: 10;">🗑️</button>
                     
                     <div class="club-select-header" style="margin-top: 10px;">
                         <div class="club-select-emoji" style="font-size:3.5rem;">${save.club.emoji}</div>
-                        <div class="club-select-name" style="font-size:1.15rem; margin-top:12px;">${tClub(save.club.name)}</div>
+                        <div class="club-select-name" style="font-size:1.15rem; margin-top:12px;">${clubName.toUpperCase()}</div>
                     </div>
                     
-                    <div class="captain-box" style="padding: 16px; margin-top: auto;">
+                    <div class="captain-box" style="padding: 16px; margin-top: auto; display:flex; flex-direction:column; gap:8px;">
                         <div style="font-weight:900; color:var(--accent-gold); font-size:1.3rem;">💰 ${save.coins}</div>
-                        <div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px; font-weight: 800;">${t('TEXT_CURRENT_DIVISION', { value: save.meta?.highestSeriesUnlocked || 0 })}</div>
+                        
+                        <div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px; font-weight: 800;">${leagueConfig.emoji} ${t(leagueConfig.name)}</div>
                     </div>
                 </div>`;
         });
