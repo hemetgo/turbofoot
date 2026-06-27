@@ -41,7 +41,7 @@ MAP_NODE_TRAINING=Traning
 MAP_NODE_LECTURE=Lecture
 
 # --- Market ---
-LABEL_MARKET_TITLE=OLHEIRO
+LABEL_MARKET_TITLE=SCOUT
 MARKET_TITLE_DEFAULT=CHOOSE 1 NEW PLAYER
 MARKET_SUB_DEFAULT=The players will be placed on the reserve list.
 MARKET_SCOUT_TITLE=SCOUT REPORT
@@ -508,15 +508,21 @@ TEAM_FORMATION=FORMATION
 LABEL_RESERVES=RESERVES
 
 # --- Novas Habilidades (Traits) ---
-PERK_HEADING_NAME=CABECEIO
-HOW_TO_PLAY_TRAIT_HEADING_DESC=Ganha bônus enorme em cruzamentos e bolas aéreas.
-PERK_ACROBATICS_NAME=ACROBATA
-HOW_TO_PLAY_TRAIT_ACROBATICS_DESC=Mestre em voleios, bicicletas e finalizações difíceis.
-PERK_DRIBBLING_NAME=DRIBLADOR
-HOW_TO_PLAY_TRAIT_DRIBBLING_DESC=Facilidade em limpar jogadas individuais e quebrar linhas.
-PERK_STAMINA_NAME=FÔLEGO
-HOW_TO_PLAY_TRAIT_STAMINA_DESC=Não cansa em arrancadas e transições longas.
-PERK_POSITIONING_NAME=POSICIONAMENTO
-HOW_TO_PLAY_TRAIT_POSITIONING_DESC=Sempre no lugar certo. Ajuda a cortar passes e antecipar jogadas.
-PERK_CATIMBA_NAME=CATIMBA
-HOW_TO_PLAY_TRAIT_CATIMBA_DESC=Especialista em cavar faltas, esfriar o jogo e irritar o rival.
+PERK_HEADING_NAME=HEADING
+HOW_TO_PLAY_TRAIT_HEADING_DESC=Gains a huge bonus on crosses and aerial balls.
+PERK_ACROBATICS_NAME=ACROBAT
+HOW_TO_PLAY_TRAIT_ACROBATICS_DESC=Master of volleys, bicycle kicks, and difficult finishes.
+PERK_DRIBBLING_NAME=DRIBBLER
+HOW_TO_PLAY_TRAIT_DRIBBLING_DESC=Easily beats defenders one-on-one and breaks defensive lines.
+PERK_STAMINA_NAME=STAMINA
+HOW_TO_PLAY_TRAIT_STAMINA_DESC=Doesn't tire during sprints and long transitions.
+PERK_POSITIONING_NAME=POSITIONING
+HOW_TO_PLAY_TRAIT_POSITIONING_DESC=Always in the right place. Helps intercept passes and anticipate plays.
+PERK_CATIMBA_NAME=GAMESMANSHIP
+HOW_TO_PLAY_TRAIT_CATIMBA_DESC=Specialist in drawing fouls, slowing down the game, and irritating the opponent.
+
+LABEL_CLAIMED=Claimed
+
+TITLE_SCOUT_SUB=REPLACE PLAYER
+SUBTITLE_TEAM_LIMIT=Your squad has reached its limit (23/23). Choose a reserve player to release and make room for the new signing.
+LABEL_NEW_PLAYER=NEW SIGNING

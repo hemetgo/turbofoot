@@ -85,7 +85,7 @@ function showMarketScreen() {
             list.innerHTML += `
             <div class="universal-card" style="animation-delay: ${animDelay}; opacity: 0.3; filter: grayscale(1); display:flex; align-items:center; gap:14px; background:var(--bg-card); border:1px solid var(--border-accent); border-radius:14px; padding:14px; width:100%;">
                 <div style="font-size:2.5rem;">❌</div>
-                <div style="font-weight:900; font-size:1.1rem;">VENDIDO</div>
+                <div style="font-weight:900; font-size:1.1rem;">${t('MARKET_SOLD_OUT')}</div>
             </div>`;
             return;
         }
@@ -160,7 +160,7 @@ function openMarketSwapModal(draftIndex) {
             // Botão de substituir injetado na carta da reserva
             let actionHTML = `
                 <button class="btn-primary" style="background:rgba(248,113,113,0.1); border:1px solid var(--accent-red); color:var(--accent-red); padding:16px 20px; font-size:1rem; box-shadow:none;" onclick="replaceReserve(${idx})">
-                    🔁 TROCAR
+                    🗑️
                 </button>
             `;
 

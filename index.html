@@ -203,27 +203,29 @@
             <div id="market-swap-overlay" class="modal-overlay">
                 <div class="options-box" style="max-width: 560px;">
                     <div class="modal-header flex-between">
-                        <h2 class="options-title" style="color: var(--accent-blue);">🔁 SUBSTITUIR JOGADOR</h2>
+                        <h2 class="options-title" style="color: var(--accent-blue );" data-i18n="TITLE_SCOUT_SUB">
+                            SUBSTITUIR JOGADOR</h2>
                         <button class="btn-icon" onclick="closeMarketSwap()">❌</button>
                     </div>
                     <div class="modal-body" style="display:flex; flex-direction:column; gap:8px;">
                         <p id="market-swap-message"
-                            style="margin:0; color: var(--text-muted); font-size: 0.85rem; text-align: center; margin-bottom: 8px;">
+                            style="margin:0; color: var(--text-muted); font-size: 0.85rem; text-align: center; margin-bottom: 8px;"
+                            data-i18n="SUBTITLE_TEAM_LIMIT">
                             Seu elenco chegou ao limite (23/23). Escolha um reserva para dispensar e abrir espaço para o
                             novo reforço.
                         </p>
 
                         <!-- NOVO: Container do jogador que está sendo comprado -->
                         <div class="swap-incoming-section">
-                            <div
-                                style="font-size: 0.75rem; font-weight: 900; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 6px; text-align: center;">
-                                ⬇️ NOVO REFORÇO ⬇️</div>
+                            <div style="font-size: 0.75rem; font-weight: 900; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 6px; text-align: center;"
+                                data-i18n="LABEL_NEW_PLAYER">
+                                ⬇️ NOVO JOGADOR ⬇️</div>
                             <div id="market-swap-incoming"></div>
                         </div>
 
-                        <div
-                            style="font-size: 0.75rem; font-weight: 900; color: var(--text-muted); text-transform: uppercase; margin-top: 8px; margin-bottom: 4px; text-align: center;">
-                            ELENCO RESERVA (SAÍDA)</div>
+                        <div style="font-size: 0.75rem; font-weight: 900; color: var(--text-muted); text-transform: uppercase; margin-top: 8px; margin-bottom: 4px; text-align: center;"
+                            data-i18n="LABEL_RESERVES">
+                            RESERVAS</div>
 
                         <div id="market-swap-list" class="market-swap-list"
                             style="display:flex; flex-direction:column; gap:8px;"></div>
@@ -698,7 +700,7 @@
                 <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
                     <div id="mobile-player-card-container"></div>
                     <div style="display:flex; gap:10px;">
-                        <button class="btn-secondary" style="flex:1;" onclick="startSwapFromMobile()">🔁 TROCAR</button>
+                        <button class="btn-secondary" style="flex:1;" onclick="startSwapFromMobile()">🔁</button>
                         <button id="btn-make-captain" class="btn-primary"
                             style="flex:1; background:var(--accent-gold); border-color:var(--accent-gold); color:#000;"
                             onclick="makeCaptainFromMobile()">👑 CAPITÃO</button>

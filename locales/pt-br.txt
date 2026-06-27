@@ -524,3 +524,9 @@ PERK_POSITIONING_NAME=POSICIONAMENTO
 HOW_TO_PLAY_TRAIT_POSITIONING_DESC=Sempre no lugar certo. Ajuda a cortar passes e antecipar jogadas.
 PERK_CATIMBA_NAME=CATIMBA
 HOW_TO_PLAY_TRAIT_CATIMBA_DESC=Especialista em cavar faltas, esfriar o jogo e irritar o rival.
+
+LABEL_CLAIMED=Resgatada
+
+TITLE_SCOUT_SUB=SUBSTITUIR JOGADOR
+SUBTITLE_TEAM_LIMIT=Seu elenco chegou ao limite (23/23). Escolha um reserva para dispensar e abrir espaço para o novo reforço.
+LABEL_NEW_PLAYER=NOVO JOGADOR

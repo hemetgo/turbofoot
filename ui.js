@@ -328,7 +328,6 @@ window.openHistoryModal = function () {
 };
 
 // ETAPA 2: LISTAR PARTIDAS DA LIGA ESCOLHIDA
-// ETAPA 2: LISTAR PARTIDAS DA LIGA ESCOLHIDA
 window.viewHistoryDetails = function (idx) {
     let season = window.cachedSeasonsHistory[idx];
     if (!season) return;

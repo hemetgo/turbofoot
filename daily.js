@@ -127,7 +127,7 @@ function renderDailyMissionsModal() {
         let pct = Math.min(100, Math.floor((m.progress / m.target) * 100));
         let isDone = m.progress >= m.target;
         let btnHtml = m.claimed
-            ? `<span style="font-size:0.75rem; font-weight:900; color:var(--text-muted); text-transform:uppercase;">Resgatada</span>`
+            ? `<span style="font-size:0.75rem; font-weight:900; color:var(--text-muted); text-transform:uppercase;">${t('LABEL_CLAIMED')}</span>`
             : isDone
                 ? `<button class="btn-primary" style="padding:6px 14px; font-size:0.8rem;" onclick="claimDailyMission('${m.id}')">RESGATAR</button>`
                 : `<span style="font-size:0.8rem; font-weight:900; color:var(--text-muted);">${m.progress}/${m.target}</span>`;
