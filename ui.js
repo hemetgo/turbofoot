@@ -328,6 +328,7 @@ window.openHistoryModal = function () {
 };
 
 // ETAPA 2: LISTAR PARTIDAS DA LIGA ESCOLHIDA
+// ETAPA 2: LISTAR PARTIDAS DA LIGA ESCOLHIDA
 window.viewHistoryDetails = function (idx) {
     let season = window.cachedSeasonsHistory[idx];
     if (!season) return;
@@ -367,11 +368,14 @@ window.viewHistoryDetails = function (idx) {
             let saves = m.stats && m.stats.saves !== undefined ? m.stats.saves : 0;
             let tackles = m.stats && m.stats.tackles !== undefined ? m.stats.tackles : 0;
 
+            let finalScorersHtml = '';
             let scorersHtml = '';
+            let rivalScorersHtml = '';
+
+            // Pílulas: Artilheiros do Usuário (Esquerda)
             if (m.stats && m.stats.scorers) {
                 let scorers = Object.values(m.stats.scorers);
                 if (scorers.length > 0) {
-                    scorersHtml = `<div style="margin-top:10px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.05); display:flex; gap:6px; flex-wrap:wrap; justify-content:center;">`;
                     scorers.forEach(s => {
                         let balls = '⚽'.repeat(s.count);
                         scorersHtml += `
@@ -382,8 +386,34 @@ window.viewHistoryDetails = function (idx) {
                             </div>
                         `;
                     });
-                    scorersHtml += `</div>`;
                 }
+            }
+
+            // Pílulas: Artilheiros do Rival (Direita)
+            if (m.stats && m.stats.rivalScorers) {
+                let rivalScorers = Object.values(m.stats.rivalScorers);
+                if (rivalScorers.length > 0) {
+                    rivalScorers.forEach(s => {
+                        let balls = '⚽'.repeat(s.count);
+                        rivalScorersHtml += `
+                            <div style="display:inline-flex; align-items:center; gap:4px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); border-radius:6px; padding:4px 10px;">
+                                <span style="font-size:0.7rem; margin-right:4px;">${balls}</span>
+                                <span style="font-size:0.65rem; font-weight:800; color:var(--text-main);">${s.name.toUpperCase()}</span>
+                                <span style="font-size:1rem;">${s.emoji}</span>
+                            </div>
+                        `;
+                    });
+                }
+            }
+
+            // Une as duas metades em uma barra dupla se houver gol na partida
+            if (scorersHtml !== '' || rivalScorersHtml !== '') {
+                finalScorersHtml = `
+                    <div style="margin-top:10px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.05); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                        <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-start; flex:1;">${scorersHtml}</div>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; flex:1;">${rivalScorersHtml}</div>
+                    </div>
+                `;
             }
 
             let rivalName = typeof tClub === 'function' ? tClub(m.rivalName) : m.rivalName;
@@ -450,7 +480,7 @@ window.viewHistoryDetails = function (idx) {
                             </div>
                         </div>
                     </div>
-                    ${scorersHtml}
+                    ${finalScorersHtml}
                 </div>
             `;
         });

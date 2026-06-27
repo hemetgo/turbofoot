@@ -21,15 +21,16 @@ function startMapMatch() {
         currentAction: 0, badLuckCounter: 0,
         advantageFailCounter: 0,
         isExtraTime: false,
-        // --- ESTATÍSTICAS AMPLIADAS ---
+        // PREPARANDO O RASTREADOR DO ADVERSÁRIO
         stats: {
             userActions: 0,
             totalActions: 0,
             userSuccess: 0,
             userGoalsBy: {},
+            rivalGoalsBy: {}, // <-- NOVO AQUI
             maxCombo: 0,
-            saves: 0,     // Defesas do Goleiro
-            tackles: 0    // Desarmes/Ações Defensivas
+            saves: 0,
+            tackles: 0
         }
     };
     matchState.totalActions = matchState.baseTotalActions;
@@ -98,8 +99,8 @@ function getZonePlayers(zone) {
 }
 
 function renderMatchPlayers() {
-    const container = document.getElementById('match-players-container'); 
-    if (!container) return; 
+    const container = document.getElementById('match-players-container');
+    if (!container) return;
 
     container.innerHTML = '';
     const activePlayers = getZonePlayers(matchState.zone);
@@ -108,7 +109,7 @@ function renderMatchPlayers() {
         let temp = document.createElement('div');
         temp.innerHTML = getPlayerCardHTML(p, "", "cursor: default;");
         let card = temp.firstElementChild;
-        card.setAttribute('data-id', p.id); 
+        card.setAttribute('data-id', p.id);
         container.appendChild(card);
     });
 }
@@ -130,9 +131,9 @@ function highlightSynergyPlayers(synergyIds) {
         let cardId = card.getAttribute('data-id');
         let playerObj = gameState.team.find(p => p.id === cardId);
         let hasSyn = false;
-        
+
         if (playerObj && playerObj.perks) {
-             hasSyn = playerObj.perks.some(perk => synergyIds.includes(perk.id));
+            hasSyn = playerObj.perks.some(perk => synergyIds.includes(perk.id));
         }
 
         if (hasSyn && validIds.includes(cardId)) {
@@ -157,7 +158,7 @@ function updateFieldState() {
 
     updateTimerDisplay();
     renderMinimap();
-    renderMatchPlayers(); 
+    renderMatchPlayers();
 
     const possBadge = document.getElementById("possession-badge");
     if (matchState.hasBall) {
@@ -454,7 +455,7 @@ function _renderPlayerButtons() {
         };
 
         wrapper.appendChild(btn);
-    }); 
+    });
 }
 
 async function resolveProceduralNode(node, event) {
@@ -577,32 +578,39 @@ async function resolveProceduralNode(node, event) {
 
 function handleGoal(isUserGoal, actorObj = null) {
     document.getElementById("dynamic-nodes-wrapper").innerHTML = "";
+
     if (isUserGoal) {
         matchState.userScore++;
         document.getElementById("score-user").innerText = matchState.userScore;
         createJuiceText(t('JUICE_GOAL_USER'), "#f59e0b", window.innerWidth / 2, window.innerHeight / 2 - 100);
 
-        // --- SALVA O ARTILHEIRO EXATO DA JOGADA ---
         let scorer = actorObj;
         if (!scorer) {
             let strikers = getZonePlayers(4);
             scorer = strikers.length > 0 ? rnd(strikers) : gameState.team[0];
         }
         let scorerName = scorer.name.split(' ')[0];
-        
+
         if (!matchState.stats.userGoalsBy[scorer.id]) {
             matchState.stats.userGoalsBy[scorer.id] = { name: scorerName, emoji: scorer.emoji, count: 0 };
         }
         matchState.stats.userGoalsBy[scorer.id].count++;
 
         addMatchLog(`⚽ GOLAÇO DE ${scorerName.toUpperCase()}!!!`, "goal-user");
-
         addMatchLog(t('LOG_RIVAL_RESTART'), "fail");
         fireConfetti();
+
     } else {
         matchState.rivalScore++;
         document.getElementById("score-rival").innerText = matchState.rivalScore;
         createJuiceText(t('LOG_GOAL_AGAINST'), "#ef4444", window.innerWidth / 2, window.innerHeight / 2);
+
+        // --- SALVA O GOL PARA O RIVAL ---
+        let rivalId = "rival_striker";
+        if (!matchState.stats.rivalGoalsBy[rivalId]) {
+            matchState.stats.rivalGoalsBy[rivalId] = { name: "ATAQUE", emoji: matchState.rivalProfile.emoji, count: 0 };
+        }
+        matchState.stats.rivalGoalsBy[rivalId].count++;
 
         let defenders = getZonePlayers(0);
         let keeper = defenders.length > 0 ? rnd(defenders).name : "Defesa";
@@ -715,11 +723,11 @@ function finishMatchRewards() {
     const isVictory = matchState.userScore > matchState.rivalScore;
     addMatchLog(t(getRandomLog('matchEnd')), "system");
 
-    // ENVIAR AS ESTATÍSTICAS PARA O HISTÓRICO
     let posPct = matchState.stats.totalActions > 0 ? Math.round((matchState.stats.userActions / matchState.stats.totalActions) * 100) : 50;
     let accPct = matchState.stats.userActions > 0 ? Math.round((matchState.stats.userSuccess / matchState.stats.userActions) * 100) : 0;
 
     if (!gameState.season.matchHistory) gameState.season.matchHistory = [];
+
     gameState.season.matchHistory.push({
         rivalName: matchState.rivalProfile.name,
         rivalEmoji: matchState.rivalProfile.emoji,
@@ -732,7 +740,8 @@ function finishMatchRewards() {
             maxCombo: matchState.stats.maxCombo,
             saves: matchState.stats.saves,
             tackles: matchState.stats.tackles,
-            scorers: matchState.stats.userGoalsBy
+            scorers: matchState.stats.userGoalsBy,
+            rivalScorers: matchState.stats.rivalGoalsBy // <-- NOVO AQUI
         }
     });
 
@@ -753,8 +762,8 @@ function finishMatchRewards() {
             };
 
             gameState.inMatch = false;
-            gameState.season.map = []; 
-            saveGame(); 
+            gameState.season.map = [];
+            saveGame();
 
             document.getElementById("post-match-overlay").style.display = "flex";
             return;
@@ -851,8 +860,8 @@ function applyDiminishingReturns(count) {
 
 function getLeadershipMitigation(traits) {
     let captain = gameState.team.find(p => p.id === gameState.captainId);
-    if (!captain || !captain.perks) return 1; 
+    if (!captain || !captain.perks) return 1;
 
     let hasLeadership = captain.perks.some(p => p.id === 'leadership');
-    return hasLeadership ? 0.6 : 1; 
+    return hasLeadership ? 0.6 : 1;
 }
