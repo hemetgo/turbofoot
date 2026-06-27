@@ -1,13 +1,17 @@
 let pendingClubOptions = [];
 let selectedSeriesIndex = 0;
 
+let enableCrazyGames = false;
+
 // Inicializa o jogo: i18n → carrega dados → renderiza
 async function initGame() {
     try {
         // --- NOVO: INICIALIZAÇÃO DA CRAZY GAMES ---
         // Puxa o save da nuvem antes de tentar ler os dados do jogo!
-        if (window.CrazyGames && window.CrazyGames.SDK) {
-            await window.CrazyGames.SDK.init();
+        if (enableCrazyGames === true) {
+            if (window.CrazyGames && window.CrazyGames.SDK) {
+                await window.CrazyGames.SDK.init();
+            }
         }
 
         await loadLanguagePreference();
@@ -236,18 +240,27 @@ function saveGame() {
 // --- EVENTOS DO SDK DA CRAZY GAMES ---
 
 window.notifyGameplayStart = function () {
+    if (enableCrazyGames === false)
+        return;
+
     if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.game) {
         window.CrazyGames.SDK.game.gameplayStart();
     }
 };
 
 window.notifyGameplayStop = function () {
+    if (enableCrazyGames === false)
+        return;
+
     if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.game) {
         window.CrazyGames.SDK.game.gameplayStop();
     }
 };
 
 window.notifyHappyTime = function () {
+    if (enableCrazyGames === false)
+        return;
+
     if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.game) {
         window.CrazyGames.SDK.game.happytime();
     }
