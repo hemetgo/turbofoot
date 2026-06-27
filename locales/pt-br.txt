@@ -540,3 +540,5 @@ NAV_LABEL_RESERVES=RESERVAS
 TITLE_FIRE_PLAYER=DISPENSAR JOGADOR
 TEXT_FIRE_PLAYER_CONFIRM=Tem certeza que deseja dispensar o jogador {name}? Esta ação não pode ser desfeita e ele deixará o clube definitivamente.
 LOG_FIRED=DISPENSADO
+
+SKILLS_NOT_FOUND=Nenhuma habilidade encontrada.

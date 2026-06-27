@@ -284,7 +284,7 @@ function handleMapNodeClick(node) {
         }).join('');
 
         if (!perksHtml) {
-            perksHtml = `<span style="font-size: 0.8rem; color: var(--text-muted); font-style: italic;">O olheiro não detectou especialidades.</span>`;
+            perksHtml = `<span style="font-size: 0.8rem; color: var(--text-muted); font-style: italic;">${t('SKILLS_NOT_FOUND')}</span>`;
         }
 
         let teamLvl = getTeamAverageLevel();

@@ -536,3 +536,5 @@ NAV_LABEL_RESERVES=RESERVES
 TITLE_FIRE_PLAYER=RELEASE PLAYER
 TEXT_FIRE_PLAYER_CONFIRM=Are you sure you want to release {name}? This action cannot be undone and they will permanently leave the club.
 LOG_FIRED=RELEASED
+
+SKILLS_NOT_FOUND=No skill found.
