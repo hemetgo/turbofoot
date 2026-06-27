@@ -20,7 +20,7 @@ const FORMATIONS = {
 // --- SISTEMA DE SALVAMENTO BLINDADO ---
 function loadAllSaves() {
     try {
-        const savedData = localStorage.getItem("turboFoot_saves_v8");
+        const savedData = getSafeStorage().getItem("turboFoot_saves_v8"); // <-- Modificado
         allSaves = savedData ? JSON.parse(savedData) : [];
         if (!Array.isArray(allSaves)) allSaves = [];
     }
@@ -36,10 +36,9 @@ function saveAllClubs() {
 
         if (activeSaveIndex !== -1 && gameState && gameState.club) {
             allSaves[activeSaveIndex] = JSON.parse(JSON.stringify(gameState));
-            localStorage.setItem("turboFoot_saves_v8", JSON.stringify(allSaves));
+            getSafeStorage().setItem("turboFoot_saves_v8", JSON.stringify(allSaves)); // <-- Modificado
         } else if (allSaves.length > 0) {
-            // Preserve o arquivo de saves quando não há clube ativo.
-            localStorage.setItem("turboFoot_saves_v8", JSON.stringify(allSaves));
+            getSafeStorage().setItem("turboFoot_saves_v8", JSON.stringify(allSaves)); // <-- Modificado
         }
     } catch (e) {
         console.error("Erro Crítico de Armazenamento:", e);
@@ -141,8 +140,23 @@ window.randomizeClubName = function () {
 function openCreateClub() {
     const natSel = document.getElementById('create-club-nat');
 
-    // Popula o select de nacionalidades
-    natSel.innerHTML = GAME_CONTENT.names.map((n, i) => `<option value="${i}">${n.country}</option>`).join('');
+    // 1. Criamos um array auxiliar que guarda o índice original e gera o Emoji da bandeira
+    let countriesList = GAME_CONTENT.names.map((n, index) => {
+        // Truque de Mágica do JS: Converte o código ISO (ex: 'br') em Emoji de bandeira 🇧🇷
+        let flagEmoji = n.flag ? [...n.flag.toUpperCase()].map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join('') : '';
+
+        return {
+            originalIndex: index,
+            countryName: n.country,
+            emoji: flagEmoji
+        };
+    });
+
+    // 2. Ordenamos esse array alfabeticamente pelo nome do país
+    countriesList.sort((a, b) => a.countryName.localeCompare(b.countryName));
+
+    // 3. Populamos o Select mantendo o "value" como o índice original do arquivo JSON
+    natSel.innerHTML = countriesList.map(n => `<option value="${n.originalIndex}">${n.emoji} ${n.countryName}</option>`).join('');
 
     // Rola o primeiro nome aleatório
     randomizeClubName();
@@ -214,10 +228,10 @@ function executeCreateClub() {
         activeSaveIndex = allSaves.length - 1;
         saveAllClubs();
 
-        // TESTE REAL: Tenta ler do dispositivo para garantir que salvou de verdade
-        const testSave = localStorage.getItem("turboFoot_saves_v8");
+        // TESTE REAL: Tenta ler da Nuvem/Aparelho para garantir que salvou de verdade
+        const testSave = getSafeStorage().getItem("turboFoot_saves_v8"); // <-- Modificado
         if (!testSave || !testSave.includes(base.name)) {
-            showCustomAlert("❌ ERRO NO CELULAR", "O jogo não conseguiu salvar no seu aparelho. Limpe o cache do navegador ou saia do modo anônimo.");
+            showCustomAlert("❌ ERRO NO CELULAR", "O jogo não conseguiu salvar. Limpe o cache do navegador ou saia do modo anônimo.");
         } else {
             returnToHub();
         }
@@ -246,7 +260,7 @@ window.deleteClub = function (idx, event) {
         () => {
             // Ação executada se o usuário clicar em "CONFIRMAR"
             allSaves.splice(idx, 1);
-            localStorage.setItem("turboFoot_saves_v8", JSON.stringify(allSaves));
+            getSafeStorage().setItem("turboFoot_saves_v8", JSON.stringify(allSaves)); // <-- Modificado
             renderClubSelection();
 
             // Feedback visual flutuante

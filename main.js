@@ -4,6 +4,12 @@ let selectedSeriesIndex = 0;
 // Inicializa o jogo: i18n → carrega dados → renderiza
 async function initGame() {
     try {
+        // --- NOVO: INICIALIZAÇÃO DA CRAZY GAMES ---
+        // Puxa o save da nuvem antes de tentar ler os dados do jogo!
+        if (window.CrazyGames && window.CrazyGames.SDK) {
+            await window.CrazyGames.SDK.init();
+        }
+
         await loadLanguagePreference();
 
         const mechanicsData = await fetch('config_mechanics.json').then(r => r.json());

@@ -3,6 +3,14 @@
 // Textos em locales/<idioma>.txt
 // ==========================================
 
+window.getSafeStorage = function () {
+    // Se o SDK da CrazyGames carregou, usa o Cloud Data, senão usa o cache local comum
+    if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.data) {
+        return window.CrazyGames.SDK.data;
+    }
+    return localStorage;
+};
+
 let CURRENT_LANG = "en";
 let I18N_STRINGS = {};
 let I18N_FALLBACK_STRINGS = {};
@@ -110,21 +118,17 @@ function applyStaticI18n() {
 }
 
 async function changeLanguage(lang) {
-
-    localStorage.setItem("language", lang);
+    getSafeStorage().setItem("language", lang); // <-- Modificado
 
     await loadLocale(lang);
-
     applyStaticI18n();
-
     console.log("[i18n] language changed to", lang);
 }
 
 async function loadLanguagePreference() {
-    // 1. Tenta pegar o idioma salvo
-    let lang = localStorage.getItem("language");
+    // 1. Tenta pegar o idioma salvo na Nuvem/Dispositivo
+    let lang = getSafeStorage().getItem("language"); // <-- Modificado
 
-    // 2. Se não tiver nada salvo (primeiro acesso), verifica o idioma do navegador
     if (!lang) {
         lang = navigator.language.toLowerCase().startsWith("pt") ? "pt-br" : "en";
     }

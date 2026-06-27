@@ -18,9 +18,10 @@ let matchState = {
 let PERK_LIST = [];
 
 function loadSaveData() {
-    if (localStorage.getItem("turboFoot_mgr_v7")) {
+    // Troca os localStorage pelo getSafeStorage()
+    if (getSafeStorage().getItem("turboFoot_mgr_v7")) {
         try {
-            let saved = JSON.parse(localStorage.getItem("turboFoot_mgr_v7"));
+            let saved = JSON.parse(getSafeStorage().getItem("turboFoot_mgr_v7"));
             gameState = { ...gameState, ...saved };
 
             // Corrige saves antigos que não tinham o requireConfirm salvo
