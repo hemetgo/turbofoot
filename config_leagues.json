@@ -6,9 +6,9 @@
         "rewardBase": 10,
         "color": "#94a3b8",
         "enemyBaseLevel": 1,
-        "enemyBaseTraits": 0,
-        "levelScaling": 0.5,
-        "traitScaling": 0.2,
+        "enemyBaseTraits": 22,
+        "levelScaling": 2,
+        "traitScaling": 0,
         "natDistribution": [
             11
         ]
@@ -20,9 +20,9 @@
         "rewardBase": 15,
         "color": "#34d399",
         "enemyBaseLevel": 3,
-        "enemyBaseTraits": 5,
+        "enemyBaseTraits": 22,
         "levelScaling": 2,
-        "traitScaling": 2,
+        "traitScaling": 0,
         "natDistribution": [
             10,
             1
@@ -35,9 +35,9 @@
         "rewardBase": 20,
         "color": "#3b82f6",
         "enemyBaseLevel": 7,
-        "enemyBaseTraits": 1,
-        "levelScaling": 2,
-        "traitScaling": 3,
+        "enemyBaseTraits": 22,
+        "levelScaling": 4,
+        "traitScaling": 0,
         "natDistribution": [
             8,
             2,
@@ -51,9 +51,9 @@
         "rewardBase": 25,
         "color": "#a855f7",
         "enemyBaseLevel": 11,
-        "enemyBaseTraits": 10,
-        "levelScaling": 3,
-        "traitScaling": 3,
+        "enemyBaseTraits": 22,
+        "levelScaling": 8,
+        "traitScaling": 0,
         "natDistribution": [
             7,
             2,
@@ -67,9 +67,9 @@
         "rewardBase": 30,
         "color": "#f59e0b",
         "enemyBaseLevel": 15,
-        "enemyBaseTraits": 15,
-        "levelScaling": 3,
-        "traitScaling": 4,
+        "enemyBaseTraits": 22,
+        "levelScaling": 16,
+        "traitScaling": 0,
         "natDistribution": [
             5,
             2,
@@ -88,7 +88,7 @@
         "color": "#ef4444",
         "enemyBaseLevel": 19,
         "enemyBaseTraits": 22,
-        "levelScaling": 0,
+        "levelScaling": 16,
         "traitScaling": 1,
         "natDistribution": [
             4,

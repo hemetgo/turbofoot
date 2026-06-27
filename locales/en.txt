@@ -479,15 +479,15 @@ SCREEN_CREATE_CLUB=CREATE CLUB
 LABEL_CLUB_NAME=CLUB NAME
 LABEL_NATIONALITY=COUNTRY
 BTN_CREATE_CLUB=FOUND CLUB
-BTN_SQUAD=👥 TEAM
+BTN_SQUAD=👥 SQUAD
 BTN_HUB_MARKET=🔍 SCOUT
-LABEL_SQUAD_TITLE=TEAM MANAGEMENT
-LABEL_STARTERS=TITULARES (11)
-LABEL_RESERVES=RESERVAS ({count}/12)
-TEXT_ROSTER_FULL=ELENCO CHEIO!
-BTN_SWAP=TROCAR
-BTN_FIRE=DEMITIR
-TEXT_SELECT_TO_SWAP=Selecione dois jogadores para trocar de posição.
+LABEL_SQUAD_TITLE=SQUAD MANAGEMENT
+LABEL_STARTERS=STARTERS (11)
+LABEL_RESERVES=RESERVES ({count}/12)
+TEXT_ROSTER_FULL=SQUAD FULL!
+BTN_SWAP=SWAP
+BTN_FIRE=RELEASE
+TEXT_SELECT_TO_SWAP=Select two players to swap positions.
 
 # --- Posições e Capitão ---
 POS_GOL=GK
@@ -503,26 +503,26 @@ TEXT_GOL_SWAP_ERROR=Goleiro só pode ser trocado por outro Goleiro!
 TEXT_SQUAD_TIP=Selecione dois para trocar. Clique DUAS VEZES num titular para torná-lo CAPITÃO.
 
 # --- Features Adicionais ---
-BTN_DELETE_CLUB=EXCLUIR
-TEXT_DELETE_CLUB_CONFIRM=Tem certeza que deseja excluir o clube {club}? O clube deixará de existir!
-TEXT_ABANDON_PENALTY=⚠️ PUNIÇÃO POR ABANDONO!\n\nVocê fechou o jogo durante uma partida. Isso foi considerado abandono de campo (W.O.) e seu time foi eliminado da liga atual.
-TEXT_RESUME_RUN=▶ CONTINUAR LIGA
+BTN_DELETE_CLUB=DELETE
+TEXT_DELETE_CLUB_CONFIRM=Are you sure you want to delete {club}? The club will cease to exist!
+TEXT_ABANDON_PENALTY=⚠️ ABANDONMENT PENALTY!\n\nYou closed the game during a match. This was considered a walkover (W.O.) and your team was eliminated from the current league.
+TEXT_RESUME_RUN=▶ RESUME LEAGUE
 
 TEAM_FORMATION=FORMATION
 LABEL_RESERVES=RESERVES
 
 # --- Novas Habilidades (Traits) ---
-PERK_HEADING_NAME=HEADING
+PERK_HEADING_NAME=Heading
 HOW_TO_PLAY_TRAIT_HEADING_DESC=Gains a huge bonus on crosses and aerial balls.
-PERK_ACROBATICS_NAME=ACROBAT
+PERK_ACROBATICS_NAME=Acrobatics
 HOW_TO_PLAY_TRAIT_ACROBATICS_DESC=Master of volleys, bicycle kicks, and difficult finishes.
-PERK_DRIBBLING_NAME=DRIBBLER
+PERK_DRIBBLING_NAME=Dribbling
 HOW_TO_PLAY_TRAIT_DRIBBLING_DESC=Easily beats defenders one-on-one and breaks defensive lines.
-PERK_STAMINA_NAME=STAMINA
+PERK_STAMINA_NAME=Stamina
 HOW_TO_PLAY_TRAIT_STAMINA_DESC=Doesn't tire during sprints and long transitions.
-PERK_POSITIONING_NAME=POSITIONING
+PERK_POSITIONING_NAME=Positioning
 HOW_TO_PLAY_TRAIT_POSITIONING_DESC=Always in the right place. Helps intercept passes and anticipate plays.
-PERK_CATIMBA_NAME=GAMESMANSHIP
+PERK_CATIMBA_NAME=Gamesmanship
 HOW_TO_PLAY_TRAIT_CATIMBA_DESC=Specialist in drawing fouls, slowing down the game, and irritating the opponent.
 
 LABEL_CLAIMED=Claimed

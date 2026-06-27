@@ -516,17 +516,17 @@ TEAM_FORMATION=FORMAÇÃO
 LABEL_RESERVES=RESERVAS
 
 # --- Novas Habilidades (Traits) ---
-PERK_HEADING_NAME=CABECEIO
+PERK_HEADING_NAME=Cabeceio
 HOW_TO_PLAY_TRAIT_HEADING_DESC=Ganha bônus enorme em cruzamentos e bolas aéreas.
-PERK_ACROBATICS_NAME=ACROBATA
+PERK_ACROBATICS_NAME=Acrobacia
 HOW_TO_PLAY_TRAIT_ACROBATICS_DESC=Mestre em voleios, bicicletas e finalizações difíceis.
-PERK_DRIBBLING_NAME=DRIBLADOR
+PERK_DRIBBLING_NAME=Drible
 HOW_TO_PLAY_TRAIT_DRIBBLING_DESC=Facilidade em limpar jogadas individuais e quebrar linhas.
-PERK_STAMINA_NAME=FÔLEGO
+PERK_STAMINA_NAME=Fôlego
 HOW_TO_PLAY_TRAIT_STAMINA_DESC=Não cansa em arrancadas e transições longas.
-PERK_POSITIONING_NAME=POSICIONAMENTO
+PERK_POSITIONING_NAME=Posicionamento
 HOW_TO_PLAY_TRAIT_POSITIONING_DESC=Sempre no lugar certo. Ajuda a cortar passes e antecipar jogadas.
-PERK_CATIMBA_NAME=CATIMBA
+PERK_CATIMBA_NAME=Catimba
 HOW_TO_PLAY_TRAIT_CATIMBA_DESC=Especialista em cavar faltas, esfriar o jogo e irritar o rival.
 
 LABEL_CLAIMED=Resgatada
