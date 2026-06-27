@@ -354,7 +354,9 @@ function recordRun(wonSeason) {
         result: wonSeason ? "CAMPEÃO" : "ELIMINADO",
         stageReached: gameState.season.currentStage,
         matches: [...gameState.season.matchHistory],
-        finalTeam: [...gameState.team]
+        finalTeam: [...gameState.team],
+        // INCLUA ESTA NOVA LINHA PARA SALVAR OS ARTILHEIROS:
+        playerStats: gameState.season.playerStats ? JSON.parse(JSON.stringify(gameState.season.playerStats)) : {}
     };
 
     if (!gameState.runHistory) gameState.runHistory = [];
@@ -364,6 +366,13 @@ function recordRun(wonSeason) {
 }
 
 function finishSeason(wonSeason) {
+    if (wonSeason) {
+        gameState.team.forEach(p => {
+            if (!p.stats) p.stats = { matches: 0, goals: 0, passes: 0, tackles: 0, saves: 0, cleanSheets: 0, titles: 0 };
+            p.stats.titles++;
+        });
+    }
+
     recordRun(wonSeason);
     progressDailyMission('play_runs', 1);
 

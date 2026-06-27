@@ -63,7 +63,8 @@ function generatePlayer(level, isPremium = false, forcedNationality = null, forc
         id: `p_${Date.now()}_${Math.random()}`,
         name: iden.name, emoji: iden.emoji, flag: iden.flag,
         position: position,
-        level: finalLevel, perks: perks, isStar: isStar, price: price
+        level: finalLevel, perks: perks, isStar: isStar, price: price,
+        stats: { matches: 0, goals: 0, passes: 0, tackles: 0, saves: 0, cleanSheets: 0, titles: 0 }
     };
 }
 
@@ -102,33 +103,31 @@ function getPlayerCardHTML(p, actionHTML = "", customStyles = "", indexInfo = nu
         oopHTML = `<div style="font-size:0.55rem; color:var(--accent-red); font-weight:800; text-transform:uppercase; margin-top:2px; display:flex; align-items:center; gap:4px;">⚠️ Fora (Ideal: ${indexInfo.expectedPos})</div>`;
     }
 
-    // ADICIONADO data-id="${p.id}" e data-perks="${dataPerks}" AQUI NESTA DIV!
+    let runGoals = (gameState.season && gameState.season.playerStats && gameState.season.playerStats[p.id]?.goals) || 0;
+    let runGoalsBadge = runGoals > 0 ? `<span style="font-size:0.6rem; background:rgba(245,158,11,0.2); border:1px solid var(--accent-gold); color:var(--accent-gold); padding:2px 6px; border-radius:10px; margin-left:6px; white-space:nowrap;">⚽ ${runGoals}</span>` : "";
+
+    let infoBtn = `<button class="btn-icon" style="padding:2px 6px; font-size:0.8rem; margin-left:auto; border:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.4);" onclick="event.stopPropagation(); showPlayerStats('${p.id}')">🔍</button>`;
+
     return `
         <div class="player-card universal-card" data-id="${p.id}" data-perks="${dataPerks}" style="position:relative; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-light); border-radius:10px; padding:8px 10px; width:100%; transition:all 0.2s; ${customStyles}">
-            
-            <!-- Coluna 1: Avatar + Level -->
             <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; flex-shrink:0; min-width:40px;">
                 <span style="font-size:1.8rem; line-height:1; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));">${p.emoji}</span>
                 <div style="background:rgba(0,0,0,0.4); border-radius:4px; padding:1px 5px; font-size:0.6rem; font-weight:900; color:var(--accent-green); border:1px solid rgba(255,255,255,0.1);">Nv ${p.level}</div>
             </div>
-            
-            <!-- Coluna 2: Informações -->
             <div style="flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center;">
                 
-                <!-- Linha do Nome -->
-                <div style="display:flex; align-items:center; gap:4px; flex-wrap:nowrap; overflow:hidden;">
+                <div style="display:flex; align-items:center; gap:4px; flex-wrap:nowrap; overflow:hidden; width:100%;">
                     <span class="pos-badge pos-${p.position}" style="font-size:0.5rem; padding:1px 4px; margin:0; flex-shrink:0; border:1px solid rgba(255,255,255,0.1);">${posLabel}</span>
                     <span class="fi fi-${p.flag || 'xx'}" style="border-radius:2px; font-size:0.75rem; flex-shrink:0;"></span>
                     <span style="font-size:0.85rem; font-weight:900; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-transform:uppercase; letter-spacing:-0.5px;">${displayName}</span>
+                    ${runGoalsBadge}
+                    ${infoBtn}
                 </div>
                 
                 ${perksHTML}
                 ${oopHTML}
             </div>
-            
-            <!-- Coluna 3: Botões Injetados -->
             ${actionHTML ? `<div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end; margin-left:auto; flex-shrink:0;">${actionHTML}</div>` : ''}
-            
         </div>
     `;
 }

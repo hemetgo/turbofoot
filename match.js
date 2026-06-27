@@ -27,7 +27,8 @@ function startMapMatch() {
             totalActions: 0,
             userSuccess: 0,
             userGoalsBy: {},
-            rivalGoalsBy: {}, // <-- NOVO AQUI
+            rivalGoalsBy: {},
+            players: {},
             maxCombo: 0,
             saves: 0,
             tackles: 0
@@ -499,10 +500,12 @@ async function resolveProceduralNode(node, event) {
     let actor = node.actor.name.split(' ')[0];
 
     if (isSuccess) {
-        // --- GRAVAÇÃO DE SUCESSO, DEFESAS E DESARMES ---
-        if (wasAttacking) matchState.stats.userSuccess++;
-        if (!wasAttacking && node.type === 'save') matchState.stats.saves++;
-        if (!wasAttacking && node.type === 'def') matchState.stats.tackles++;
+        if (!matchState.stats.players[node.actor.id]) {
+            matchState.stats.players[node.actor.id] = { passes: 0, tackles: 0, saves: 0 };
+        }
+        if (wasAttacking && node.type === 'atk') matchState.stats.players[node.actor.id].passes++;
+        if (!wasAttacking && node.type === 'save') matchState.stats.players[node.actor.id].saves++;
+        if (!wasAttacking && node.type === 'def') matchState.stats.players[node.actor.id].tackles++;
 
         matchState.momentum = clamp(matchState.momentum + 1, -3, 3);
         if (node.comboReq === "ALL") matchState.combo = 0; else if (node.comboReq) matchState.combo = Math.max(0, matchState.combo - node.comboReq);
@@ -748,6 +751,55 @@ function finishMatchRewards() {
             rivalScorers: matchState.stats.rivalGoalsBy // <-- NOVO AQUI
         }
     });
+
+    // --- NOVO: SALVAR ESTATÍSTICAS PROFUNDAS PÓS-JOGO ---
+    if (!gameState.season.playerStats) gameState.season.playerStats = {};
+    let cleanSheet = matchState.rivalScore === 0; // O time não sofreu gols!
+
+    gameState.team.forEach(p => {
+        // Proteção para saves antigos
+        if (!p.stats) p.stats = { matches: 0, goals: 0, passes: 0, tackles: 0, saves: 0, cleanSheets: 0, titles: 0 };
+        p.stats.matches++;
+
+        // Zagueiros e Goleiros ganham moral por não levar gol
+        if (cleanSheet && (p.position === 'GOL' || p.position === 'ZAG')) {
+            p.stats.cleanSheets++;
+        }
+
+        if (!gameState.season.playerStats[p.id]) {
+            gameState.season.playerStats[p.id] = { name: p.name, emoji: p.emoji, goals: 0, passes: 0, tackles: 0, saves: 0 };
+        }
+
+        // Transfere o que ele fez nesta partida para a Carreira e para a Campanha(Run)
+        let matchPStats = matchState.stats.players[p.id];
+        if (matchPStats) {
+            p.stats.passes += matchPStats.passes || 0;
+            p.stats.tackles += matchPStats.tackles || 0;
+            p.stats.saves += matchPStats.saves || 0;
+
+            gameState.season.playerStats[p.id].passes += matchPStats.passes || 0;
+            gameState.season.playerStats[p.id].tackles += matchPStats.tackles || 0;
+            gameState.season.playerStats[p.id].saves += matchPStats.saves || 0;
+        }
+    });
+
+    // Salvar os gols marcados
+    if (matchState.stats.userGoalsBy) {
+        Object.keys(matchState.stats.userGoalsBy).forEach(pId => {
+            let p = gameState.team.find(x => x.id === pId) || (gameState.reserves && gameState.reserves.find(x => x.id === pId));
+            let goalsScored = matchState.stats.userGoalsBy[pId].count;
+
+            if (p) {
+                if (!p.stats) p.stats = { matches: 0, goals: 0, passes: 0, tackles: 0, saves: 0, cleanSheets: 0, titles: 0 };
+                p.stats.goals += goalsScored;
+            }
+            if (!gameState.season.playerStats[pId]) {
+                gameState.season.playerStats[pId] = { name: matchState.stats.userGoalsBy[pId].name, emoji: matchState.stats.userGoalsBy[pId].emoji, goals: 0, passes: 0, tackles: 0, saves: 0 };
+            }
+            gameState.season.playerStats[pId].goals += goalsScored;
+        });
+    }
+    // ----------------------------------------------------
 
     setTimeout(() => {
         if (!isVictory) {

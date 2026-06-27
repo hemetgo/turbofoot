@@ -510,9 +510,116 @@ window.viewHistoryDetails = function (idx) {
         html += `<p style="text-align:center; font-size:0.8rem; color:var(--text-muted);">${t('HISTORY_NO_RECORDS_YET') || "Nenhuma partida registrada."}</p>`;
     }
 
+    // --- NOVO: DESTAQUES DA CAMPANHA (RUN) NO HISTÓRICO ---
+    if (season.playerStats) {
+        let pStats = Object.values(season.playerStats);
+
+        let topScorers = pStats.filter(s => s.goals > 0).sort((a, b) => b.goals - a.goals);
+        let topPassers = pStats.filter(s => s.passes > 0).sort((a, b) => b.passes - a.passes);
+        let topDefenders = pStats.filter(s => s.tackles > 0).sort((a, b) => b.tackles - a.tackles);
+        let topKeepers = pStats.filter(s => s.saves > 0).sort((a, b) => b.saves - a.saves);
+
+        let destaquesHtml = "";
+        let styleBadge = "background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); padding:6px 10px; border-radius:8px; font-size:0.75rem; color:#fff; display:flex; align-items:center; gap:6px;";
+
+        if (topScorers.length > 0) destaquesHtml += `<div style="${styleBadge}"><span style="font-size:1.2rem;">${topScorers[0].emoji}</span> <span>${t('STATS_AWARD_SCORER')}: <b>${topScorers[0].name}</b> (${topScorers[0].goals})</span></div>`;
+        if (topPassers.length > 0) destaquesHtml += `<div style="${styleBadge}"><span style="font-size:1.2rem;">${topPassers[0].emoji}</span> <span>${t('STATS_AWARD_PASSER')}: <b>${topPassers[0].name}</b> (${topPassers[0].passes})</span></div>`;
+        if (topDefenders.length > 0) destaquesHtml += `<div style="${styleBadge}"><span style="font-size:1.2rem;">${topDefenders[0].emoji}</span> <span>${t('STATS_AWARD_DEFENDER')}: <b>${topDefenders[0].name}</b> (${topDefenders[0].tackles})</span></div>`;
+        if (topKeepers.length > 0) destaquesHtml += `<div style="${styleBadge}"><span style="font-size:1.2rem;">${topKeepers[0].emoji}</span> <span>${t('STATS_AWARD_KEEPER')}: <b>${topKeepers[0].name}</b> (${topKeepers[0].saves})</span></div>`;
+
+        if (destaquesHtml !== "") {
+            html += `<div style="margin-top:20px; padding:16px; background:rgba(0,0,0,0.2); border-radius:8px; border:1px solid var(--border-light);">
+                <h4 style="color:var(--text-muted); font-size: 0.85rem; margin-top:0; margin-bottom: 12px; text-transform:uppercase; text-align:center;">${t('STATS_HIGHLIGHTS')}</h4>
+                <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;">
+                    ${destaquesHtml}
+                </div>
+            </div>`;
+        }
+    }
+    // ------------------------------------------------------
+
     content.innerHTML = html;
     document.getElementById("history-details").style.display = "flex";
     document.getElementById("history-footer").style.display = "flex";
+};
+
+window.showPlayerStats = function (playerId) {
+    let p = gameState.team.find(x => x.id === playerId) || (gameState.reserves && gameState.reserves.find(x => x.id === playerId));
+    if (!p) return;
+
+    if (!p.stats) p.stats = { matches: 0, goals: 0, passes: 0, tackles: 0, saves: 0, cleanSheets: 0, titles: 0 };
+    let runS = (gameState.season && gameState.season.playerStats && gameState.season.playerStats[p.id]) || { goals: 0, passes: 0, tackles: 0, saves: 0 };
+
+    let overlay = document.getElementById('player-stats-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'player-stats-overlay';
+        overlay.className = 'modal-overlay';
+        overlay.style.zIndex = '10006';
+        document.body.appendChild(overlay);
+    }
+
+    let tempCard = getPlayerCardHTML(p, "", "pointer-events:none;");
+    tempCard = tempCard.replace(/<button[^>]*showPlayerStats[^>]*>🔍<\/button>/g, '');
+
+    const statRow = (label, emoji, careerVal, runVal, color) => {
+        if (careerVal === 0 && runVal === 0) return '';
+        let runLabel = runVal > 0 ? `<span style="font-size:0.65rem; color:var(--text-muted); margin-left:6px;">${t('STATS_LABEL_RUN', { val: runVal })}</span>` : '';
+        return `
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:8px 12px; border-radius:6px; border-left:3px solid ${color}; margin-bottom: 6px;">
+                <span style="font-size:0.8rem; font-weight:800; color:#fff;">${emoji} ${label}</span>
+                <div style="text-align:right;">
+                    <span style="font-size:1rem; font-weight:900; color:${color};">${careerVal}</span>
+                    ${runLabel}
+                </div>
+            </div>`;
+    };
+
+    let actionsHtml = "";
+    actionsHtml += statRow(t('STATS_GOALS'), '⚽', p.stats.goals, runS.goals, 'var(--accent-gold)');
+    actionsHtml += statRow(t('STATS_PASSES'), '👟', p.stats.passes, runS.passes, 'var(--accent-blue)');
+    actionsHtml += statRow(t('STATS_TACKLES'), '🪓', p.stats.tackles, runS.tackles, 'var(--accent-red)');
+    actionsHtml += statRow(t('STATS_SAVES'), '🧤', p.stats.saves, runS.saves, 'var(--accent-green)');
+
+    if (p.stats.cleanSheets > 0) {
+        actionsHtml += `
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:8px 12px; border-radius:6px; border-left:3px solid #fff; margin-bottom: 6px;">
+                <span style="font-size:0.8rem; font-weight:800; color:#fff;">${t('STATS_CLEAN_SHEETS')}</span>
+                <span style="font-size:1rem; font-weight:900; color:#fff;">${p.stats.cleanSheets}</span>
+            </div>`;
+    }
+
+    if (actionsHtml === "" && p.stats.matches > 0) actionsHtml = `<div style="text-align:center; font-size:0.8rem; color:var(--text-muted); padding:10px;">${t('STATS_DISCREET')}</div>`;
+    if (p.stats.matches === 0) actionsHtml = `<div style="text-align:center; font-size:0.8rem; color:var(--text-muted); padding:10px;">${t('STATS_NOT_DEBUTED')}</div>`;
+
+    overlay.innerHTML = `
+        <div class="options-box" style="max-width:340px;">
+            <div class="modal-header flex-between">
+                <h2 class="options-title" style="color:var(--accent-blue);">${t('STATS_TECHNICAL_SHEET')}</h2>
+                <button class="btn-icon" onclick="document.getElementById('player-stats-overlay').style.display='none'">❌</button>
+            </div>
+            <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
+                ${tempCard}
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div style="background:rgba(0,0,0,0.3); padding:12px; border-radius:8px; border:1px solid var(--border-light); text-align:center;">
+                        <div style="font-size:0.7rem; color:var(--text-muted); font-weight:800;">${t('STATS_MATCHES')}</div>
+                        <div style="font-size:1.6rem; font-weight:900; color:#fff;">${p.stats.matches}</div>
+                    </div>
+                    <div style="background:rgba(245,158,11,0.1); padding:12px; border-radius:8px; border:1px solid rgba(245,158,11,0.3); text-align:center;">
+                        <div style="font-size:0.7rem; color:var(--accent-gold); font-weight:800;">${t('STATS_TITLES')}</div>
+                        <div style="font-size:1.6rem; font-weight:900; color:var(--accent-gold);">${p.stats.titles}</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; margin-bottom: 10px; text-transform: uppercase; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;">${t('STATS_PITCH_HISTORY')}</h3>
+                    ${actionsHtml}
+                </div>
+            </div>
+        </div>
+    `;
+    overlay.style.display = 'flex';
 };
 
 function showLevelDistribution(points, onComplete, givesTrait = false) {

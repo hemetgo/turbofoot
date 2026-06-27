@@ -462,8 +462,12 @@ function renderSquadGrid() {
     const rTitle = document.getElementById('reserves-title');
 
     rGrid.innerHTML = '';
+    // --- SUBSTITUA ESTA PARTE EM renderSquadGrid() ---
     let resCount = gameState.reserves ? gameState.reserves.length : 0;
-    rTitle.innerHTML = t('LABEL_RESERVES', { count: resCount }) || `RESERVAS (${resCount}/12)`;
+
+    // Deixando o limite (12) explícito e colorido caso esteja cheio
+    let colorCount = resCount >= 12 ? 'var(--accent-red)' : 'var(--text-main)';
+    rTitle.innerHTML = `RESERVAS <span style="color:${colorCount}; font-weight:900;">(${resCount}/12)</span>`;
     pGrid.innerHTML = '';
 
     let formationDef = FORMATIONS[gameState.formation || "4-4-2"];
