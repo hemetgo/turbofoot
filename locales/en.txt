@@ -227,13 +227,16 @@ UPGRADE_BTN_MAX=MAX
 UPGRADE_BTN_REFUND=REFUND ALL
 
 # --- Config: Missions ---
-MISSION_WIN_MATCHES=Win {target} matches
-MISSION_SCORE_GOALS=Score {target} goals
-MISSION_REACH_STAGE=Reach {target} stages in the league
-MISSION_PLAY_RUNS=Complete {target} league runs
-MISSION_BEAT_ELITE=Win {target} Challenging matches
-MISSION_BEAT_BOSS=Win a league
-MISSION_VISIT_MARKET=Sign {target} player(s) in the Market
+MISSION_WIN_MATCHES=Win {target} Official Matches
+MISSION_SCORE_GOALS=Score {target} Goals
+MISSION_REACH_STAGE=Reach Stage {target} on the Map
+MISSION_PLAY_RUNS=Start {target} Different Leagues
+MISSION_BEAT_ELITE=Defeat {target} Elite Rivals
+MISSION_BEAT_BOSS=Defeat {target} League Bosses
+MISSION_MAKE_SAVES=Make {target} Difficult Saves
+MISSION_MAKE_TACKLES=Execute {target} Precise Tackles
+MISSION_CLEAN_SHEETS=Keep {target} Clean Sheets
+MISSION_HIRE_PLAYERS=Sign {target} New Players
 
 # --- Config: Rivals ---
 RIVAL_RETRANQUEIRO=Defensive

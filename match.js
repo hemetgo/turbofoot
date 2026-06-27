@@ -828,10 +828,24 @@ function finishMatchRewards() {
         const threat = GAME_BALANCE.mechanics.threatLevels[gameState.currentNode.type] || GAME_BALANCE.mechanics.threatLevels['match'];
         const base = GAME_BALANCE.leagues[gameState.leagueLevel].rewardBase;
 
+        // Se ganhou o jogo
         progressDailyMission('win_matches', 1);
-        progressDailyMission('score_goals', matchState.userScore);
+
+        // Se derrotou elites/bosses
         if (gameState.currentNode.type === 'elite') progressDailyMission('beat_elite', 1);
         if (gameState.currentNode.type === 'boss') progressDailyMission('beat_boss', 1);
+
+        // Mecânicas de campo (Gols, Defesas, Desarmes)
+        progressDailyMission('score_goals', matchState.userScore);
+        progressDailyMission('make_saves', matchState.stats.saves);
+        progressDailyMission('make_tackles', matchState.stats.tackles);
+
+        // Jogo sem sofrer gol (Clean Sheet) - Vale Ouro!
+        if (matchState.rivalScore === 0) {
+            progressDailyMission('clean_sheets', 1);
+        }
+
+        // ==========================================================
 
         let mult = threat.coinMult;
         let coins = Math.floor(base * (1 + Math.min(matchState.combo, 6) * GAME_BALANCE.mechanics.comboCoinMultiplier) * mult);

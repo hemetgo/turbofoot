@@ -262,13 +262,17 @@ UPGRADE_BTN_MAX=MÁXIMO
 UPGRADE_BTN_REFUND=REEMBOLSAR TUDO
 
 # --- Config: Missions ---
-MISSION_WIN_MATCHES=Vença {target} partidas
-MISSION_SCORE_GOALS=Marque {target} gols
-MISSION_REACH_STAGE=Avance {target} estágios na liga
-MISSION_PLAY_RUNS=Complete {target} ligas
-MISSION_BEAT_ELITE=Vença {target} confrontos Desafiadores
-MISSION_BEAT_BOSS=Vença uma liga
-MISSION_VISIT_MARKET=Contrate {target} jogador(es) no Mercado
+# --- Missões Diárias ---
+MISSION_WIN_MATCHES=Vença {target} Partidas Oficiais
+MISSION_SCORE_GOALS=Balance as Redes {target} Vezes
+MISSION_REACH_STAGE=Avance até a Etapa {target} do Mapa
+MISSION_PLAY_RUNS=Inicie {target} Ligas Diferentes
+MISSION_BEAT_ELITE=Derrote {target} Rivais de Elite
+MISSION_BEAT_BOSS=Vença {target} Chefões de Liga
+MISSION_MAKE_SAVES=Faça {target} Defesas Difíceis
+MISSION_MAKE_TACKLES=Realize {target} Desarmes Precisos
+MISSION_CLEAN_SHEETS=Passe {target} Jogos Sem Sofrer Gol
+MISSION_HIRE_PLAYERS=Contrate {target} Novos Reforços
 
 # --- Config: Rivals ---
 RIVAL_RETRANQUEIRO=Retranqueiro

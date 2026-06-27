@@ -81,7 +81,7 @@ function getPlayerCardHTML(p, actionHTML = "", customStyles = "", indexInfo = nu
     if (hasTraits) {
         let perksArray = p.perks.map(perk => {
             // CORREÇÃO: Adicionado data-tip com a descrição traduzida e cursor:help
-            return `<span data-tip="${t(perk.desc)}" style="display:inline-flex; align-items:center; gap:3px; font-size:0.55rem; font-weight:800; color:var(--text-muted); background:rgba(0,0,0,0.25); padding:2px 4px; border-radius:4px; border:1px solid rgba(255,255,255,0.05); cursor:help;">
+            return `<span data-tip="${t(perk.desc)}" style="display:inline-flex; align-items:center; gap:3px; font-size:0.55rem; font-weight:800; color:var(--text-muted); background:rgba(0,0,0,0.25); padding:2px 4px; border-radius:4px; border:1px solid rgba(255,255,255,0.05); ">
                         <span>${perk.emoji}</span> <span>${t(perk.name).toUpperCase()}</span>
                     </span>`;
         });
