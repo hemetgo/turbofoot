@@ -424,10 +424,16 @@ function _renderPlayerButtons() {
         `;
 
         btn.onclick = async (e) => {
+            // NOVO: Impede que o 'main.js' toque o som de clique padrão
+            e.stopPropagation();
+
             if (!canAfford) {
+                if (typeof playSFX === 'function') playSFX('error');
                 createJuiceText(t('LOG_COMBO_INSUFFICIENT'), "#f87171", e.clientX || window.innerWidth / 2, (e.clientY || window.innerHeight / 2) - 30);
                 btn.classList.add("shake"); setTimeout(() => btn.classList.remove("shake"), 300); return;
             }
+
+            // NOVO: Toca o som de chute IMEDIATAMENTE após a escolha/confirmação
             if (!gameState.settings.requireConfirm || selectedActionNodeId === node.id) {
                 removeHighlightPlayers(); await resolveProceduralNode(node, e);
             } else {
@@ -499,15 +505,16 @@ async function resolveProceduralNode(node, event) {
     matchState.currentAction++;
     updateTimerDisplay();
 
+    if (node.type === 'shoot') {
+        if (typeof playSFX === 'function') playSFX('kick');
+    }
+
     if (node.type === 'shoot' || node.type === 'save') await playSuspenseSequence((node.type === 'shoot'), isSuccess);
 
     let goalScored = false, isUserGoal = false;
     let actor = node.actor.name.split(' ')[0];
 
     if (isSuccess) {
-        // --- NOVO: SONS DA JOGADA ---
-        if (node.type === 'shoot' || node.type === 'atk') playSFX('kick');
-        if (node.type === 'save') playSFX('save');
 
         if (!matchState.stats.players[node.actor.id]) {
             matchState.stats.players[node.actor.id] = { passes: 0, tackles: 0, saves: 0 };
@@ -537,8 +544,15 @@ async function resolveProceduralNode(node, event) {
 
         if (node.forcePossessionLoss) { matchState.hasBall = false; addMatchLog(t('LOG_FOUL'), "fail"); }
 
-        if (node.type === 'shoot' && matchState.zone >= 4) { goalScored = true; isUserGoal = true; }
+        if (node.type === 'shoot' && matchState.zone >= 4) {
+            goalScored = true; isUserGoal = true;
+        }
         else if (node.type !== 'shoot' && node.type !== 'save') {
+
+            // --- NOVO: SOM DE SUCESSO (Passe, Drible, Desarme) ---
+            if (typeof playSFX === 'function') playSFX('kick');
+            // -----------------------------------------------------
+
             if (wasPityUsed || usedSecondChance) {
                 createJuiceText(t('JUICE_SYNERGY'), "#a855f7", x, y - 50);
                 addMatchLog((t('LOG_SYNERGY_SAVE') || `✨ {name} usou sua habilidade para salvar a jogada!`).replace('{name}', actor), "success");
@@ -574,10 +588,14 @@ async function resolveProceduralNode(node, event) {
 
         if (node.type === 'save') { goalScored = true; isUserGoal = false; }
         else if (!wasAttacking || node.type !== 'shoot') {
+
+            if (typeof playSFX === 'function') playSFX('kickFail');
+
             createJuiceText(t('LOG_FAILED'), "#f87171", x, y);
             addMatchLog((t('LOG_ACTION_FAIL') || `⚠️ {name} falhou na tentativa de {action}...`).replace('{name}', actor).replace('{action}', t(node.name)), 'fail');
         }
         else if (node.type === 'shoot') {
+
             createJuiceText(t('LOG_MISSED'), "#94a3b8", x, y);
             addMatchLog((t('LOG_SHOOT_MISS') || `🤦‍♂️ Inacreditável! {name} mandou pra fora!`).replace('{name}', actor), 'fail');
         }
@@ -593,7 +611,6 @@ function handleGoal(isUserGoal, actorObj = null) {
 
     if (isUserGoal) {
         matchState.userScore++;
-        if (typeof playSFX === 'function') playSFX('goal');
         document.getElementById("score-user").innerText = matchState.userScore;
         createJuiceText(t('JUICE_GOAL_USER'), "#f59e0b", window.innerWidth / 2, window.innerHeight / 2 - 100);
 
@@ -737,7 +754,7 @@ function endMatchByTime() {
 }
 
 function finishMatchRewards() {
-    if (typeof playSFX === 'function') playSFX('whistle');
+    if (typeof playSFX === 'function') playSFX('whistleEnd');
 
     const isVictory = matchState.userScore > matchState.rivalScore;
     addMatchLog(t(getRandomLog('matchEnd')), "system");

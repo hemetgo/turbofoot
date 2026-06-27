@@ -30,7 +30,6 @@
 
         <main id="main-content">
 
-            <!-- HEADER GLOBAL CENTRALIZADO -->
             <header id="global-header" class="champ-header"
                 style="display: none; justify-content: space-between; align-items: center; padding: 10px 16px; min-height: 60px; gap: 12px; background: var(--bg-card); border-bottom: 1px solid var(--border-light);">
 
@@ -53,7 +52,6 @@
                 </div>
             </header>
 
-            <!-- NOVO: Tela de Seleção de Clube -->
             <div id="screen-club-selection" class="screen">
                 <div class="club-options-wrapper" id="saved-clubs-container"></div>
                 <div class="bottom-action-bar">
@@ -62,7 +60,6 @@
                 </div>
             </div>
 
-            <!-- Tela de Criação de Clube -->
             <div id="screen-create-club" class="screen">
                 <div class="modal-body"
                     style="display:flex; flex-direction:column; gap:20px; max-width: 500px; margin: 0 auto; width: 100%;">
@@ -90,15 +87,11 @@
                 </div>
             </div>
 
-            <!-- Tela de Gestão de Elenco -->
             <div id="screen-squad" class="screen">
                 <div class="map-wrapper" style="padding: 15px; background: var(--bg-base); padding-bottom: 80px;">
-                    <!-- Procure por este bloco em index.html e deixe-o assim: -->
                     <div class="formation-row">
                         <div style="display:flex; align-items:center; gap:8px; flex-wrap: wrap;">
 
-
-                            <!-- BOTÃO CORRIGIDO AQUI (Adicionado width: max-content;) -->
                             <button id="btn-toggle-captain" class="btn-secondary btn-sm"
                                 onclick="toggleCaptainSelection()"
                                 style="width: max-content; border-color: var(--accent-gold); color: var(--accent-gold); font-weight: 900; padding: 6px 12px; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
@@ -142,8 +135,6 @@
                 </div>
             </div>
 
-            <!-- HUB PRINCIPAL -->
-            <!-- HUB PRINCIPAL -->
             <div id="screen-title" class="screen">
                 <div class="title-container" style="position: relative;">
                     <div class="title-menu" style="align-items: center; width: 100%; max-width: 400px;">
@@ -161,9 +152,6 @@
                             <button class="btn-secondary" style="flex:1; color:#fff;" data-i18n="BTN_HUB_MARKET"
                                 onclick="openHubMarket()">🛒 MERCADO</button>
                         </div>
-                        <!-- <button class="btn-primary" data-i18n="BTN_CAREER"
-                            style="background: var(--accent-gold); color: #020617; box-shadow: 0 4px 15px rgba(245,158,11,0.3); margin-bottom:10px; width:100%;"
-                            onclick="openMetaShop()">💼 INFRAESTRUTURA</button> -->
                         <button class="btn-secondary" style="position:relative; margin-bottom:10px; width:100%;"
                             onclick="openDailyMissionsModal()">
                             <span data-i18n="BTN_DAILY_MISSIONS">📅 MISSÕES DIÁRIAS</span>
@@ -183,7 +171,6 @@
                 </div>
             </div>
 
-            <!-- Seleção de Ligas -->
             <div id="screen-series-select" class="screen">
                 <div class="club-options-wrapper" id="series-options-container"></div>
             </div>
@@ -226,7 +213,6 @@
                             novo reforço.
                         </p>
 
-                        <!-- NOVO: Container do jogador que está sendo comprado -->
                         <div class="swap-incoming-section">
                             <div style="font-size: 0.75rem; font-weight: 900; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 6px; text-align: center;"
                                 data-i18n="LABEL_NEW_PLAYER">
@@ -291,7 +277,6 @@
 
         </main>
 
-        <!-- Modais PADRONIZADOS COM ❌ NO HEADER -->
         <div id="level-modal-overlay" class="modal-overlay" style="z-index: 9999;">
             <div class="options-box">
                 <div class="modal-header flex-between" style="align-items: flex-start;">
@@ -365,8 +350,7 @@
 
         <div id="camp-overlay" class="modal-overlay">
             <div class="options-box">
-                <!-- Injetado dinamicamente no JS com ❌ -->
-            </div>
+                </div>
         </div>
 
         <div id="roster-overlay" class="modal-overlay">
@@ -429,6 +413,14 @@
                     <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-confirm"
                                 onchange="toggleConfirm()"><span class="checkmark"></span><span class="toggle-text"
                                 data-i18n="LABEL_CONFIRM_CLICKS_TOGGLE">Confirmação Cliques</span></label></div>
+                    
+                    <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-music"
+                                onchange="toggleMusicUI()"><span class="checkmark"></span><span class="toggle-text"
+                                data-i18n="LABEL_MUSIC_TOGGLE">🎵 Música</span></label></div>
+                    <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-sfx"
+                                onchange="toggleSFXUI()"><span class="checkmark"></span><span class="toggle-text"
+                                data-i18n="LABEL_SFX_TOGGLE">🔊 Efeitos Sonoros</span></label></div>
+
                     <div class="options-row">
                         <label style="font-weight:700;" data-i18n="LABEL_LANGUAGE">Idioma</label>
                         <select id="language-select" onchange="changeLanguage(this.value)"
@@ -439,12 +431,8 @@
                     </div>
                 </div>
             </div>
-
-
-            <!-- TEXTO DA VERSÃO AQUI -->
-            <div
-                style="position: absolute; bottom: 24px; font-size: 1rem; font-weight: 800; color: var(--border-accent); letter-spacing: 1px;">
-                TurboFoot Manager v1.2r
+            <div style="position: absolute; bottom: 24px; font-size: 1rem; font-weight: 800; color: var(--border-accent); letter-spacing: 1px;">
+                TurboFoot Manager v1.1r
             </div>
         </div>
 
@@ -458,183 +446,6 @@
                 <div class="modal-footer">
                     <button class="btn-secondary" data-i18n="BTN_REPLAY_TUTORIAL"
                         onclick="replayFirstMatchTutorial()">▶️ REVER TUTORIAL GUIADO</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Os overlays de suspense, vitória/derrota e mobile action continuam inalterados abaixo... -->
-
-        <!-- Modais Mantidos -->
-        <div id="level-modal-overlay" class="modal-overlay" style="z-index: 9999;">
-            <div class="options-box">
-                <div class="modal-header">
-                    <h2 class="options-title text-success" data-i18n="TITLE_POST_MATCH_TRAINING">📈 TREINAMENTO PÓS-JOGO
-                    </h2>
-                    <p class="modal-subtitle" data-i18n-html="TEXT_LEVEL_POINTS_INFO">
-                        Você tem <strong id="level-points-text"
-                            style="color: var(--accent-green); font-size: 1.1rem;">0</strong> níveis para distribuir!
-                    </p>
-                </div>
-                <div class="modal-body">
-                    <div id="level-team-grid" class="roster-grid"></div>
-                </div>
-                <div class="modal-footer" style="flex-direction: row; gap: 10px;">
-                    <button id="btn-level-confirm" class="btn-primary" data-i18n="BTN_CONFIRM" style="flex: 2;"
-                        disabled>CONFIRMAR</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="meta-shop-overlay" class="modal-overlay">
-            <div class="options-box">
-                <div class="modal-header flex-between">
-                    <h2 class="options-title text-gold" data-i18n="TITLE_CAREER">MINHA CARREIRA</h2>
-                    <div class="currency-display" style="font-size: 1.2rem;">🏆 <span id="meta-coins-display">0</span>
-                    </div>
-                </div>
-                <div class="modal-body" id="meta-shop-list"
-                    style="display:flex; flex-direction:column; gap:8px; padding-top: 24px;"></div>
-            </div>
-        </div>
-
-        <div id="quit-confirm-overlay" class="modal-overlay" style="z-index: 999;">
-            <div class="options-box text-center">
-                <div class="modal-header">
-                    <h2 class="options-title text-danger" data-i18n="TITLE_QUIT_CONFIRM">DESISTIR?</h2>
-                </div>
-                <div class="modal-body">
-                    <p class="modal-subtitle" data-i18n="TEXT_QUIT_WARNING" style="margin-top:0;">Você abandonará esta
-                        Liga e voltará ao Hub do clube.</p>
-                </div>
-                <div class="modal-footer" style="flex-direction:row; gap:10px;">
-                    <button class="btn-secondary" data-i18n="BTN_CANCEL" style="flex:1;"
-                        onclick="closeModals()">CANCELAR</button>
-                    <button class="btn-primary" data-i18n="BTN_QUIT_CONFIRM"
-                        style="flex:1; background:var(--accent-red); box-shadow:none;"
-                        onclick="confirmQuitRun()">DESISTIR</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="pre-match-overlay" class="modal-overlay">
-            <div class="options-box">
-                <div class="modal-header">
-                    <h2 class="options-title text-danger" data-i18n="TITLE_OPPONENT_FOUND">ADVERSÁRIO ENCONTRADO</h2>
-                </div>
-                <div class="modal-body" style="padding: 16px;">
-                    <div id="pre-match-details"></div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-primary" data-i18n="BTN_ENTER_MATCH" onclick="startMapMatch()">ENTRAR EM CAMPO
-                        ⚽</button>
-                    <button class="btn-secondary" data-i18n="BTN_BACK_MAP" onclick=" closeModals()">← VOLTAR AO
-                        MAPA</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="camp-overlay" class="modal-overlay">
-            <div class="options-box">
-                <div class="modal-header">
-                    <h2 class="options-title text-success" data-i18n="TITLE_CAMP">ACAMPAMENTO DE TREINO 🏕️</h2>
-                    <p class="modal-subtitle" data-i18n="TEXT_CAMP_SUBTITLE">Aproveite para melhorar sua equipe.</p>
-                </div>
-                <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
-                    <button class="btn-primary" data-i18n-html="BTN_CAMP_INDIVIDUAL"
-                        onclick="promptCampTrain()">TREINAMENTO INDIVIDUAL<br><small>Escolha 1 jogador para subir de
-                            Nível</small></button>
-                    <button class="btn-primary btn-epic" data-i18n-html="BTN_CAMP_TACTICAL"
-                        onclick="applyCamp('buff')">FOCO TÁTICO<br><small>Bônus de Força no próximo
-                            jogo</small></button>
-                </div>
-            </div>
-        </div>
-
-        <div id="roster-overlay" class="modal-overlay">
-            <div class="options-box bottom-sheet">
-                <div class="modal-header flex-between">
-                    <h2 class="options-title" id="mobile-roster-title" data-i18n="TITLE_MY_ROSTER"
-                        style="display:flex; align-items:center; gap:8px;">MEU ELENCO</h2>
-                    <button class="btn-icon" onclick="closeModals()">❌</button>
-                </div>
-                <div class="modal-body">
-                    <div id="modal-roster-list" class="roster-grid"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="run-history-overlay" class="modal-overlay">
-            <div class="options-box">
-                <div class="modal-header flex-between">
-                    <h2 class="options-title" data-i18n="TITLE_HISTORY">HISTÓRICO</h2>
-                    <button class="btn-icon" onclick="closeModals()">❌</button>
-                </div>
-                <div class="modal-body" style="padding: 0;">
-                    <div id="history-list" class="history-list"></div>
-                    <div id="history-details" class="history-details" style="display:none;">
-                        <div id="history-details-content" style="padding: 16px;"></div>
-                    </div>
-                </div>
-                <div class="modal-footer" id="history-footer" style="display:none;">
-                    <button class="btn-secondary" data-i18n="BTN_BACK_LIST" onclick="closeHistoryDetails()">← VOLTAR PRA
-                        LISTA</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="daily-missions-overlay" class="modal-overlay">
-            <div class="options-box">
-                <div class="modal-header flex-between">
-                    <h2 class="options-title" data-i18n="BTN_DAILY_MISSIONS">📅 MISSÕES DIÁRIAS</h2>
-                    <button class="btn-icon" onclick="closeModals()">❌</button>
-                </div>
-                <div class="modal-body">
-                    <div id="daily-missions-reset-info"
-                        style="text-align:center; font-size:0.75rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:14px;">
-                    </div>
-                    <div id="daily-missions-list"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="options-overlay" class="modal-overlay">
-            <div class="options-box">
-                <div class="modal-header">
-                    <h2 class="options-title" data-i18n="TITLE_SETTINGS">CONFIGURAÇÕES</h2>
-                </div>
-                <div class="modal-body">
-                    <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-suspense"
-                                onchange="toggleSuspense()"><span class="checkmark"></span><span class="toggle-text"
-                                data-i18n="LABEL_SUSPENSE_TOGGLE">Suspense</span></label></div>
-                    <div class="options-row"><label class="toggle-container"><input type="checkbox" id="toggle-confirm"
-                                onchange="toggleConfirm()"><span class="checkmark"></span><span class="toggle-text"
-                                data-i18n="LABEL_CONFIRM_CLICKS_TOGGLE">Confirmação Cliques</span></label></div>
-                    <div class="options-row">
-                        <label style="font-weight:700;" data-i18n="LABEL_LANGUAGE">Idioma</label>
-                        <select id="language-select" onchange="changeLanguage(this.value)"
-                            style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; min-width: 140px; margin-left: 8px;">
-                            <option value="pt-br">🇧🇷 Português</option>
-                            <option value="en">🇺🇸 English</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-primary" data-i18n="BTN_CLOSE" onclick="closeOptions()">FECHAR</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="how-to-play-overlay" class="modal-overlay">
-            <div class="options-box">
-                <div class="modal-header">
-                    <h2 class="options-title" id="htp-title" data-i18n="HOW_TO_PLAY_TITLE">COMO JOGAR</h2>
-                </div>
-                <div class="modal-body" id="htp-body">
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-secondary" data-i18n="BTN_REPLAY_TUTORIAL"
-                        onclick="replayFirstMatchTutorial()">▶️ REVER TUTORIAL GUIADO</button>
-                    <button class="btn-primary" data-i18n="BTN_UNDERSTOOD" onclick="closeModals()">ENTENDI</button>
                 </div>
             </div>
         </div>
@@ -695,12 +506,10 @@
             </div>
         </div>
 
-        <!-- Div do Tooltip de Jogador (Exclusivo PC) -->
         <div id="pc-player-tooltip"
             style="display:none; position:fixed; z-index:99999; pointer-events:none; width: 280px; box-shadow: 0 15px 30px rgba(0,0,0,0.8); border-radius: 8px;">
         </div>
 
-        <!-- Modal Ação Mobile (Exclusivo Celular) -->
         <div id="mobile-player-action-overlay" class="modal-overlay" style="z-index: 10000;">
             <div class="options-box bottom-sheet">
                 <div class="modal-header flex-between">
@@ -745,7 +554,6 @@
     <script src="season.js"></script>
     <script src="match.js"></script>
     <script src="tutorial.js"></script>
-    <script src="main.js"></script>
 </body>
 
 </html>

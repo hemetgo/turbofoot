@@ -243,6 +243,8 @@ window.addEventListener('resize', drawMapLines);
 function handleMapNodeClick(node) {
     gameState.currentNode = node;
 
+    if (typeof playSFX === 'function') playSFX('click');
+
     if (node.type === 'match' || node.type === 'elite' || node.type === 'boss') {
         const threat = GAME_BALANCE.mechanics.threatLevels[node.type] || GAME_BALANCE.mechanics.threatLevels['match'];
 

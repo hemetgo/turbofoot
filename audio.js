@@ -7,10 +7,13 @@ const AUDIO_FILES = {
     bgm: 'assets/audio/bgm_main.mp3',       // Música de fundo
     click: 'assets/audio/sfx_click.mp3',    // Clique de botões
     whistle: 'assets/audio/sfx_whistle.mp3', // Apito do juiz
-    kick: 'assets/audio/sfx_kick.mp3',      // Chute/Passe
+    whistleEnd: 'assets/audio/sfx_whistleEnd.mp3',
+    kick: 'assets/audio/sfx_kick.mp3',
+    kickFail: 'assets/audio/sfx_kickFail.mp3',     // Chute/Passe
     goal: 'assets/audio/sfx_goal.mp3',      // Grito de Gol/Torcida
-    save: 'assets/audio/sfx_save.mp3',      // Defesa do Goleiro
+    userFail: 'assets/audio/sfx_userFail.mp3',      // Lamento da torcida
     cash: 'assets/audio/sfx_cash.mp3',      // Dinheiro (Loja)
+    save: 'assets/audio/sfx_save.mp3',      // Dinheiro (Loja)
     error: 'assets/audio/sfx_error.mp3'     // Ação inválida / Sem dinheiro
 };
 
@@ -19,11 +22,11 @@ let audioInitialized = false;
 
 function initAudio() {
     if (audioInitialized) return;
-    
+
     bgmAudio = new Audio(AUDIO_FILES.bgm);
     bgmAudio.loop = true;
     bgmAudio.volume = 0.3; // Volume da música um pouco mais baixo
-    
+
     audioInitialized = true;
     updateAudioState();
 }

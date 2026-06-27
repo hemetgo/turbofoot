@@ -5,9 +5,9 @@
         "desc": "LEAGUE_REGIONAL_DESC",
         "rewardBase": 10,
         "color": "#94a3b8",
-        "enemyBaseLevel": 1,
+        "enemyBaseLevel": -3,
         "enemyBaseTraits": 22,
-        "levelScaling": 2,
+        "levelScaling": 1,
         "traitScaling": 0,
         "natDistribution": [
             11

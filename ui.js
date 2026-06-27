@@ -1,15 +1,13 @@
 function fireConfetti() {
     const cont = document.getElementById("main-content");
-    const colors = ['#f59e0b', '#38bdf8', '#34d399', '#ec4899', '#f8fafc']; // Cores vibrantes de festa
+    const colors = ['#f59e0b', '#38bdf8', '#34d399', '#ec4899', '#f8fafc'];
 
-    // Aumentei para 80 confetes para preencher bem a tela de forma distribuída
     for (let i = 0; i < 80; i++) {
         const c = document.createElement("div");
 
-        // Posicionamento inicial espalhado no topo, fora da visão do jogador
         c.style.position = "absolute";
-        c.style.left = (Math.random() * 100) + "%"; // Brota de qualquer ponto horizontal
-        c.style.top = "-20px"; // Começa um pouco acima do topo da tela
+        c.style.left = (Math.random() * 100) + "%";
+        c.style.top = "-20px";
         c.style.width = (Math.random() * 6 + 6) + "px";
         c.style.height = (Math.random() * 10 + 6) + "px";
         c.style.backgroundColor = rnd(colors);
@@ -17,24 +15,21 @@ function fireConfetti() {
         c.style.zIndex = "9999";
         if (Math.random() > 0.5) c.style.borderRadius = "50%";
 
-        // Configurações da queda lenta e celebração
-        const driftX = (Math.random() * 160 - 80); // Leve balanço para os lados enquanto flutua
-        const fallDuration = 2000 + Math.random() * 1500; // Bem mais lento (de 4 a 6.5 segundos de queda)
-        const startDelay = Math.random() * 500; // Efeito "chuva": eles não caem todos ao mesmo tempo
+        const driftX = (Math.random() * 160 - 80);
+        const fallDuration = 2000 + Math.random() * 1500;
+        const startDelay = Math.random() * 500;
 
         c.animate([
             { transform: 'translateY(0) translateX(0) rotate(0deg)', opacity: 1 },
             { transform: `translateY(45vh) translateX(${driftX}px) rotate(${Math.random() * 1440}deg)`, opacity: 0 }
         ], {
             duration: fallDuration,
-            easing: 'ease-out', // Suaviza a velocidade conforme eles caem
+            easing: 'ease-out',
             delay: startDelay,
             fill: 'forwards'
         });
 
         cont.appendChild(c);
-
-        // Garante a remoção do elemento da memória após o término da animação individual
         setTimeout(() => c.remove(), fallDuration + startDelay + 100);
     }
 }
@@ -62,7 +57,21 @@ function createJuiceText(text, color, x, y) {
 }
 
 async function playSuspenseSequence(isUser, isSuccess) {
-    if (!gameState.settings.showSuspense) return;
+    let isGoal = (isUser && isSuccess) || (!isUser && !isSuccess);
+
+    // Se o jogador desligou o suspense nas opções, toca o som na hora e segue o jogo
+    if (!gameState.settings.showSuspense) {
+        if (isGoal) {
+            if (typeof playSFX === 'function') playSFX('goal');
+        } else {
+            if (typeof playSFX === 'function') {
+                if (isUser) playSFX('kickFail'); // Usuário errou o chute
+                else playSFX('save'); // Usuário defendeu
+            }
+        }
+        return;
+    }
+
     const ov = document.getElementById("suspense-overlay");
     const textEl = document.getElementById("suspense-text");
     const teamEl = document.getElementById("suspense-team");
@@ -85,6 +94,24 @@ async function playSuspenseSequence(isUser, isSuccess) {
     textEl.innerText = t(rnd(result));
     textEl.className = "suspense-text pop";
     textEl.style.color = (isUser && isSuccess) || (!isUser && isSuccess) ? "#34d399" : "#f87171";
+
+    // --- NOVO: TOCA O SOM EXATAMENTE JUNTO COM A REVELAÇÃO DO TEXTO ---
+    if (isGoal) {
+        if (isUser) {
+            if (typeof playSFX === 'function')
+                playSFX('goal');
+        }
+        else {
+            playSFX('userFail');
+        }
+    } else {
+        if (typeof playSFX === 'function') {
+            if (isUser) playSFX('userFail'); // Usuário errou o chute pra fora/trave
+            else playSFX('save'); // Goleiro fez a defesa
+        }
+    }
+    // ------------------------------------------------------------------
+
     await sleep(1200);
     ov.style.display = "none";
 }
@@ -93,11 +120,34 @@ async function playSuspenseSequence(isUser, isSuccess) {
 function openOptions() {
     document.getElementById('toggle-suspense').checked = gameState.settings.showSuspense;
     document.getElementById('toggle-confirm').checked = gameState.settings.requireConfirm;
+
+    // NOVO: Marca os botões de áudio conforme o save do jogador
+    if (document.getElementById('toggle-music')) {
+        document.getElementById('toggle-music').checked = gameState.settings.musicOn !== false;
+    }
+    if (document.getElementById('toggle-sfx')) {
+        document.getElementById('toggle-sfx').checked = gameState.settings.sfxOn !== false;
+    }
+
     document.getElementById('options-overlay').style.display = 'flex';
 }
+
 function toggleConfirm() { gameState.settings.requireConfirm = document.getElementById('toggle-confirm').checked; }
-function closeOptions() { document.getElementById('options-overlay').style.display = 'none'; saveGame(); }
 function toggleSuspense() { gameState.settings.showSuspense = document.getElementById('toggle-suspense').checked; }
+
+window.toggleMusicUI = function () {
+    gameState.settings.musicOn = document.getElementById('toggle-music').checked;
+    if (typeof updateAudioState === 'function') updateAudioState();
+    if (typeof saveGame === 'function') saveGame();
+};
+
+window.toggleSFXUI = function () {
+    gameState.settings.sfxOn = document.getElementById('toggle-sfx').checked;
+    if (gameState.settings.sfxOn && typeof playSFX === 'function') playSFX('click');
+    if (typeof saveGame === 'function') saveGame();
+};
+
+function closeOptions() { document.getElementById('options-overlay').style.display = 'none'; saveGame(); }
 function openTraitsHelp() { document.getElementById('traits-help-overlay').style.display = 'flex'; }
 function closeModals() { document.querySelectorAll(".modal-overlay").forEach(m => m.style.display = 'none'); }
 
@@ -106,13 +156,11 @@ function openQuitConfirm() {
 }
 
 function confirmQuitRun() {
-    // Grava como derrota na memória se quiser rastrear, ou apenas reseta
     recordRun(false);
 
-    // --- CORREÇÃO AQUI ---
-    gameState.season.map = []; // Destrói o mapa para encerrar a run de verdade
+    // Encerra o mapa atual
+    gameState.season.map = [];
     saveGame();
-    // ---------------------
 
     returnToTitle();
 }
@@ -121,13 +169,11 @@ function returnToTitle() {
     closeModals();
     document.body.classList.remove('in-run');
 
-    // Se por algum motivo o player voltar ao título sem clube, trava na tela de seleção
     if (!gameState.club) {
         if (typeof renderClubSelection === 'function') {
             renderClubSelection();
         }
     } else {
-        // Usa a nova função do sistema persistente (club_manager.js)
         if (typeof returnToHub === 'function') {
             returnToHub();
         } else {
@@ -174,7 +220,6 @@ function updateRosterUI() {
     const mobTitle = document.getElementById("mobile-roster-title");
     if (mobTitle && gameState.club) mobTitle.innerHTML = `<span style="font-size:1.2rem;">${gameState.club.emoji}</span> ${clubName}`;
 
-    // --- NOVA LÓGICA DO HUB PRINCIPAL (Com Liga Atual) ---
     const hubInfo = document.getElementById("hub-club-info");
     if (hubInfo && gameState.club) {
         let highestIdx = gameState.meta?.highestSeriesUnlocked || 0;
@@ -231,7 +276,6 @@ function populateHowToPlay() {
 
     const colors = ['trait-gold', 'trait-blue', 'trait-purple', 'trait-green', 'trait-muted', 'trait-blue', 'trait-green'];
 
-    // Variável alterada de 't' para 'trait' para podermos usar a função t() livremente
     data.traits.forEach((trait, i) => {
         html += `<div class="trait-help-item ${colors[i % colors.length]}"><strong>${t(trait.name)}</strong><br><span style="font-weight:600; color:var(--text-muted);">${t(trait.desc)}</span></div>`;
     });
@@ -245,16 +289,9 @@ function openRosterModal() {
     document.getElementById('roster-overlay').style.display = 'flex';
 }
 
-// --- HISTÓRICO ---
-// ==========================================
-// SISTEMA DE HISTÓRICO EM DUAS ETAPAS
-// ==========================================
-
-// Função auxiliar para coletar e formatar as ligas jogadas
 function getSeasonsHistory() {
     let allSeasons = [];
 
-    // 1. Temporadas Passadas (Histórico de Runs encerradas)
     if (gameState.runHistory && Array.isArray(gameState.runHistory)) {
         gameState.runHistory.forEach((run, idx) => {
             if (run && run.matchHistory && Array.isArray(run.matchHistory) && run.matchHistory.length > 0) {
@@ -271,7 +308,6 @@ function getSeasonsHistory() {
         });
     }
 
-    // 2. Temporada Atual (Em andamento)
     if (gameState.season && gameState.season.matchHistory && Array.isArray(gameState.season.matchHistory) && gameState.season.matchHistory.length > 0) {
         allSeasons.push({
             isCurrent: true,
@@ -284,11 +320,9 @@ function getSeasonsHistory() {
         });
     }
 
-    // Inverte para colocar as mais recentes no topo
     return allSeasons.reverse();
 }
 
-// ETAPA 1: LISTAR AS LIGAS JOGADAS
 window.openHistoryModal = function () {
     const list = document.getElementById("history-list");
     const detailsPanel = document.getElementById("history-details");
@@ -303,7 +337,7 @@ window.openHistoryModal = function () {
     list.innerHTML = "";
 
     let seasons = getSeasonsHistory();
-    window.cachedSeasonsHistory = seasons; // Guarda os dados para a Etapa 2
+    window.cachedSeasonsHistory = seasons;
 
     if (seasons.length === 0) {
         list.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding: 20px;">${t("TEXT_NO_RUNS_YET") || "Nenhum histórico registrado."}</p>`;
@@ -323,7 +357,6 @@ window.openHistoryModal = function () {
 
             let clubName = typeof tClub === 'function' ? tClub(season.club.name) : season.club.name;
 
-            // Usa a classe "history-item" nativa do seu CSS
             list.innerHTML += `
                 <div class="history-item ${cls}" style="border-left: 4px solid ${colorClass};" onclick="viewHistoryDetails(${idx})">
                     <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
@@ -350,7 +383,6 @@ window.openHistoryModal = function () {
     document.getElementById("run-history-overlay").style.display = "flex";
 };
 
-// ETAPA 2: LISTAR PARTIDAS DA LIGA ESCOLHIDA
 window.viewHistoryDetails = function (idx) {
     let season = window.cachedSeasonsHistory[idx];
     if (!season) return;
@@ -363,7 +395,6 @@ window.viewHistoryDetails = function (idx) {
     let clubName = typeof tClub === 'function' && season.club ? tClub(season.club.name) : (season.club ? season.club.name : 'Meu Clube');
     let myEmoji = season.club ? season.club.emoji : '🛡️';
 
-    // Cabeçalho da Liga detalhada
     let html = `
         <div style="text-align:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.05);">
             <div style="font-size:3rem; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5)); line-height:1;">${leagueConfig.emoji}</div>
@@ -394,7 +425,6 @@ window.viewHistoryDetails = function (idx) {
             let scorersHtml = '';
             let rivalScorersHtml = '';
 
-            // Pílulas: Artilheiros do Usuário (Esquerda)
             if (m.stats && m.stats.scorers) {
                 let scorers = Object.values(m.stats.scorers);
                 if (scorers.length > 0) {
@@ -411,7 +441,6 @@ window.viewHistoryDetails = function (idx) {
                 }
             }
 
-            // Pílulas: Artilheiros do Rival (Direita)
             if (m.stats && m.stats.rivalScorers) {
                 let rivalScorers = Object.values(m.stats.rivalScorers);
                 if (rivalScorers.length > 0) {
@@ -428,7 +457,6 @@ window.viewHistoryDetails = function (idx) {
                 }
             }
 
-            // Une as duas metades em uma barra dupla se houver gol na partida
             if (scorersHtml !== '' || rivalScorersHtml !== '') {
                 finalScorersHtml = `
                     <div style="margin-top:10px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.05); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
@@ -510,7 +538,6 @@ window.viewHistoryDetails = function (idx) {
         html += `<p style="text-align:center; font-size:0.8rem; color:var(--text-muted);">${t('HISTORY_NO_RECORDS_YET') || "Nenhuma partida registrada."}</p>`;
     }
 
-    // --- NOVO: DESTAQUES DA CAMPANHA (RUN) NO HISTÓRICO ---
     if (season.playerStats) {
         let pStats = Object.values(season.playerStats);
 
@@ -536,7 +563,6 @@ window.viewHistoryDetails = function (idx) {
             </div>`;
         }
     }
-    // ------------------------------------------------------
 
     content.innerHTML = html;
     document.getElementById("history-details").style.display = "flex";
@@ -629,10 +655,8 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
     const btnConfirm = document.getElementById('btn-level-confirm');
 
     let available = points;
-    let originalPoints = points;
     let allocations = {};
 
-    // Inicia todo mundo com 0 níveis extras
     gameState.team.forEach(p => allocations[p.id] = 0);
 
     function render() {
@@ -642,12 +666,10 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
         gameState.team.forEach(p => {
             let currentBonus = allocations[p.id];
 
-            // Gera o card original intacto
             let tempDiv = document.createElement('div');
             tempDiv.innerHTML = getPlayerCardHTML(p);
             let cardDiv = tempDiv.firstElementChild;
 
-            // Feedback visual de card selecionado
             if (currentBonus > 0) {
                 cardDiv.style.borderColor = "var(--accent-green)";
                 cardDiv.style.boxShadow = "inset 0 0 15px rgba(52, 211, 153, 0.15)";
@@ -662,8 +684,6 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
                 };
             }
 
-            // O TRUQUE DE MESTRE: Modifica apenas a área do Nível (lado direito do card)
-            // Sem alterar a grid, sem botões flutuantes!
             let levelSection = cardDiv.lastElementChild;
 
             if (currentBonus > 0) {
@@ -681,7 +701,7 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
 
                 let minusBtn = levelSection.querySelector('.remove-pt-btn');
                 minusBtn.onclick = (e) => {
-                    e.stopPropagation(); // Evita que o clique no "-" dê um nível sem querer
+                    e.stopPropagation();
                     allocations[p.id]--;
                     available++;
                     render();
@@ -707,9 +727,10 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
     }
 
     btnConfirm.onclick = (e) => {
-        // AVISO VISUAL: O jogador esqueceu de usar os pontos
         if (available > 0) {
+            // AVISO VISUAL E SONORO: O jogador esqueceu de usar os pontos
             if (typeof playSFX === 'function') playSFX('error');
+
             btnConfirm.classList.add("shake");
             pointsText.parentElement.classList.add("shake");
 
@@ -765,8 +786,6 @@ function showLevelDistribution(points, onComplete, givesTrait = false) {
     render();
 }
 
-
-
 window.closeHistoryDetails = function () {
     document.getElementById("history-list").style.display = "flex";
     document.getElementById("history-details").style.display = "none";
@@ -792,5 +811,4 @@ function setMobileTab(tab) {
     }
 }
 
-// Inicializa o estado padrão ao carregar o jogo
 document.body.classList.add('viewing-map');
