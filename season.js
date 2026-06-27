@@ -375,10 +375,18 @@ function finishSeason(wonSeason) {
         });
     }
 
+    // 1. Grava no Histórico ANTES de limpar a memória
     recordRun(wonSeason);
     progressDailyMission('play_runs', 1);
 
-    gameState.season.map = []; // Garante o fim da run após o resumo
+    // 2. Limpa completamente os dados da temporada para não aparecer "Em andamento"
+    gameState.season.map = [];
+    gameState.season.matchHistory = [];
+    gameState.season.history = [];
+    gameState.season.currentStage = 0;
+    if (gameState.season.playerStats) gameState.season.playerStats = {};
+    gameState.inMatch = false;
+
     saveGame();
 
     let currentLeague = GAME_BALANCE.leagues[gameState.leagueLevel];
@@ -388,19 +396,30 @@ function finishSeason(wonSeason) {
         endIcon.innerText = leagueEmoji;
     }
 
-    let subText = wonSeason ? "\n🏆 TEMPORADA PERFEITA!\nO título é nosso e a torcida está em festa!" : "\n❌ ELIMINADO.\nUm tropeço duro. Junte os cacos e prepare o time para a próxima tentativa.";
+    // --- TEXTOS LOCALIZADOS ---
+    let subText = wonSeason ? "\n" + t('TEXT_SEASON_PERFECT') : "\n" + t('TEXT_SEASON_ELIMINATED');
 
     if (wonSeason) {
         let highest = gameState.meta.highestSeriesUnlocked || 0;
 
         if (gameState.leagueLevel === highest && highest < GAME_BALANCE.leagues.length - 1) {
             gameState.meta.highestSeriesUnlocked = highest + 1;
-            let nextSeriesName = GAME_BALANCE.leagues[highest + 1].name;
-            subText += `\n\n⭐ META ALCANÇADA! ⭐\nNova Liga Desbloqueada:\n👉 ${nextSeriesName} 👈`;
+
+            // Usa o t() para traduzir também o nome da nova liga
+            let nextSeriesName = t(GAME_BALANCE.leagues[highest + 1].name);
+
+            subText += "\n\n" + (t('TEXT_LEAGUE_UNLOCKED') || "").replace('{league}', nextSeriesName);
         }
     }
 
-    let matchesWon = gameState.season.matchHistory.filter(m => m.userScore > m.rivalScore).length;
+    // ATENÇÃO: Como limpamos a memória acima, precisamos usar a variável local (já guardada)
+    // Mas para isso funcionar de forma retroativa, calculamos os ganhos ANTES de limpar a memória, 
+    // ou passamos os valores do último registro salvo.
+
+    // Pegando do histórico recém-salvo:
+    let lastRun = gameState.runHistory[0];
+    let matchesWon = lastRun ? lastRun.matches.filter(m => m.userScore > m.rivalScore).length : 0;
+
     let metaPerWin = (gameState.leagueLevel + 1) * 5;
     let metaWinBonus = (gameState.leagueLevel + 1) * 50;
 
@@ -411,9 +430,9 @@ function finishSeason(wonSeason) {
     gameState.meta.metaCoins += earnedTrophies;
     saveGame();
 
-    subText += `\n\nVitórias na liga: ${matchesWon} (+${matchesWon * metaPerWin} 💰)`;
-    if (wonSeason) subText += `\nBônus de Campeão: +${metaWinBonus} 💰`;
-    subText += `\n\n🏆 Você ganhou +${earnedTrophies} Troféus para usar na Sede do Clube!`;
+    subText += "\n\n" + (t('TEXT_WINS_SUMMARY') || "").replace('{wins}', matchesWon).replace('{coins}', matchesWon * metaPerWin);
+    if (wonSeason) subText += "\n" + (t('TEXT_CHAMPION_BONUS') || "").replace('{bonus}', metaWinBonus);
+    subText += "\n\n" + (t('TEXT_TROPHIES_EARNED') || "").replace('{trophies}', earnedTrophies);
 
     document.getElementById('se-sub').innerText = subText;
     document.getElementById('se-coins').innerText = `+${earnedTrophies} 💰`;

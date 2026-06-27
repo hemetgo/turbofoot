@@ -156,10 +156,22 @@ function openQuitConfirm() {
 }
 
 function confirmQuitRun() {
+    // 1. Salva a run no histórico geral (Se jogou alguma partida, vai ficar como ELIMINADO)
     recordRun(false);
 
-    // Encerra o mapa atual
+    // 2. Limpa COMPLETAMENTE o estado da temporada atual para não aparecer "Em andamento"
     gameState.season.map = [];
+    gameState.season.matchHistory = [];
+    gameState.season.history = [];
+    gameState.season.currentStage = 0;
+
+    if (gameState.season.playerStats) {
+        gameState.season.playerStats = {};
+    }
+
+    // Garante que o jogo entenda que não estamos mais numa partida
+    gameState.inMatch = false;
+
     saveGame();
 
     returnToTitle();

@@ -591,3 +591,11 @@ LABEL_CURRENT_LEAGUE=Liga Atual
 
 LABEL_MUSIC_TOGGLE=🎵 Música
 LABEL_SFX_TOGGLE=🔊 Efeitos Sonoros
+
+# --- Fim de Temporada ---
+TEXT_SEASON_PERFECT=🏆 TEMPORADA PERFEITA!\nO título é nosso e a torcida está em festa!
+TEXT_SEASON_ELIMINATED=❌ ELIMINADO.\nUm tropeço duro. Junte os cacos e prepare o time para a próxima tentativa.
+TEXT_LEAGUE_UNLOCKED=⭐ META ALCANÇADA! ⭐\nNova Liga Desbloqueada:\n👉 {league} 👈
+TEXT_WINS_SUMMARY=Vitórias na liga: {wins} (+{coins} 💰)
+TEXT_CHAMPION_BONUS=Bônus de Campeão: +{bonus} 💰
+TEXT_TROPHIES_EARNED=🏆 Você ganhou +{trophies} Troféus para usar na Sede do Clube!
