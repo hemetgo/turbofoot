@@ -58,7 +58,7 @@ HOW_TO_PLAY_TRAIT_TACKLING_DESC=Cães de guarda! Bônus em marcações e desarme
 HOW_TO_PLAY_TRAIT_REFLEXES_NAME=🧤 Reflexos
 HOW_TO_PLAY_TRAIT_REFLEXES_DESC=Uma muralha entre as traves! Bônus enorme em defesas do goleiro. Só funciona dentro da sua própria área.
 
-HOW_TO_PLAY_TRAIT_MARKING_NAME=🛡️ Posicionamento
+HOW_TO_PLAY_TRAIT_MARKING_NAME=🛡️ Marcação
 HOW_TO_PLAY_TRAIT_MARKING_DESC=Inteligência tática! Reduz a força do RIVAL em todas as jogadas dele.
 
 HOW_TO_PLAY_TRAIT_VISION_NAME=🔗 Visão de Jogo

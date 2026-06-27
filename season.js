@@ -295,14 +295,7 @@ function handleMapNodeClick(node) {
         details.innerHTML = `
             <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 20px;">
                 <div style="font-size:4.5rem; margin-bottom:5px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); line-height: 1;">${node.rival.emoji}</div>
-                <h3 style="color:#fff; font-size:1.5rem; text-transform:uppercase; letter-spacing: 1px;">${tClub(node.rival.name)}</h3>
-            </div>
-
-            <div style="background:rgba(0,0,0,0.25); border-radius:12px; padding:16px; margin-bottom:16px; border:1px solid var(--border-accent); display:flex; flex-direction:column; align-items:center;">
-                <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px; font-weight:900; text-transform:uppercase; letter-spacing:1px;">📊 ${t('CLUB_ABILITIES')}</div>
-                <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:6px;">
-                    ${perksHtml}
-                </div>
+                <h3 style="color:#fff; font-size:1.5rem; text-transform:uppercase; letter-spacing: 1px; margin-top: 15px;">${tClub(node.rival.name)}</h3>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
