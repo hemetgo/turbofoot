@@ -498,9 +498,10 @@ SECTOR_GOL=GOALKEEPER
 SECTOR_ZAG=DEFENSE
 SECTOR_MEI=MIDFIELD
 SECTOR_ATA=ATTACK
-TEXT_CAPTAIN_SET=Faixa de capitão entregue!
-TEXT_GOL_SWAP_ERROR=Goleiro só pode ser trocado por outro Goleiro!
-TEXT_SQUAD_TIP=Selecione dois para trocar. Clique DUAS VEZES num titular para torná-lo CAPITÃO.
+
+TEXT_CAPTAIN_SET=Captain assigned!
+TEXT_GOL_SWAP_ERROR=Goalkeepers can only be swapped with other Goalkeepers!
+TEXT_SQUAD_TIP=Select two players to swap. Double-click a starter to make them the CAPTAIN.
 
 # --- Features Adicionais ---
 BTN_DELETE_CLUB=DELETE
@@ -576,3 +577,5 @@ STATS_AWARD_PASSER=Maestro
 STATS_AWARD_DEFENDER=The Wall
 STATS_AWARD_KEEPER=Safe Hands
 STATS_LABEL_RUN=(Run: {val})
+
+BTN_SET_CAPTAIN=SET CAPTAIN

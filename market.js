@@ -93,15 +93,17 @@ function showMarketScreen() {
         let isAffordable = gameState.coins >= p.price;
         let btnAttr = isAffordable ? "" : "disabled";
 
-        // Botão de compra gigante e claro injetado na carta
+        // --- ATUALIZAÇÃO: Preço dentro do botão + Novo design compacto ---
         let actionHTML = `
-            <div style="font-size:1.3rem; font-weight:900; color:var(--accent-gold); text-align:center;">${p.price}💰</div>
-            <button class="btn-primary" style="padding:12px 20px; font-size:0.95rem; margin-top:4px;" ${btnAttr} onclick="executePurchase(${idx})">${t('MARKET_BTN_BUY') || 'CONTRATAR'}</button>
+            <button class="btn-primary" style="padding:10px 16px; font-size:0.95rem; display:flex; align-items:center; gap:8px; white-space:nowrap; margin:0;" ${btnAttr} onclick="executePurchase(${idx})">
+                ${t('MARKET_BTN_BUY') || 'CONTRATAR'} <span style="color:var(--accent-gold); font-weight:900; background:rgba(0,0,0,0.3); padding:2px 6px; border-radius:6px; margin-left:2px;">${p.price} 💰</span>
+            </button>
         `;
 
         let customStyle = `animation-delay: ${animDelay}; ` + (!isAffordable ? "opacity:0.6; filter:grayscale(30%);" : "");
 
-        list.innerHTML += getPlayerCardHTML(p, actionHTML, customStyle);
+        // --- ATUALIZAÇÃO: Passando { hideInfo: true } para remover a lupa ---
+        list.innerHTML += getPlayerCardHTML(p, actionHTML, customStyle, { hideInfo: true });
     });
 }
 
@@ -150,7 +152,7 @@ function openMarketSwapModal(draftIndex) {
     }
 
     // Carta do novo reforço não tem botões
-    incomingContainer.innerHTML = getPlayerCardHTML(pendingPurchase);
+    incomingContainer.innerHTML = getPlayerCardHTML(pendingPurchase, "", "", { hideInfo: true });
 
     swapList.innerHTML = '';
     if (!gameState.reserves || gameState.reserves.length === 0) {
@@ -164,7 +166,7 @@ function openMarketSwapModal(draftIndex) {
                 </button>
             `;
 
-            swapList.innerHTML += getPlayerCardHTML(player, actionHTML);
+            swapList.innerHTML += getPlayerCardHTML(player, actionHTML, "", { hideInfo: true });
         });
     }
 

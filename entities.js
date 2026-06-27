@@ -75,19 +75,19 @@ function generateBasePlayer(baseLevel = 1, numTraits = 2, focusTraitId = null, f
 // ÚNICO GERADOR DE CARD UNIVERSAL
 function getPlayerCardHTML(p, actionHTML = "", customStyles = "", indexInfo = null) {
     let perksHTML = "";
-    // RECUPERADO: Lista de IDs das habilidades para o brilho de sinergia
     let dataPerks = p.perks ? p.perks.map(perk => perk.id).join(',') : "";
     let hasTraits = p.perks && p.perks.length > 0;
 
     if (hasTraits) {
         let perksArray = p.perks.map(perk => {
-            return `<span style="display:inline-flex; align-items:center; gap:3px; font-size:0.55rem; font-weight:800; color:var(--text-muted); background:rgba(0,0,0,0.25); padding:2px 5px; border-radius:4px; border:1px solid rgba(255,255,255,0.05);">
+            // CORREÇÃO: Adicionado data-tip com a descrição traduzida e cursor:help
+            return `<span data-tip="${t(perk.desc)}" style="display:inline-flex; align-items:center; gap:3px; font-size:0.55rem; font-weight:800; color:var(--text-muted); background:rgba(0,0,0,0.25); padding:2px 4px; border-radius:4px; border:1px solid rgba(255,255,255,0.05); cursor:help;">
                         <span>${perk.emoji}</span> <span>${t(perk.name).toUpperCase()}</span>
                     </span>`;
         });
-        perksHTML = `<div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:4px;">${perksArray.join('')}</div>`;
+        perksHTML = `<div style="display:flex; gap:4px; flex-wrap:wrap;">${perksArray.join('')}</div>`;
     } else {
-        perksHTML = `<div style="font-size:0.6rem; color:var(--text-muted); font-weight:700; margin-top:2px;">${t('TEXT_NO_PERKS')}</div>`;
+        perksHTML = `<div style="font-size:0.6rem; color:var(--text-muted); font-weight:700;">${t('TEXT_NO_PERKS')}</div>`;
     }
 
     let isCaptain = (gameState.captainId === p.id);
@@ -103,31 +103,47 @@ function getPlayerCardHTML(p, actionHTML = "", customStyles = "", indexInfo = nu
         oopHTML = `<div style="font-size:0.55rem; color:var(--accent-red); font-weight:800; text-transform:uppercase; margin-top:2px; display:flex; align-items:center; gap:4px;">⚠️ Fora (Ideal: ${indexInfo.expectedPos})</div>`;
     }
 
+    // Badge de Gols na Temporada
     let runGoals = (gameState.season && gameState.season.playerStats && gameState.season.playerStats[p.id]?.goals) || 0;
     let runGoalsBadge = runGoals > 0 ? `<span style="font-size:0.6rem; background:rgba(245,158,11,0.2); border:1px solid var(--accent-gold); color:var(--accent-gold); padding:2px 6px; border-radius:10px; margin-left:6px; white-space:nowrap;">⚽ ${runGoals}</span>` : "";
 
-    let infoBtn = `<button class="btn-icon" style="padding:2px 6px; font-size:0.8rem; margin-left:auto; border:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.4);" onclick="event.stopPropagation(); showPlayerStats('${p.id}')">🔍</button>`;
+    // --- ATUALIZAÇÃO: Verifica se indexInfo.hideInfo é true para esconder a lupa ---
+    let hideInfo = indexInfo && indexInfo.hideInfo === true;
+    let infoBtn = hideInfo ? "" : `<button class="btn-icon" style="padding:4px 8px; font-size:0.9rem; border:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.4); border-radius:8px; cursor:pointer; transition:transform 0.2s;" onclick="event.stopPropagation(); showPlayerStats('${p.id}')">🔍</button>`;
 
     return `
-        <div class="player-card universal-card" data-id="${p.id}" data-perks="${dataPerks}" style="position:relative; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-light); border-radius:10px; padding:8px 10px; width:100%; transition:all 0.2s; ${customStyles}">
-            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; flex-shrink:0; min-width:40px;">
-                <span style="font-size:1.8rem; line-height:1; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));">${p.emoji}</span>
-                <div style="background:rgba(0,0,0,0.4); border-radius:4px; padding:1px 5px; font-size:0.6rem; font-weight:900; color:var(--accent-green); border:1px solid rgba(255,255,255,0.1);">Nv ${p.level}</div>
+        <div class="player-card universal-card" data-id="${p.id}" data-perks="${dataPerks}" style="position:relative; display:flex; align-items:center; gap:8px; background:var(--bg-card); border:1px solid var(--border-light); border-radius:10px; padding:6px 8px; width:100%; min-height: 72px; height: 100%; transition:all 0.2s; box-sizing: border-box; ${customStyles}">
+            
+            <!-- Coluna 1: Avatar + Level -->
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; flex-shrink:0; min-width:40px;">
+                <span style="font-size:1.6rem; line-height:1; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));">${p.emoji}</span>
+                <div style="background:rgba(0,0,0,0.4); border-radius:4px; padding:1px 4px; font-size:0.55rem; font-weight:900; color:var(--accent-green); border:1px solid rgba(255,255,255,0.1);">Nv ${p.level}</div>
             </div>
+            
+            <!-- Coluna 2: Informações -->
             <div style="flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center;">
                 
-                <div style="display:flex; align-items:center; gap:4px; flex-wrap:nowrap; overflow:hidden; width:100%;">
+                <div style="display:flex; align-items:center; gap:4px; flex-wrap:nowrap; overflow:hidden; width:100%; margin-bottom: 3px;">
                     <span class="pos-badge pos-${p.position}" style="font-size:0.5rem; padding:1px 4px; margin:0; flex-shrink:0; border:1px solid rgba(255,255,255,0.1);">${posLabel}</span>
                     <span class="fi fi-${p.flag || 'xx'}" style="border-radius:2px; font-size:0.75rem; flex-shrink:0;"></span>
                     <span style="font-size:0.85rem; font-weight:900; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-transform:uppercase; letter-spacing:-0.5px;">${displayName}</span>
                     ${runGoalsBadge}
-                    ${infoBtn}
                 </div>
                 
-                ${perksHTML}
+                <!-- Altura mínima reduzida para as habilidades -->
+                <div style="min-height: 18px; display:flex; align-items:center;">
+                    ${perksHTML}
+                </div>
+                
                 ${oopHTML}
             </div>
-            ${actionHTML ? `<div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end; margin-left:auto; flex-shrink:0;">${actionHTML}</div>` : ''}
+            
+            <!-- Coluna 3: Botões Injetados -->
+            <div style="display:flex; flex-direction:row; gap:4px; align-items:center; margin-left:auto; flex-shrink:0;">
+                ${infoBtn}
+                ${actionHTML}
+            </div>
+            
         </div>
     `;
 }

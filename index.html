@@ -91,8 +91,17 @@
             <!-- Tela de Gestão de Elenco -->
             <div id="screen-squad" class="screen">
                 <div class="map-wrapper" style="padding: 15px; background: var(--bg-base); padding-bottom: 80px;">
+                    <!-- Procure por este bloco em index.html e deixe-o assim: -->
                     <div class="formation-row">
                         <div style="display:flex; align-items:center; gap:8px; flex-wrap: wrap;">
+
+
+                            <!-- BOTÃO CORRIGIDO AQUI (Adicionado width: max-content;) -->
+                            <button id="btn-toggle-captain" class="btn-secondary btn-sm"
+                                onclick="toggleCaptainSelection()"
+                                style="width: max-content; border-color: var(--accent-gold); color: var(--accent-gold); font-weight: 900; padding: 6px 12px; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
+                                👑 <span data-i18n="BTN_SET_CAPTAIN">DEFINIR CAPITÃO</span>
+                            </button>
                             <span style="font-size: 0.8rem; font-weight: 900; color: var(--text-muted);"><label
                                     data-i18n="TEAM_FORMATION">FORMAÇÃO:</label></span>
                             <select id="formation-select" class="btn-secondary btn-sm"
@@ -433,7 +442,7 @@
             <!-- TEXTO DA VERSÃO AQUI -->
             <div
                 style="position: absolute; bottom: 24px; font-size: 1rem; font-weight: 800; color: var(--border-accent); letter-spacing: 1px;">
-                TurboFoot Manager v0.43b
+                TurboFoot Manager v0.44b
             </div>
         </div>
 

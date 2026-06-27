@@ -5,6 +5,7 @@
 let allSaves = [];
 let activeSaveIndex = -1;
 let squadSelectedPlayer = null;
+let isSelectingCaptain = false;
 
 // Dicionário universal de mapeamento de Formações. 
 // O índice no array define a POSIÇÃO EXIGIDA do slot correspondente ao gameState.team[index].
@@ -386,9 +387,20 @@ window.makeCaptainFromMobile = function () {
     renderSquadGrid();
 };
 
+window.toggleCaptainSelection = function () {
+    isSelectingCaptain = !isSelectingCaptain;
+    squadSelectedPlayer = null; // Cancela qualquer troca de posição em andamento
+    renderSquadGrid();
+};
+
 window.assignCaptain = function (playerId) {
     gameState.captainId = playerId;
-    createJuiceText(t('TEXT_CAPTAIN_SET') || "CAPITÃO!", "var(--accent-gold)", window.innerWidth / 2, window.innerHeight / 2);
+    isSelectingCaptain = false; // Desliga o modo de seleção após escolher
+
+    if (typeof createJuiceText === 'function') {
+        createJuiceText(t('TEXT_CAPTAIN_SET') || "CAPITÃO!", "var(--accent-gold)", window.innerWidth / 2, window.innerHeight / 2);
+    }
+
     saveAllClubs();
     renderSquadGrid();
 };
@@ -467,7 +479,7 @@ function renderSquadGrid() {
 
     // Deixando o limite (12) explícito e colorido caso esteja cheio
     let colorCount = resCount >= 12 ? 'var(--accent-red)' : 'var(--text-main)';
-    rTitle.innerHTML = `RESERVAS <span style="color:${colorCount}; font-weight:900;">(${resCount}/12)</span>`;
+    rTitle.innerHTML = `${t('LABEL_RESERVES')} <span style="color:${colorCount}; font-weight:900;">(${resCount}/12)</span>`;
     pGrid.innerHTML = '';
 
     let formationDef = FORMATIONS[gameState.formation || "4-4-2"];
@@ -504,24 +516,40 @@ function renderSquadGrid() {
         sec.players.forEach(item => {
             let p = item.player;
 
-            // Lógica de Destaque
             let isSelected = squadSelectedPlayer && squadSelectedPlayer.id === p.id;
             let isSwapTarget = squadSelectedPlayer && !isSelected;
 
-            let btnCap = (gameState.captainId !== p.id) ?
-                `<button style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:var(--text-muted); font-size:1rem; padding:8px 12px; border-radius:8px; cursor:pointer; transition:all 0.2s;" onclick="event.stopPropagation(); assignCaptain('${p.id}')">👑</button>` :
-                ``;
+            let customStyles = "cursor: pointer;";
+
+            // --- NOVO: Lógica de destaque do Modo Capitão ---
+            if (isSelectingCaptain) {
+                if (gameState.captainId !== p.id) {
+                    // Pulsa em dourado quem PODE ser o novo capitão
+                    customStyles += " animation: pulseSwapTarget 1.5s infinite ease-in-out; border-color: var(--accent-gold); box-shadow: inset 0 0 10px rgba(245,158,11,0.2);";
+                } else {
+                    // Deixa o capitão atual "apagado" e com opacidade reduzida
+                    customStyles += " opacity: 0.4; filter: grayscale(1);";
+                }
+            }
 
             let temp = document.createElement('div');
-            // Removemos os estilos inline de seleção daqui, o CSS puro fará isso
-            temp.innerHTML = getPlayerCardHTML(p, btnCap, "cursor: pointer;", { expectedPos: item.expectedPos });
+            // Removemos o btnCap daqui, pois a interface agora está super limpa!
+            temp.innerHTML = getPlayerCardHTML(p, "", customStyles, { expectedPos: item.expectedPos });
             let card = temp.firstElementChild;
 
-            // Aplica as classes dinamicamente
-            if (isSelected) card.classList.add('swap-selected');
-            else if (isSwapTarget) card.classList.add('swap-target');
+            // --- NOVO: Muda a ação do clique dependendo do modo ---
+            if (isSelectingCaptain) {
+                card.onclick = (e) => {
+                    e.stopPropagation();
+                    if (gameState.captainId !== p.id) assignCaptain(p.id);
+                    else toggleCaptainSelection(); // Se clicar no capitão atual, só cancela
+                };
+            } else {
+                if (isSelected) card.classList.add('swap-selected');
+                else if (isSwapTarget) card.classList.add('swap-target');
+                card.onclick = (e) => handleSquadClick(p, item.index, true, e);
+            }
 
-            card.onclick = (e) => handleSquadClick(p, item.index, true, e);
             sectorList.appendChild(card);
         });
         pGrid.appendChild(sectorList);
@@ -548,6 +576,19 @@ function renderSquadGrid() {
             card.onclick = (e) => handleSquadClick(p, i, false, e);
             rGrid.appendChild(card);
         });
+    }
+
+    const btnToggleCap = document.getElementById('btn-toggle-captain');
+    if (btnToggleCap) {
+        if (isSelectingCaptain) {
+            btnToggleCap.style.background = 'var(--accent-gold)';
+            btnToggleCap.style.color = '#000';
+            btnToggleCap.innerHTML = `❌ <span data-i18n="BTN_CANCEL">${t('BTN_CANCEL')}</span>`;
+        } else {
+            btnToggleCap.style.background = 'transparent';
+            btnToggleCap.style.color = 'var(--accent-gold)';
+            btnToggleCap.innerHTML = `👑 <span data-i18n="BTN_SET_CAPTAIN">${t('BTN_SET_CAPTAIN')}</span>`;
+        }
     }
 }
 
