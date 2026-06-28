@@ -94,7 +94,7 @@
         "emoji": "🐍"
       },
       {
-        "name": "TEAM_BASE_FALCONS",
+        "name": "TEAM_BASE_OWLS",
         "emoji": "🦉"
       },
       {
@@ -130,7 +130,7 @@
         "emoji": "🌟"
       },
       {
-        "name": "TEAM_BASE_WARRIORS",
+        "name": "TEAM_BASE_JUDOKAS",
         "emoji": "🥋"
       },
       {
@@ -143,11 +143,11 @@
       },
       {
         "name": "TEAM_BASE_PHOENIXES",
-        "emoji": "🕊️"
+        "emoji": "🐦‍🔥"
       },
       {
         "name": "TEAM_BASE_RANGERS",
-        "emoji": "🌲"
+        "emoji": "🏹"
       },
       {
         "name": "TEAM_BASE_KNIGHTS",
@@ -158,12 +158,24 @@
         "emoji": "🏛️"
       },
       {
-        "name": "TEAM_BASE_VIPERS",
-        "emoji": "🐊"
-      },
-      {
         "name": "TEAM_BASE_STALLIONS",
         "emoji": "🐎"
+      },
+      {
+        "name": "TEAM_BASE_NINJAS",
+        "emoji": "🥷"
+      },
+      {
+        "name": "TEAM_BASE_SAMURAIS",
+        "emoji": "🎌"
+      },
+      {
+        "name": "TEAM_BASE_POOP",
+        "emoji": "💩"
+      },
+      {
+        "name": "TEAM_BASE_COCONUT",
+        "emoji": "🥥"
       }
     ],
     "adjectives": [
