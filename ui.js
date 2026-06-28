@@ -306,12 +306,14 @@ function getSeasonsHistory() {
 
     if (gameState.runHistory && Array.isArray(gameState.runHistory)) {
         gameState.runHistory.forEach((run, idx) => {
-            if (run && run.matchHistory && Array.isArray(run.matchHistory) && run.matchHistory.length > 0) {
+            // 'matches' is the field saved by recordRun(); 'matchHistory' was a previous naming
+            let runMatches = run.matches || run.matchHistory;
+            if (run && runMatches && Array.isArray(runMatches) && runMatches.length > 0) {
                 allSeasons.push({
                     isCurrent: false,
                     title: `Temporada ${idx + 1}`,
                     leagueLevel: run.leagueLevel !== undefined ? run.leagueLevel : 0,
-                    matches: run.matchHistory,
+                    matches: runMatches,
                     result: run.result || "ELIMINADO",
                     club: run.club || gameState.club,
                     date: run.date || ""

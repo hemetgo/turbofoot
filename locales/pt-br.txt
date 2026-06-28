@@ -74,6 +74,10 @@ MAP_NODE_FINAL=Final
 MAP_NODE_SCOUT=Olheiro
 MAP_NODE_TRAINING=Treino
 MAP_NODE_LECTURE=Preleção
+TITLE_TACTICAL_CAMP=🧠 PRELEÇÃO TÁTICA
+SUBTITLE_TACTICAL_BUFF=Ajustes Finais!
+DESC_TACTICAL_CAMP=O treinador reuniu o elenco para repassar a estratégia. Toda a equipe receberá +15% de Bônus de Força na próxima partida!
+BTN_TACTICAL_CONFIRM=ENTENDIDO
 
 # --- Mercado ---
 LABEL_MARKET_TITLE=OLHEIRO

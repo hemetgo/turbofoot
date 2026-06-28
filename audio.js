@@ -32,7 +32,9 @@ function initAudio() {
 }
 
 function playBGM() {
-    if (gameState && gameState.settings && gameState.settings.musicOn) {
+    // musicOn undefined (antes do save carregar) = toca por padrão
+    const musicEnabled = !gameState || !gameState.settings || gameState.settings.musicOn !== false;
+    if (musicEnabled) {
         if (bgmAudio && bgmAudio.paused) {
             bgmAudio.play().catch(e => console.log("Bloqueio de Autoplay do Navegador", e));
         }
@@ -68,7 +70,9 @@ function toggleSFX() {
 
 function updateAudioState() {
     if (!audioInitialized) return;
-    if (gameState && gameState.settings && gameState.settings.musicOn) {
+    // musicOn undefined (antes do save carregar) = toca por padrão
+    const musicEnabled = !gameState || !gameState.settings || gameState.settings.musicOn !== false;
+    if (musicEnabled) {
         playBGM();
     } else {
         stopBGM();

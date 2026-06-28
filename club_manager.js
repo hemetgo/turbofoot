@@ -93,6 +93,9 @@ function loadClub(idx) {
     if (!gameState.marketPool) gameState.marketPool = [];
     if (!gameState.formation) gameState.formation = "4-4-2";
 
+    // Atualiza o áudio assim que o save (e suas settings) está carregado
+    if (typeof updateAudioState === 'function') updateAudioState();
+
     // ANTI-EXPLOIT: Se ele fechou o navegador durante a partida
     if (gameState.inMatch) {
         gameState.inMatch = false;
@@ -102,11 +105,15 @@ function loadClub(idx) {
         gameState.season.map = [];
         saveAllClubs();
 
-        // CHAMA A MODAL EM VEZ DO ALERT
-        showCustomAlert(
-            t('ALERT_ABANDON_PENALTY_TITLE'),
-            t('ALERT_ABANDON_PENALTY_TEXT')
-        );
+        // Navega primeiro; depois exibe o alerta (returnToHub chama closeModals internamente)
+        returnToHub();
+        setTimeout(function () {
+            showCustomAlert(
+                t('ALERT_ABANDON_PENALTY_TITLE'),
+                t('ALERT_ABANDON_PENALTY_TEXT')
+            );
+        }, 150);
+        return;
     }
 
     let totalStages = GAME_BALANCE.mechanics?.runStages || 8;
@@ -123,25 +130,24 @@ function loadClub(idx) {
 let currentRandomBaseIdx = 0;
 let currentRandomAdjIdx = 0;
 
-// Função chamada pelo botão 🔀
+// Sorteia apenas o nome do clube
 function randomizeClubName() {
-    // 1. Sorteia o nome e o emoji (mantém a lógica que você já tinha)
-    const base = rnd(GAME_CONTENT.clubGeneration.bases);
-    const adj = rnd(GAME_CONTENT.clubGeneration.adjectives);
+    currentRandomBaseIdx = Math.floor(Math.random() * GAME_CONTENT.clubGeneration.bases.length);
+    currentRandomAdjIdx  = Math.floor(Math.random() * GAME_CONTENT.clubGeneration.adjectives.length);
+    const base = GAME_CONTENT.clubGeneration.bases[currentRandomBaseIdx];
+    const adj  = GAME_CONTENT.clubGeneration.adjectives[currentRandomAdjIdx];
 
-    let newName = `${base.emoji} ${t(base.name)} ${t(adj)}`;
-    document.getElementById('display-club-name').innerText = newName;
+    document.getElementById('display-club-name').innerText = `${base.emoji} ${t(base.name)} ${t(adj)}`;
 
-    // --- NOVO: Sorteia o país (Nacionalidade) ---
+    if (typeof playSFX === 'function') playSFX('click');
+}
+
+// Sorteia apenas o pais de origem
+function randomizeCountry() {
     const natSelect = document.getElementById('create-club-nat');
     if (natSelect && natSelect.options.length > 0) {
-        // Escolhe um índice aleatório baseado na quantidade de países na lista
-        const randomIndex = Math.floor(Math.random() * natSelect.options.length);
-        natSelect.selectedIndex = randomIndex;
+        natSelect.selectedIndex = Math.floor(Math.random() * natSelect.options.length);
     }
-    // ---------------------------------------------
-
-    // Toca o som de clique, se o sistema de áudio estiver ativo
     if (typeof playSFX === 'function') playSFX('click');
 }
 
@@ -166,8 +172,9 @@ function openCreateClub() {
     // 3. Populamos o Select mantendo o "value" como o índice original do arquivo JSON
     natSel.innerHTML = countriesList.map(n => `<option value="${n.originalIndex}">${n.emoji} ${n.countryName}</option>`).join('');
 
-    // Rola o primeiro nome aleatório
+    // Rola o primeiro nome e país aleatórios
     randomizeClubName();
+    randomizeCountry();
 
     showScreen('screen-create-club');
 }

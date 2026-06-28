@@ -39,6 +39,10 @@ MAP_NODE_FINAL=Final
 MAP_NODE_SCOUT=Scout
 MAP_NODE_TRAINING=Traning
 MAP_NODE_LECTURE=Lecture
+TITLE_TACTICAL_CAMP=🧠 TACTICAL BRIEFING
+SUBTITLE_TACTICAL_BUFF=Final Adjustments!
+DESC_TACTICAL_CAMP=The coach gathered the squad to go over the strategy. The whole team will receive a +15% Strength Bonus in the next match!
+BTN_TACTICAL_CONFIRM=GOT IT
 
 # --- Market ---
 LABEL_MARKET_TITLE=SCOUT

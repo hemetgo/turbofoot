@@ -334,17 +334,17 @@ window.executeTacticalCamp = function () {
     // Injeta o HTML da modal de Preleção dinamicamente
     box.innerHTML = `
         <div class="modal-header flex-between">
-            <h2 class="options-title" style="color: var(--accent-blue);">${t('TITLE_TACTICAL_CAMP') || '🧠 PRELEÇÃO TÁTICA'}</h2>
+            <h2 class="options-title" style="color: var(--accent-blue);">${t('TITLE_TACTICAL_CAMP')}</h2>
             <button class="btn-icon" onclick="closeModals()">❌</button>
         </div>
         <div class="modal-body" style="text-align: center; padding: 10px;">
             <div style="font-size: 4.5rem; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); margin-bottom: 10px;">📋</div>
-            <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px; text-transform: uppercase;">${t('SUBTITLE_TACTICAL_BUFF') || 'Ajustes Finais!'}</h3>
+            <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px; text-transform: uppercase;">${t('SUBTITLE_TACTICAL_BUFF')}</h3>
             <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 24px;">
-                ${t('DESC_TACTICAL_CAMP') || 'O treinador reuniu o elenco para repassar a estratégia. Toda a equipe receberá <strong style="color: var(--accent-blue);">+15% de Bônus de Força</strong> na próxima partida!'}
+                ${t('DESC_TACTICAL_CAMP')}
             </p>
             <div class="modal-footer" style="padding: 0;">
-                <button class="btn-primary" style="background: var(--accent-blue); width: 100%; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);" onclick="confirmTacticalCamp()">${t('BTN_TACTICAL_CONFIRM') || 'ENTENDIDO'}</button>
+                <button class="btn-primary" style="background: var(--accent-blue); width: 100%; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);" onclick="confirmTacticalCamp()">${t('BTN_TACTICAL_CONFIRM')}</button>
             </div>
         </div>
     `;

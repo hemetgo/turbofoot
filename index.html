@@ -79,8 +79,13 @@
                     <div class="options-row">
                         <label style="font-weight:700; color:var(--text-muted);" data-i18n="LABEL_NATIONALITY">PAÍS DE
                             ORIGEM (Elenco Inicial)</label>
-                        <select id="create-club-nat" class="btn-secondary"
-                            style="width:100%; margin-top:10px; background:var(--bg-main); color:#fff; padding:10px;"></select>
+                        <div style="display:flex; gap:10px; margin-top:10px; align-items:stretch;">
+                            <select id="create-club-nat" class="btn-secondary"
+                                style="flex:1; background:var(--bg-main); color:#fff; padding:10px;"></select>
+                            <button class="btn-secondary"
+                                style="width:60px; font-size:1.6rem; padding:0; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
+                                onclick="randomizeCountry()">🔀</button>
+                        </div>
                     </div>
                     <button class="btn-primary btn-epic" data-i18n="BTN_CREATE_CLUB"
                         onclick="executeCreateClub()">FUNDAR CLUBE</button>
