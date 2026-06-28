@@ -353,7 +353,11 @@ function _renderPlayerButtons() {
         if (node.riskLevel === "safe") {
             chance = 100;
         } else {
-            chance = Math.max(5, Math.min(95, Math.round(chance)));
+            // Cap máximo por tipo de ação: defesas (GOL) têm teto menor para evitar GOL god-strat
+            let maxChance = (node.type === 'save')
+                ? (scale.maxChanceBySave || 70)
+                : (scale.maxChanceDefault || 88);
+            chance = Math.max(5, Math.min(maxChance, Math.round(chance)));
             let tweakStep = Math.max(1, Math.floor((gameState.leagueLevel + 1) * 0.5));
             let attempts = 0;
             let currentChance = chance;
@@ -932,13 +936,29 @@ function finishMatchRewards() {
             let rewardsText = `+${coins} 💰`;
             document.getElementById("pm-coins").innerText = rewardsText;
 
+            // Anti-spam de liga: se o time médio supera o teto da liga, XP cai para 0
+            let expCapLevels = (GAME_BALANCE.mechanics.leagueExpCap || []);
+            let expCap = expCapLevels[gameState.leagueLevel] !== undefined ? expCapLevels[gameState.leagueLevel] : 999;
+            let avgLvl = typeof getTeamAverageLevel === 'function' ? getTeamAverageLevel() : 1;
+            let niveisBase = threat.expReward || 1;
+            let niveisGanhosPreview = avgLvl > expCap ? 0 : niveisBase;
+
+            if (niveisGanhosPreview === 0) {
+                let rewardsText2 = `+${coins} 💰  •  ${t('TEXT_EXP_CAPPED') || 'EXP BLOQUEADA'}`;
+                document.getElementById("pm-coins").innerText = rewardsText2;
+            }
+
             document.querySelector("#post-match-overlay .btn-primary").innerText = t('BTN_DISTRIBUTE_LEVELS');
             document.querySelector("#post-match-overlay .btn-primary").onclick = () => {
                 document.getElementById('post-match-overlay').style.display = 'none';
-                let niveisGanhos = threat.expReward || 1;
-                showLevelDistribution(niveisGanhos, () => {
+                let niveisGanhos = avgLvl > expCap ? 0 : niveisBase;
+                if (niveisGanhos > 0) {
+                    showLevelDistribution(niveisGanhos, () => {
+                        advanceMapNode();
+                    });
+                } else {
                     advanceMapNode();
-                });
+                }
             };
         }
 

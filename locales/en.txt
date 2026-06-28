@@ -599,3 +599,4 @@ TEXT_LEAGUE_UNLOCKED=⭐ GOAL ACHIEVED! ⭐\nNew League Unlocked:\n👉 {league}
 TEXT_WINS_SUMMARY=League wins: {wins} (+{coins} 💰)
 TEXT_CHAMPION_BONUS=Champion Bonus: +{bonus} 💰
 TEXT_TROPHIES_EARNED=🏆 You earned +{trophies} Trophies to use at the Club HQ!
+TEXT_EXP_CAPPED=EXP BLOCKED ⬆️ MOVE UP A LEAGUE

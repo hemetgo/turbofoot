@@ -603,3 +603,4 @@ TEXT_LEAGUE_UNLOCKED=⭐ META ALCANÇADA! ⭐\nNova Liga Desbloqueada:\n👉 {le
 TEXT_WINS_SUMMARY=Vitórias na liga: {wins} (+{coins} 💰)
 TEXT_CHAMPION_BONUS=Bônus de Campeão: +{bonus} 💰
 TEXT_TROPHIES_EARNED=🏆 Você ganhou +{trophies} Troféus para usar na Sede do Clube!
+TEXT_EXP_CAPPED=EXP BLOQUEADA ⬆️ SUBA DE LIGA

@@ -271,7 +271,12 @@ function handleMapNodeClick(node) {
 
         let threatColor = threat.color;
         let threatLabel = t(threat.label);
-        let levelGain = threat.expReward;
+        // Verifica teto de EXP da liga atual
+        let expCapArr = (GAME_BALANCE.mechanics.leagueExpCap || []);
+        let expCap = expCapArr[gameState.leagueLevel] !== undefined ? expCapArr[gameState.leagueLevel] : 999;
+        let currentAvgLvl = typeof getTeamAverageLevel === 'function' ? getTeamAverageLevel() : 1;
+        let expBlocked = currentAvgLvl > expCap;
+        let levelGain = expBlocked ? 0 : threat.expReward;
 
         let perkCounts = {};
         node.rival.perks.forEach(perk => {
@@ -307,7 +312,7 @@ function handleMapNodeClick(node) {
                 </div>
                 <div style="background:rgba(0,0,0,0.3); padding: 12px; border-radius:8px; border-bottom: 3px solid var(--accent-blue); display:flex; flex-direction:column; align-items:center; justify-content:center;">
                     <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">${t('LABEL_REWARD')}</span>
-                    <span style="font-size:0.9rem; font-weight:900; color:var(--accent-blue); text-transform:uppercase; text-align:center;">+${levelGain} ${t('LABEL_LEVEL')}</span>
+                    <span style="font-size:0.9rem; font-weight:900; color:${expBlocked ? 'var(--accent-red)' : 'var(--accent-blue)'}; text-transform:uppercase; text-align:center;">${expBlocked ? (t('TEXT_EXP_CAPPED') || 'EXP BLOQUEADA') : '+' + levelGain + ' ' + t('LABEL_LEVEL')}</span>
                 </div>
             </div>
         `;
