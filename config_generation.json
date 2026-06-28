@@ -1,28 +1,216 @@
 {
-    "clubGeneration": {
-        "bases": [
-            { "name": "TEAM_BASE_LIONS", "emoji": "🦁" },
-            { "name": "TEAM_BASE_ROOSTERS", "emoji": "🐓" },
-            { "name": "TEAM_BASE_FOXES", "emoji": "🦊" },
-            { "name": "TEAM_BASE_HAWKS", "emoji": "🦅" },
-            { "name": "TEAM_BASE_TIGERS", "emoji": "🐯" },
-            { "name": "TEAM_BASE_PIGS", "emoji": "🐷" },
-            { "name": "TEAM_BASE_DRAGONS", "emoji": "🐉" },
-            { "name": "TEAM_BASE_CANARIES", "emoji": "🐤" },
-            { "name": "TEAM_BASE_BULLS", "emoji": "🐂" },
-            { "name": "TEAM_BASE_HURRICANES", "emoji": "🌪️" },
-            { "name": "TEAM_BASE_ADMIRALS", "emoji": "⚓" },
-            { "name": "TEAM_BASE_WORKERS", "emoji": "👷" },
-            { "name": "TEAM_BASE_ACADEMICS", "emoji": "🎓" },
-            { "name": "TEAM_BASE_PIONEERS", "emoji": "🗺️" },
-            { "name": "TEAM_BASE_GIANTS", "emoji": "🏟️" },
-            { "name": "TEAM_BASE_SOVEREIGNS", "emoji": "👑" },
-            { "name": "TEAM_BASE_IMMORTALS", "emoji": "🧟" },
-            { "name": "TEAM_BASE_NAVIGATORS", "emoji": "⛵" },
-            { "name": "TEAM_BASE_WOLVES", "emoji": "🐺" }
-        ],
-        "adjectives": [
-            "TEAM_ADJ_CAPITAL", "TEAM_ADJ_NORTH", "TEAM_ADJ_SOUTH", "TEAM_ADJ_EAST", "TEAM_ADJ_WEST", "TEAM_ADJ_HILL", "TEAM_ADJ_VILLAGE", "TEAM_ADJ_PORT", "TEAM_ADJ_VALLEY", "TEAM_ADJ_BORDER", "TEAM_ADJ_VALLEY2", "TEAM_ADJ_ISLAND", "TEAM_ADJ_UNITED", "TEAM_ADJ_INDEPENDENT", "TEAM_ADJ_METRO", "TEAM_ADJ_ATHLETIC", "TEAM_ADJ_TRICOLOR", "TEAM_ADJ_CELESTIAL", "TEAM_ADJ_EMERALD", "TEAM_ADJ_REDWHITE", "TEAM_ADJ_REGATAS", "TEAM_ADJ_FC", "TEAM_ADJ_SC", "TEAM_ADJ_VARZEA"
-        ]
-    }
+  "clubGeneration": {
+    "bases": [
+      {
+        "name": "TEAM_BASE_LIONS",
+        "emoji": "🦁"
+      },
+      {
+        "name": "TEAM_BASE_ROOSTERS",
+        "emoji": "🐓"
+      },
+      {
+        "name": "TEAM_BASE_FOXES",
+        "emoji": "🦊"
+      },
+      {
+        "name": "TEAM_BASE_HAWKS",
+        "emoji": "🦅"
+      },
+      {
+        "name": "TEAM_BASE_TIGERS",
+        "emoji": "🐯"
+      },
+      {
+        "name": "TEAM_BASE_PIGS",
+        "emoji": "🐷"
+      },
+      {
+        "name": "TEAM_BASE_DRAGONS",
+        "emoji": "🐉"
+      },
+      {
+        "name": "TEAM_BASE_CANARIES",
+        "emoji": "🐤"
+      },
+      {
+        "name": "TEAM_BASE_BULLS",
+        "emoji": "🐂"
+      },
+      {
+        "name": "TEAM_BASE_HURRICANES",
+        "emoji": "🌪️"
+      },
+      {
+        "name": "TEAM_BASE_ADMIRALS",
+        "emoji": "⚓"
+      },
+      {
+        "name": "TEAM_BASE_WORKERS",
+        "emoji": "👷"
+      },
+      {
+        "name": "TEAM_BASE_ACADEMICS",
+        "emoji": "🎓"
+      },
+      {
+        "name": "TEAM_BASE_PIONEERS",
+        "emoji": "🗺️"
+      },
+      {
+        "name": "TEAM_BASE_GIANTS",
+        "emoji": "🏟️"
+      },
+      {
+        "name": "TEAM_BASE_SOVEREIGNS",
+        "emoji": "👑"
+      },
+      {
+        "name": "TEAM_BASE_IMMORTALS",
+        "emoji": "🧟"
+      },
+      {
+        "name": "TEAM_BASE_NAVIGATORS",
+        "emoji": "⛵"
+      },
+      {
+        "name": "TEAM_BASE_WOLVES",
+        "emoji": "🐺"
+      },
+      {
+        "name": "TEAM_BASE_EAGLES",
+        "emoji": "🦅"
+      },
+      {
+        "name": "TEAM_BASE_SHARKS",
+        "emoji": "🦈"
+      },
+      {
+        "name": "TEAM_BASE_PANTHERS",
+        "emoji": "🐆"
+      },
+      {
+        "name": "TEAM_BASE_COBRAS",
+        "emoji": "🐍"
+      },
+      {
+        "name": "TEAM_BASE_FALCONS",
+        "emoji": "🦉"
+      },
+      {
+        "name": "TEAM_BASE_BEARS",
+        "emoji": "🐻"
+      },
+      {
+        "name": "TEAM_BASE_SCORPIONS",
+        "emoji": "🦂"
+      },
+      {
+        "name": "TEAM_BASE_RAVENS",
+        "emoji": "🐦‍⬛"
+      },
+      {
+        "name": "TEAM_BASE_GLADIATORS",
+        "emoji": "⚔️"
+      },
+      {
+        "name": "TEAM_BASE_MINERS",
+        "emoji": "⛏️"
+      },
+      {
+        "name": "TEAM_BASE_SAILORS",
+        "emoji": "🚢"
+      },
+      {
+        "name": "TEAM_BASE_CRUSADERS",
+        "emoji": "🛡️"
+      },
+      {
+        "name": "TEAM_BASE_LEGENDS",
+        "emoji": "🌟"
+      },
+      {
+        "name": "TEAM_BASE_WARRIORS",
+        "emoji": "🥋"
+      },
+      {
+        "name": "TEAM_BASE_THUNDER",
+        "emoji": "⚡"
+      },
+      {
+        "name": "TEAM_BASE_REBELS",
+        "emoji": "🔥"
+      },
+      {
+        "name": "TEAM_BASE_PHOENIXES",
+        "emoji": "🕊️"
+      },
+      {
+        "name": "TEAM_BASE_RANGERS",
+        "emoji": "🌲"
+      },
+      {
+        "name": "TEAM_BASE_KNIGHTS",
+        "emoji": "♞"
+      },
+      {
+        "name": "TEAM_BASE_SPARTANS",
+        "emoji": "🏛️"
+      },
+      {
+        "name": "TEAM_BASE_VIPERS",
+        "emoji": "🐊"
+      },
+      {
+        "name": "TEAM_BASE_STALLIONS",
+        "emoji": "🐎"
+      }
+    ],
+    "adjectives": [
+      "TEAM_ADJ_CAPITAL",
+      "TEAM_ADJ_NORTH",
+      "TEAM_ADJ_SOUTH",
+      "TEAM_ADJ_EAST",
+      "TEAM_ADJ_WEST",
+      "TEAM_ADJ_HILL",
+      "TEAM_ADJ_VILLAGE",
+      "TEAM_ADJ_PORT",
+      "TEAM_ADJ_VALLEY",
+      "TEAM_ADJ_BORDER",
+      "TEAM_ADJ_VALLEY2",
+      "TEAM_ADJ_ISLAND",
+      "TEAM_ADJ_UNITED",
+      "TEAM_ADJ_INDEPENDENT",
+      "TEAM_ADJ_METRO",
+      "TEAM_ADJ_ATHLETIC",
+      "TEAM_ADJ_TRICOLOR",
+      "TEAM_ADJ_CELESTIAL",
+      "TEAM_ADJ_EMERALD",
+      "TEAM_ADJ_REDWHITE",
+      "TEAM_ADJ_REGATAS",
+      "TEAM_ADJ_FC",
+      "TEAM_ADJ_SC",
+      "TEAM_ADJ_VARZEA",
+      "TEAM_ADJ_RIVER",
+      "TEAM_ADJ_MOUNTAIN",
+      "TEAM_ADJ_CENTRAL",
+      "TEAM_ADJ_ROYAL",
+      "TEAM_ADJ_UNION",
+      "TEAM_ADJ_COSMOS",
+      "TEAM_ADJ_DISTRICT",
+      "TEAM_ADJ_GLORIOUS",
+      "TEAM_ADJ_LEGENDARY",
+      "TEAM_ADJ_GRAND",
+      "TEAM_ADJ_INVICTA",
+      "TEAM_ADJ_POPULAR",
+      "TEAM_ADJ_SUBURB",
+      "TEAM_ADJ_RED",
+      "TEAM_ADJ_BLACK",
+      "TEAM_ADJ_GOLDEN",
+      "TEAM_ADJ_THUNDER",
+      "TEAM_ADJ_CLASSIC",
+      "TEAM_ADJ_AURORA",
+      "TEAM_ADJ_EC"
+    ]
+  }
 }
