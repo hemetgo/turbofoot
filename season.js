@@ -468,7 +468,6 @@ function finishSeason(wonSeason) {
 
     subText += "\n\n" + (t('TEXT_WINS_SUMMARY') || "").replace('{wins}', matchesWon).replace('{coins}', matchesWon * metaPerWin);
     if (wonSeason) subText += "\n" + (t('TEXT_CHAMPION_BONUS') || "").replace('{bonus}', metaWinBonus);
-    subText += "\n\n" + (t('TEXT_TROPHIES_EARNED') || "").replace('{trophies}', earnedTrophies);
 
     document.getElementById('se-sub').innerText = subText;
     document.getElementById('se-coins').innerText = `+${earnedTrophies} 💰`;
